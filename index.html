@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<!-- saved from url=(0071)file:///C:/Users/admin/Desktop/coding%20codes/Class10th%20Syllabus.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 10 | Hyper Performance Syllabus</title>
+    <link href="./Class 10th Syllabus_files/css2" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #020203;
+            --bg-surface: #0a0a0c;
+            --accent-primary: #0055ff;
+            --accent-glow: #00d1ff;
+            --text-main: #ffffff;
+            --text-muted: #888891;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            margin: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 10, 12, 0.07);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .nav-item {
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease, transform 0.3s ease-in-out;
+            position: relative;
+        }
+	
+	.nav-item::after {
+	    content: "";
+  	    position: absolute;
+  	    top: -12px;   /* expand clickable area upward */
+ 	    left: -12px;  /* expand clickable area left */
+ 	    right: -12px; /* expand clickable area right */
+  	    bottom: -12px;/* expand clickable area downward */
+	}
+
+        .nav-item.active {
+            color: var(--accent-glow);
+            background: rgba(0, 209, 255, 0.199);
+            box-shadow: 0 0 18px rgba(0, 209, 255, 0.899);
+	}
+        .nav-item:not(.active) {
+            color: var(--accent-glow);
+            background: rgba(0, 209, 255, 0.08);
+            box-shadow: 0 0 18px rgba(0, 209, 255, 0.35);
+	}
+
+	.nav-item:hover {
+            color: var(--accent-glow);
+            background: rgba(0, 197, 255, 0.199);
+            box-shadow: 0 0 18px rgba(4, 180, 255, 0.899);
+	    transform: scale(1.1);
+        }
+
+        /* Page Management */
+        .app-page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            padding-left: 80px; /* Space for sidebar */
+        }
+
+        .app-page.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Constant Video-like Animation */
+        @keyframes constantBreathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-16.2px); }
+        }
+
+        .main-engine-wrap {
+            animation: constantBreathe 8s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ambient-light {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 40%, rgba(0, 85, 255, 0.15) 0%, transparent 85%),
+                radial-gradient(circle at 90% 20%, rgba(0, 209, 255, 0.1) 0%, transparent 100%);
+            animation: breathe 36s ease-in-out infinite;
+        }
+	@keyframes breathe {
+          0%, 100% {
+            opacity: 0.5;
+            box-shadow: 0 0 20px #00ffff;
+           }
+           50% {
+    	   opacity: 1;
+   	   box-shadow: 0 0 60px #00ffff;
+ 	  }
+         } 
+
+        /* High Visibility Geometric Background Shapes */
+        .bg-shapes {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border: 2px solid rgba(255, 255, 255, 0.18);
+            background: transparent;
+            animation: drift 72s infinite alternate ease-in-out;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            100% { transform: translate(60px, 20px) rotate(76deg) scale(1.5); }
+        }
+
+        header {
+            padding: 120px 20px 40px;
+            text-align: center;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .chassis-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-glow);
+            border: 1px solid rgba(0, 209, 255, 0.5);
+            padding: 8px 20px;
+            border-radius: 4px;
+            background: rgba(0, 209, 255, 0.1);
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4.8rem);
+            font-weight: 700;
+            letter-spacing: -4px;
+            margin: 0;
+            background: linear-gradient(180deg, #FFFFFF 0%, #444 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-module {
+            position: relative;
+            max-width: 650px;
+            margin: 60px auto 0;
+            z-index: 10;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-glow);
+            width: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-surface);
+            border: 1px solid var(--glass-border);
+            padding: 24px 24px 24px 60px;
+            border-radius: 16px;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 60px rgba(0, 85, 255, 0.3);
+            background: #0d0d10;
+        }
+
+        .grid-chassis {
+            max-width: 1200px;
+            margin: 60px auto 150px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 30px;
+        }
+
+        .subject-module {
+            background: var(--bg-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            transition: var(--transition);
+            cursor: pointer;
+            overflow: hidden;
+            height: fit-content;
+            backdrop-filter: blur(15px);
+        }
+
+        .subject-module:hover:not(.expanded) {
+            transform: translateY(-10px);
+            border-color: var(--accent-glow);
+            background: #121218;
+        }
+
+        .subject-module.expanded {
+            grid-column: 1 / -1;
+            background: #050508;
+            border-color: var(--accent-primary);
+            cursor: default;
+        }
+        .module-header {
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .icon-core {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(0, 85, 255, 0.2), rgba(0, 209, 255, 0.1));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-glow);
+            margin-right: 20px;
+            border: 1px solid rgba(0, 85, 255, 0.3);
+        }
+
+        .syllabus-core {
+            display: none;
+            padding: 0 40px 50px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 50px;
+        }
+
+        .expanded .syllabus-core { display: grid; }
+
+        .division-title {
+            color: var(--accent-glow);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--accent-primary);
+            padding-bottom: 15px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .chapter-list { list-style: none; padding: 0; margin: 0; }
+        .chapter-item {
+            font-size: 1rem;
+            color: var(--text-muted);
+            padding: 15px 0;
+            display: flex;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+
+        .chapter-item:hover {
+            color: #fff;
+            padding-left: 10px;
+            background: linear-gradient(90deg, rgba(0, 85, 255, 0.05), transparent);
+        }
+
+        .chapter-item span { color: var(--accent-glow); opacity: 0.8; font-family: 'JetBrains Mono'; font-size: 13px; font-weight: bold; }
+        .hidden-by-search { display: none !important; }
+
+        /* -------------------------------------
+           NEW: TRANSLUCENT RESOURCES PAGE
+           ------------------------------------- */
+        .resources-glass-panel {
+            max-width: 1000px;
+            margin: 60px auto 150px;
+            padding: 50px;
+            background: rgba(5, 5, 8, 0.3); /* highly translucent */
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+
+        .book-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .book-card:hover {
+            background: rgba(0, 209, 255, 0.05);
+            border-color: var(--accent-glow);
+            transform: translateX(10px);
+        }
+
+        .book-card i { color: var(--accent-glow); }
+        .book-card div h4 { margin: 0 0 5px; font-size: 1.1rem; }
+        .book-card div p { margin: 0; font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono'; }
+
+        /* Graph Section */
+        .graph-section h3 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 15px;
+        }
+
+        .chart-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .chart-label {
+            width: 150px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .chart-bar-bg {
+            flex-grow: 1;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-glow));
+            box-shadow: 0 0 15px rgba(0, 209, 255, 0.4);
+        }
+
+        .chart-value {
+            width: 40px;
+            text-align: right;
+            font-weight: bold;
+            color: var(--accent-glow);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 120px 20px 120px 80px;
+            background: rgba(3, 3, 5, 0.98);
+            backdrop-filter: blur(30px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 50px;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            color: white;
+        }
+
+        .footer-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 40px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 20px #00ff88;
+            margin-right: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .app-page { padding-left: 0; padding-bottom: 80px; }
+            footer { padding-left: 20px; padding-bottom: 120px; }
+            .sidebar {
+                top: auto;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                flex-direction: row;
+                border-radius: 40px;
+            }
+            .grid-chassis { grid-template-columns: 1fr; }
+            .footer-content { flex-direction: column; text-align: center; }
+            .footer-status { flex-direction: column; gap: 15px; }
+            .chart-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .chart-label, .chart-value { width: auto; }
+            .chart-bar-bg { width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-light"></div>
+    
+    <div class="bg-shapes">
+        <div class="shape" style="width: 500px; height: 500px; top: -10%; left: -150px; border-radius: 100px; transform: rotate(-15deg);"></div>
+        <div class="shape" style="width: 350px; height: 700px; top: 30%; right: -100px; border-radius: 200px; transform: rotate(10deg);"></div>
+        <div class="shape" style="width: 400px; height: 400px; bottom: 10%; left: 20%; border-radius: 50%;"></div>
+        <div class="shape" style="width: 80%; height: 1px; top: 25%; left: 10%; border: none; border-top: 2px solid rgba(255,255,255,0.12);"></div>
+    </div>
+
+    <nav class="sidebar">
+        <div class="nav-item active" data-target="view-syllabus" title="Syllabus Engine">
+            <i data-lucide="layout-grid"></i>
+        </div>
+        <div class="nav-item" data-target="view-resources" title="NCERT Official Resources">
+            <i data-lucide="library"></i>
+        </div>
+    </nav>
+
+    <div class="main-engine-wrap">
+        
+        <div id="view-syllabus" class="app-page active">
+            <header>
+                <div class="chassis-badge">V22 CHASSIS • MASTER_CORE • VERIFIED</div>
+                <h1>CLASS 10 SYLLABUS</h1>
+                <div class="search-module">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Scan database for chapters or topics...">
+                </div>
+            </header>
+
+            <div class="grid-chassis" id="syllabusGrid">
+                <div class="subject-module">
+                    <div class="module-header" onclick="toggleModule(this.parentElement)">
+                        <div style="display:flex; align-items:center">
+                            <div class="icon-core"><i data-lucide="calculator"></i></div>
+                            <h2 class="subject-title">Mathematics</h2>
+                        </div>
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="syllabus-core">
+                        <div>
+                            <h3 class="division-title">Number Systems &amp; Algebra</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item"><span>01</span> Real Numbers</li>
+                                <li class="chapter-item"><span>02</span> Polynomials</li>
+                                <li class="chapter-item"><span>03</span> Pair of Linear Equations</li>
+                                <li class="chapter-item"><span>04</span> Quadratic Equations</li>
+                                <li class="chapter-item"><span>05</span> Arithmetic Progressions</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Geometry &amp; Trigonometry</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item"><span>06</span> Triangles</li>
+                                <li class="chapter-item"><span>07</span> Coordinate Geometry</li>
+                                <li class="chapter-item"><span>08</span> Introduction to Trigonometry</li>
+                                <li class="chapter-item"><span>09</span> Applications of Trigonometry</li>
+                                <li class="chapter-item"><span>10</span> Circles</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Statistics &amp; Mensuration</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item"><span>11</span> Areas Related to Circles</li>
+                                <li class="chapter-item"><span>12</span> Surface Areas and Volumes</li>
+                                <li class="chapter-item"><span>13</span> Statistics</li>
+                                <li class="chapter-item"><span>14</span> Probability</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subject-module">
+                    <div class="module-header" onclick="toggleModule(this.parentElement)">
+                        <div style="display:flex; align-items:center">
+                            <div class="icon-core"><i data-lucide="flask-conical"></i></div>
+                            <h2 class="subject-title">Science</h2>
+                        </div>
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="syllabus-core">
+                        <div>
+                            <h3 class="division-title">Chemistry</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">Chemical Reactions and Equations</li>
+                                <li class="chapter-item">Acids, Bases and Salts</li>
+                                <li class="chapter-item">Metals and Non-metals</li>
+                                <li class="chapter-item">Carbon and its Compounds</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Biology</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">Life Processes</li>
+                                <li class="chapter-item">Control and Coordination</li>
+                                <li class="chapter-item">How do Organisms Reproduce?</li>
+                                <li class="chapter-item">Heredity</li>
+     				<li class="chapter-item">Our Environment</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Physics</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">Light: Reflection &amp; Refraction</li>
+                                <li class="chapter-item">Human Eye &amp; Colourful World</li>
+                                <li class="chapter-item">Electricity</li>
+                                <li class="chapter-item">Magnetic Effects of Electric Current</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subject-module">
+                    <div class="module-header" onclick="toggleModule(this.parentElement)">
+                        <div style="display:flex; align-items:center">
+                            <div class="icon-core"><i data-lucide="map"></i></div>
+                            <h2 class="subject-title">Social Science</h2>
+                        </div>
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="syllabus-core">
+                        <div>
+                            <h3 class="division-title">History</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item"><span>H1</span> Rise of Nationalism in Europe</li>
+                                <li class="chapter-item"><span>H2</span> Nationalism in India</li>
+                                <li class="chapter-item"><span>H3</span> Making of a Global World</li>
+                                <li class="chapter-item"><span>H4</span> Age of Industrialisation</li>
+                                <li class="chapter-item"><span>H5</span> Print Culture &amp; Modern World</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Civics</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item"><span>C1</span> Power Sharing</li>
+                                <li class="chapter-item"><span>C2</span> Federalism</li>
+                                <li class="chapter-item"><span>C3</span> Gender, Religion &amp; Caste</li>
+                                <li class="chapter-item"><span>C4</span> Political Parties</li>
+                                <li class="chapter-item"><span>C5</span> Outcomes of Democracy</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Geography</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item"><span>G1</span> Resources and Development</li>
+                                <li class="chapter-item"><span>G2</span> Forest &amp; Wildlife Resources</li>
+                                <li class="chapter-item"><span>G3</span> Water Resources</li>
+                                <li class="chapter-item"><span>G4</span> Agriculture</li>
+                                <li class="chapter-item"><span>G5</span> Minerals &amp; Energy Resources</li>
+                                <li class="chapter-item"><span>G6</span> Manufacturing Industries</li>
+                                <li class="chapter-item"><span>G7</span> Lifelines of National Economy</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Economics</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item"><span>E1</span> Development</li>
+                                <li class="chapter-item"><span>E2</span> Sectors of the Indian Economy</li>
+                                <li class="chapter-item"><span>E3</span> Money and Credit</li>
+                                <li class="chapter-item"><span>E4</span> Globalisation &amp; the Economy</li>
+                                <li class="chapter-item"><span>E5</span> Consumer Rights</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subject-module">
+                    <div class="module-header" onclick="toggleModule(this.parentElement)">
+                        <div style="display:flex; align-items:center">
+                            <div class="icon-core"><i data-lucide="languages"></i></div>
+                            <h2 class="subject-title">Hindi (Course A)</h2>
+                        </div>
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="syllabus-core">
+                        <div>
+                            <h3 class="division-title">Kshitij (Kavya)</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">Surdas (Pad)</li>
+                                <li class="chapter-item">Tulsidas (Ram-Lakshman)</li>
+<li class="chapter-item">Jaishankar Prasad (Atmakathya)</li>
+                                <li class="chapter-item">Suryakant Tripathi Nirala (Utsah)</li>
+                                <li class="chapter-item">Nagarjun (Yeh Danturit Muskan)</li>
+                                <li class="chapter-item">Manglesh Dabral (Sangatkar)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Kshitij (Gadya)</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">Swayam Prakash (Netaji)</li>
+                                <li class="chapter-item">Ramvriksh Benipuri (Balgobin)</li>
+                                <li class="chapter-item">Yashpal (Lakhnavi Andaz)</li>
+<li class="chapter-item">Mannu Bhandari (Ek Kahani yah Bhi)</li>
+                                <li class="chapter-item">Yatindra Mishra (Ibadat)</li>
+                                <li class="chapter-item">Bhadant Anand (Sanskriti)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Kritika</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">Shivpujan Sahay (Mata Ka Aanchal)</li>
+                                <li class="chapter-item">Madhu Kankariya (Sana-Sana)</li>
+                                <li class="chapter-item">Agyeya (Main Kyun Likhta Hun)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subject-module">
+                    <div class="module-header" onclick="toggleModule(this.parentElement)">
+                        <div style="display:flex; align-items:center">
+                            <div class="icon-core"><i data-lucide="book-open"></i></div>
+                            <h2 class="subject-title">English Lang &amp; Lit</h2>
+                        </div>
+                        <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="syllabus-core">
+                        <div>
+                            <h3 class="division-title">First Flight (Prose)</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">A Letter to God</li>
+                                <li class="chapter-item">Nelson Mandela</li>
+                                <li class="chapter-item">Two Stories about Flying</li>
+                                <li class="chapter-item">Diary of Anne Frank</li>
+                                <li class="chapter-item">Glimpses of India</li>
+                                <li class="chapter-item">Madam Rides the Bus</li>
+                                <li class="chapter-item">The Sermon at Benares</li>
+                                <li class="chapter-item">The Proposal</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">First Flight (Poetry)</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">Dust of Snow / Fire &amp; Ice</li>
+                                <li class="chapter-item">A Tiger in the Zoo</li>
+                                <li class="chapter-item">How to Tell Wild Animals</li>
+                                <li class="chapter-item">The Ball Poem</li>
+                                <li class="chapter-item">Amanda!</li>
+                                <li class="chapter-item">Custard the Dragon</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="division-title">Footprints Without Feet</h3>
+                            <ul class="chapter-list">
+                                <li class="chapter-item">A Triumph of Surgery</li>
+                                <li class="chapter-item">The Thief's Story</li>
+                                <li class="chapter-item">The Midnight Visitor</li>
+                                <li class="chapter-item">A Question of Trust</li>
+                                <li class="chapter-item">Footprints without Feet</li>
+                                <li class="chapter-item">The Making of a Scientist</li>
+                                <li class="chapter-item">The Necklace</li>
+                                <li class="chapter-item">Bholi</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-resources" class="app-page">
+            <header>
+                <div class="chassis-badge">NCERT_LINK • DATABANK</div>
+                <h1>OFFICIAL TEXTBOOKS</h1>
+            </header>
+
+            <div class="resources-glass-panel">
+                <div class="book-grid">
+                    <a href="https://ncert.nic.in/textbook.php?jemh1=0-14" target="_blank" class="book-card">
+                        <i data-lucide="calculator" width="32" height="32"></i>
+                        <div>
+                            <h4>Mathematics</h4>
+                            <p>NCERT Class 10 Math</p>
+                        </div>
+                    </a>
+                    <a href="https://ncert.nic.in/textbook.php?jess1=0-7" target="_blank" class="book-card">
+                        <i data-lucide="flask-conical" width="32" height="32"></i>
+                        <div>
+                            <h4>Science</h4>
+                            <p>NCERT Class 10 Science</p>
+                        </div>
+                    </a>
+                    <a href="https://ncert.nic.in/textbook.php?jess1=0-5" target="_blank" class="book-card">
+                        <i data-lucide="map" width="32" height="32"></i>
+                        <div>
+                            <h4>Social Science</h4>
+                            <p>History, Civics, Geo, Eco</p>
+                        </div>
+                    </a>
+                    <a href="https://ncert.nic.in/textbook.php?jeff1=0-9" target="_blank" class="book-card">
+                        <i data-lucide="book-open" width="32" height="32"></i>
+                        <div>
+                            <h4>English</h4>
+                            <p>First Flight &amp; Footprints</p>
+                        </div>
+                    </a>
+                    <a href="https://ncert.nic.in/textbook.php?jhks1=0-12" target="_blank" class="book-card">
+                        <i data-lucide="languages" width="32" height="32"></i>
+                        <div>
+                            <h4>Hindi</h4>
+                            <p>Kshitij &amp; Kritika</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="graph-section">
+                    <h3>SYLLABUS VOLUME DISTRIBUTION</h3>
+                    
+                    <div class="chart-row">
+                        <div class="chart-label">Social Science</div>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
+                        <div class="chart-value">22 Ch</div>
+                    </div>
+                    
+                    <div class="chart-row">
+                        <div class="chart-label">English</div>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
+                        <div class="chart-value">22 Ch</div>
+                    </div>
+                    
+                    <div class="chart-row">
+                        <div class="chart-label">Mathematics</div>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 63%;"></div></div>
+                        <div class="chart-value">14 Ch</div>
+                    </div>
+
+                    <div class="chart-row">
+                        <div class="chart-label">Science</div>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 59%;"></div></div>
+                        <div class="chart-value">13 Ch</div>
+                    </div>
+
+                    <div class="chart-row">
+                        <div class="chart-label">Hindi</div>
+                        <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 65%;"></div></div>
+                        <div class="chart-value">15 Ch</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>V22 CHASSIS ENGINE</h3>
+                <p style="color: var(--text-muted); font-size: 15px; max-width: 400px;">Hyper-performance syllabus engine for Class 10. Data integrity verified. Constant render loop active.</p>
+            </div>
+            <div class="footer-status">
+                <div><span class="status-dot"></span>CORE: STABLE</div>
+                <div>DATABASE: FULL_SYNC</div>
+                <div>FRAME_RATE: 60FPS</div>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-family: &#39;JetBrains Mono&#39;, monospace; font-size: 12px; margin: 0;">© 2026 SyllabusENGINE_OS</p>
+                <p style="color: var(--accent-glow); font-size: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: bold;">System Deployment v22.2</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./Class 10th Syllabus_files/lucide.min.js.download"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Icons
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            
+            // --- 1. SEARCH LOGIC ---
+            const searchInput = document.getElementById('searchInput');
+            const modules = document.querySelectorAll('.subject-module');
+
+            if(searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase().trim();
+                    modules.forEach(module => {
+                        const textContent = module.innerText.toLowerCase();
+                        if (term === "") {
+                            module.classList.remove('hidden-by-search');
+                            module.classList.remove('expanded');
+                        } else if (textContent.includes(term)) {
+                            module.classList.remove('hidden-by-search');
+                            if (term.length > 2) module.classList.add('expanded');
+                        } else {
+                            module.classList.add('hidden-by-search');
+                            module.classList.remove('expanded');
+                        }
+                    });
+                });
+            }
+
+            // --- 2. ACCORDION EXPANSION ---
+            window.toggleModule = (module) => {
+                const isExpanded = module.classList.contains('expanded');
+                modules.forEach(m => {
+                    if (m !== module) m.classList.remove('expanded');
+                });
+                
+                module.classList.toggle('expanded');
+                
+                if (!isExpanded) {
+                    setTimeout(() => {
+                        // Hook into our custom targetY variable instead of standard smooth scroll
+                        const offset = module.getBoundingClientRect().top + window.scrollY - 80;
+                        targetY = Math.max(0, offset);
+                        startAnimation();
+                    }, 50);
+                }
+            };
+
+            // --- 3. PAGE SWITCHING LOGIC ---
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.app-page');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Update active nav button
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Switch Pages
+                    const targetId = item.getAttribute('data-target');
+                    pages.forEach(page => {
+                        page.classList.remove('active');
+                        if(page.id === targetId) {
+                            page.classList.add('active');
+                        }
+                    });
+
+                    // Reset Scroll position safely to prevent bouncing
+                    targetY = 0;
+                    currentY = 0;
+                    window.scrollTo(0, 0);
+                });
+            });
+        });
+
+        // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
+        let currentY = window.scrollY;
+        let targetY = window.scrollY;
+        let isAnimating = false;
+        const ease = 0.075; 
+
+        function animate() {
+            const distance = targetY - currentY;
+            currentY += distance * ease;
+            window.scrollTo(0, currentY);
+
+            if (Math.abs(targetY - currentY) < 0.1) {
+                isAnimating = false;
+                return;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function startAnimation() {
+            if (!isAnimating) {
+                isAnimating = true;
+                requestAnimationFrame(animate);
+            }
+        }
+
+        window.addEventListener('wheel', (e) => {
+            e.preventDefault(); 
+            targetY += e.deltaY;
+            targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+            startAnimation();
+        }, { passive: false });
+
+        window.addEventListener('keydown', (e) => {
+            let delta = 0;
+            const pageStep = window.innerHeight * 0.8;
+            switch (e.key) {
+                case 'ArrowDown': delta = 150; break;
+                case 'ArrowUp': delta = -150; break;
+                case 'PageDown': delta = pageStep; break;
+                case 'PageUp': delta = -pageStep; break;
+                case ' ': delta = pageStep; break;
+            }
+            if (delta !== 0) {
+                e.preventDefault();
+                targetY += delta;
+                targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+                startAnimation();
+            }
+        });
+
+        // Handle browser resize properly
+        window.addEventListener('resize', () => {
+            targetY = window.scrollY;
+            currentY = window.scrollY;
+        });
+    </script>
+
+</body></html>
