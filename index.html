@@ -964,6 +964,12 @@
             targetY = window.scrollY;
             currentY = window.scrollY;
         });
+
+		document.querySelector('#target').scrollIntoView({
+ 		  behavior: 'smooth',
+          block: 'start'
+         });
+		
     </script>
 
 </body></html>
