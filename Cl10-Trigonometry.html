@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NCERT Class 10 Trigonometry: Interactive Learning App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      background: #fff;
+      color: #222;
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+    body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1em 2em 1em;
+    }
+    header {
+      background: #f5f7fa;
+      border-bottom: 2px solid #e0e0e0;
+      padding: 2em 0 1em 0;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.2em;
+      margin: 0 0 0.2em 0;
+      color: #2a4d8f;
+    }
+    h2 {
+      color: #2a4d8f;
+      margin-top: 2em;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 0.2em;
+    }
+    h3 {
+      color: #1b3556;
+      margin-top: 1.5em;
+    }
+    .section {
+      margin-bottom: 2.5em;
+    }
+    .interactive-block {
+      background: #f8fafc;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1em;
+      margin: 1.5em 0;
+      overflow-x: auto;
+    }
+    .formula {
+      background: #eaf1fb;
+      border-left: 4px solid #2a4d8f;
+      padding: 0.5em 1em;
+      margin: 1em 0;
+      font-family: 'Consolas', 'Menlo', monospace;
+      font-size: 1.1em;
+      display: inline-block;
+    }
+    .value-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1em 0;
+      background: #f8fafc;
+    }
+    .value-table th, .value-table td {
+      border: 1px solid #bfc9d1;
+      padding: 0.5em 0.8em;
+      text-align: center;
+    }
+    .value-table th {
+      background: #eaf1fb;
+      color: #2a4d8f;
+    }
+    .note {
+      background: #fffbe7;
+      border-left: 4px solid #ffe066;
+      padding: 0.7em 1em;
+      margin: 1em 0;
+      font-size: 1em;
+      color: #7a6a00;
+    }
+    .example {
+      background: #e7fbe7;
+      border-left: 4px solid #6ac47e;
+      padding: 0.7em 1em;
+      margin: 1em 0;
+      font-size: 1em;
+      color: #1b5e20;
+    }
+    .exercise {
+      background: #f7e7fb;
+      border-left: 4px solid #a66ac4;
+      padding: 0.7em 1em;
+      margin: 1em 0;
+      font-size: 1em;
+      color: #4b1b5e;
+    }
+    .controls label {
+      margin-right: 1em;
+      font-weight: 500;
+    }
+    .slider {
+      width: 180px;
+      vertical-align: middle;
+    }
+    .input-num {
+      width: 3em;
+      font-size: 1em;
+      margin-left: 0.5em;
+      margin-right: 1em;
+    }
+    .graph-canvas {
+      width: 100%;
+      max-width: 480px;
+      height: 260px;
+      display: block;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #bfc9d1;
+      border-radius: 8px;
+    }
+    .svg-diagram {
+      display: block;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #bfc9d1;
+      border-radius: 8px;
+      max-width: 100%;
+      height: auto;
+    }
+    .legend {
+      font-size: 0.95em;
+      margin-top: 0.5em;
+      color: #555;
+    }
+    .responsive-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2em;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    @media (max-width: 700px) {
+      .responsive-flex {
+        flex-direction: column;
+        gap: 1em;
+      }
+      .graph-canvas, .svg-diagram {
+        max-width: 100%;
+      }
+    }
+    /* Accessibility: focus styles */
+    input:focus, button:focus, select:focus {
+      outline: 2px solid #2a4d8f;
+      outline-offset: 2px;
+    }
+    /* Custom scrollbar for code blocks and diagrams */
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: #f5f7fa;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #bfc9d1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NCERT Class 10 Trigonometry: Interactive Learning App</h1>
+    <p>
+      A comprehensive, interactive, and beginner-friendly guide to all concepts from the Class 10 NCERT Trigonometry chapters.<br>
+      <strong>Explore, manipulate, and visualize trigonometric concepts with dynamic diagrams, graphs, and animations.</strong>
+    </p>
+  </header>
+
+  <!-- Introduction -->
+  <section class="section" id="intro">
+    <h2>Introduction: What is Trigonometry?</h2>
+    <p>
+      <strong>Trigonometry</strong> is the branch of mathematics that studies the relationships between the sides and angles of triangles, especially right-angled triangles. The word "trigonometry" comes from the Greek words <em>trigonon</em> (triangle) and <em>metron</em> (measure). In Class 10, you will learn how trigonometry helps us solve real-world problems, such as finding the height of a building or the distance across a river, without directly measuring them.
+    </p>
+    <div class="note">
+      <strong>Why is trigonometry important?</strong> Trigonometry is widely used in engineering, architecture, navigation, astronomy, and many other fields. It forms the foundation for advanced mathematics and science studies.
+    </div>
+  </section>
+
+  <!-- Chapter 8: Introduction to Trigonometry -->
+  <section class="section" id="chapter8">
+    <h2>Chapter 8: Introduction to Trigonometry</h2>
+    <p>
+      This chapter introduces the basic concepts of trigonometry, focusing on right-angled triangles. You will learn about the six trigonometric ratios, their relationships, standard values, and fundamental identities. All explanations are aligned with the latest NCERT and CBSE curriculum for Class 10.
+    </p>
+
+    <!-- Section: Right-Angled Triangle and Sides -->
+    <h3>1. Understanding the Right-Angled Triangle</h3>
+    <p>
+      Consider a triangle <strong>ABC</strong> that is right-angled at <strong>B</strong>. The sides of the triangle are named based on the angle you are considering:
+    </p>
+    <ul>
+      <li><strong>Hypotenuse</strong>: The side opposite the right angle (the longest side).</li>
+      <li><strong>Opposite side</strong>: The side opposite to the angle in question.</li>
+      <li><strong>Adjacent side</strong>: The side next to the angle in question (but not the hypotenuse).</li>
+    </ul>
+    <div class="interactive-block" id="triangle-diagram-block">
+      <h4>Interactive Diagram: Labelled Right-Angled Triangle</h4>
+      <svg id="triangle-svg" class="svg-diagram" width="340" height="260" aria-label="Interactive right-angled triangle"></svg>
+      <div class="controls" style="margin-top:1em;">
+        <label for="angleA-slider">Angle A (<span id="angleA-value">30</span>°):</label>
+        <input type="range" id="angleA-slider" min="15" max="75" value="30" class="slider" aria-valuemin="15" aria-valuemax="75" aria-valuenow="30" aria-label="Angle A slider">
+        <span class="legend">Drag the slider to change angle A. Observe how the triangle and side labels update.</span>
+      </div>
+    </div>
+    <p>
+      In the diagram above, you can adjust angle A. Notice how the lengths of the sides change, but the <strong>ratios</strong> between the sides for a given angle remain the same. This is the key idea behind trigonometric ratios.
+    </p>
+
+    <!-- Section: Trigonometric Ratios -->
+    <h3>2. The Six Trigonometric Ratios</h3>
+    <p>
+      For any acute angle (less than 90°) in a right-angled triangle, we define six trigonometric ratios:
+    </p>
+    <div class="formula">
+      <strong>For angle A in triangle ABC (right-angled at B):</strong><br>
+      sin A = Opposite / Hypotenuse = BC / AC<br>
+      cos A = Adjacent / Hypotenuse = AB / AC<br>
+      tan A = Opposite / Adjacent = BC / AB<br>
+      cosec A = Hypotenuse / Opposite = AC / BC<br>
+      sec A = Hypotenuse / Adjacent = AC / AB<br>
+      cot A = Adjacent / Opposite = AB / BC
+    </div>
+    <p>
+      <strong>sin</strong>, <strong>cos</strong>, and <strong>tan</strong> are called the <strong>primary trigonometric ratios</strong>. The other three (<strong>cosec</strong>, <strong>sec</strong>, <strong>cot</strong>) are their reciprocals.
+    </p>
+    <div class="note">
+      <strong>Memory Tip:</strong> Use the phrase <strong>SOH-CAH-TOA</strong> to remember:<br>
+      <strong>S</strong>in = <strong>O</strong>pposite / <strong>H</strong>ypotenuse<br>
+      <strong>C</strong>os = <strong>A</strong>djacent / <strong>H</strong>ypotenuse<br>
+      <strong>T</strong>an = <strong>O</strong>pposite / <strong>A</strong>djacent
+    </div>
+
+    <!-- Section: Example Problem -->
+    <div class="example">
+      <strong>Example:</strong> In triangle ABC, right-angled at B, if AB = 24 cm and BC = 7 cm, find sin A and cos A.<br>
+      <em>Solution:</em> First, find the hypotenuse AC using the Pythagoras theorem:<br>
+      AC = √(AB² + BC²) = √(24² + 7²) = √(576 + 49) = √625 = 25 cm.<br>
+      sin A = BC / AC = 7 / 25<br>
+      cos A = AB / AC = 24 / 25
+    </div>
+
+    <!-- Section: Standard Values Table -->
+    <h3>3. Standard Values of Trigonometric Ratios</h3>
+    <p>
+      The values of trigonometric ratios for certain standard angles (0°, 30°, 45°, 60°, 90°) are frequently used in problems and proofs. Memorizing this table is essential.
+    </p>
+    <table class="value-table" aria-label="Standard values of trigonometric ratios">
+      <tr>
+        <th>Angle</th>
+        <th>sin</th>
+        <th>cos</th>
+        <th>tan</th>
+        <th>cosec</th>
+        <th>sec</th>
+        <th>cot</th>
+      </tr>
+      <tr>
+        <td>0°</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>Not defined</td>
+        <td>1</td>
+        <td>Not defined</td>
+      </tr>
+      <tr>
+        <td>30°</td>
+        <td>1/2</td>
+        <td>√3/2</td>
+        <td>1/√3</td>
+        <td>2</td>
+        <td>2/√3</td>
+        <td>√3</td>
+      </tr>
+      <tr>
+        <td>45°</td>
+        <td>1/√2</td>
+        <td>1/√2</td>
+        <td>1</td>
+        <td>√2</td>
+        <td>√2</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td>60°</td>
+        <td>√3/2</td>
+        <td>1/2</td>
+        <td>√3</td>
+        <td>2/√3</td>
+        <td>2</td>
+        <td>1/√3</td>
+      </tr>
+      <tr>
+        <td>90°</td>
+        <td>1</td>
+        <td>0</td>
+        <td>Not defined</td>
+        <td>1</td>
+        <td>Not defined</td>
+        <td>0</td>
+      </tr>
+    </table>
+    <p>
+      <strong>Notice:</strong> The values of sin increase from 0 to 1 as the angle increases from 0° to 90°, while the values of cos decrease from 1 to 0. The tan values can become very large or undefined (at 90°).
+    </p>
+
+    <!-- Section: Interactive Trigonometric Function Graphs -->
+    <div class="interactive-block" id="trig-graph-block">
+      <h4>Interactive Graph: Trigonometric Functions</h4>
+      <canvas id="trig-graph-canvas" class="graph-canvas" width="480" height="260" aria-label="Trigonometric function graph"></canvas>
+      <div class="controls" style="margin-top:1em;">
+        <label for="graph-angle-slider">Angle (<span id="graph-angle-value">0</span>°):</label>
+        <input type="range" id="graph-angle-slider" min="0" max="360" value="0" class="slider" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0" aria-label="Graph angle slider">
+        <span class="legend">Move the slider to see how sin, cos, and tan change as the angle increases.</span>
+      </div>
+    </div>
+    <p>
+      The graph above shows the variation of sin, cos, and tan as the angle changes from 0° to 360°. Notice the periodic nature of these functions and how tan becomes undefined at 90° and 270°.
+    </p>
+
+    <!-- Section: Trigonometric Identities -->
+    <h3>4. Fundamental Trigonometric Identities</h3>
+    <p>
+      Trigonometric identities are equations that are true for all values of the variables involved. The three most important identities in Class 10 are:
+    </p>
+    <div class="formula">
+      sin² θ + cos² θ = 1<br>
+      1 + tan² θ = sec² θ<br>
+      1 + cot² θ = cosec² θ
+    </div>
+    <p>
+      These identities are derived from the Pythagoras theorem and are used to simplify and solve trigonometric expressions and equations.
+    </p>
+    <div class="example">
+      <strong>Example:</strong> If sin θ = 3/5, find cos θ.<br>
+      <em>Solution:</em> Use the identity sin² θ + cos² θ = 1.<br>
+      (3/5)² + cos² θ = 1 ⇒ 9/25 + cos² θ = 1 ⇒ cos² θ = 1 - 9/25 = 16/25 ⇒ cos θ = 4/5
+    </div>
+
+    <!-- Section: Complementary Angles -->
+    <h3>5. Trigonometric Ratios of Complementary Angles</h3>
+    <p>
+      Two angles are called <strong>complementary</strong> if their sum is 90°. In a right-angled triangle, the two acute angles are always complementary. The following relationships hold:
+    </p>
+    <div class="formula">
+      sin (90° − A) = cos A<br>
+      cos (90° − A) = sin A<br>
+      tan (90° − A) = cot A<br>
+      cot (90° − A) = tan A<br>
+      sec (90° − A) = cosec A<br>
+      cosec (90° − A) = sec A
+    </div>
+    <div class="note">
+      <strong>Tip:</strong> The value of a trigonometric ratio for an angle is equal to the value of its complementary ratio for the complementary angle.
+    </div>
+
+    <!-- Section: Practice Exercises -->
+    <h3>6. Practice Exercises</h3>
+    <div class="exercise">
+      <strong>Exercise 1:</strong> In triangle ABC, right-angled at B, if AB = 9 cm and BC = 12 cm, find all six trigonometric ratios for angle A.<br>
+      <strong>Exercise 2:</strong> If tan θ = 3/4, find sin θ and cos θ.<br>
+      <strong>Exercise 3:</strong> Prove that 1 + tan² θ = sec² θ for θ = 45°.
+    </div>
+    <p>
+      <em>Try to solve these exercises yourself. Use the interactive triangle and the identities above to help you!</em>
+    </p>
+  </section>
+
+  <!-- Chapter 9: Some Applications of Trigonometry -->
+  <section class="section" id="chapter9">
+    <h2>Chapter 9: Some Applications of Trigonometry</h2>
+    <p>
+      This chapter focuses on how trigonometry is used to solve real-life problems involving heights and distances. You will learn about the concepts of <strong>angle of elevation</strong> and <strong>angle of depression</strong>, and how to apply trigonometric ratios to find unknown heights or distances without direct measurement.
+    </p>
+
+    <!-- Section: Angle of Elevation and Depression -->
+    <h3>1. Angle of Elevation and Angle of Depression</h3>
+    <div class="responsive-flex">
+      <div style="flex:1 1 320px; min-width:280px;">
+        <div class="interactive-block" id="angle-animation-block">
+          <h4>Animation: Angle of Elevation and Depression</h4>
+          <svg id="angle-animation-svg" class="svg-diagram" width="320" height="220" aria-label="Angle of elevation and depression animation"></svg>
+          <div class="controls" style="margin-top:1em;">
+            <label for="angle-elev-slider">Angle (<span id="angle-elev-value">30</span>°):</label>
+            <input type="range" id="angle-elev-slider" min="10" max="80" value="30" class="slider" aria-valuemin="10" aria-valuemax="80" aria-valuenow="30" aria-label="Angle of elevation slider">
+            <span class="legend">Drag to change the angle. Watch how the line of sight and triangle change.</span>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1 1 320px; min-width:280px;">
+        <p>
+          <strong>Angle of Elevation:</strong> The angle formed by the line of sight when looking up at an object above the horizontal level.<br>
+          <strong>Angle of Depression:</strong> The angle formed by the line of sight when looking down at an object below the horizontal level.
+        </p>
+        <div class="note">
+          <strong>In both cases,</strong> the horizontal line is always drawn from the observer's eye. The angle is measured upwards (elevation) or downwards (depression) from the horizontal.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Solving Heights and Distances Problems -->
+    <h3>2. Solving Heights and Distances Problems</h3>
+    <p>
+      To solve real-life problems using trigonometry, follow these steps:
+    </p>
+    <ol>
+      <li>Draw a diagram representing the situation.</li>
+      <li>Mark all known and unknown lengths and angles.</li>
+      <li>Identify the right-angled triangle(s) involved.</li>
+      <li>Choose the appropriate trigonometric ratio based on the given information.</li>
+      <li>Write the equation and solve for the unknown.</li>
+    </ol>
+    <div class="example">
+      <strong>Example:</strong> From a point 15 m away from the foot of a tower, the angle of elevation of the top of the tower is 60°. Find the height of the tower.<br>
+      <em>Solution:</em> Let the height of the tower be h m.<br>
+      tan 60° = h / 15 ⇒ √3 = h / 15 ⇒ h = 15 × √3 ≈ 25.98 m
+    </div>
+
+    <!-- Section: Interactive Problem Solver -->
+    <div class="interactive-block" id="height-distance-block">
+      <h4>Interactive Problem: Find the Height of a Tower</h4>
+      <div class="controls">
+        <label for="distance-input">Distance from tower (m):</label>
+        <input type="number" id="distance-input" class="input-num" value="20" min="1" max="100" aria-label="Distance from tower">
+        <label for="elevation-input">Angle of elevation (°):</label>
+        <input type="number" id="elevation-input" class="input-num" value="45" min="1" max="89" aria-label="Angle of elevation">
+        <button id="solve-btn" style="margin-left:1em;">Calculate Height</button>
+      </div>
+      <div id="height-result" style="margin-top:1em; font-weight:500;"></div>
+      <svg id="height-distance-svg" class="svg-diagram" width="320" height="220" aria-label="Height and distance triangle"></svg>
+    </div>
+    <p>
+      Enter the distance and angle of elevation, then click "Calculate Height" to see the solution and the triangle diagram.
+    </p>
+
+    <!-- Section: Practice Exercises -->
+    <h3>3. Practice Exercises</h3>
+    <div class="exercise">
+      <strong>Exercise 1:</strong> A ladder 10 m long leans against a wall, making an angle of 60° with the ground. How high does the ladder reach on the wall?<br>
+      <strong>Exercise 2:</strong> The angle of depression from the top of a building 20 m high to a point on the ground is 45°. Find the distance from the building to the point.<br>
+      <strong>Exercise 3:</strong> From a point on the ground, the angle of elevation of the top of a tree is 30°. If the point is 12 m from the base of the tree, find the height of the tree.
+    </div>
+    <p>
+      <em>Draw diagrams for each problem and use the interactive tools above to check your answers!</em>
+    </p>
+  </section>
+
+  <!-- Additional Resources and Exam Tips -->
+  <section class="section" id="resources">
+    <h2>Additional Resources and Exam Tips</h2>
+    <ul>
+      <li>
+        <strong>CBSE Exam Pattern:</strong> Trigonometry (Chapters 8 and 9) carries about 12 marks in the Class 10 board exam. Questions include definitions, value calculations, proofs, and real-life applications.
+      </li>
+      <li>
+        <strong>Common Mistakes:</strong> Always identify the correct sides relative to the angle, use the Pythagoras theorem to find missing sides, and check if your answer is reasonable (e.g., sin θ cannot be greater than 1).
+      </li>
+      <li>
+        <strong>Accessibility:</strong> All interactive elements are keyboard and screen-reader accessible. Use the Tab key to navigate and Enter/Space to activate controls.
+      </li>
+      <li>
+        <strong>Offline Usage:</strong> This app is a single HTML file. You can save and use it offline for revision and practice.
+      </li>
+    </ul>
+    <div class="note">
+      <strong>Tip:</strong> Practice drawing diagrams for every problem. Visualizing the triangle is the key to solving trigonometry questions confidently.
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="margin-top:2em; text-align:center; color:#888; font-size:0.95em;">
+    &copy; 2026 NCERT Trigonometry Interactive App. Educational use only. <br>
+    Developed for CBSE Class 10 students and teachers.
+  </footer>
+
+  <!-- JavaScript for Interactivity and Animations -->
+  <script>
+    // --- Utility Functions ---
+    function toRadians(deg) { return deg * Math.PI / 180; }
+    function toDegrees(rad) { return rad * 180 / Math.PI; }
+    function round2(x) { return Math.round(x * 100) / 100; }
+    function clamp(x, min, max) { return Math.max(min, Math.min(max, x)); }
+
+    // --- Interactive Triangle SVG ---
+    const triangleSVG = document.getElementById('triangle-svg');
+    const angleASlider = document.getElementById('angleA-slider');
+    const angleAValue = document.getElementById('angleA-value');
+    let angleA = parseInt(angleASlider.value);
+
+    function drawTriangleSVG(angleAdeg) {
+      // Fixed base AB = 140 px, draw triangle at (60,200), (200,200), C above
+      const base = 140, startX = 60, startY = 200;
+      const angleA_rad = toRadians(angleAdeg);
+      // Let AB = base, angle at A = angleA, angle at B = 90°
+      // So angle at C = 90 - angleA
+      // Use sine rule to get BC and AC
+      // Let BC = x, AC = y
+      // sin(angleA) = BC / AC => BC = AC * sin(angleA)
+      // sin(90-angleA) = AB / AC => AB = AC * cos(angleA)
+      // So AC = AB / cos(angleA)
+      const AC = base / Math.cos(angleA_rad);
+      const BC = AC * Math.sin(angleA_rad);
+
+      // Points: A (startX, startY), B (startX+base, startY), C (startX+base, startY-BC)
+      // But need to rotate C to correct position
+      // Let's compute C using vector math
+      // A at (startX, startY)
+      // B at (startX+base, startY)
+      // C at (startX+base - BC * cos(angleA), startY - BC * sin(angleA))
+      // But since triangle is right-angled at B, C is above B
+      // So C at (startX+base, startY - BC)
+      triangleSVG.innerHTML = '';
+      // Draw triangle
+      triangleSVG.innerHTML += `
+        <polygon points="${startX},${startY} ${startX+base},${startY} ${startX+base},${startY-BC}" fill="#eaf1fb" stroke="#2a4d8f" stroke-width="2"/>
+        <circle cx="${startX}" cy="${startY}" r="4" fill="#2a4d8f"/>
+        <circle cx="${startX+base}" cy="${startY}" r="4" fill="#2a4d8f"/>
+        <circle cx="${startX+base}" cy="${startY-BC}" r="4" fill="#2a4d8f"/>
+        <text x="${startX-10}" y="${startY+15}" font-size="1.1em" fill="#2a4d8f">A</text>
+        <text x="${startX+base+8}" y="${startY+15}" font-size="1.1em" fill="#2a4d8f">B</text>
+        <text x="${startX+base+8}" y="${startY-BC-8}" font-size="1.1em" fill="#2a4d8f">C</text>
+        <text x="${(startX+startX+base)/2-10}" y="${startY+25}" font-size="1em" fill="#1b3556">AB (Adjacent)</text>
+        <text x="${startX+base+10}" y="${startY-(BC/2)}" font-size="1em" fill="#1b3556">BC (Opposite)</text>
+        <text x="${startX+base-40}" y="${startY-BC/2-10}" font-size="1em" fill="#1b3556">AC (Hypotenuse)</text>
+        <text x="${startX+8}" y="${startY-8}" font-size="1em" fill="#a66ac4">Angle A: ${angleAdeg}°</text>
+        <text x="${startX+base-35}" y="${startY-8}" font-size="1em" fill="#a66ac4">Angle B: 90°</text>
+        <text x="${startX+base+10}" y="${startY-BC-8}" font-size="1em" fill="#a66ac4">Angle C: ${90-angleAdeg}°</text>
+      `;
+    }
+    angleASlider.addEventListener('input', function() {
+      angleA = parseInt(this.value);
+      angleAValue.textContent = angleA;
+      drawTriangleSVG(angleA);
+    });
+    // Initial draw
+    drawTriangleSVG(angleA);
+
+    // --- Trigonometric Function Graphs ---
+    const trigGraphCanvas = document.getElementById('trig-graph-canvas');
+    const graphAngleSlider = document.getElementById('graph-angle-slider');
+    const graphAngleValue = document.getElementById('graph-angle-value');
+    let graphAngle = parseInt(graphAngleSlider.value);
+
+    function drawTrigGraph(angleDeg) {
+      const ctx = trigGraphCanvas.getContext('2d');
+      ctx.clearRect(0, 0, trigGraphCanvas.width, trigGraphCanvas.height);
+      // Axes
+      ctx.strokeStyle = '#bfc9d1';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(40, 220); ctx.lineTo(440, 220); // x-axis
+      ctx.moveTo(40, 20); ctx.lineTo(40, 220); // y-axis
+      ctx.stroke();
+      // Labels
+      ctx.fillStyle = '#222';
+      ctx.font = '1em Segoe UI, Arial';
+      ctx.fillText('Angle (°)', 200, 245);
+      ctx.fillText('-1', 10, 220);
+      ctx.fillText('0', 15, 120);
+      ctx.fillText('1', 15, 30);
+      // Plot sin, cos, tan
+      function plotFunc(fn, color, label, yOffset=0) {
+        ctx.beginPath();
+        let started = false;
+        for (let x = 0; x <= 400; x++) {
+          let angle = (x / 400) * 360;
+          let rad = toRadians(angle);
+          let y;
+          if (label === 'tan') {
+            let cosv = Math.cos(rad);
+            if (Math.abs(cosv) < 0.01) { started = false; continue; }
+            y = 120 - 80 * Math.tan(rad);
+            if (y < 20 || y > 220) { started = false; continue; }
+          } else {
+            y = 120 - 80 * fn(rad);
+          }
+          if (!started) { ctx.moveTo(40 + x, y); started = true; }
+          else { ctx.lineTo(40 + x, y); }
+        }
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        // Draw label
+        ctx.fillStyle = color;
+        ctx.fillText(label, 440 - 40, 40 + yOffset);
+      }
+      plotFunc(Math.sin, '#2a4d8f', 'sin');
+      plotFunc(Math.cos, '#6ac47e', 'cos', 18);
+      plotFunc(Math.tan, '#a66ac4', 'tan', 36);
+      // Draw current angle marker
+      let x = 40 + (angleDeg / 360) * 400;
+      let siny = 120 - 80 * Math.sin(toRadians(angleDeg));
+      let cosy = 120 - 80 * Math.cos(toRadians(angleDeg));
+      let tany = 120 - 80 * Math.tan(toRadians(angleDeg));
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = '#888';
+      ctx.beginPath();
+      ctx.moveTo(x, 20); ctx.lineTo(x, 220);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Draw points
+      ctx.fillStyle = '#2a4d8f';
+      ctx.beginPath(); ctx.arc(x, siny, 5, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = '#6ac47e';
+      ctx.beginPath(); ctx.arc(x, cosy, 5, 0, 2 * Math.PI); ctx.fill();
+      if (tany >= 20 && tany <= 220 && Math.abs(Math.cos(toRadians(angleDeg))) > 0.01) {
+        ctx.fillStyle = '#a66ac4';
+        ctx.beginPath(); ctx.arc(x, tany, 5, 0, 2 * Math.PI); ctx.fill();
+      }
+      // Show values
+      ctx.fillStyle = '#222';
+      ctx.font = '1em Segoe UI, Arial';
+      ctx.fillText(`sin(${angleDeg}°) = ${round2(Math.sin(toRadians(angleDeg)))}`, 60, 30);
+      ctx.fillText(`cos(${angleDeg}°) = ${round2(Math.cos(toRadians(angleDeg)))}`, 60, 50);
+      if (Math.abs(Math.cos(toRadians(angleDeg))) > 0.01)
+        ctx.fillText(`tan(${angleDeg}°) = ${round2(Math.tan(toRadians(angleDeg)))}`, 60, 70);
+      else
+        ctx.fillText(`tan(${angleDeg}°) is undefined`, 60, 70);
+    }
+    graphAngleSlider.addEventListener('input', function() {
+      graphAngle = parseInt(this.value);
+      graphAngleValue.textContent = graphAngle;
+      drawTrigGraph(graphAngle);
+    });
+    // Initial draw
+    drawTrigGraph(graphAngle);
+
+    // --- Angle of Elevation/Depression Animation ---
+    const angleAnimSVG = document.getElementById('angle-animation-svg');
+    const angleElevSlider = document.getElementById('angle-elev-slider');
+    const angleElevValue = document.getElementById('angle-elev-value');
+    let angleElev = parseInt(angleElevSlider.value);
+
+    function drawAngleAnimation(angleDeg) {
+      // Draw ground, observer, object, line of sight
+      angleAnimSVG.innerHTML = '';
+      // Ground
+      angleAnimSVG.innerHTML += `<rect x="20" y="180" width="280" height="20" fill="#eaf1fb"/>`;
+      // Observer
+      angleAnimSVG.innerHTML += `<circle cx="60" cy="180" r="10" fill="#6ac47e"/><text x="45" y="175" font-size="1em" fill="#2a4d8f">Observer</text>`;
+      // Object (tower)
+      angleAnimSVG.innerHTML += `<rect x="240" y="100" width="20" height="80" fill="#2a4d8f"/><text x="230" y="95" font-size="1em" fill="#2a4d8f">Object</text>`;
+      // Line of sight
+      let x1 = 70, y1 = 180;
+      let x2 = 250, y2 = 180 - 80 * Math.tan(toRadians(angleDeg));
+      if (y2 < 40) y2 = 40;
+      angleAnimSVG.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#a66ac4" stroke-width="3" marker-end="url(#arrowhead)"/>`;
+      // Arrowhead marker
+      angleAnimSVG.innerHTML += `<defs><marker id="arrowhead" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto" markerUnits="strokeWidth"><polygon points="0,0 8,4 0,8" fill="#a66ac4"/></marker></defs>`;
+      // Horizontal line
+      angleAnimSVG.innerHTML += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y1}" stroke="#bfc9d1" stroke-width="2"/>`;
+      // Angle arc
+      let arcRadius = 28;
+      let arcEndX = x1 + arcRadius * Math.cos(toRadians(-angleDeg));
+      let arcEndY = y1 + arcRadius * Math.sin(toRadians(-angleDeg));
+      angleAnimSVG.innerHTML += `<path d="M${x1+arcRadius},${y1} A${arcRadius},${arcRadius} 0 0,1 ${arcEndX},${arcEndY}" fill="none" stroke="#a66ac4" stroke-width="2"/>`;
+      // Angle label
+      angleAnimSVG.innerHTML += `<text x="${x1+arcRadius+5}" y="${y1-5}" font-size="1em" fill="#a66ac4">${angleDeg}°</text>`;
+      // Labels
+      angleAnimSVG.innerHTML += `<text x="${(x1+x2)/2-10}" y="${(y1+y2)/2-10}" font-size="1em" fill="#a66ac4">Line of sight</text>`;
+      angleAnimSVG.innerHTML += `<text x="${(x1+x2)/2-10}" y="${y1+18}" font-size="1em" fill="#1b3556">Horizontal</text>`;
+    }
+    angleElevSlider.addEventListener('input', function() {
+      angleElev = parseInt(this.value);
+      angleElevValue.textContent = angleElev;
+      drawAngleAnimation(angleElev);
+    });
+    // Initial draw
+    drawAngleAnimation(angleElev);
+
+    // --- Height and Distance Problem Solver ---
+    const distanceInput = document.getElementById('distance-input');
+    const elevationInput = document.getElementById('elevation-input');
+    const solveBtn = document.getElementById('solve-btn');
+    const heightResult = document.getElementById('height-result');
+    const heightDistSVG = document.getElementById('height-distance-svg');
+
+    function drawHeightDistanceSVG(distance, angleDeg, height) {
+      // Draw ground, tower, observer, triangle
+      heightDistSVG.innerHTML = '';
+      // Ground
+      heightDistSVG.innerHTML += `<rect x="20" y="180" width="280" height="20" fill="#eaf1fb"/>`;
+      // Observer
+      heightDistSVG.innerHTML += `<circle cx="60" cy="180" r="10" fill="#6ac47e"/><text x="45" y="175" font-size="1em" fill="#2a4d8f">Observer</text>`;
+      // Tower
+      let towerX = 60 + clamp(distance, 20, 200);
+      let towerHeight = clamp(height, 20, 120);
+      heightDistSVG.innerHTML += `<rect x="${towerX-10}" y="${180-towerHeight}" width="20" height="${towerHeight}" fill="#2a4d8f"/><text x="${towerX-20}" y="${180-towerHeight-5}" font-size="1em" fill="#2a4d8f">Tower</text>`;
+      // Triangle
+      heightDistSVG.innerHTML += `<polygon points="60,180 ${towerX},180 ${towerX},${180-towerHeight}" fill="#eaf1fb" stroke="#a66ac4" stroke-width="2"/>`;
+      // Labels
+      heightDistSVG.innerHTML += `<text x="${(60+towerX)/2-10}" y="195" font-size="1em" fill="#1b3556">Distance: ${distance} m</text>`;
+      heightDistSVG.innerHTML += `<text x="${towerX+12}" y="${180-towerHeight/2}" font-size="1em" fill="#1b3556">Height: ${round2(height)} m</text>`;
+      // Angle arc
+      let arcRadius = 28;
+      let arcEndX = 60 + arcRadius * Math.cos(toRadians(-angleDeg));
+      let arcEndY = 180 + arcRadius * Math.sin(toRadians(-angleDeg));
+      heightDistSVG.innerHTML += `<path d="M${60+arcRadius},180 A${arcRadius},${arcRadius} 0 0,1 ${arcEndX},${arcEndY}" fill="none" stroke="#a66ac4" stroke-width="2"/>`;
+      heightDistSVG.innerHTML += `<text x="${60+arcRadius+5}" y="${180-5}" font-size="1em" fill="#a66ac4">${angleDeg}°</text>`;
+    }
+    solveBtn.addEventListener('click', function() {
+      let distance = parseFloat(distanceInput.value);
+      let angleDeg = parseFloat(elevationInput.value);
+      if (isNaN(distance) || isNaN(angleDeg) || angleDeg <= 0 || angleDeg >= 90 || distance <= 0) {
+        heightResult.textContent = 'Please enter valid values.';
+        return;
+      }
+      let height = distance * Math.tan(toRadians(angleDeg));
+      heightResult.textContent = `Height of the tower = ${distance} × tan(${angleDeg}°) = ${round2(height)} m`;
+      drawHeightDistanceSVG(distance, angleDeg, height);
+    });
+    // Initial draw
+    drawHeightDistanceSVG(20, 45, 20 * Math.tan(toRadians(45)));
+    heightResult.textContent = `Height of the tower = 20 × tan(45°) = 20 m`;
+
+    // --- Accessibility: Keyboard support for sliders and buttons ---
+    // Already handled by default for input[type=range] and buttons
+
+    // --- End of Script ---
+  </script>
+</body>
+</html>
