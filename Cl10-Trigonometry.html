@@ -286,9 +286,72 @@
     </section>
   </main>
 
-  <footer>
-    &copy; 2026 NCERT Trigonometry Interactive App.
-  </footer>
+     <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>V22 CHASSIS ENGINE</h3>
+                <p style="color: var(--text-muted); font-size: 15px; max-width: 400px;">Hyper-performance syllabus engine for Class 10. Data integrity verified. Constant render loop active.</p>
+            </div>
+            <div class="footer-status">
+                <div><span class="status-dot"></span>CORE: STABLE</div>
+                <div>DATABASE: FULL_SYNC</div>
+                <div>FRAME_RATE: 60FPS</div>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-family: 'JetBrains Mono', monospace; font-size: 12px; margin: 0;">© 2026 SyllabusENGINE_OS</p>
+                <p style="color: var(--accent-glow); font-size: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: bold;">System Deployment v22.2</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Icons
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            
+            // --- 1. SEARCH LOGIC ---
+            const searchInput = document.getElementById('searchInput');
+            const modules = document.querySelectorAll('.subject-module');
+
+            if(searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase().trim();
+                    modules.forEach(module => {
+                        const textContent = module.innerText.toLowerCase();
+                        if (term === "") {
+                            module.classList.remove('hidden-by-search');
+                            module.classList.remove('expanded');
+                        } else if (textContent.includes(term)) {
+                            module.classList.remove('hidden-by-search');
+                            if (term.length > 2) module.classList.add('expanded');
+                        } else {
+                            module.classList.add('hidden-by-search');
+                            module.classList.remove('expanded');
+                        }
+                    });
+                });
+            }
+
+            // --- 2. ACCORDION EXPANSION ---
+            window.toggleModule = (module) => {
+                const isExpanded = module.classList.contains('expanded');
+                modules.forEach(m => {
+                    if (m !== module) m.classList.remove('expanded');
+                });
+                
+                module.classList.toggle('expanded');
+                
+                if (!isExpanded) {
+                    setTimeout(() => {
+                        const offset = module.getBoundingClientRect().top + window.scrollY - 80;
+                        targetY = Math.max(0, offset);
+                        startAnimation();
+                    }, 50);
+                }
+            };
+
+          </script>
 
   <script>
     // --- Page Switching Logic ---
