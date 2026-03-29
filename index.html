@@ -1026,7 +1026,8 @@
                 });
             });
         });
-
+	</script>
+	<script>
         // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
         let currentY = window.scrollY;
         let targetY = window.scrollY;
@@ -1081,6 +1082,22 @@
             targetY = window.scrollY;
             currentY = window.scrollY;
         });
+		function throttle(func, limit) {
+  let inThrottle;
+  return function() {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  }
+}
+
+window.addEventListener('scroll', throttle(() => {
+  console.log('Scroll event fired!');
+}, 100));
 
     </script>
 </body>
