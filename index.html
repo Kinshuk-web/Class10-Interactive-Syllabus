@@ -1072,30 +1072,30 @@ window.addEventListener('keydown', (e) => {
         case 'PageDown': delta = pageStep; break;
         case 'PageUp': delta = -pageStep; break;
         case ' ': delta = pageStep; break;
-    }
-    if (delta !== 0) {
-        e.preventDefault();
-        targetY += delta;
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        targetY = Math.max(0, Math.min(targetY, maxScroll));
-        startAnimation();
-    }
-});
+    		}
+  		  if (delta !== 0) {
+       		 e.preventDefault();
+       		 targetY += delta;
+       		 const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      		  targetY = Math.max(0, Math.min(targetY, maxScroll));
+      		  startAnimation();
+    		}
+		});
 
 // 3. CRITICAL: SYNC ON MANUAL SCROLL
 // This "turns off" the engine conflict if the user grabs the scrollbar
-window.addEventListener('scroll', () => {
-    if (!isAnimating) {
-        targetY = window.scrollY;
-        currentY = window.scrollY;
-    }
-}, { passive: true });
+		window.addEventListener('scroll', () => {
+  		  if (!isAnimating) {
+  		      targetY = window.scrollY;
+    		    currentY = window.scrollY;
+		    }
+  		}, { passive: true });
 
-// 4. RESIZE SYNC
-window.addEventListener('resize', () => {
-    targetY = window.scrollY;
-    currentY = window.scrollY;
-});
+		// 4. RESIZE SYNC
+		window.addEventListener('resize', () => {
+		    targetY = window.scrollY;
+    		currentY = window.scrollY;
+		});
     </script>
 </body>
 </html>
