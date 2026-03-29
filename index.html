@@ -9,7 +9,7 @@
 	<link rel="icon" type="image/x-icon" href="logo-small.png">
     <style>
 		html {
-  			scroll-behavior: smooth;
+  			scroll-behavior: auto !important;
 		}
         :root {
             --bg-base: #020203;
@@ -1021,64 +1021,61 @@
                             page.classList.add('active');
                         }
                     });
-
-                    // Reset Scroll position safely to prevent bouncing
-                    targetY = 0;
-                    currentY = 0;
-                    window.scrollTo(0, 0);
-                });
-            });
-        });
-	</script>
+</script>
 <script>
-const ease = 0.075;
-let currentY = window.scrollY;
-let targetY = window.scrollY;
-let isAnimating = false;
+	class SmoothScroll {
+  constructor(options = {}) {
+    this.targetY = window.scrollY;
+    this.currentY = window.scrollY;
+    this.easing = options.easing || 0.07; // Lower = smoother/slower
+    this.isRunning = false;
 
-function animate() {
-  const distance = targetY - currentY;
-  currentY += distance * ease;
-  window.scrollTo(0, currentY);
+    this.init();
+  }
 
-  if (Math.abs(distance) > 0.5) {
-    requestAnimationFrame(animate);
-  } else {
-    isAnimating = false;
+  init() {
+    // 'passive: false' allows us to take control of the scroll timing
+    window.addEventListener('wheel', (e) => this.onWheel(e), { passive: false });
+    this.animate();
+  }
+
+  onWheel(e) {
+    e.preventDefault(); // Prevents the jumpy default browser scroll
+    this.targetY += e.deltaY;
+    
+    // Clamp the target so we don't scroll into infinity
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    this.targetY = Math.max(0, Math.min(this.targetY, maxScroll));
+  }
+
+  animate() {
+    // The LERP formula: current + (target - current) * easing
+    // This creates the high-fps deceleration effect
+    const diff = this.targetY - this.currentY;
+    this.currentY += diff * this.easing;
+
+    window.scrollTo(0, this.currentY);
+
+    // Syncs with the monitor's refresh rate (60Hz, 120Hz, 144Hz+)
+    requestAnimationFrame(() => this.animate());
   }
 }
 
-function smoothScrollTo(y) {
-  targetY = y;
-  if (!isAnimating) {
-    isAnimating = true;
-    requestAnimationFrame(animate);
-  }
-}
-
-// Example: smooth scroll on PageDown key
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'PageDown') {
+// Initialize when the DOM is ready
+new SmoothScroll({ easing: 0.08 });
+	// Add this inside your SmoothScroll class or as a separate listener
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
     e.preventDefault();
-    smoothScrollTo(window.scrollY + window.innerHeight * 0.8);
-  }
-});
-
-// Throttled scroll listener for extra UI work
-window.addEventListener('scroll', throttle(() => {
-  console.log('Scroll event fired!');
-}, 100));
-
-function throttle(func, limit) {
-  let inThrottle;
-  return function() {
-    if (!inThrottle) {
-      func.apply(this, arguments);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+    const targetId = this.getAttribute('href');
+    const targetElement = document.querySelector(targetId);
+    
+    if (targetElement) {
+      // Set the smooth scroll target to the element's position
+      scroller.targetY = targetElement.offsetTop; 
     }
-  }
-}
+  });
+});
 </script>
 </body>
 </html>
