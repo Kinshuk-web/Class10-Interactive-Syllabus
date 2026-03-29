@@ -8,6 +8,9 @@
     <title>Class 10 | Hyper Performance Syllabus</title>
 	<link rel="icon" type="image/x-icon" href="logo-small.png">
     <style>
+		html {
+  			scroll-behavior: smooth;
+		}
         :root {
             --bg-base: #020203;
             --bg-surface: #0a0a0c;
@@ -1027,78 +1030,55 @@
             });
         });
 	</script>
-	<script>
-        // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
-        let currentY = window.scrollY;
-        let targetY = window.scrollY;
-        let isAnimating = false;
-        const ease = 0.075; 
+<script>
+const ease = 0.075;
+let currentY = window.scrollY;
+let targetY = window.scrollY;
+let isAnimating = false;
 
-        function animate() {
-            const distance = targetY - currentY;
-            currentY += distance * ease;
-            window.scrollTo(0, currentY);
+function animate() {
+  const distance = targetY - currentY;
+  currentY += distance * ease;
+  window.scrollTo(0, currentY);
 
-            if (Math.abs(targetY - currentY) < 0.1) {
-                isAnimating = false;
-                return;
-            }
-            requestAnimationFrame(animate);
-        }
+  if (Math.abs(distance) > 0.5) {
+    requestAnimationFrame(animate);
+  } else {
+    isAnimating = false;
+  }
+}
 
-        function startAnimation() {
-            if (!isAnimating) {
-                isAnimating = true;
-                requestAnimationFrame(animate);
-            }
-        }
+function smoothScrollTo(y) {
+  targetY = y;
+  if (!isAnimating) {
+    isAnimating = true;
+    requestAnimationFrame(animate);
+  }
+}
 
-        window.addEventListener('wheel', (e) => {
-            e.preventDefault(); 
-            targetY += e.deltaY;
-            targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
-            startAnimation();
-        }, { passive: false });
+// Example: smooth scroll on PageDown key
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'PageDown') {
+    e.preventDefault();
+    smoothScrollTo(window.scrollY + window.innerHeight * 0.8);
+  }
+});
 
-        window.addEventListener('keydown', (e) => {
-            let delta = 0;
-            const pageStep = window.innerHeight * 0.8;
-            switch (e.key) {
-                case 'ArrowDown': delta = 150; break;
-                case 'ArrowUp': delta = -150; break;
-                case 'PageDown': delta = pageStep; break;
-                case 'PageUp': delta = -pageStep; break;
-                case ' ': delta = pageStep; break;
-            }
-            if (delta !== 0) {
-                e.preventDefault();
-                targetY += delta;
-                targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
-                startAnimation();
-            }
-        });
+// Throttled scroll listener for extra UI work
+window.addEventListener('scroll', throttle(() => {
+  console.log('Scroll event fired!');
+}, 100));
 
-        window.addEventListener('resize', () => {
-            targetY = window.scrollY;
-            currentY = window.scrollY;
-        });
-		function throttle(func, limit) {
+function throttle(func, limit) {
   let inThrottle;
   return function() {
-    const args = arguments;
-    const context = this;
     if (!inThrottle) {
-      func.apply(context, args);
+      func.apply(this, arguments);
       inThrottle = true;
       setTimeout(() => inThrottle = false, limit);
     }
   }
 }
-
-window.addEventListener('scroll', throttle(() => {
-  console.log('Scroll event fired!');
-}, 100));
-
-    </script>
+</script>
 </body>
 </html>
