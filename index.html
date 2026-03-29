@@ -1030,7 +1030,7 @@
         let currentY = window.scrollY;
         let targetY = window.scrollY;
         let isAnimating = false;
-        const ease = 0.075; 
+        const ease = 0.1; 
 
         function animate() {
             const distance = targetY - currentY;
@@ -1046,7 +1046,7 @@
 
         function startAnimation() {
             if (!isAnimating) {
-                isAnimating = false;
+                isAnimating = true;
                 requestAnimationFrame(animate);
             }
         }
