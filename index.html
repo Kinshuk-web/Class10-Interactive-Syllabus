@@ -1023,59 +1023,99 @@
                     });
 </script>
 <script>
-	class SmoothScroll {
+class SmoothScroll {
   constructor(options = {}) {
     this.targetY = window.scrollY;
     this.currentY = window.scrollY;
-    this.easing = options.easing || 0.07; // Lower = smoother/slower
-    this.isRunning = false;
-
+    this.easing = options.easing || 0.05; 
+    this.lineStep = 220; 
+    
+    this.createProgressBar();
     this.init();
   }
 
+  createProgressBar() {
+    // Create the progress bar element via JS to keep HTML clean
+    this.progressBar = document.createElement('div');
+    Object.assign(this.progressBar.style, {
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      height: '4px', // Adjust thickness here
+      width: '0%',
+      backgroundColor: '#3498db', // Change your color here
+      zIndex: '9999',
+      transition: 'none' // We handle the "smoothness" in JS
+    });
+    document.body.appendChild(this.progressBar);
+  }
+
   init() {
-    // 'passive: false' allows us to take control of the scroll timing
     window.addEventListener('wheel', (e) => this.onWheel(e), { passive: false });
+    window.addEventListener('keydown', (e) => this.onKeydown(e));
     this.animate();
   }
 
   onWheel(e) {
-    e.preventDefault(); // Prevents the jumpy default browser scroll
-    this.targetY += e.deltaY;
-    
-    // Clamp the target so we don't scroll into infinity
+    if (e.target.closest('textarea, input, .scrollable-area')) return;
+    e.preventDefault();
+    const direction = e.deltaY > 0 ? 1 : -1;
+    this.targetY += direction * this.lineStep;
+    this.clamp();
+  }
+
+  onKeydown(e) {
+    const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable;
+    if (isInput) return;
+
+    const keys = {
+      'ArrowUp': -this.lineStep,
+      'ArrowDown': this.lineStep,
+      'PageUp': -window.innerHeight * 0.8,
+      'PageDown': window.innerHeight * 0.8,
+      ' ': e.shiftKey ? -window.innerHeight * 0.8 : window.innerHeight * 0.8,
+      'Home': -this.targetY,
+      'End': document.documentElement.scrollHeight
+    };
+
+    if (keys[e.key] !== undefined) {
+      e.preventDefault();
+      this.targetY += keys[e.key];
+      this.clamp();
+    }
+  }
+
+  clamp() {
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     this.targetY = Math.max(0, Math.min(this.targetY, maxScroll));
   }
 
+  updateProgressBar() {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (maxScroll <= 0) return;
+    
+    // Calculate percentage based on current interpolated position
+    const progress = (this.currentY / maxScroll) * 100;
+    this.progressBar.style.width = `${progress}%`;
+  }
+
   animate() {
-    // The LERP formula: current + (target - current) * easing
-    // This creates the high-fps deceleration effect
     const diff = this.targetY - this.currentY;
-    this.currentY += diff * this.easing;
+    
+    if (Math.abs(diff) > 0.05) {
+      this.currentY += diff * this.easing;
+      window.scrollTo(0, this.currentY);
+      this.updateProgressBar(); // Sync bar with the smooth movement
+    } else {
+      this.currentY = this.targetY;
+      this.updateProgressBar();
+    }
 
-    window.scrollTo(0, this.currentY);
-
-    // Syncs with the monitor's refresh rate (60Hz, 120Hz, 144Hz+)
     requestAnimationFrame(() => this.animate());
   }
 }
 
-// Initialize when the DOM is ready
-new SmoothScroll({ easing: 0.08 });
-	// Add this inside your SmoothScroll class or as a separate listener
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    e.preventDefault();
-    const targetId = this.getAttribute('href');
-    const targetElement = document.querySelector(targetId);
-    
-    if (targetElement) {
-      // Set the smooth scroll target to the element's position
-      scroller.targetY = targetElement.offsetTop; 
-    }
-  });
-});
+const scroller = new SmoothScroll();
 </script>
 </body>
 </html>
