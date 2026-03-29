@@ -8,9 +8,6 @@
     <title>Class 10 | Hyper Performance Syllabus</title>
 	<link rel="icon" type="image/x-icon" href="logo-small.png">
     <style>
-		html {
-  			scroll-behavior: auto !important;
-		}
         :root {
             --bg-base: #020203;
             --bg-surface: #0a0a0c;
@@ -64,7 +61,7 @@
             transition: background-color 0.3s ease, transform 0.3s ease-in-out;
             position: relative;
         }
-	
+
         .nav-item::after {
             content: "";
             position: absolute;
@@ -127,7 +124,7 @@
                 radial-gradient(circle at 90% 20%, rgba(0, 209, 255, 0.1) 0%, transparent 100%);
             animation: breathe 36s ease-in-out infinite;
         }
-        
+
         @keyframes breathe {
           0%, 100% {
             opacity: 0.5;
@@ -260,7 +257,7 @@
             border-color: var(--accent-primary);
             cursor: default;
         }
-        
+
         .module-header {
             padding: 40px;
             display: flex;
@@ -302,7 +299,7 @@
         }
 
         .chapter-list { list-style: none; padding: 0; margin: 0; }
-        
+
         .chapter-item {
             font-size: 1rem;
             color: var(--text-muted);
@@ -320,7 +317,7 @@
         }
 
         .chapter-item span { color: var(--accent-glow); opacity: 0.8; font-family: 'JetBrains Mono'; font-size: 13px; font-weight: bold; }
-        
+
         /* New rules for links inside the lists */
         .chapter-item a {
             color: inherit;
@@ -490,7 +487,7 @@
 <body>
 
     <div class="ambient-light"></div>
-    
+
     <div class="bg-shapes">
         <div class="shape" style="width: 500px; height: 500px; top: -10%; left: -150px; border-radius: 100px; transform: rotate(-15deg);"></div>
         <div class="shape" style="width: 350px; height: 700px; top: 30%; right: -100px; border-radius: 200px; transform: rotate(10deg);"></div>
@@ -511,7 +508,7 @@
     </nav>
 
     <div class="main-engine-wrap">
-        
+
         <div id="view-syllabus" class="app-page active">
             <header>
                 <div class="chassis-badge">V22 CHASSIS • MASTER_CORE • VERIFIED</div>
@@ -798,19 +795,19 @@
 
                 <div class="graph-section">
                     <h3>SYLLABUS VOLUME DISTRIBUTION</h3>
-                    
+
                     <div class="chart-row">
                         <div class="chart-label">Social Science</div>
                         <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
                         <div class="chart-value">22 Ch</div>
                     </div>
-                    
+
                     <div class="chart-row">
                         <div class="chart-label">English</div>
                         <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
                         <div class="chart-value">22 Ch</div>
                     </div>
-                    
+
                     <div class="chart-row">
                         <div class="chart-label">Mathematics</div>
                         <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 63%;"></div></div>
@@ -961,7 +958,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize Icons
             if (typeof lucide !== 'undefined') lucide.createIcons();
-            
+
             // --- 1. SEARCH LOGIC ---
             const searchInput = document.getElementById('searchInput');
             const modules = document.querySelectorAll('.subject-module');
@@ -991,9 +988,9 @@
                 modules.forEach(m => {
                     if (m !== module) m.classList.remove('expanded');
                 });
-                
+
                 module.classList.toggle('expanded');
-                
+
                 if (!isExpanded) {
                     setTimeout(() => {
                         const offset = module.getBoundingClientRect().top + window.scrollY - 80;
@@ -1022,99 +1019,69 @@
                         }
                     });
 
-class SmoothScroll {
-  constructor(options = {}) {
-    this.targetY = window.scrollY;
-    this.currentY = window.scrollY;
-    this.easing = options.easing || 0.05; 
-    this.lineStep = 220; 
-    
-    this.createProgressBar();
-    this.init();
-  }
+                    // Reset Scroll position safely to prevent bouncing
+                    targetY = 0;
+                    currentY = 0;
+                    window.scrollTo(0, 0);
+                });
+            });
+        });
 
-  createProgressBar() {
-    // Create the progress bar element via JS to keep HTML clean
-    this.progressBar = document.createElement('div');
-    Object.assign(this.progressBar.style, {
-      position: 'fixed',
-      top: '0',
-      left: '0',
-      height: '4px', // Adjust thickness here
-      width: '0%',
-      backgroundColor: '#3498db', // Change your color here
-      zIndex: '9999',
-      transition: 'none' // We handle the "smoothness" in JS
-    });
-    document.body.appendChild(this.progressBar);
-  }
+        // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
+        let currentY = window.scrollY;
+        let targetY = window.scrollY;
+        let isAnimating = false;
+        const ease = 0.075; 
 
-  init() {
-    window.addEventListener('wheel', (e) => this.onWheel(e), { passive: false });
-    window.addEventListener('keydown', (e) => this.onKeydown(e));
-    this.animate();
-  }
+        function animate() {
+            const distance = targetY - currentY;
+            currentY += distance * ease;
+            window.scrollTo(0, currentY);
 
-  onWheel(e) {
-    if (e.target.closest('textarea, input, .scrollable-area')) return;
-    e.preventDefault();
-    const direction = e.deltaY > 0 ? 1 : -1;
-    this.targetY += direction * this.lineStep;
-    this.clamp();
-  }
+            if (Math.abs(targetY - currentY) < 0.1) {
+                isAnimating = false;
+                return;
+            }
+            requestAnimationFrame(animate);
+        }
 
-  onKeydown(e) {
-    const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable;
-    if (isInput) return;
+        function startAnimation() {
+            if (!isAnimating) {
+                isAnimating = true;
+                requestAnimationFrame(animate);
+            }
+        }
 
-    const keys = {
-      'ArrowUp': -this.lineStep,
-      'ArrowDown': this.lineStep,
-      'PageUp': -window.innerHeight * 0.8,
-      'PageDown': window.innerHeight * 0.8,
-      ' ': e.shiftKey ? -window.innerHeight * 0.8 : window.innerHeight * 0.8,
-      'Home': -this.targetY,
-      'End': document.documentElement.scrollHeight
-    };
+        window.addEventListener('wheel', (e) => {
+            e.preventDefault(); 
+            targetY += e.deltaY;
+            targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+            startAnimation();
+        }, { passive: false });
 
-    if (keys[e.key] !== undefined) {
-      e.preventDefault();
-      this.targetY += keys[e.key];
-      this.clamp();
-    }
-  }
+        window.addEventListener('keydown', (e) => {
+            let delta = 0;
+            const pageStep = window.innerHeight * 0.8;
+            switch (e.key) {
+                case 'ArrowDown': delta = 150; break;
+                case 'ArrowUp': delta = -150; break;
+                case 'PageDown': delta = pageStep; break;
+                case 'PageUp': delta = -pageStep; break;
+                case ' ': delta = pageStep; break;
+            }
+            if (delta !== 0) {
+                e.preventDefault();
+                targetY += delta;
+                targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+                startAnimation();
+            }
+        });
 
-  clamp() {
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    this.targetY = Math.max(0, Math.min(this.targetY, maxScroll));
-  }
+        window.addEventListener('resize', () => {
+            targetY = window.scrollY;
+            currentY = window.scrollY;
+        });
 
-  updateProgressBar() {
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    if (maxScroll <= 0) return;
-    
-    // Calculate percentage based on current interpolated position
-    const progress = (this.currentY / maxScroll) * 100;
-    this.progressBar.style.width = `${progress}%`;
-  }
-
-  animate() {
-    const diff = this.targetY - this.currentY;
-    
-    if (Math.abs(diff) > 0.05) {
-      this.currentY += diff * this.easing;
-      window.scrollTo(0, this.currentY);
-      this.updateProgressBar(); // Sync bar with the smooth movement
-    } else {
-      this.currentY = this.targetY;
-      this.updateProgressBar();
-    }
-
-    requestAnimationFrame(() => this.animate());
-  }
-}
-
-const scroller = new SmoothScroll();
-</script>
+    </script>
 </body>
 </html>
