@@ -951,8 +951,14 @@
         </div>
     </footer>
 
-   <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
     <script>
+        // --- GLOBAL SCROLL VARIABLES ---
+        let currentY = window.scrollY;
+        let targetY = window.scrollY;
+        let isAnimating = false;
+        const ease = 0.075;
+
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize Icons
             if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -969,8 +975,7 @@
                     modules.forEach(module => {
                         const textContent = module.innerText.toLowerCase();
                         if (term === "") {
-                            module.classList.remove('hidden-by-search');
-                            module.classList.remove('expanded');
+                            module.classList.remove('hidden-by-search', 'expanded');
                         } else if (textContent.includes(term)) {
                             module.classList.remove('hidden-by-search');
                             if (term.length > 2) module.classList.add('expanded');
@@ -985,9 +990,7 @@
             // --- 2. ACCORDION EXPANSION ---
             window.toggleModule = (module) => {
                 const isExpanded = module.classList.contains('expanded');
-                modules.forEach(m => {
-                    if (m !== module) m.classList.remove('expanded');
-                });
+                modules.forEach(m => { if (m !== module) m.classList.remove('expanded'); });
                 
                 module.classList.toggle('expanded');
                 
@@ -1009,30 +1012,29 @@
                     const targetId = item.getAttribute('data-target');
                     pages.forEach(page => {
                         page.classList.remove('active');
-                        if(page.id === targetId) {
-                            page.classList.add('active');
-                        }
+                        if(page.id === targetId) page.classList.add('active');
                     });
 
+                    // RESET SCROLL ENGINE
                     targetY = 0;
                     currentY = 0;
+                    isAnimating = false; // Stop current loop
                     window.scrollTo(0, 0);
                 });
             });
         });
 
         // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
-        let currentY = window.scrollY;
-        let targetY = window.scrollY;
-        let isAnimating = false;
-        const ease = 0.075; 
-
         function animate() {
+            if (!isAnimating) return;
+
             const distance = targetY - currentY;
             currentY += distance * ease;
             window.scrollTo(0, currentY);
 
-            if (Math.abs(targetY - currentY) < 0.1) {
+            if (Math.abs(distance) < 0.1) {
+                currentY = targetY;
+                window.scrollTo(0, currentY);
                 isAnimating = false;
                 return;
             }
@@ -1046,6 +1048,7 @@
             }
         }
 
+        // Prevent default wheel behavior to let LERP take over
         window.addEventListener('wheel', (e) => {
             e.preventDefault(); 
             targetY += e.deltaY;
