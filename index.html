@@ -1061,6 +1061,7 @@
 
         window.addEventListener('keydown', (e) => {
             let delta = 0;
+			const lineStep = 150; // The 5-6 lines feel
             const pageStep = window.innerHeight * 0.8;
             switch (e.key) {
                 case 'ArrowDown': delta = 150; break;
