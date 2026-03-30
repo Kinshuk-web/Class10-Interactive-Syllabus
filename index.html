@@ -951,16 +951,18 @@
         </div>
     </footer>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+   <script src="https://unpkg.com/lucide@latest"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize Icons
             if (typeof lucide !== 'undefined') lucide.createIcons();
             
-            // --- 1. SEARCH LOGIC ---
-            const searchInput = document.getElementById('searchInput');
             const modules = document.querySelectorAll('.subject-module');
+            const navItems = document.querySelectorAll('.nav-item');
+            const pages = document.querySelectorAll('.app-page');
+            const searchInput = document.getElementById('searchInput');
 
+            // --- 1. SEARCH LOGIC ---
             if(searchInput) {
                 searchInput.addEventListener('input', (e) => {
                     const term = e.target.value.toLowerCase().trim();
@@ -979,8 +981,6 @@
                     });
                 });
             }
-    </script>
-    <script>
 
             // --- 2. ACCORDION EXPANSION ---
             window.toggleModule = (module) => {
@@ -999,20 +999,13 @@
                     }, 50);
                 }
             };
-    </script>
-    <script>
 
             // --- 3. PAGE SWITCHING LOGIC ---
-            const navItems = document.querySelectorAll('.nav-item');
-            const pages = document.querySelectorAll('.app-page');
-
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
-                    // Update active nav button
                     navItems.forEach(nav => nav.classList.remove('active'));
                     item.classList.add('active');
 
-                    // Switch Pages
                     const targetId = item.getAttribute('data-target');
                     pages.forEach(page => {
                         page.classList.remove('active');
@@ -1020,8 +1013,13 @@
                             page.classList.add('active');
                         }
                     });
-    </script>
-    <script>
+
+                    targetY = 0;
+                    currentY = 0;
+                    window.scrollTo(0, 0);
+                });
+            });
+        });
 
         // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
         let currentY = window.scrollY;
@@ -1077,7 +1075,6 @@
             targetY = window.scrollY;
             currentY = window.scrollY;
         });
-
     </script>
 </body>
 </html>
