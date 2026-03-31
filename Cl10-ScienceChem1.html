@@ -591,5 +591,62 @@
         initChart('exothermic');
 
     </script>
+      <script>
+            // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
+        let currentY = window.scrollY;
+        let targetY = window.scrollY;
+        let isAnimating = false;
+        const ease = 0.075; 
+
+        function animate() {
+            const distance = targetY - currentY;
+            currentY += distance * ease;
+            window.scrollTo(0, currentY);
+
+            if (Math.abs(targetY - currentY) < 0.1) {
+                isAnimating = false;
+                return;
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function startAnimation() {
+            if (!isAnimating) {
+                isAnimating = true;
+                requestAnimationFrame(animate);
+            }
+        }
+
+        window.addEventListener('wheel', (e) => {
+            e.preventDefault(); 
+            targetY += e.deltaY;
+            targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+            startAnimation();
+        }, { passive: false });
+
+        window.addEventListener('keydown', (e) => {
+            let delta = 0;
+            const pageStep = window.innerHeight * 0.8;
+            switch (e.key) {
+                case 'ArrowDown': delta = 150; break;
+                case 'ArrowUp': delta = -150; break;
+                case 'PageDown': delta = pageStep; break;
+                case 'PageUp': delta = -pageStep; break;
+                case ' ': delta = pageStep; break;
+            }
+            if (delta !== 0) {
+                e.preventDefault();
+                targetY += delta;
+                targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+                startAnimation();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            targetY = window.scrollY;
+            currentY = window.scrollY;
+        });
+
+  </script>
 </body>
 </html>
