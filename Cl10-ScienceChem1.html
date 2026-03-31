@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Study Guide: Chemical Reactions & Equations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9; 
+            color: #292524;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-highlight {
+            transition: all 0.3s ease;
+            background-color: #fef08a;
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-weight: bold;
+            color: #854d0e;
+        }
+
+        .nav-link {
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: #0d9488;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Chosen Palette: Warm Neutrals with Teal and Amber Accents -->
+    <!-- Application Structure Plan: The SPA is structured sequentially to mirror the learning path of a student: Introduction -> Core Concepts (Balancing) -> Categorization (Reaction Types) -> Real-world Application. A fixed navigation bar aids quick jumps. The "Balancing" section uses a step-by-step interactive revealer to teach the "Hit and Trial" method dynamically. The "Types" section uses a tabbed interface to prevent cognitive overload, allowing users to focus on one reaction type at a time. An interactive energy chart provides visual context for Exothermic/Endothermic concepts linked to these types. -->
+    <!-- Visualization & Content Choices: 1. Indicators: CSS Grid with emojis (No SVG) for visual association. 2. Balancing: Interactive JS text stepper to show conservation of mass in real-time. 3. Energy Profiles: Chart.js line chart to visualize Exothermic vs Endothermic reactions, fulfilling the chart requirement while deeply connecting to the combination/decomposition text. 4. Reaction Types: Tabbed UI for organized comparison. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 font-bold text-xl text-teal-800 tracking-tight">
+                    Chemical Rea<span class="text-amber-600">ctions and equations</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#basics" class="nav-link text-sm font-medium text-stone-600">Basics</a>
+                    <a href="#balancing" class="nav-link text-sm font-medium text-stone-600">Balancing</a>
+                    <a href="#types" class="nav-link text-sm font-medium text-stone-600">Reaction Types</a>
+                    <a href="#daily-life" class="nav-link text-sm font-medium text-stone-600">Daily Life</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-teal-900 text-white py-20 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">Chemical Reactions & Equations</h1>
+            <p class="text-lg md:text-xl text-teal-100 max-w-2xl mx-auto leading-relaxed">
+                Explore the fundamental processes where substances transform. Understand how bonds break and form, learn to balance the scales of mass, and discover how these reactions shape our daily world.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+
+        <section id="basics" class="scroll-mt-24">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">1. What is a Chemical Reaction?</h2>
+                <p class="text-stone-600 text-lg">
+                    This section introduces the core definition of a chemical change. A chemical reaction is a process where reactants transform into products with entirely different properties through the breaking and forming of bonds. Interact with the cards below to see the physical indicators that tell us a reaction has occurred.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow cursor-default group">
+                    <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">🧊</div>
+                    <h3 class="font-bold text-lg text-teal-800 mb-2">Change in State</h3>
+                    <p class="text-stone-500 text-sm">Solid to liquid, or liquid to gas.</p>
+                    <div class="mt-4 p-3 bg-stone-50 rounded text-sm text-stone-700 hidden group-hover:block">
+                        <strong>Example:</strong> Burning of wax.
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow cursor-default group">
+                    <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">🎨</div>
+                    <h3 class="font-bold text-lg text-teal-800 mb-2">Change in Colour</h3>
+                    <p class="text-stone-500 text-sm">Visual transformation of substances.</p>
+                    <div class="mt-4 p-3 bg-stone-50 rounded text-sm text-stone-700 hidden group-hover:block">
+                        <strong>Example:</strong> Rusting of iron (turns reddish-brown).
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow cursor-default group">
+                    <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">🫧</div>
+                    <h3 class="font-bold text-lg text-teal-800 mb-2">Evolution of Gas</h3>
+                    <p class="text-stone-500 text-sm">Bubbles or fumes released.</p>
+                    <div class="mt-4 p-3 bg-stone-50 rounded text-sm text-stone-700 hidden group-hover:block">
+                        <strong>Example:</strong> Zinc + dilute H<sub>2</sub>SO<sub>4</sub> releasing H<sub>2</sub> gas.
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow cursor-default group">
+                    <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">🌡️</div>
+                    <h3 class="font-bold text-lg text-teal-800 mb-2">Change in Temp.</h3>
+                    <p class="text-stone-500 text-sm">Environment gets hotter or colder.</p>
+                    <div class="mt-4 p-3 bg-stone-50 rounded text-sm text-stone-700 hidden group-hover:block">
+                        <strong>Example:</strong> Adding water to Quick Lime.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="balancing" class="scroll-mt-24 bg-teal-50 rounded-3xl p-8 md:p-12 border border-teal-100">
+            <div class="mb-8 max-w-3xl">
+                <h2 class="text-3xl font-bold text-teal-900 mb-4">2. Balancing Chemical Equations</h2>
+                <p class="text-teal-800 text-lg mb-4">
+                    Equations must be balanced to satisfy the <strong>Law of Conservation of Mass</strong> (mass can neither be created nor destroyed). The number of atoms of each element must be equal on both the Left Hand Side (Reactants) and Right Hand Side (Products). 
+                </p>
+                <p class="text-teal-700 text-sm italic">
+                    Use the interactive stepper below to practice the "Hit and Trial Method". Click "Next Step" to see how coefficients are adjusted to achieve balance.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-teal-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-xl text-stone-800">Interactive: Hit and Trial Method</h3>
+                    <span id="step-counter" class="bg-teal-100 text-teal-800 py-1 px-3 rounded-full text-sm font-semibold">Step 0 / 3</span>
+                </div>
+
+                <div class="text-center py-10 bg-stone-50 rounded-xl mb-6 font-mono text-2xl md:text-3xl text-stone-800 tracking-wide overflow-x-auto" id="equation-display">
+                    Fe + H<sub>2</sub>O &rarr; Fe<sub>3</sub>O<sub>4</sub> + H<sub>2</sub>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <div class="flex-1 w-full">
+                        <h4 class="font-semibold text-stone-700 mb-3 border-b pb-2">Atom Count</h4>
+                        <div class="grid grid-cols-2 gap-4 text-sm" id="atom-count-display">
+                            <div class="bg-red-50 p-3 rounded border border-red-100">
+                                <span class="block font-bold text-red-800 mb-1">LHS (Reactants)</span>
+                                <span id="lhs-count">Fe: 1, H: 2, O: 1</span>
+                            </div>
+                            <div class="bg-red-50 p-3 rounded border border-red-100">
+                                <span class="block font-bold text-red-800 mb-1">RHS (Products)</span>
+                                <span id="rhs-count">Fe: 3, H: 2, O: 4</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 w-full flex flex-col justify-center">
+                        <p id="step-explanation" class="text-stone-600 min-h-[4rem] text-lg mb-4">
+                            <strong>Skeletal Equation:</strong> Currently, the equation is unbalanced. Iron (Fe) and Oxygen (O) atoms are unequal.
+                        </p>
+                        <div class="flex gap-4">
+                            <button id="btn-prev" class="px-6 py-2 rounded-lg bg-stone-200 text-stone-700 font-medium hover:bg-stone-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled>Previous</button>
+                            <button id="btn-next" class="px-6 py-2 rounded-lg bg-teal-600 text-white font-medium hover:bg-teal-700 transition-colors flex-1 shadow-sm">Next Step</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="types" class="scroll-mt-24">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">3. Types of Chemical Reactions</h2>
+                <p class="text-stone-600 text-lg">
+                    Chemical reactions are classified based on how atoms rearrange. Explore the tabs below to understand the five main types of reactions, their formulas, and real-world examples. The interactive chart provides a visualization of energy changes during these reactions.
+                </p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <div class="w-full lg:w-1/3">
+                    <div class="flex flex-col space-y-2" id="tab-buttons">
+                        <button data-target="tab-combination" class="tab-btn w-full text-left px-5 py-4 rounded-xl font-semibold bg-white border-2 border-teal-600 text-teal-800 shadow-sm transition-all">A. Combination</button>
+                        <button data-target="tab-decomposition" class="tab-btn w-full text-left px-5 py-4 rounded-xl font-semibold bg-stone-50 border-2 border-transparent text-stone-600 hover:bg-stone-100 transition-all">B. Decomposition</button>
+                        <button data-target="tab-displacement" class="tab-btn w-full text-left px-5 py-4 rounded-xl font-semibold bg-stone-50 border-2 border-transparent text-stone-600 hover:bg-stone-100 transition-all">C. Displacement</button>
+                        <button data-target="tab-double" class="tab-btn w-full text-left px-5 py-4 rounded-xl font-semibold bg-stone-50 border-2 border-transparent text-stone-600 hover:bg-stone-100 transition-all">D. Double Displacement</button>
+                        <button data-target="tab-redox" class="tab-btn w-full text-left px-5 py-4 rounded-xl font-semibold bg-stone-50 border-2 border-transparent text-stone-600 hover:bg-stone-100 transition-all">E. Redox (Oxidation/Reduction)</button>
+                    </div>
+                </div>
+
+                <div class="w-full lg:w-2/3 bg-white rounded-2xl p-8 shadow-sm border border-stone-200 min-h-[400px]">
+                    <div id="tab-combination" class="tab-content active">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">➕</span>
+                            <h3 class="text-2xl font-bold text-teal-900">Combination Reaction</h3>
+                        </div>
+                        <p class="text-stone-700 mb-6 text-lg">Two or more reactants combine to form a single product.</p>
+                        <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6 font-mono text-center text-xl text-teal-800">
+                            A + B &rarr; AB
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-stone-800">Example 1: Burning of Coal</h4>
+                                <p class="font-mono text-stone-600 bg-stone-100 p-2 rounded inline-block mt-1">C(s) + O<sub>2</sub>(g) &rarr; CO<sub>2</sub>(g)</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-stone-800">Example 2: Slaked Lime Formation</h4>
+                                <p class="font-mono text-stone-600 bg-stone-100 p-2 rounded inline-block mt-1">CaO(s) + H<sub>2</sub>O(l) &rarr; Ca(OH)<sub>2</sub>(aq) + Heat</p>
+                                <p class="text-sm text-amber-600 mt-1 font-semibold">* This is an Exothermic reaction.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-decomposition" class="tab-content">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">⚡</span>
+                            <h3 class="text-2xl font-bold text-teal-900">Decomposition Reaction</h3>
+                        </div>
+                        <p class="text-stone-700 mb-6 text-lg">A single reactant breaks down into two or more simpler products. These require energy.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                                <h4 class="font-bold text-red-800 mb-2">1. Thermal (Heat)</h4>
+                                <p class="font-mono text-sm text-red-900">CaCO<sub>3</sub> &rarr; CaO + CO<sub>2</sub></p>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                <h4 class="font-bold text-blue-800 mb-2">2. Electrolytic (Electricity)</h4>
+                                <p class="font-mono text-sm text-blue-900">2H<sub>2</sub>O &rarr; 2H<sub>2</sub> + O<sub>2</sub></p>
+                            </div>
+                            <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
+                                <h4 class="font-bold text-amber-800 mb-2">3. Photolytic (Sunlight)</h4>
+                                <p class="font-mono text-sm text-amber-900">2AgCl(s) &rarr; 2Ag(s) + Cl<sub>2</sub>(g)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-displacement" class="tab-content">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">🔀</span>
+                            <h3 class="text-2xl font-bold text-teal-900">Displacement Reaction</h3>
+                        </div>
+                        <p class="text-stone-700 mb-6 text-lg">A more reactive element displaces a less reactive element from its salt solution.</p>
+                        <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6 font-mono text-center text-xl text-teal-800">
+                            A + BC &rarr; AC + B
+                        </div>
+                        <div class="bg-white border-2 border-blue-100 rounded-lg p-5">
+                            <h4 class="font-bold text-stone-800 mb-2">Example: Iron and Copper Sulphate</h4>
+                            <p class="font-mono text-stone-600 bg-stone-100 p-2 rounded block mb-3 text-center">Fe(s) + CuSO<sub>4</sub>(aq) &rarr; FeSO<sub>4</sub>(aq) + Cu(s)</p>
+                            <div class="flex items-center gap-4 text-sm justify-center">
+                                <div class="px-3 py-1 bg-blue-100 text-blue-800 rounded">Blue Solution</div>
+                                <span>&rarr; fades to &rarr;</span>
+                                <div class="px-3 py-1 bg-green-100 text-green-800 rounded">Light Green</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-double" class="tab-content">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">🔄</span>
+                            <h3 class="text-2xl font-bold text-teal-900">Double Displacement</h3>
+                        </div>
+                        <p class="text-stone-700 mb-6 text-lg">Exchange of ions between two compounds to form new compounds. Often results in a <strong>Precipitate</strong> (insoluble solid).</p>
+                        <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 mb-6 font-mono text-center text-xl text-teal-800">
+                            AB + CD &rarr; AD + CB
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-stone-800 mb-2">Example: Precipitation Reaction</h4>
+                            <p class="font-mono text-stone-600 bg-stone-100 p-3 rounded block text-center mb-2">Na<sub>2</sub>SO<sub>4</sub>(aq) + BaCl<sub>2</sub>(aq) &rarr; <span class="font-bold text-teal-700 border-b-2 border-teal-500">BaSO<sub>4</sub>(s)</span> + 2NaCl(aq)</p>
+                            <p class="text-center text-sm text-stone-500">BaSO<sub>4</sub> forms a white precipitate.</p>
+                        </div>
+                    </div>
+
+                    <div id="tab-redox" class="tab-content">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">⚖️</span>
+                            <h3 class="text-2xl font-bold text-teal-900">Redox (Oxidation & Reduction)</h3>
+                        </div>
+                        <p class="text-stone-700 mb-6 text-lg">Reactions where oxidation and reduction occur simultaneously.</p>
+                        
+                        <div class="flex flex-col md:flex-row gap-4 mb-6">
+                            <div class="flex-1 bg-red-50 p-4 rounded-lg border border-red-100">
+                                <h4 class="font-bold text-red-800 text-lg mb-1">Oxidation</h4>
+                                <ul class="list-disc list-inside text-sm text-red-900">
+                                    <li>Gain of Oxygen</li>
+                                    <li>Loss of Hydrogen</li>
+                                </ul>
+                            </div>
+                            <div class="flex-1 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                <h4 class="font-bold text-blue-800 text-lg mb-1">Reduction</h4>
+                                <ul class="list-disc list-inside text-sm text-blue-900">
+                                    <li>Loss of Oxygen</li>
+                                    <li>Gain of Hydrogen</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 text-center">
+                            <h4 class="font-bold text-stone-800 mb-2">Example Reaction</h4>
+                            <p class="font-mono text-xl text-stone-800 mb-3">CuO + H<sub>2</sub> <span class="text-sm">&rarr;(&Delta;)</span> Cu + H<sub>2</sub>O</p>
+                            <div class="text-sm flex justify-center gap-8">
+                                <div class="text-blue-700"><strong>Reduced:</strong> CuO &rarr; Cu</div>
+                                <div class="text-red-700"><strong>Oxidized:</strong> H<sub>2</sub> &rarr; H<sub>2</sub>O</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-white rounded-2xl p-8 shadow-sm border border-stone-200">
+                <div class="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-stone-800">Energy Profiles in Reactions</h3>
+                        <p class="text-stone-500 text-sm">Visualize Exothermic (Combination) vs Endothermic (Decomposition) reactions.</p>
+                    </div>
+                    <select id="energy-chart-select" class="p-2 border border-stone-300 rounded-lg bg-stone-50 text-stone-700 font-medium focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="exothermic">Exothermic Profile</option>
+                        <option value="endothermic">Endothermic Profile</option>
+                    </select>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="energyChart"></canvas>
+                </div>
+                <p id="chart-description" class="text-center text-sm text-stone-500 mt-4 italic">
+                    Exothermic reactions release energy (heat), resulting in products with lower energy than reactants.
+                </p>
+            </div>
+        </section>
+
+        <section id="daily-life" class="scroll-mt-24 mb-20">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-stone-800 mb-4">4. Effects of Oxidation in Daily Life</h2>
+                <p class="text-stone-600 text-lg">
+                    Oxidation isn't just a textbook concept; it continuously affects the materials and food around us. Explore the two primary real-world effects: Corrosion of metals and Rancidity in foods. Click on the cards to reveal prevention methods.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-200 flex flex-col">
+                    <div class="bg-amber-100 p-6 flex justify-between items-center cursor-pointer" onclick="document.getElementById('corrosion-details').classList.toggle('hidden')">
+                        <div>
+                            <h3 class="text-2xl font-bold text-amber-900 mb-1">Corrosion</h3>
+                            <p class="text-amber-800 text-sm">Gradual destruction of metals.</p>
+                        </div>
+                        <div class="text-2xl bg-white w-10 h-10 flex items-center justify-center rounded-full shadow-sm text-amber-600">🛡️</div>
+                    </div>
+                    <div class="p-6 flex-1">
+                        <ul class="space-y-3 text-stone-700 mb-6">
+                            <li><span class="w-3 h-3 inline-block rounded-full bg-red-800 mr-2"></span><strong>Iron:</strong> Rusting (Reddish-brown layer).</li>
+                            <li><span class="w-3 h-3 inline-block rounded-full bg-stone-800 mr-2"></span><strong>Silver:</strong> Black coating (Silver sulphide).</li>
+                            <li><span class="w-3 h-3 inline-block rounded-full bg-green-600 mr-2"></span><strong>Copper:</strong> Green coating (Copper carbonate).</li>
+                        </ul>
+                        <div id="corrosion-details" class="hidden animate-[fadeIn_0.3s_ease-in-out]">
+                            <h4 class="font-bold text-stone-800 border-t pt-4 mb-3">Prevention Methods</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-amber-50 text-amber-800 text-sm px-3 py-1 rounded-full border border-amber-200">Painting</span>
+                                <span class="bg-amber-50 text-amber-800 text-sm px-3 py-1 rounded-full border border-amber-200">Oiling/Greasing</span>
+                                <span class="bg-amber-50 text-amber-800 text-sm px-3 py-1 rounded-full border border-amber-200">Galvanization (Zinc coating)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-stone-50 p-3 text-center text-sm text-stone-500 font-medium border-t cursor-pointer hover:bg-stone-100 transition-colors" onclick="document.getElementById('corrosion-details').classList.toggle('hidden')">
+                        Click to toggle prevention methods
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-200 flex flex-col">
+                    <div class="bg-teal-100 p-6 flex justify-between items-center cursor-pointer" onclick="document.getElementById('rancidity-details').classList.toggle('hidden')">
+                        <div>
+                            <h3 class="text-2xl font-bold text-teal-900 mb-1">Rancidity</h3>
+                            <p class="text-teal-800 text-sm">Oxidation of fats and oils in food.</p>
+                        </div>
+                        <div class="text-2xl bg-white w-10 h-10 flex items-center justify-center rounded-full shadow-sm text-teal-600">🍟</div>
+                    </div>
+                    <div class="p-6 flex-1">
+                        <p class="text-stone-700 mb-6">
+                            When fats and oils are oxidized, they become rancid and their smell and taste change, making food unpalatable and spoiled.
+                        </p>
+                        <div id="rancidity-details" class="hidden animate-[fadeIn_0.3s_ease-in-out]">
+                            <h4 class="font-bold text-stone-800 border-t pt-4 mb-3">Prevention Methods</h4>
+                            <ul class="space-y-2 text-sm text-stone-700">
+                                <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div> Adding antioxidants.</li>
+                                <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div> Flushing packets with Nitrogen gas (inert).</li>
+                                <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div> Storing in airtight containers.</li>
+                                <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div> Refrigeration.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bg-stone-50 p-3 text-center text-sm text-stone-500 font-medium border-t cursor-pointer hover:bg-stone-100 transition-colors" onclick="document.getElementById('rancidity-details').classList.toggle('hidden')">
+                        Click to toggle prevention methods
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center text-sm">
+        <p>&copy; 2026 Interactive Study Guides. Based on Class 10 Science Syllabus.</p>
+    </footer>
+
+    <script>
+        const balancingSteps = [
+            {
+                equation: 'Fe + H<sub>2</sub>O &rarr; Fe<sub>3</sub>O<sub>4</sub> + H<sub>2</sub>',
+                lhs: 'Fe: 1, H: 2, <span class="text-red-600 font-bold">O: 1</span>',
+                rhs: 'Fe: 3, H: 2, <span class="text-red-600 font-bold">O: 4</span>',
+                lhsClass: 'bg-red-50 border-red-100',
+                rhsClass: 'bg-red-50 border-red-100',
+                text: '<strong>Skeletal Equation:</strong> Currently, the equation is unbalanced. Iron (Fe) and Oxygen (O) atoms are unequal. Let\'s start by balancing Oxygen, the element with maximum atoms.'
+            },
+            {
+                equation: 'Fe + <span class="step-highlight">4</span>H<sub>2</sub>O &rarr; Fe<sub>3</sub>O<sub>4</sub> + H<sub>2</sub>',
+                lhs: 'Fe: 1, <span class="text-red-600 font-bold">H: 8</span>, <span class="text-green-600 font-bold">O: 4</span>',
+                rhs: 'Fe: 3, <span class="text-red-600 font-bold">H: 2</span>, <span class="text-green-600 font-bold">O: 4</span>',
+                lhsClass: 'bg-amber-50 border-amber-100',
+                rhsClass: 'bg-amber-50 border-amber-100',
+                text: '<strong>Step 1: Balance Oxygen.</strong> We place coefficient "4" before H<sub>2</sub>O on LHS. Oxygen is balanced (4=4), but now Hydrogen is unbalanced (8 on LHS, 2 on RHS).'
+            },
+            {
+                equation: '<span class="step-highlight">3</span>Fe + 4H<sub>2</sub>O &rarr; Fe<sub>3</sub>O<sub>4</sub> + H<sub>2</sub>',
+                lhs: '<span class="text-green-600 font-bold">Fe: 3</span>, <span class="text-red-600 font-bold">H: 8</span>, O: 4',
+                rhs: '<span class="text-green-600 font-bold">Fe: 3</span>, <span class="text-red-600 font-bold">H: 2</span>, O: 4',
+                lhsClass: 'bg-amber-50 border-amber-100',
+                rhsClass: 'bg-amber-50 border-amber-100',
+                text: '<strong>Step 2: Balance Iron.</strong> We place coefficient "3" before Fe on LHS. Iron is balanced (3=3). Only Hydrogen remains unbalanced.'
+            },
+            {
+                equation: '3Fe(s) + 4H<sub>2</sub>O(g) &rarr; Fe<sub>3</sub>O<sub>4</sub>(s) + <span class="step-highlight">4</span>H<sub>2</sub>(g)',
+                lhs: '<span class="text-green-700 font-bold">Fe: 3, H: 8, O: 4</span>',
+                rhs: '<span class="text-green-700 font-bold">Fe: 3, H: 8, O: 4</span>',
+                lhsClass: 'bg-green-50 border-green-200',
+                rhsClass: 'bg-green-50 border-green-200',
+                text: '<strong>Step 3: Final Balance.</strong> Place "4" before H<sub>2</sub> on RHS. All atoms are equal. Physical states (s, g) are added to make it more informative. The equation is fully balanced!'
+            }
+        ];
+
+        let currentStep = 0;
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+        const stepCounter = document.getElementById('step-counter');
+        const equationDisplay = document.getElementById('equation-display');
+        const lhsCount = document.getElementById('lhs-count');
+        const rhsCount = document.getElementById('rhs-count');
+        const stepExplanation = document.getElementById('step-explanation');
+        
+        function updateBalancingUI() {
+            const data = balancingSteps[currentStep];
+            equationDisplay.innerHTML = data.equation;
+            lhsCount.innerHTML = data.lhs;
+            rhsCount.innerHTML = data.rhs;
+            stepExplanation.innerHTML = data.text;
+            stepCounter.innerText = `Step ${currentStep} / 3`;
+
+            lhsCount.parentElement.className = `p-3 rounded border transition-colors ${data.lhsClass}`;
+            rhsCount.parentElement.className = `p-3 rounded border transition-colors ${data.rhsClass}`;
+
+            btnPrev.disabled = currentStep === 0;
+            btnNext.disabled = currentStep === balancingSteps.length - 1;
+            
+            if(currentStep === balancingSteps.length - 1) {
+                btnNext.classList.replace('bg-teal-600', 'bg-stone-300');
+                btnNext.classList.replace('hover:bg-teal-700', 'hover:bg-stone-400');
+                btnNext.classList.replace('text-white', 'text-stone-500');
+            } else {
+                btnNext.classList.replace('bg-stone-300', 'bg-teal-600');
+                btnNext.classList.replace('hover:bg-stone-400', 'hover:bg-teal-700');
+                btnNext.classList.replace('text-stone-500', 'text-white');
+            }
+        }
+
+        btnPrev.addEventListener('click', () => {
+            if (currentStep > 0) { currentStep--; updateBalancingUI(); }
+        });
+
+        btnNext.addEventListener('click', () => {
+            if (currentStep < balancingSteps.length - 1) { currentStep++; updateBalancingUI(); }
+        });
+
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => {
+                    b.classList.remove('border-teal-600', 'text-teal-800', 'bg-white');
+                    b.classList.add('border-transparent', 'text-stone-600', 'bg-stone-50');
+                });
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                btn.classList.add('border-teal-600', 'text-teal-800', 'bg-white');
+                btn.classList.remove('border-transparent', 'text-stone-600', 'bg-stone-50');
+                document.getElementById(btn.dataset.target).classList.add('active');
+            });
+        });
+
+        const chartCtx = document.getElementById('energyChart').getContext('2d');
+        let energyChart;
+
+        const chartData = {
+            exothermic: {
+                labels: ['Reactants', 'Activation', 'Products'],
+                data: [60, 80, 20],
+                color: '#0d9488', 
+                desc: 'Exothermic reactions (like Combination/Burning) release energy, resulting in products with lower energy than reactants.'
+            },
+            endothermic: {
+                labels: ['Reactants', 'Activation', 'Products'],
+                data: [20, 90, 70],
+                color: '#ea580c', 
+                desc: 'Endothermic reactions (like Decomposition) absorb energy, resulting in products with higher energy than reactants.'
+            }
+        };
+
+        function initChart(type) {
+            if(energyChart) energyChart.destroy();
+            
+            const dataConfig = chartData[type];
+            document.getElementById('chart-description').innerText = dataConfig.desc;
+
+            energyChart = new Chart(chartCtx, {
+                type: 'line',
+                data: {
+                    labels: dataConfig.labels,
+                    datasets: [{
+                        label: 'Energy Level',
+                        data: dataConfig.data,
+                        borderColor: dataConfig.color,
+                        backgroundColor: dataConfig.color + '33',
+                        borderWidth: 3,
+                        pointBackgroundColor: dataConfig.color,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return 'Energy: ' + context.parsed.y + ' units'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Potential Energy' },
+                            ticks: { display: false } 
+                        },
+                        x: {
+                            title: { display: true, text: 'Progress of Reaction' },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('energy-chart-select').addEventListener('change', (e) => {
+            initChart(e.target.value);
+        });
+
+        updateBalancingUI();
+        initChart('exothermic');
+
+    </script>
+</body>
+</html>
