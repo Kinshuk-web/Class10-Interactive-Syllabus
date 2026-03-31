@@ -1055,7 +1055,7 @@
                 e.preventDefault(); 
                 
                 // Limit the scroll delta to roughly 5-6 lines (150px) per notch
-                const scrollStep = 150;
+                const scrollStep = 50;
                 const direction = e.deltaY > 0 ? 1 : -1;
                 
                 targetY += (direction * scrollStep);
@@ -1066,7 +1066,7 @@
 
             window.addEventListener('keydown', (e) => {
                 let delta = 0;
-                const lineStep = 150; 
+                const lineStep = 50; 
                 const pageStep = window.innerHeight * 0.8;
 
                 switch (e.key) {
