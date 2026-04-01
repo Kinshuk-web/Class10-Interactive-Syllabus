@@ -1026,70 +1026,90 @@
         });
 
         // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
-        function animate() {
-            if (!isAnimating || isTouchDevice) return;
+	let currentY = window.scrollY;
+    let targetY = window.scrollY;
+    let isAnimating = false;
+    
+    // --- TWEAK THESE FOR FEEL ---
+    const ease = 0.075;      // Lower = smoother/slower, Higher = snappier
+    const scrollStep = 160;  // Increased step for "faster" travel
+    // ----------------------------
 
-            const distance = targetY - currentY;
-            currentY += distance * ease;
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        
+        // ... (Keep your search and nav logic exactly as it was) ...
+    });
+
+    // --- ENHANCED SMOOTH SCROLL ---
+    function animate() {
+        if (!isAnimating || isTouchDevice) return;
+
+        const distance = targetY - currentY;
+        
+        // This creates the "break and scroll" feel by slowing down 
+        // more aggressively as it reaches the target
+        currentY += distance * ease;
+
+        window.scrollTo(0, currentY);
+
+        // Stop condition: using a slightly larger threshold (0.1) 
+        // helps prevent "infinite micro-scrolling"
+        if (Math.abs(distance) < 0.1) {
+            currentY = targetY;
             window.scrollTo(0, currentY);
+            isAnimating = false;
+            return;
+        }
+        requestAnimationFrame(animate);
+    }
 
-            if (Math.abs(distance) < 0.5) {
-                currentY = targetY;
-                window.scrollTo(0, currentY);
-                isAnimating = false;
-                return;
-            }
+    function startAnimation() {
+        if (!isAnimating && !isTouchDevice) {
+            isAnimating = true;
             requestAnimationFrame(animate);
         }
+    }
 
-        function startAnimation() {
-            if (!isAnimating && !isTouchDevice) {
-                isAnimating = true;
-                requestAnimationFrame(animate);
-            }
-        }
+    if (!isTouchDevice) {
+        window.addEventListener('wheel', (e) => {
+            e.preventDefault(); 
+            
+            // Normalize scroll delta across browsers and increase speed
+            const direction = e.deltaY > 0 ? 1 : -1;
+            
+            // Adding to targetY creates the "momentum" effect
+            targetY += (direction * scrollStep);
+            
+            // Clamp values so we don't scroll into the void
+            targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+            
+            startAnimation();
+        }, { passive: false });
 
-        // Only attach custom scroll listeners if NOT a touch device
-        if (!isTouchDevice) {
-            window.addEventListener('wheel', (e) => {
-                e.preventDefault(); 
-                
-                // Limit the scroll delta to roughly 5-6 lines (150px) per notch
-                const scrollStep = 100;
-                const direction = e.deltaY > 0 ? 1 : -1;
-                
-                targetY += (direction * scrollStep);
+        // Smooth Keyboard Support
+        window.addEventListener('keydown', (e) => {
+            let delta = 0;
+            if (e.key === 'ArrowDown') delta = scrollStep;
+            else if (e.key === 'ArrowUp') delta = -scrollStep;
+            else if (e.key === 'PageDown' || e.key === ' ') delta = window.innerHeight * 0.9;
+            else if (e.key === 'PageUp') delta = -window.innerHeight * 0.9;
+
+            if (delta !== 0) {
+                e.preventDefault();
+                targetY += delta;
                 targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
-                
                 startAnimation();
-            }, { passive: false });
-
-            window.addEventListener('keydown', (e) => {
-                let delta = 0;
-                const lineStep = 100; 
-                const pageStep = window.innerHeight * 0.8;
-
-                switch (e.key) {
-                    case 'ArrowDown': delta = lineStep; break;
-                    case 'ArrowUp': delta = -lineStep; break;
-                    case 'PageDown': delta = pageStep; break;
-                    case 'PageUp': delta = -pageStep; break;
-                    case ' ': delta = pageStep; break;
-                }
-
-                if (delta !== 0) {
-                    e.preventDefault();
-                    targetY += delta;
-                    targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
-                    startAnimation();
-                }
-            });
-        }
-
-        window.addEventListener('resize', () => {
-            targetY = window.scrollY;
-            currentY = window.scrollY;
+            }
         });
-    </script>
+    }
+
+    window.addEventListener('resize', () => {
+        targetY = window.scrollY;
+        currentY = window.scrollY;
+    });
+</script>
 </body>
 </html>
