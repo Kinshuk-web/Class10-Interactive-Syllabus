@@ -954,109 +954,428 @@
         </div>
     </footer>
 
+arations
+Conversation with Gemini
+You said
 <script src="https://unpkg.com/lucide@latest"></script>
+
 <script>
+
         // --- GLOBAL SCROLL VARIABLES ---
+
         let currentY = window.scrollY;
+
         let targetY = window.scrollY;
+
         let isAnimating = false;
+
         const ease = 0.1; // Slightly increased for better responsiveness
+
         
+
         // Check if device is touchscreen
+
         const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
+
+
         document.addEventListener('DOMContentLoaded', () => {
+
             if (typeof lucide !== 'undefined') lucide.createIcons();
+
             
+
             const modules = document.querySelectorAll('.subject-module');
+
             const navItems = document.querySelectorAll('.nav-item');
+
             const pages = document.querySelectorAll('.app-page');
+
             const searchInput = document.getElementById('searchInput');
 
+
+
             // --- 1. SEARCH LOGIC ---
+
             if(searchInput) {
+
                 searchInput.addEventListener('input', (e) => {
+
                     const term = e.target.value.toLowerCase().trim();
+
                     modules.forEach(module => {
+
                         const textContent = module.innerText.toLowerCase();
+
                         if (term === "") {
+
                             module.classList.remove('hidden-by-search', 'expanded');
+
                         } else if (textContent.includes(term)) {
+
                             module.classList.remove('hidden-by-search');
+
                             if (term.length > 2) module.classList.add('expanded');
+
                         } else {
+
                             module.classList.add('hidden-by-search', 'expanded');
+
                         }
+
                     });
+
                 });
+
             }
 
+
+
             // --- 2. ACCORDION EXPANSION ---
+
             window.toggleModule = (module) => {
+
                 const isExpanded = module.classList.contains('expanded');
+
                 modules.forEach(m => { if (m !== module) m.classList.remove('expanded'); });
+
                 module.classList.toggle('expanded');
+
                 
+
                 if (!isExpanded && !isTouchDevice) {
+
                     setTimeout(() => {
+
                         const offset = module.getBoundingClientRect().top + window.scrollY - 80;
+
                         targetY = Math.max(0, offset);
+
                         startAnimation();
+
                     }, 50);
+
                 }
+
             };
 
+
+
             // --- 3. PAGE SWITCHING ---
+
             navItems.forEach(item => {
+
                 item.addEventListener('click', () => {
+
                     navItems.forEach(nav => nav.classList.remove('active'));
+
                     item.classList.add('active');
+
                     const targetId = item.getAttribute('data-target');
+
                     pages.forEach(page => {
+
                         page.classList.remove('active');
+
                         if(page.id === targetId) page.classList.add('active');
+
                     });
 
+
+
                     targetY = 0;
+
                     currentY = 0;
+
                     isAnimating = false;
+
                     window.scrollTo(0, 0);
+
                 });
+
             });
+
         });
 
+
+
         // --- 4. ULTRA SMOOTH SCROLL (LERP) ---
-	let currentY = window.scrollY;
+
+let currentY = window.scrollY;
+
     let targetY = window.scrollY;
+
     let isAnimating = false;
+
     
+
     // --- TWEAK THESE FOR FEEL ---
+
     const ease = 0.075;      // Lower = smoother/slower, Higher = snappier
+
     const scrollStep = 160;  // Increased step for "faster" travel
+
     // ----------------------------
+
+
 
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        
+
+        // ... (Keep your search and nav logic exactly as it was) ...
+
+    });
+
+
+
+    // --- ENHANCED SMOOTH SCROLL ---
+
+    function animate() {
+
+        if (!isAnimating || isTouchDevice) return;
+
+
+
+        const distance = targetY - currentY;
+
+        
+
+        // This creates the "break and scroll" feel by slowing down 
+
+        // more aggressively as it reaches the target
+
+        currentY += distance * ease;
+
+
+
+        window.scrollTo(0, currentY);
+
+
+
+        // Stop condition: using a slightly larger threshold (0.1) 
+
+        // helps prevent "infinite micro-scrolling"
+
+        if (Math.abs(distance) < 0.1) {
+
+            currentY = targetY;
+
+            window.scrollTo(0, currentY);
+
+            isAnimating = false;
+
+            return;
+
+        }
+
+        requestAnimationFrame(animate);
+
+    }
+
+
+
+    function startAnimation() {
+
+        if (!isAnimating && !isTouchDevice) {
+
+            isAnimating = true;
+
+            requestAnimationFrame(animate);
+
+        }
+
+    }
+
+
+
+    if (!isTouchDevice) {
+
+        window.addEventListener('wheel', (e) => {
+
+            e.preventDefault(); 
+
+            
+
+            // Normalize scroll delta across browsers and increase speed
+
+            const direction = e.deltaY > 0 ? 1 : -1;
+
+            
+
+            // Adding to targetY creates the "momentum" effect
+
+            targetY += (direction * scrollStep);
+
+            
+
+            // Clamp values so we don't scroll into the void
+
+            targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+
+            
+
+            startAnimation();
+
+        }, { passive: false });
+
+
+
+        // Smooth Keyboard Support
+
+        window.addEventListener('keydown', (e) => {
+
+            let delta = 0;
+
+            if (e.key === 'ArrowDown') delta = scrollStep;
+
+            else if (e.key === 'ArrowUp') delta = -scrollStep;
+
+            else if (e.key === 'PageDown' || e.key === ' ') delta = window.innerHeight * 0.9;
+
+            else if (e.key === 'PageUp') delta = -window.innerHeight * 0.9;
+
+
+
+            if (delta !== 0) {
+
+                e.preventDefault();
+
+                targetY += delta;
+
+                targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
+
+                startAnimation();
+
+            }
+
+        });
+
+    }
+
+
+
+    window.addEventListener('resize', () => {
+
+        targetY = window.scrollY;
+
+        currentY = window.scrollY;
+
+    });
+
+</script> what is the problem with this code
+
+Gemini said
+The primary problem with this code is a Syntax Error caused by re-declaring variables that already exist in the same scope. Specifically, you have declared let currentY, let targetY, let isAnimating, and const ease twice within the same <script> block.
+
+In JavaScript, let and const do not allow re-declaration in the same scope. This will throw an Uncaught SyntaxError: Identifier 'currentY' has already been declared and prevent the entire script from running.
+
+Here is a breakdown of the issues and how to fix them:
+
+1. Duplicate Declarations
+You have a block of variables at the top of the script, and then another block of the same variables (with slightly different values) in the middle.
+
+The Fix: Remove the second set of declarations. If you want to use the updated values (like ease = 0.075), update the values at the very top.
+
+2. Redundant DOMContentLoaded Listeners
+You have two document.addEventListener('DOMContentLoaded', ...) blocks. While this technically works in JavaScript, it makes the code hard to maintain and leads to logic being split across two places.
+
+The Fix: Merge the logic into a single initialization function.
+
+3. Logic Conflicts in toggleModule
+In your first block, toggleModule calls startAnimation(). However, startAnimation and the animate function aren't defined until much later in the script. While function declarations are hoisted, function expressions (like const animate = () => {}) are not.
+
+Cleaned & Optimized Version
+I have merged the two versions, kept your "Ultra Smooth" settings, and fixed the syntax errors:
+
+JavaScript
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    // --- 1. GLOBAL VARIABLES (Declared only once) ---
+    let currentY = window.scrollY;
+    let targetY = window.scrollY;
+    let isAnimating = false;
+    
+    const ease = 0.075;      // Smoothness
+    const scrollStep = 160;  // Speed
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    // --- 2. INITIALIZATION ---
     document.addEventListener('DOMContentLoaded', () => {
         if (typeof lucide !== 'undefined') lucide.createIcons();
         
-        // ... (Keep your search and nav logic exactly as it was) ...
+        const modules = document.querySelectorAll('.subject-module');
+        const navItems = document.querySelectorAll('.nav-item');
+        const pages = document.querySelectorAll('.app-page');
+        const searchInput = document.getElementById('searchInput');
+
+        // Search Logic
+        if(searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+                modules.forEach(module => {
+                    const textContent = module.innerText.toLowerCase();
+                    if (term === "") {
+                        module.classList.remove('hidden-by-search', 'expanded');
+                    } else if (textContent.includes(term)) {
+                        module.classList.remove('hidden-by-search');
+                        if (term.length > 2) module.classList.add('expanded');
+                    } else {
+                        module.classList.add('hidden-by-search', 'expanded');
+                    }
+                });
+            });
+        }
+
+        // Accordion Expansion
+        window.toggleModule = (module) => {
+            const isExpanded = module.classList.contains('expanded');
+            modules.forEach(m => { if (m !== module) m.classList.remove('expanded'); });
+            module.classList.toggle('expanded');
+            
+            if (!isExpanded && !isTouchDevice) {
+                setTimeout(() => {
+                    const offset = module.getBoundingClientRect().top + window.scrollY - 80;
+                    targetY = Math.max(0, offset);
+                    startAnimation();
+                }, 50);
+            }
+        };
+
+        // Page Switching
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                const targetId = item.getAttribute('data-target');
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                    if(page.id === targetId) page.classList.add('active');
+                });
+
+                targetY = 0;
+                currentY = 0;
+                isAnimating = false;
+                window.scrollTo(0, 0);
+            });
+        });
     });
 
-    // --- ENHANCED SMOOTH SCROLL ---
+    // --- 3. SMOOTH SCROLL ENGINE ---
     function animate() {
         if (!isAnimating || isTouchDevice) return;
 
         const distance = targetY - currentY;
-        
-        // This creates the "break and scroll" feel by slowing down 
-        // more aggressively as it reaches the target
         currentY += distance * ease;
 
         window.scrollTo(0, currentY);
 
-        // Stop condition: using a slightly larger threshold (0.1) 
-        // helps prevent "infinite micro-scrolling"
         if (Math.abs(distance) < 0.1) {
             currentY = targetY;
             window.scrollTo(0, currentY);
@@ -1073,23 +1392,16 @@
         }
     }
 
+    // --- 4. INPUT LISTENERS ---
     if (!isTouchDevice) {
         window.addEventListener('wheel', (e) => {
             e.preventDefault(); 
-            
-            // Normalize scroll delta across browsers and increase speed
             const direction = e.deltaY > 0 ? 1 : -1;
-            
-            // Adding to targetY creates the "momentum" effect
             targetY += (direction * scrollStep);
-            
-            // Clamp values so we don't scroll into the void
             targetY = Math.max(0, Math.min(targetY, document.documentElement.scrollHeight - window.innerHeight));
-            
             startAnimation();
         }, { passive: false });
 
-        // Smooth Keyboard Support
         window.addEventListener('keydown', (e) => {
             let delta = 0;
             if (e.key === 'ArrowDown') delta = scrollStep;
