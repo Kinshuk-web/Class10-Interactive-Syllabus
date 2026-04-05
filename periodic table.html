@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive | Periodic Table</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --grid-cols: 18;
+            --grid-rows: 10;
+            --sm: 1; /* Expansion multiplier for desktop */
+        }
+
+        /* Increase expansion size significantly for mobile devices */
+        @media (max-width: 768px) {
+            :root {
+                --sm: 2.2;
+            }
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(2, 6, 23, 0.8); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #06b6d4, #1d4ed8); border-radius: 5px; border: 2px solid #020617; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #22d3ee, #2563eb); }
+
+        /* Ambient Lighting */
+        .ambient-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #001d3d 0%, #020617 100%);
+            z-index: -2;
+        }
+        .ambient-glow {
+            position: fixed; width: 150vw; height: 150vh; top: -25vh; left: -25vw;
+            background: radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
+                        radial-gradient(circle at 70% 70%, rgba(29, 78, 216, 0.12) 0%, transparent 40%);
+            animation: rotateGlow 25s ease-in-out infinite alternate;
+            z-index: -1; pointer-events: none;
+            transform: translateZ(0); /* Hardware acceleration */
+            will-change: transform;
+        }
+
+        @keyframes rotateGlow {
+            0% { transform: rotate(-10deg) scale(1) translateZ(0); }
+            50% { transform: rotate(10deg) scale(1.1) translateZ(0); }
+            100% { transform: rotate(-5deg) scale(1) translateZ(0); }
+        }
+
+        #periodic-table {
+            display: grid;
+            grid-template-columns: repeat(var(--grid-cols), 1fr);
+            gap: 0.3vw;
+            padding: 2vw 0;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .element-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            z-index: 1;
+        }
+
+        /* Elevate the wrapper on hover/lock */
+        .element-wrapper.active,
+        .element-wrapper:hover {
+            z-index: 50;
+        }
+
+        /* The dynamic card bounding box */
+        .element-card {
+            container-type: inline-size;
+            position: absolute;
+            top: 0; bottom: 0; left: 0; right: 0;
+            background: #0f172a; /* Replaced laggy backdrop-filter with solid hex color */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            /* Targeted transitions instead of 'all' for better performance */
+            transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        left 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        right 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.4s ease, border-width 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            z-index: 1;
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.02);
+            overflow: hidden;
+            transform: translateZ(0); /* Force GPU rendering */
+        }
+
+        /* Shape Transformation Logic! */
+        .element-wrapper.active .element-card,
+        .element-wrapper:hover .element-card {
+            top: calc(var(--t) * var(--sm) * 1%);
+            bottom: calc(var(--b) * var(--sm) * 1%);
+            left: calc(var(--l) * var(--sm) * 1%);
+            right: calc(var(--r) * var(--sm) * 1%);
+            
+            background: #0b1120;
+            border-width: 2px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8), inset 0 0 30px -15px currentColor;
+            border-color: currentColor;
+            z-index: 50;
+        }
+
+        /* Dim others */
+        #periodic-table.has-active .element-wrapper:not(.active) .element-card {
+            opacity: 0.2;
+            filter: grayscale(0.8);
+            transition: opacity 0.4s ease, filter 0.4s ease;
+        }
+
+        /* Inner Content Structure */
+        .top-content {
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .element-wrapper.active .top-content,
+        .element-wrapper:hover .top-content {
+            height: 40%; /* Shrink to top portion */
+            transform: scale(0.9);
+        }
+
+        /* Typography */
+        .num { position: absolute; top: 8cqw; left: 8cqw; font-size: 16cqw; font-weight: bold; opacity: 0.8; line-height: 1; }
+        .mass { position: absolute; top: 8cqw; right: 8cqw; font-size: 11cqw; font-family: monospace; opacity: 0.5; line-height: 1; }
+        .sym { font-size: 42cqw; font-weight: bold; line-height: 1; margin-top: 4cqw; }
+        .name { font-size: 12cqw; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8; margin-top: 4cqw; }
+
+        /* The newly revealed detailed data */
+        .expanded-data {
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 60%;
+            padding: 0 6cqw 6cqw 6cqw;
+            opacity: 0;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .element-wrapper.active .expanded-data,
+        .element-wrapper:hover .expanded-data {
+            opacity: 1;
+            transition-delay: 0.15s;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5cqw;
+            margin-bottom: 4cqw;
+        }
+
+        .data-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 2cqw;
+            padding: 2.5cqw;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .data-label { font-size: 6.5cqw; text-transform: uppercase; opacity: 0.5; letter-spacing: 0.05em; }
+        .data-val { font-size: 11cqw; font-weight: 600; margin-top: 0.5cqw; }
+
+        .cat-name {
+            text-align: center; font-size: 7.5cqw; text-transform: uppercase; letter-spacing: 0.1em;
+            border-top: 1px solid currentColor; padding-top: 3cqw; opacity: 0.9;
+        }
+
+        /* Atom Animation Layer */
+        .atom {
+            position: absolute; top: 50%; left: 50%;
+            width: 70%; aspect-ratio: 1;
+            transform: translate(-50%, -50%) scale(0) rotateX(60deg);
+            opacity: 0; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; 
+            pointer-events: none;
+        }
+
+        .element-wrapper.active .atom,
+        .element-wrapper:hover .atom {
+            top: 20%;
+            transform: translate(-50%, -50%) scale(1) rotateX(0deg);
+            opacity: 0.15;
+        }
+
+        .nucleus {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 4px; height: 4px; background: currentColor; border-radius: 50%;
+            box-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+        }
+        .orbit {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border: 1px solid currentColor; border-radius: 50%; transform-style: preserve-3d;
+        }
+        
+        /* Stop animations when not hovered to save massive CPU/GPU processing */
+        .orbit-1 { animation: spin1 3s linear infinite paused; }
+        .orbit-2 { animation: spin2 4s linear infinite paused; }
+        .orbit-3 { animation: spin3 5s linear infinite paused; }
+
+        /* Only play the atomic spin on the active/hovered element */
+        .element-wrapper.active .orbit,
+        .element-wrapper:hover .orbit {
+            animation-play-state: running;
+        }
+
+        @keyframes spin1 { 100% { transform: rotateX(75deg) rotateY(0deg) rotateZ(360deg); } }
+        @keyframes spin2 { 100% { transform: rotateX(75deg) rotateY(60deg) rotateZ(360deg); } }
+        @keyframes spin3 { 100% { transform: rotateX(75deg) rotateY(120deg) rotateZ(360deg); } }
+
+        .electron {
+            position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
+            width: 3px; height: 3px; background: #fff; border-radius: 50%; box-shadow: 0 0 6px #fff;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-white">
+
+    <div class="ambient-bg"></div>
+    <div class="ambient-glow"></div>
+
+    <div class="min-h-screen flex flex-col items-center w-full px-4 md:px-12 py-12">
+        <header class="w-full max-w-7xl text-center relative z-10 mb-10 pt-4">
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                PERIODIC TABLE
+            </h1>
+            <p class="text-cyan-200 mt-4 text-sm md:text-base tracking-[0.3em] uppercase opacity-80">
+                Interactive Elements Explorer
+            </p>
+            <p class="text-slate-400 mt-2 text-xs md:text-sm tracking-wide opacity-60">
+                Hover to expand data. Click to lock view.
+            </p>
+        </header>
+
+        <main class="w-full max-w-[1600px] pb-24 relative z-10 px-1 md:px-4">
+            <div id="periodic-table"></div>
+            <div id="legend" class="mt-12 flex flex-wrap justify-center gap-x-4 gap-y-3 text-[9px] md:text-xs font-semibold tracking-wider uppercase opacity-80 w-full"></div>
+        </main>
+    </div>
+
+    <script>
+        const elementsData = `1,H,Hydrogen,1.008,1,1,1|2,He,Helium,4.0026,2,1,18|3,Li,Lithium,6.94,3,2,1|4,Be,Beryllium,9.0122,4,2,2|5,B,Boron,10.81,5,2,13|6,C,Carbon,12.011,1,2,14|7,N,Nitrogen,14.007,1,2,15|8,O,Oxygen,15.999,1,2,16|9,F,Fluorine,18.998,6,2,17|10,Ne,Neon,20.180,2,2,18|11,Na,Sodium,22.990,3,3,1|12,Mg,Magnesium,24.305,4,3,2|13,Al,Aluminum,26.982,7,3,13|14,Si,Silicon,28.085,5,3,14|15,P,Phosphorus,30.974,1,3,15|16,S,Sulfur,32.06,1,3,16|17,Cl,Chlorine,35.45,6,3,17|18,Ar,Argon,39.948,2,3,18|19,K,Potassium,39.098,3,4,1|20,Ca,Calcium,40.078,4,4,2|21,Sc,Scandium,44.956,8,4,3|22,Ti,Titanium,47.867,8,4,4|23,V,Vanadium,50.942,8,4,5|24,Cr,Chromium,51.996,8,4,6|25,Mn,Manganese,54.938,8,4,7|26,Fe,Iron,55.845,8,4,8|27,Co,Cobalt,58.933,8,4,9|28,Ni,Nickel,58.693,8,4,10|29,Cu,Copper,63.546,8,4,11|30,Zn,Zinc,65.38,8,4,12|31,Ga,Gallium,69.723,7,4,13|32,Ge,Germanium,72.630,5,4,14|33,As,Arsenic,74.922,5,4,15|34,Se,Selenium,78.971,1,4,16|35,Br,Bromine,79.904,6,4,17|36,Kr,Krypton,83.798,2,4,18|37,Rb,Rubidium,85.468,3,5,1|38,Sr,Strontium,87.62,4,5,2|39,Y,Yttrium,88.906,8,5,3|40,Zr,Zirconium,91.224,8,5,4|41,Nb,Niobium,92.906,8,5,5|42,Mo,Molybdenum,95.95,8,5,6|43,Tc,Technetium,98,8,5,7|44,Ru,Ruthenium,101.07,8,5,8|45,Rh,Rhodium,102.91,8,5,9|46,Pd,Palladium,106.42,8,5,10|47,Ag,Silver,107.87,8,5,11|48,Cd,Cadmium,112.41,8,5,12|49,In,Indium,114.82,7,5,13|50,Sn,Tin,118.71,7,5,14|51,Sb,Antimony,121.76,5,5,15|52,Te,Tellurium,127.60,5,5,16|53,I,Iodine,126.90,6,5,17|54,Xe,Xenon,131.29,2,5,18|55,Cs,Cesium,132.91,3,6,1|56,Ba,Barium,137.33,4,6,2|57,La,Lanthanum,138.91,9,9,4|58,Ce,Cerium,140.12,9,9,5|59,Pr,Praseodymium,140.91,9,9,6|60,Nd,Neodymium,144.24,9,9,7|61,Pm,Promethium,145,9,9,8|62,Sm,Samarium,150.36,9,9,9|63,Eu,Europium,151.96,9,9,10|64,Gd,Gadolinium,157.25,9,9,11|65,Tb,Terbium,158.93,9,9,12|66,Dy,Dysprosium,162.50,9,9,13|67,Ho,Holmium,164.93,9,9,14|68,Er,Erbium,167.26,9,9,15|69,Tm,Thulium,168.93,9,9,16|70,Yb,Ytterbium,173.05,9,9,17|71,Lu,Lutetium,174.97,9,9,18|72,Hf,Hafnium,178.49,8,6,4|73,Ta,Tantalum,180.95,8,6,5|74,W,Tungsten,183.84,8,6,6|75,Re,Rhenium,186.21,8,6,7|76,Os,Osmium,190.23,8,6,8|77,Ir,Iridium,192.22,8,6,9|78,Pt,Platinum,195.08,8,6,10|79,Au,Gold,196.97,8,6,11|80,Hg,Mercury,200.59,8,6,12|81,Tl,Thallium,204.38,7,6,13|82,Pb,Lead,207.2,7,6,14|83,Bi,Bismuth,208.98,7,6,15|84,Po,Polonium,209,5,6,16|85,At,Astatine,210,6,6,17|86,Rn,Radon,222,2,6,18|87,Fr,Francium,223,3,7,1|88,Ra,Radium,226,4,7,2|89,Ac,Actinium,227,10,10,4|90,Th,Thorium,232.04,10,10,5|91,Pa,Protactinium,231.04,10,10,6|92,U,Uranium,238.03,10,10,7|93,Np,Neptunium,237,10,10,8|94,Pu,Plutonium,244,10,10,9|95,Am,Americium,243,10,10,10|96,Cm,Curium,247,10,10,11|97,Bk,Berkelium,247,10,10,12|98,Cf,Californium,251,10,10,13|99,Es,Einsteinium,252,10,10,14|100,Fm,Fermium,257,10,10,15|101,Md,Mendelevium,258,10,10,16|102,No,Nobelium,259,10,10,17|103,Lr,Lawrencium,266,10,10,18|104,Rf,Rutherfordium,267,8,7,4|105,Db,Dubnium,268,8,7,5|106,Sg,Seaborgium,269,8,7,6|107,Bh,Bohrium,270,8,7,7|108,Hs,Hassium,269,8,7,8|109,Mt,Meitnerium,278,8,7,9|110,Ds,Darmstadtium,281,8,7,10|111,Rg,Roentgenium,282,8,7,11|112,Cn,Copernicium,285,8,7,12|113,Nh,Nihonium,286,7,7,13|114,Fl,Flerovium,289,7,7,14|115,Mc,Moscovium,290,7,7,15|116,Lv,Livermorium,293,7,7,16|117,Ts,Tennessine,294,6,7,17|118,Og,Oganesson,294,2,7,18`;
+
+        const categories = {
+            1: { name: 'Reactive Nonmetal', color: '#22c55e' },
+            2: { name: 'Noble Gas', color: '#a855f7' },
+            3: { name: 'Alkali Metal', color: '#ef4444' },
+            4: { name: 'Alkaline Earth Metal', color: '#f97316' },
+            5: { name: 'Metalloid', color: '#eab308' },
+            6: { name: 'Halogen', color: '#06b6d4' },
+            7: { name: 'Post-Transition Metal', color: '#3b82f6' },
+            8: { name: 'Transition Metal', color: '#ec4899' },
+            9: { name: 'Lanthanide', color: '#8b5cf6' },
+            10: { name: 'Actinide', color: '#14b8a6' }
+        };
+
+        const grid = document.getElementById('periodic-table');
+        const legend = document.getElementById('legend');
+
+        Object.values(categories).forEach(cat => {
+            const legendItem = document.createElement('div');
+            legendItem.className = 'flex items-center gap-2 px-2 py-1 bg-slate-900/50 rounded border border-slate-800';
+            legendItem.innerHTML = `
+                <div class="w-3 h-3 rounded-full" style="background-color: ${cat.color}; box-shadow: 0 0 8px ${cat.color}80"></div>
+                <span style="color: ${cat.color}">${cat.name}</span>
+            `;
+            legend.appendChild(legendItem);
+        });
+
+        const elements = elementsData.split('|').map(e => {
+            const [num, sym, name, mass, cat, row, col] = e.split(',');
+            return { num, sym, name, mass, cat, row, col };
+        });
+
+        elements.forEach(el => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'element-wrapper';
+            wrapper.style.gridColumn = el.col;
+            wrapper.style.gridRow = el.row;
+
+            // Logic to ensure the expanded rectangular card stays within view bounds
+            let hLeft = -70, hRight = -70; // Expand left and right to grow width
+            if (el.col <= 2) { hLeft = -10; hRight = -130; }
+            if (el.col >= 17) { hLeft = -130; hRight = -10; }
+            if (el.col == 1) { hLeft = 0; hRight = -140; }
+            if (el.col == 18) { hLeft = -140; hRight = 0; }
+            
+            let hTop = -100, hBottom = -140; // Expand top and bottom to grow height (making it a rectangle)
+            if (el.row <= 2) { hTop = -20; hBottom = -220; }
+            if (el.row >= 6) { hTop = -200; hBottom = -40; }
+
+            // Easy-to-understand subatomic logic
+            const atomicNum = parseInt(el.num);
+            const protons = atomicNum;
+            const electrons = atomicNum; // Assuming neutral state
+            const neutrons = Math.round(parseFloat(el.mass)) - atomicNum;
+
+            // Basic, easy-to-understand valency logic 
+            let valency = "Varies";
+            const col = parseInt(el.col);
+            if (col === 1) valency = "1";
+            else if (col === 2) valency = "2";
+            else if (col === 13) valency = "3";
+            else if (col === 14) valency = "4";
+            else if (col === 15) valency = "3";
+            else if (col === 16) valency = "2";
+            else if (col === 17) valency = "1";
+            else if (col === 18) valency = "0";
+
+            const catInfo = categories[el.cat];
+
+            wrapper.innerHTML = `
+                <div class="element-card" style="--t: ${hTop}; --b: ${hBottom}; --l: ${hLeft}; --r: ${hRight}; color: ${catInfo.color};">
+                    
+                    <div class="atom">
+                        <div class="nucleus"></div>
+                        <div class="orbit orbit-1"><div class="electron"></div></div>
+                        <div class="orbit orbit-2"><div class="electron"></div></div>
+                        <div class="orbit orbit-3"><div class="electron"></div></div>
+                    </div>
+
+                    <div class="top-content">
+                        <span class="num">${el.num}</span>
+                        <span class="mass">${el.mass}</span>
+                        <h2 class="sym">${el.sym}</h2>
+                        <span class="name">${el.name}</span>
+                    </div>
+
+                    <div class="expanded-data">
+                        <div class="data-grid text-slate-100">
+                            <div class="data-box">
+                                <span class="data-label">Protons</span>
+                                <span class="data-val">${protons}</span>
+                            </div>
+                            <div class="data-box">
+                                <span class="data-label">Neutrons</span>
+                                <span class="data-val">${neutrons}</span>
+                            </div>
+                            <div class="data-box">
+                                <span class="data-label">Electrons</span>
+                                <span class="data-val">${electrons}</span>
+                            </div>
+                            <div class="data-box">
+                                <span class="data-label">Valency</span>
+                                <span class="data-val">${valency}</span>
+                            </div>
+                        </div>
+                        <div class="cat-name">${catInfo.name}</div>
+                    </div>
+
+                </div>
+            `;
+
+            wrapper.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (wrapper.classList.contains('active')) {
+                    wrapper.classList.remove('active');
+                    grid.classList.remove('has-active');
+                } else {
+                    document.querySelectorAll('.element-wrapper.active').forEach(w => w.classList.remove('active'));
+                    wrapper.classList.add('active');
+                    grid.classList.add('has-active');
+                }
+            });
+
+            grid.appendChild(wrapper);
+        });
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.element-wrapper.active').forEach(w => w.classList.remove('active'));
+            grid.classList.remove('has-active');
+        });
+    </script>
+</body>
+</html>
