@@ -76,6 +76,7 @@
             color: var(--accent-glow);
             background: rgba(0, 209, 255, 0.199);
             box-shadow: 0 0 18px rgba(0, 209, 255, 0.899);
+			animation: pulse-glow 1.5s infinite;
         }
         .nav-item:not(.active) {
             color: var(--accent-glow);
@@ -89,6 +90,16 @@
             box-shadow: 0 0 18px rgba(4, 180, 255, 0.899);
             transform: scale(1.1);
         }
+		@keyframes pulse-glow {
+ 		 0% {
+		    box-shadow: 0 0 10px 2px rgba(52, 152, 219, 0.6);
+		    }
+	 	 50% {
+   		 	box-shadow: 0 0 25px 8px rgba(52, 152, 219, 0.9);
+  			}
+ 	 	100% {
+    		box-shadow: 0 0 10px 2px rgba(52, 152, 219, 0.6);
+ 			 }
 
         /* Page Management */
         .app-page {
