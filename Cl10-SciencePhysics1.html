@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light: Reflection & Refraction</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React and ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800 selection:bg-teal-200">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // --- INTERACTIVE RAY DIAGRAM COMPONENT ---
+        const RayDiagram = ({ type, data }) => {
+            const { ox, oy, ix, iy, paths, infObj, infImg } = data;
+            
+            const exL = (x1, y1, x2, y2) => x1 === x2 ? y1 : y1 + ((y2 - y1) / (x2 - x1)) * (0 - x1);
+            const exR = (x1, y1, x2, y2) => x1 === x2 ? y1 : y1 + ((y2 - y1) / (x2 - x1)) * (400 - x1);
+
+            const renderRays = () => {
+                if (paths) return paths.map((p, i) => (
+                    <path key={i} d={p.d} stroke={p.dashed ? '#fb923c' : '#fbbf24'} strokeWidth="2.5" strokeDasharray={p.dashed ? "6,6" : "none"} fill="none" />
+                ));
+                
+                let dynamicPaths = [];
+                dynamicPaths.push({ d: `M ${ox} ${oy} L 200 ${oy}`, dashed: false });
+                
+                if (type === 'concave-mirror') {
+                   if (ix > 200) { 
+                      dynamicPaths.push({ d: `M 200 ${oy} L 0 ${exL(ix, iy, 200, oy)}`, dashed: false });
+                      dynamicPaths.push({ d: `M 200 ${oy} L ${ix} ${iy}`, dashed: true });
+                   } else { 
+                      dynamicPaths.push({ d: `M 200 ${oy} L 0 ${exL(200, oy, ix, iy)}`, dashed: false });
+                   }
+                } else if (type === 'convex-mirror') {
+                   dynamicPaths.push({ d: `M 200 ${oy} L 0 ${exL(ix, iy, 200, oy)}`, dashed: false });
+                   dynamicPaths.push({ d: `M 200 ${oy} L ${ix} ${iy}`, dashed: true });
+                } else if (type === 'convex-lens') {
+                   if (ix < 200) { 
+                      dynamicPaths.push({ d: `M 200 ${oy} L 400 ${exR(ix, iy, 200, oy)}`, dashed: false });
+                      dynamicPaths.push({ d: `M 200 ${oy} L ${ix} ${iy}`, dashed: true });
+                   } else { 
+                      dynamicPaths.push({ d: `M 200 ${oy} L 400 ${exR(200, oy, ix, iy)}`, dashed: false });
+                   }
+                } else if (type === 'concave-lens') {
+                   dynamicPaths.push({ d: `M 200 ${oy} L 400 ${exR(ix, iy, 200, oy)}`, dashed: false });
+                   dynamicPaths.push({ d: `M 200 ${oy} L ${ix} ${iy}`, dashed: true });
+                }
+
+                dynamicPaths.push({ d: `M ${ox} ${oy} L 200 100`, dashed: false });
+                
+                if (type === 'concave-mirror' || type === 'convex-mirror') {
+                   if (ix > 200) { 
+                      dynamicPaths.push({ d: `M 200 100 L 0 ${exL(ix, iy, 200, 100)}`, dashed: false });
+                      dynamicPaths.push({ d: `M 200 100 L ${ix} ${iy}`, dashed: true });
+                   } else { 
+                      dynamicPaths.push({ d: `M 200 100 L 0 ${exL(200, 100, ix, iy)}`, dashed: false });
+                   }
+                } else { 
+                   if (ix < 200) { 
+                      dynamicPaths.push({ d: `M 200 100 L 400 ${exR(ox, oy, 200, 100)}`, dashed: false });
+                      dynamicPaths.push({ d: `M 200 100 L ${ix} ${iy}`, dashed: true });
+                   } else { 
+                      dynamicPaths.push({ d: `M 200 100 L 400 ${exR(200, 100, ix, iy)}`, dashed: false });
+                   }
+                }
+
+                return dynamicPaths.map((p, i) => (
+                    <path key={i} d={p.d} stroke={p.dashed ? '#fb923c' : '#fbbf24'} strokeWidth="2.5" strokeDasharray={p.dashed ? "6,6" : "none"} fill="none" />
+                ));
+            };
+
+            return (
+                <div className="w-full bg-white rounded-xl shadow-inner border border-gray-200 overflow-hidden mb-6 relative">
+                    <svg viewBox="0 0 400 200" className="w-full h-48 md:h-64">
+                        <defs>
+                            <marker id="arrow-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#0284c7" />
+                            </marker>
+                            <marker id="arrow-orange" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#ea580c" />
+                            </marker>
+                        </defs>
+                        <line x1="0" y1="100" x2="400" y2="100" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4,4" />
+                        {type.includes('concave-mirror') && (
+                           <><circle cx="150" cy="100" r="3" fill="#334155" /><text x="150" y="115" fontSize="10" fill="#334155" textAnchor="middle" fontWeight="bold">F</text>
+                           <circle cx="100" cy="100" r="3" fill="#334155" /><text x="100" y="115" fontSize="10" fill="#334155" textAnchor="middle" fontWeight="bold">C</text></>
+                        )}
+                        {type.includes('convex-mirror') && (
+                           <><circle cx="250" cy="100" r="3" fill="#334155" /><text x="250" y="115" fontSize="10" fill="#334155" textAnchor="middle" fontWeight="bold">F</text>
+                           <circle cx="300" cy="100" r="3" fill="#334155" /><text x="300" y="115" fontSize="10" fill="#334155" textAnchor="middle" fontWeight="bold">C</text></>
+                        )}
+                        {type.includes('lens') && (
+                           <><circle cx="150" cy="100" r="3" fill="#334155" /><text x="150" y="115" fontSize="10" fill="#334155" textAnchor="middle" fontWeight="bold">F1</text>
+                           <circle cx="100" cy="100" r="3" fill="#334155" /><text x="100" y="115" fontSize="10" fill="#334155" textAnchor="middle" fontWeight="bold">2F1</text>
+                           <circle cx="250" cy="100" r="3" fill="#334155" /><text x="250" y="115" fontSize="10" fill="#334155" textAnchor="middle" fontWeight="bold">F2</text>
+                           <circle cx="300" cy="100" r="3" fill="#334155" /><text x="300" y="115" fontSize="10" fill="#334155" textAnchor="middle" fontWeight="bold">2F2</text></>
+                        )}
+                        {renderRays()}
+                        {type === 'concave-mirror' && <path d="M 185 30 Q 215 100 185 170" fill="none" stroke="#0f172a" strokeWidth="4" />}
+                        {type === 'convex-mirror' && <path d="M 215 30 Q 185 100 215 170" fill="none" stroke="#0f172a" strokeWidth="4" />}
+                        {type === 'convex-lens' && <path d="M 200 30 Q 220 100 200 170 Q 180 100 200 30" fill="#99f6e4" stroke="#0f172a" strokeWidth="2" opacity="0.8" />}
+                        {type === 'concave-lens' && <path d="M 185 30 L 215 30 Q 195 100 215 170 L 185 170 Q 205 100 185 30" fill="#99f6e4" stroke="#0f172a" strokeWidth="2" opacity="0.8" />}
+                        {!infObj && <line x1={ox} y1="100" x2={ox} y2={oy} stroke="#0284c7" strokeWidth="3" markerEnd="url(#arrow-blue)" />}
+                        {!infImg && (iy === 100 ? <circle cx={ix} cy="100" r="4" fill="#ea580c" /> : <line x1={ix} y1="100" x2={ix} y2={iy} stroke="#ea580c" strokeWidth="3" markerEnd="url(#arrow-orange)" />)}
+                    </svg>
+                    <div className="absolute top-2 left-2 flex gap-2">
+                        <span className="text-[10px] font-bold px-2 py-1 bg-sky-100 text-sky-700 rounded uppercase tracking-wider">Object</span>
+                        <span className="text-[10px] font-bold px-2 py-1 bg-orange-100 text-orange-700 rounded uppercase tracking-wider">Image</span>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- MAIN APP COMPONENT ---
+        const App = () => {
+            const [activeMirror, setActiveMirror] = useState('concave');
+            const [mirrorObjectPos, setMirrorObjectPos] = useState(0);
+            const [activeLens, setActiveLens] = useState('convex');
+            const [lensObjectPos, setLensObjectPos] = useState(0);
+            const [focalLength, setFocalLength] = useState(2);
+
+            const concaveMirrorData = [
+                { pos: "At Infinity", imgPos: "At Focus (F)", size: "Point sized", nature: "Real and Inverted", ox: -999, ix: 150, iy: 100, infObj: true, paths: [{d: "M 0 70 L 200 70", dashed: false}, {d: "M 200 70 L 0 190", dashed: false}, {d: "M 0 130 L 200 130", dashed: false}, {d: "M 200 130 L 0 10", dashed: false}] },
+                { pos: "Beyond C", imgPos: "Between F and C", size: "Smaller than object", nature: "Real and Inverted", ox: 50, oy: 60, ix: 125, iy: 115 },
+                { pos: "At C", imgPos: "At C", size: "Same size", nature: "Real and Inverted", ox: 100, oy: 60, ix: 100, iy: 140 },
+                { pos: "Between C and F", imgPos: "Beyond C", size: "Larger than object", nature: "Real and Inverted", ox: 125, oy: 60, ix: 50, iy: 160 },
+                { pos: "At Focus (F)", imgPos: "At Infinity", size: "Extremely large", nature: "Real and Inverted", ox: 150, oy: 60, ix: -999, infImg: true, paths: [{d: "M 150 60 L 200 60", dashed: false}, {d: "M 200 60 L 0 180", dashed: false}, {d: "M 150 60 L 200 100", dashed: false}, {d: "M 200 100 L 0 220", dashed: false}] },
+                { pos: "Between P and F", imgPos: "Behind the mirror", size: "Magnified", nature: "Virtual and Upright", ox: 175, oy: 60, ix: 250, iy: 20 },
+            ];
+
+            const convexMirrorData = [
+                { pos: "At Infinity", imgPos: "At Focus (F)", size: "Point sized", nature: "Virtual and Upright", ox: -999, ix: 250, iy: 100, infObj: true, paths: [{d: "M 0 70 L 200 70", dashed: false}, {d: "M 200 70 L 0 10", dashed: false}, {d: "M 200 70 L 250 100", dashed: true}, {d: "M 0 130 L 200 130", dashed: false}, {d: "M 200 130 L 0 190", dashed: false}, {d: "M 200 130 L 250 100", dashed: true}] },
+                { pos: "Between Infinity and P", imgPos: "Between P and F", size: "Smaller than object", nature: "Virtual and Upright", ox: 100, oy: 60, ix: 233, iy: 87 },
+            ];
+
+            const convexLensData = [
+                { pos: "At Infinity", imgPos: "At Focus (F2)", size: "Point sized", nature: "Real and Inverted", ox: -999, ix: 250, iy: 100, infObj: true, paths: [{d: "M 0 70 L 200 70", dashed: false}, {d: "M 200 70 L 400 190", dashed: false}, {d: "M 0 130 L 200 130", dashed: false}, {d: "M 200 130 L 400 10", dashed: false}] },
+                { pos: "Beyond 2F1", imgPos: "Between F2 and 2F2", size: "Smaller than object", nature: "Real and Inverted", ox: 50, oy: 60, ix: 275, iy: 115 },
+                { pos: "At 2F1", imgPos: "At 2F2", size: "Same size", nature: "Real and Inverted", ox: 100, oy: 60, ix: 300, iy: 140 },
+                { pos: "Between F1 and 2F1", imgPos: "Beyond 2F2", size: "Larger than object", nature: "Real and Inverted", ox: 125, oy: 60, ix: 350, iy: 160 },
+                { pos: "At F1", imgPos: "At Infinity", size: "Extremely large", nature: "Real and Inverted", ox: 150, oy: 60, ix: 999, infImg: true, paths: [{d: "M 150 60 L 200 60", dashed: false}, {d: "M 200 60 L 400 180", dashed: false}, {d: "M 150 60 L 200 100", dashed: false}, {d: "M 200 100 L 400 220", dashed: false}] },
+                { pos: "Between O and F1", imgPos: "Same side as object", size: "Magnified", nature: "Virtual and Upright", ox: 175, oy: 60, ix: 100, iy: 20 },
+            ];
+
+            const concaveLensData = [
+                { pos: "At Infinity", imgPos: "At Focus (F1)", size: "Point sized", nature: "Virtual and Upright", ox: -999, ix: 150, iy: 100, infObj: true, paths: [{d: "M 0 70 L 200 70", dashed: false}, {d: "M 200 70 L 400 10", dashed: false}, {d: "M 200 70 L 150 100", dashed: true}, {d: "M 0 130 L 200 130", dashed: false}, {d: "M 200 130 L 400 190", dashed: false}, {d: "M 200 130 L 150 100", dashed: true}] },
+                { pos: "Between Infinity and O", imgPos: "Between O and F1", size: "Smaller than object", nature: "Virtual and Upright", ox: 100, oy: 60, ix: 166, iy: 87 },
+            ];
+
+            const scrollToSection = (id) => {
+                document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            return (
+                <div className="min-h-screen bg-white font-sans text-gray-800">
+                    <nav className="flex justify-between items-center py-5 px-8 bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+                        <div className="font-bold text-xl tracking-tight cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+                            <span className="text-[#1a5653]">Class 10</span>
+                            <span className="text-[#d97706]"> Light Lab</span>
+                        </div>
+                        <div className="hidden md:flex space-x-8 text-gray-500 text-sm font-medium">
+                            <button onClick={() => scrollToSection('reflection')} className="hover:text-gray-900">Reflection</button>
+                            <button onClick={() => scrollToSection('mirrors')} className="hover:text-gray-900">Mirrors</button>
+                            <button onClick={() => scrollToSection('refraction')} className="hover:text-gray-900">Refraction</button>
+                            <button onClick={() => scrollToSection('lenses')} className="hover:text-gray-900">Lenses</button>
+                        </div>
+                    </nav>
+
+                    <div className="bg-[#1a5653] text-white py-20 px-6 text-center">
+                        <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">Understanding Light</h1>
+                        <p className="max-w-2xl mx-auto text-lg text-teal-50 font-light leading-relaxed">
+                            A complete guide to Reflection and Refraction. Learn how light behaves when it hits surfaces and passes through different materials.
+                        </p>
+                    </div>
+
+                    <main className="max-w-6xl mx-auto">
+                        <section id="reflection" className="py-20 px-6 text-center border-b border-gray-100">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-6 underline decoration-[#d97706] decoration-4 underline-offset-8">1. Laws of Reflection</h2>
+                            <p className="text-gray-600 max-w-3xl mx-auto mb-16 text-lg">Reflection happens when light hits a polished surface (like a mirror) and bounces back into the same medium.</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                                <div className="bg-teal-50 p-8 rounded-2xl text-left border border-teal-100">
+                                    <h3 className="font-bold text-xl text-teal-900 mb-4">Law 1: The Angles</h3>
+                                    <p className="text-gray-700">The angle at which light hits the surface (angle of incidence) is <strong>always equal</strong> to the angle at which it bounces off (angle of reflection).</p>
+                                    <p className="mt-4 font-mono font-bold text-teal-800">∠i = ∠r</p>
+                                </div>
+                                <div className="bg-teal-50 p-8 rounded-2xl text-left border border-teal-100">
+                                    <h3 className="font-bold text-xl text-teal-900 mb-4">Law 2: The Plane</h3>
+                                    <p className="text-gray-700">The incoming ray, the bouncing ray, and the imaginary line perpendicular to the surface (the Normal) all lie on the same flat surface.</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="mirrors" className="py-20 px-6 text-center border-b border-gray-100">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-6 underline decoration-[#1a5653] decoration-4 underline-offset-8">2. Image Formation in Mirrors</h2>
+                            <p className="text-gray-600 max-w-3xl mx-auto mb-12">Spherical mirrors are part of a hollow sphere. If the inside is reflecting, it's <strong>Concave</strong>. If the outside is reflecting, it's <strong>Convex</strong>.</p>
+
+                            <div className="inline-flex bg-gray-100 p-1 rounded-full mb-12">
+                                <button onClick={() => { setActiveMirror('concave'); setMirrorObjectPos(0); }} className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${activeMirror === 'concave' ? 'bg-white text-[#1a5653] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>Concave Mirror</button>
+                                <button onClick={() => { setActiveMirror('convex'); setMirrorObjectPos(0); }} className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${activeMirror === 'convex' ? 'bg-white text-[#d97706] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>Convex Mirror</button>
+                            </div>
+
+                            <div className="bg-gray-50 rounded-3xl p-8 md:p-12 text-left max-w-4xl mx-auto border border-gray-200">
+                                <div className="fade-in">
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{activeMirror === 'concave' ? 'Concave (Converging) Mirror' : 'Convex (Diverging) Mirror'}</h3>
+                                    <p className="text-gray-600 mb-8">{activeMirror === 'concave' ? 'Concave mirrors curve inward. They can form both real and virtual images depending on how close the object is.' : 'Convex mirrors curve outward. They always form a smaller, upright, virtual image. They give a wider view of things.'}</p>
+                                    
+                                    <RayDiagram type={activeMirror === 'concave' ? "concave-mirror" : "convex-mirror"} data={activeMirror === 'concave' ? concaveMirrorData[mirrorObjectPos] : convexMirrorData[mirrorObjectPos]} />
+
+                                    <div className="flex flex-wrap gap-2 mb-8">
+                                        {(activeMirror === 'concave' ? concaveMirrorData : convexMirrorData).map((item, idx) => (
+                                            <button key={idx} onClick={() => setMirrorObjectPos(idx)} className={`px-4 py-2 rounded-lg text-sm transition-all border ${mirrorObjectPos === idx ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-900'}`}>{item.pos}</button>
+                                        ))}
+                                    </div>
+                                    
+                                    <div className="bg-white border border-gray-200 p-6 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-6 shadow-sm">
+                                        <div><p className="text-xs font-bold text-gray-400 uppercase mb-1 tracking-widest">Image At</p><p className="text-lg font-semibold text-gray-900">{(activeMirror === 'concave' ? concaveMirrorData : convexMirrorData)[mirrorObjectPos].imgPos}</p></div>
+                                        <div><p className="text-xs font-bold text-gray-400 uppercase mb-1 tracking-widest">Size</p><p className="text-lg font-semibold text-gray-900">{(activeMirror === 'concave' ? concaveMirrorData : convexMirrorData)[mirrorObjectPos].size}</p></div>
+                                        <div><p className="text-xs font-bold text-gray-400 uppercase mb-1 tracking-widest">Nature</p><p className="text-lg font-semibold text-gray-900">{(activeMirror === 'concave' ? concaveMirrorData : convexMirrorData)[mirrorObjectPos].nature}</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="refraction" className="py-20 px-6 text-center border-b border-gray-100">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-6 underline decoration-[#d97706] decoration-4 underline-offset-8">3. Refraction (Bending of Light)</h2>
+                            <p className="text-gray-600 max-w-3xl mx-auto mb-12 text-lg">Light changes speed when it travels from one material to another (like air to water). This causes the light ray to bend.</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left max-w-5xl mx-auto">
+                                <div className="space-y-6">
+                                    <div className="p-6 bg-teal-50 rounded-2xl border border-teal-100">
+                                        <h4 className="font-bold text-teal-900 mb-2">Snell's Law</h4>
+                                        <p className="text-gray-700 text-sm">The ratio of the sine of the angle of incidence to the sine of the angle of refraction is a constant.</p>
+                                        <p className="mt-2 font-serif text-lg font-bold">sin i / sin r = Constant (n)</p>
+                                    </div>
+                                    <div className="p-6 bg-teal-50 rounded-2xl border border-teal-100">
+                                        <h4 className="font-bold text-teal-900 mb-2">Refractive Index</h4>
+                                        <p className="text-gray-700 text-sm">It's a number that tells you how much light slows down in a material. Higher index = Slower light.</p>
+                                        <p className="mt-2 font-serif text-lg font-bold">n = Speed of light in vacuum / Speed in medium</p>
+                                    </div>
+                                </div>
+                                <div className="bg-gray-100 rounded-3xl p-8 flex flex-col justify-center items-center">
+                                    <div className="w-full h-40 bg-sky-200 rounded-lg relative overflow-hidden mb-4 border border-sky-300">
+                                        <div className="absolute top-0 w-full h-1/2 bg-white flex items-center justify-center font-bold text-sky-800/20 text-4xl">AIR</div>
+                                        <div className="absolute bottom-0 w-full h-1/2 bg-sky-300 flex items-center justify-center font-bold text-sky-800/20 text-4xl">WATER</div>
+                                        <svg viewBox="0 0 200 100" className="absolute top-0 left-0 w-full h-full">
+                                            <line x1="100" y1="0" x2="100" y2="100" stroke="#000" strokeWidth="0.5" strokeDasharray="2,2" />
+                                            <line x1="40" y1="10" x2="100" y2="50" stroke="#fbbf24" strokeWidth="2" />
+                                            <line x1="100" y1="50" x2="130" y2="90" stroke="#fbbf24" strokeWidth="2" />
+                                            <text x="105" y="45" fontSize="6" fill="#334155">Normal</text>
+                                        </svg>
+                                    </div>
+                                    <p className="text-sm text-gray-500 italic">Light bends <strong>towards</strong> the normal when moving from a rarer medium (Air) to a denser medium (Water).</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="lenses" className="py-20 px-6 text-center">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-6 underline decoration-[#1a5653] decoration-4 underline-offset-8">4. Spherical Lenses</h2>
+                            <p className="text-gray-600 max-w-3xl mx-auto mb-12">Lenses use refraction to focus or spread light. They are essential in glasses, cameras, and telescopes.</p>
+
+                            <div className="inline-flex bg-gray-100 p-1 rounded-full mb-12">
+                                <button onClick={() => { setActiveLens('convex'); setLensObjectPos(0); }} className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${activeLens === 'convex' ? 'bg-white text-[#1a5653] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>Convex Lens</button>
+                                <button onClick={() => { setActiveLens('concave'); setLensObjectPos(0); }} className={`px-8 py-3 rounded-full text-sm font-bold transition-all ${activeLens === 'concave' ? 'bg-white text-[#d97706] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>Concave Lens</button>
+                            </div>
+
+                            <div className="bg-gray-50 rounded-3xl p-8 md:p-12 text-left max-w-4xl mx-auto border border-gray-200 mb-16">
+                                <div className="fade-in">
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">{activeLens === 'convex' ? 'Convex (Converging) Lens' : 'Concave (Diverging) Lens'}</h3>
+                                    <p className="text-gray-600 mb-8">{activeLens === 'convex' ? 'Thicker at the middle. It brings parallel rays together at the focus.' : 'Thinner at the middle. It makes parallel rays spread out.'}</p>
+                                    
+                                    <RayDiagram type={activeLens === 'convex' ? "convex-lens" : "concave-lens"} data={activeLens === 'convex' ? convexLensData[lensObjectPos] : concaveLensData[lensObjectPos]} />
+
+                                    <div className="flex flex-wrap gap-2 mb-8">
+                                        {(activeLens === 'convex' ? convexLensData : concaveLensData).map((item, idx) => (
+                                            <button key={idx} onClick={() => setLensObjectPos(idx)} className={`px-3 py-2 rounded-lg text-sm transition-all border ${lensObjectPos === idx ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-900'}`}>{item.pos}</button>
+                                        ))}
+                                    </div>
+                                    <div className="bg-white border border-gray-200 p-6 rounded-xl grid grid-cols-1 md:grid-cols-3 gap-6 shadow-sm">
+                                        <div><p className="text-xs font-bold text-gray-400 uppercase mb-1 tracking-widest">Image Position</p><p className="text-lg font-semibold text-gray-900">{(activeLens === 'convex' ? convexLensData : concaveLensData)[lensObjectPos].imgPos}</p></div>
+                                        <div><p className="text-xs font-bold text-gray-400 uppercase mb-1 tracking-widest">Size</p><p className="text-lg font-semibold text-gray-900">{(activeLens === 'convex' ? convexLensData : concaveLensData)[lensObjectPos].size}</p></div>
+                                        <div><p className="text-xs font-bold text-gray-400 uppercase mb-1 tracking-widest">Nature</p><p className="text-lg font-semibold text-gray-900">{(activeLens === 'convex' ? convexLensData : concaveLensData)[lensObjectPos].nature}</p></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto text-left">
+                                <div className="bg-[#1a5653] text-white p-8 rounded-3xl shadow-sm relative overflow-hidden">
+                                    <h3 className="text-2xl font-bold mb-2">Lens Power</h3>
+                                    <p className="text-teal-100 text-sm mb-8">How strongly a lens can bend light. Measured in Diopters (D).</p>
+                                    <div className="bg-white/10 p-6 rounded-2xl border border-white/20">
+                                        <p className="font-serif text-2xl mb-4 text-center">Power (P) = 1 / focal length (f)</p>
+                                        <div className="space-y-4">
+                                            <label className="text-sm block text-teal-100">Try it! Change focal length (in meters):</label>
+                                            <input type="number" value={focalLength} onChange={(e) => setFocalLength(e.target.value)} className="w-full bg-black/20 border border-white/20 text-white p-3 rounded-lg focus:outline-none" step="0.1" />
+                                            <div className="text-center pt-2">
+                                                <span className="text-4xl font-bold text-amber-400">{focalLength != 0 ? (1/focalLength).toFixed(2) : '0'} D</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="bg-gray-50 p-8 rounded-3xl border border-gray-200">
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-6">Must-know Formulas</h3>
+                                    <div className="space-y-6">
+                                        <div className="flex justify-between items-center border-b border-gray-200 pb-4">
+                                            <span className="text-gray-500 font-medium">Mirror Formula</span>
+                                            <span className="text-xl font-bold font-serif">1/v + 1/u = 1/f</span>
+                                        </div>
+                                        <div className="flex justify-between items-center border-b border-gray-200 pb-4">
+                                            <span className="text-gray-500 font-medium">Lens Formula</span>
+                                            <span className="text-xl font-bold font-serif text-[#d97706]">1/v - 1/u = 1/f</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-500 font-medium">Magnification (m)</span>
+                                            <span className="text-xl font-bold font-serif">m = h' / h</span>
+                                        </div>
+                                    </div>
+                                    <p className="mt-8 text-xs text-gray-400 leading-relaxed uppercase tracking-wider font-bold">Note: u is object distance, v is image distance, f is focal length.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+
+                    <footer className="bg-gray-900 text-gray-500 py-16 px-6 text-center text-sm border-t border-gray-800 mt-20">
+                        <div className="max-w-2xl mx-auto">
+                            <p className="mb-4">Designed as an interactive study companion for Class 10 Physics.</p>
+                            <p className="opacity-50">© {new Date().getFullYear()} Interactive Science Modules</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
