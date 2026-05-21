@@ -1,0 +1,2477 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scholar Bud - Your Ultimate AI Study Workspace</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for beautiful UI */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        /* Custom strike-through transition */
+        .strike-through {
+            position: relative;
+        }
+        .strike-through::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 2px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.25s ease-in-out;
+        }
+        .strike-active::after {
+            transform: scaleX(1);
+        }
+        
+        /* Pulse Animation for AI voice synthesis */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+        .voice-pulse {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 h-full flex flex-col transition-colors duration-200 overflow-hidden">
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Expose Firebase functions globally so other script tags can access them
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
+
+        // Global variables setup
+        window.appState = {
+            tasks: [],
+            calendarEvents: [],
+            notes: [],
+            documents: [],
+            presentations: [],
+            chatHistory: [],
+            youtubeResults: [],
+            isCalendarConnected: false,
+            theme: 'dark', // Default dark theme for modern feel
+            activeTab: 'dashboard',
+            userId: null,
+            firebaseReady: false,
+            uploadedImageBase64: null, // Temporary store for Multimodal Image-to-Study capability
+            activeQuizQuestions: [],
+            activeQuizIndex: 0,
+            activeQuizScore: 0,
+            voicePlaying: false,
+            voiceAudio: null,
+            apiKey: localStorage.getItem('scholarbud_api_key') || '' // Local storage caching for local notepad run
+        };
+
+        window.appId = typeof __app_id !== 'undefined' ? __app_id : 'scholar-bud-app';
+        window.db = null;
+        window.auth = null;
+
+        // Try initializing Firebase
+        if (typeof __firebase_config !== 'undefined') {
+            try {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                window.db = getFirestore(app);
+                window.auth = getAuth(app);
+                
+                // Sign in anonymously to back up data privately to this specific device
+                const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                if (token) {
+                    await signInWithCustomToken(window.auth, token);
+                } else {
+                    await signInAnonymously(window.auth);
+                }
+                
+                window.appState.userId = window.auth.currentUser?.uid || 'anonymous-user';
+                window.appState.firebaseReady = true;
+                console.log("Firebase initialized successfully with user ID:", window.appState.userId);
+            } catch (error) {
+                console.warn("Firebase initialization failed, falling back to local memory simulation:", error);
+            }
+        }
+    </script>
+
+    <script>
+        // Global variables declaration to completely prevent ReferenceErrors during initial renders
+        window.currentDocId = 'd1';
+        window.currentPresentationId = 'p1';
+        window.currentSlideIndex = 0;
+
+        // Core task data schema and midnight auto-cleaning logic
+        class TaskManager {
+            static getStorageKey() {
+                return `scholarbud_tasks_${window.appState.userId || 'guest'}`;
+            }
+
+            // Midnight checker
+            static checkAndClearExpiredTasks() {
+                const lastCheckDate = localStorage.getItem('scholarbud_last_date');
+                const todayStr = new Date().toLocaleDateString();
+
+                if (lastCheckDate && lastCheckDate !== todayStr) {
+                    console.log("New day detected! Clearing previous day tasks.");
+                    window.appState.tasks = [];
+                    this.saveTasks();
+                    NotificationManager.show("New day! Your yesterday's tasks have been cleared as requested.", "info");
+                    return true;
+                }
+                localStorage.setItem('scholarbud_last_date', todayStr);
+                return false;
+            }
+
+            static async loadTasks() {
+                // First verify midnight clean
+                this.checkAndClearExpiredTasks();
+
+                if (window.appState.firebaseReady) {
+                    try {
+                        const taskRef = window.doc(window.db, 'artifacts', window.appId, 'users', window.appState.userId, 'tasks', 'todoList');
+                        const docSnap = await window.getDoc(taskRef);
+                        if (docSnap.exists()) {
+                            window.appState.tasks = docSnap.data().items || [];
+                            return;
+                        }
+                    } catch (e) {
+                        console.error("Firestore read error for tasks:", e);
+                    }
+                }
+                // Local fallback
+                const stored = localStorage.getItem(this.getStorageKey());
+                window.appState.tasks = stored ? JSON.parse(stored) : this.getMockTasks();
+            }
+
+            static async saveTasks() {
+                this.checkAndClearExpiredTasks();
+                const items = window.appState.tasks;
+                
+                if (window.appState.firebaseReady) {
+                    try {
+                        const taskRef = window.doc(window.db, 'artifacts', window.appId, 'users', window.appState.userId, 'tasks', 'todoList');
+                        await window.setDoc(taskRef, { items, lastUpdated: new Date().toISOString() });
+                    } catch (e) {
+                        console.error("Firestore write error for tasks:", e);
+                    }
+                }
+                localStorage.setItem(this.getStorageKey(), JSON.stringify(items));
+                renderApp();
+            }
+
+            static getMockTasks() {
+                return [
+                    { id: '1', text: 'Read Chapter 4 of Science textbook', completed: false, category: 'Studies', addedTime: new Date().getTime() },
+                    { id: '2', text: 'Complete JS async programming module', completed: true, category: 'Coding', addedTime: new Date().getTime() },
+                    { id: '3', text: 'Prepare slides for history presentation', completed: false, category: 'General', addedTime: new Date().getTime() }
+                ];
+            }
+        }
+
+        // Notes and Documents manager
+        class StudyWorkspaceManager {
+            static getMockNotes() {
+                return [
+                    { id: 'n1', title: 'Binary Search Basics', content: 'Always ensure your array is sorted. Middle calculations: low + (high - low) / 2 to avoid overflow.' },
+                    { id: 'n2', title: 'Photosynthesis Overview', content: 'Light-dependent reactions vs Calvin Cycle. Occurs in chloroplast thylakoid membranes.' }
+                ];
+            }
+
+            static getMockDocs() {
+                return [
+                    { id: 'd1', title: 'Python OOP Cheat Sheet', content: 'Classes are blueprints, objects are instances. Inherit via class Child(Parent). Use super().__init__() to invoke constructor.' }
+                ];
+            }
+
+            static getMockPresentations() {
+                return [
+                    { 
+                        id: 'p1', 
+                        title: 'Artificial Intelligence Evolution', 
+                        slides: [
+                            { title: 'The Genesis', bullets: ['Dartmouth Workshop in 1956', 'Alan Turing question: Can Machines Think?', 'Early rule-based logic models'] },
+                            { title: 'Machine Learning Era', bullets: ['Shift from rules to patterns', 'Introduction of Neural Networks', 'Backpropagation algorithm discovery'] },
+                            { title: 'Generative AI & LLMs', bullets: ['Transformer architecture (2017)', 'Multi-billion parameter neural sizes', 'Scholar Bud assistants helping students'] }
+                        ]
+                    }
+                ];
+            }
+        }
+    </script>
+
+    <!-- App Container -->
+    <div class="flex h-full overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-slate-800 text-slate-100 flex flex-col justify-between border-r border-slate-700 transition-all duration-300 md:relative absolute z-30 h-full -left-64 md:left-0">
+            <div class="p-5 flex flex-col h-full justify-between">
+                <div>
+                    <!-- Logo / Brand -->
+                    <div class="flex items-center space-x-3 mb-8">
+                        <div class="h-10 w-10 bg-gradient-to-tr from-violet-600 to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                            <i class="fa-solid fa-graduation-cap text-lg animate-pulse"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">Scholar Bud</h1>
+                            <p class="text-[10px] text-slate-400 font-medium">Ultimate Gemini AI Workspace</p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Items -->
+                    <nav class="space-y-1.5">
+                        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 hover:text-white">
+                            <i class="fa-solid fa-house-laptop text-lg w-6"></i>
+                            <span>Dashboard</span>
+                        </button>
+                        <button onclick="switchTab('tasks')" id="nav-tasks" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 hover:text-white justify-between">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-clipboard-list text-lg w-6"></i>
+                                <span>Task Manager</span>
+                            </div>
+                            <span id="task-badge" class="bg-indigo-600 text-[10px] text-white px-2 py-0.5 rounded-full font-bold">0</span>
+                        </button>
+                        <button onclick="switchTab('calendar')" id="nav-calendar" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 hover:text-white">
+                            <i class="fa-solid fa-calendar-days text-lg w-6"></i>
+                            <span>Calendar Hub</span>
+                        </button>
+                        <button onclick="switchTab('chatbot')" id="nav-chatbot" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 hover:text-white">
+                            <i class="fa-solid fa-robot text-lg w-6 text-indigo-400"></i>
+                            <span>Scholar Buddy AI</span>
+                        </button>
+                        <button onclick="switchTab('workspace')" id="nav-workspace" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 hover:text-white">
+                            <i class="fa-solid fa-folder-open text-lg w-6"></i>
+                            <span>My Workspace</span>
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Footer Section in Sidebar -->
+                <div class="pt-6 border-t border-slate-700">
+                    <div id="local-key-warning" class="hidden bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl mb-3 text-center">
+                        <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-1">Local Run Detected</div>
+                        <p class="text-[10px] text-slate-300 mb-2">Configure a free Gemini API key to enable chatbot responses.</p>
+                        <button onclick="openApiKeyModal()" class="w-full text-[10px] bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-1.5 rounded-lg transition-all">
+                            Set API Key
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-4 rounded-xl mb-4 text-center border border-indigo-500/20 font-sans">
+                        <div class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold mb-1">Device Status</div>
+                        <div class="text-xs font-bold text-emerald-400 flex items-center justify-center gap-1.5">
+                            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
+                            Natively Secured Local State
+                        </div>
+                        <div id="midnight-countdown" class="text-[10px] text-indigo-300 mt-2 font-mono">Auto-clear in: 00:00:00</div>
+                    </div>
+                    
+                    <!-- Theme, API & Profile toggles -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleTheme()" class="h-10 w-10 bg-slate-700 hover:bg-slate-600 rounded-xl flex items-center justify-center text-slate-300 transition-colors" title="Toggle Theme">
+                                <i id="theme-icon" class="fa-solid fa-sun"></i>
+                            </button>
+                            <button onclick="openApiKeyModal()" class="h-10 w-10 bg-slate-700 hover:bg-slate-600 rounded-xl flex items-center justify-center text-indigo-400 transition-colors relative" title="Gemini API Settings">
+                                <i class="fa-solid fa-key"></i>
+                                <span id="api-status-dot" class="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-slate-800 bg-rose-500"></span>
+                            </button>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-bold text-slate-200">Study Mode</p>
+                            <p class="text-[10px] text-slate-400">Scholar Bud v1.5</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar overlay for mobile -->
+        <div id="sidebar-overlay" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/50 z-20 hidden md:hidden"></div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- Top Navbar -->
+            <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700/50 px-6 py-4 flex items-center justify-between z-10 transition-colors">
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleMobileSidebar()" class="md:hidden text-slate-500 hover:text-slate-800 dark:text-slate-300 dark:hover:text-white mr-2">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 id="current-tab-title" class="text-lg font-bold text-slate-800 dark:text-white">Workspace Overview</h2>
+                        <p id="current-date-string" class="text-xs text-slate-400 font-medium">Thursday, May 21, 2026</p>
+                    </div>
+                </div>
+
+                <!-- Integrations & Status Quick Links -->
+                <div class="flex items-center space-x-3">
+                    <div class="hidden sm:flex items-center bg-slate-100 dark:bg-slate-700 rounded-xl p-1 gap-1">
+                        <button onclick="switchTab('workspace'); selectWorkspaceSub('notes')" class="text-xs px-3 py-1.5 rounded-lg font-medium text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600 transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-note-sticky text-amber-500"></i> Notes
+                        </button>
+                        <button onclick="switchTab('workspace'); selectWorkspaceSub('docs')" class="text-xs px-3 py-1.5 rounded-lg font-medium text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600 transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-file-invoice text-blue-500"></i> Docs
+                        </button>
+                        <button onclick="switchTab('workspace'); selectWorkspaceSub('slides')" class="text-xs px-3 py-1.5 rounded-lg font-medium text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-600 transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-presentation-screen text-emerald-500"></i> Slides
+                        </button>
+                    </div>
+
+                    <button onclick="switchTab('chatbot')" class="bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-550/10 dark:hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-semibold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all">
+                        <i class="fa-solid fa-hands-holding-child"></i> Scholar Buddy Chat
+                    </button>
+                </div>
+            </header>
+
+            <!-- Notification banner container -->
+            <div id="notification-banner" class="hidden mx-6 mt-4 p-3 rounded-xl text-xs font-semibold flex items-center justify-between transition-all duration-300">
+                <span id="notification-text">Welcome to Scholar Bud! Ready to study today?</span>
+                <button onclick="closeNotification()" class="text-slate-500 hover:text-slate-800 ml-2"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Tab Panels Content Container -->
+            <div id="main-scroll-content" class="flex-1 overflow-y-auto p-6 space-y-6">
+
+                <!-- PANEL 1: DASHBOARD -->
+                <section id="panel-dashboard" class="tab-panel space-y-6">
+                    <!-- High Impact Welcoming Card -->
+                    <div class="bg-gradient-to-r from-violet-600 via-indigo-600 to-indigo-700 text-white rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 opacity-15 transform rotate-12">
+                            <i class="fa-solid fa-graduation-cap text-[180px]"></i>
+                        </div>
+                        <div class="max-w-xl relative z-10">
+                            <span class="bg-white/20 text-white text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full">Scholar Bud Assistant Hub</span>
+                            <h3 class="text-2xl md:text-3xl font-extrabold mt-3 leading-tight">Elevate studies with custom Gemini AI generation tools.</h3>
+                            <p class="text-slate-100/90 text-sm mt-2 font-medium">To-dos clear at midnight automatically so you can maintain a high-focus daily loop. Talk with Scholar Buddy to generate notes, docs, and listen with AI Voice Aloud.</p>
+                            <button onclick="switchTab('chatbot')" class="mt-6 bg-white text-indigo-700 font-bold text-xs px-6 py-3 rounded-xl shadow-lg hover:shadow-white/10 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-circle-play"></i> Talk to Scholar Buddy
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Widgets Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Quick Tasks Progress Widget -->
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Today's To-Do Task Progress</h4>
+                                <span class="text-xs bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400 font-bold px-2.5 py-1 rounded-lg">Auto-Reset at Midnight</span>
+                            </div>
+                            <div class="flex items-center space-x-5 py-2">
+                                <div class="relative flex items-center justify-center">
+                                    <svg class="w-20 h-20 transform -rotate-90">
+                                        <circle cx="40" cy="40" r="32" stroke="currentColor" stroke-width="6" class="text-slate-100 dark:text-slate-700" fill="transparent"></circle>
+                                        <circle cx="40" cy="40" r="32" stroke="currentColor" stroke-width="6" class="text-indigo-600" fill="transparent" stroke-dasharray="201" stroke-dashoffset="201" id="dash-task-ring"></circle>
+                                    </svg>
+                                    <span id="dash-task-percent" class="absolute font-bold text-sm">0%</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p id="dash-task-status-text" class="text-xs font-semibold text-slate-500 dark:text-slate-400">Loading tasks...</p>
+                                    <button onclick="switchTab('tasks')" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-bold mt-2 flex items-center gap-1">
+                                        Go to Task Manager <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calendar Sneak Peek Widget -->
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Upcoming Study Sessions</h4>
+                                <i class="fa-solid fa-calendar-check text-slate-400"></i>
+                            </div>
+                            <div id="dash-upcoming-events" class="space-y-3 py-1 flex-1 flex flex-col justify-center">
+                                <!-- Dynamically Rendered Upcoming Event -->
+                            </div>
+                            <button onclick="switchTab('calendar')" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-bold mt-3 block">
+                                Open Calendar & Connections
+                            </button>
+                        </div>
+
+                        <!-- Workspace Analytics / Overview Widget -->
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm flex flex-col justify-between">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Resource Vault Summary</h4>
+                                <i class="fa-solid fa-warehouse text-slate-400"></i>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-center py-2">
+                                <div class="p-2.5 bg-amber-50 dark:bg-amber-500/10 rounded-xl border border-amber-200/30">
+                                    <span id="dash-note-count" class="block font-black text-lg text-amber-600 dark:text-amber-400">0</span>
+                                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Notes</span>
+                                </div>
+                                <div class="p-2.5 bg-blue-50 dark:bg-blue-500/10 rounded-xl border border-blue-200/30">
+                                    <span id="dash-doc-count" class="block font-black text-lg text-blue-600 dark:text-blue-400">0</span>
+                                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Docs</span>
+                                </div>
+                                <div class="p-2.5 bg-emerald-50 dark:bg-emerald-500/10 rounded-xl border border-emerald-200/30">
+                                    <span id="dash-slide-count" class="block font-black text-lg text-emerald-600 dark:text-emerald-400">0</span>
+                                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Slides</span>
+                                </div>
+                            </div>
+                            <button onclick="switchTab('workspace')" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-bold mt-3 block">
+                                Explore Workspace Vault
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- YouTube Quick Study Search Widget -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm space-y-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <h4 class="font-black text-base text-slate-800 dark:text-white flex items-center gap-2">
+                                    <i class="fa-brands fa-youtube text-red-600 text-xl"></i> Search Academic Tutorials
+                                </h4>
+                                <p class="text-xs text-slate-400 font-medium">Quickly extract relevant video lessons directly inside Scholar Bud.</p>
+                            </div>
+                            <div class="relative w-full sm:w-72">
+                                <input type="text" id="youtube-search-input" placeholder="Search math equations, JS tutorials..." onkeydown="if(event.key === 'Enter') searchYouTubeWidget()" class="w-full text-xs bg-slate-100 dark:bg-slate-700 px-4 py-2.5 rounded-xl border-none focus:outline-none focus:ring-2 focus:ring-red-500 pr-10 text-slate-800 dark:text-white">
+                                <button onclick="searchYouTubeWidget()" class="absolute right-3 top-2.5 text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                        </div>
+                        
+                        <!-- Video output items -->
+                        <div id="youtube-results-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="col-span-full text-center py-6 text-slate-400 text-xs font-semibold">
+                                Type a study query above to search YouTube lessons instantly.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANEL 2: TASK MANAGER -->
+                <section id="panel-tasks" class="tab-panel space-y-6 hidden">
+                    <div class="bg-amber-50 dark:bg-amber-500/10 border border-amber-200/60 dark:border-amber-500/20 rounded-2xl p-4 flex items-start gap-3">
+                        <div class="p-2 bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 rounded-lg"><i class="fa-solid fa-clock"></i></div>
+                        <div>
+                            <h4 class="font-extrabold text-sm text-amber-800 dark:text-amber-400">Midnight Cleansing Policy</h4>
+                            <p class="text-xs text-amber-700/90 dark:text-amber-300 mt-1 leading-relaxed">Scholar Bud keeps your daily tasks highly current. To prevent historical clutter, **all tasks on this page self-destruct exactly at 00:00:00 (Midnight)** matching local browser time.</p>
+                        </div>
+                    </div>
+
+                    <!-- Main Task Board -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm overflow-hidden">
+                        
+                        <!-- Task input panel -->
+                        <div class="p-6 border-b border-slate-200/60 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 flex flex-col md:flex-row items-center gap-4">
+                            <div class="flex-1 w-full relative">
+                                <input type="text" id="task-input" placeholder="Type a task and hit enter (e.g. Code sorting algorithms in Py)..." onkeydown="if(event.key === 'Enter') createNewTask()" class="w-full text-xs bg-white dark:bg-slate-700 px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-white">
+                            </div>
+                            <div class="flex items-center gap-2 w-full md:w-auto">
+                                <select id="task-category" class="text-xs bg-white dark:bg-slate-700 px-3 py-3.5 rounded-xl border border-slate-200 dark:border-slate-600 focus:outline-none text-slate-800 dark:text-white font-bold w-full md:w-32">
+                                    <option value="Studies">Studies</option>
+                                    <option value="Coding">Coding</option>
+                                    <option value="General">General</option>
+                                    <option value="Exam Prep">Exam Prep</option>
+                                </select>
+                                <button onclick="createNewTask()" class="bg-indigo-600 hover:bg-indigo-550 text-white font-bold text-xs px-6 py-3.5 rounded-xl shadow-lg active:scale-95 transition-all whitespace-nowrap w-full md:w-auto">
+                                    <i class="fa-solid fa-plus mr-1"></i> Add Task
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Active Tasks Output List -->
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-extrabold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Active To-Dos</h4>
+                                <button onclick="clearAllTasks()" class="text-xs font-bold text-rose-500 hover:underline flex items-center gap-1">
+                                    <i class="fa-solid fa-trash-can"></i> Force Clear Board
+                                </button>
+                            </div>
+                            <div id="todo-tasks-list" class="space-y-2">
+                                <!-- Rendered Tasks go here -->
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- PANEL 3: CALENDAR HUB -->
+                <section id="panel-calendar" class="tab-panel space-y-6 hidden">
+                    <!-- Calendar connection card -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="flex items-start gap-4 flex-1">
+                            <div class="p-4 bg-indigo-50 dark:bg-indigo-550/15 text-indigo-600 dark:text-indigo-400 rounded-xl text-2xl shrink-0"><i class="fa-solid fa-link"></i></div>
+                            <div>
+                                <h3 class="font-extrabold text-lg text-slate-800 dark:text-white">Calendar Connection Hub</h3>
+                                <p class="text-xs text-slate-400 mt-1 leading-relaxed">Connect calendars to sync lecture deadlines, exam timings, and group project presentations. Once synced, invoke our proprietary **Gemini Study Planner** to create day-by-day sub-tasks!</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-stretch gap-2 w-full md:w-auto shrink-0">
+                            <button onclick="toggleCalendarConnection()" id="btn-connect-calendar" class="bg-indigo-600 hover:bg-indigo-550 text-white font-bold text-xs px-5 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-calendar-plus"></i> Connect Calendar
+                            </button>
+                            <button onclick="triggerAIStudyPlanner()" id="btn-ai-planner" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold text-xs px-5 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> AI Study Planner
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Connection success banner -->
+                    <div id="calendar-sync-banner" class="hidden bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200/60 dark:border-emerald-500/20 rounded-xl p-4 flex items-center justify-between animate-fade-in">
+                        <div class="flex items-center gap-3 text-emerald-800 dark:text-emerald-400 text-xs font-bold">
+                            <i class="fa-solid fa-circle-check text-base"></i>
+                            <span>Successfully synced Google Academic Calendar! Try clicking "AI Study Planner" to analyze these exam dates.</span>
+                        </div>
+                        <button onclick="disconnectCalendar()" class="text-slate-400 hover:text-rose-500 text-xs font-bold">Disconnect</button>
+                    </div>
+
+                    <!-- Calendar Layout Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Calendar Matrix/View -->
+                        <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="font-extrabold text-sm uppercase tracking-widest text-slate-800 dark:text-white">May 2026 Academic Agenda</h3>
+                                <div class="flex items-center gap-1.5">
+                                    <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-xs"><i class="fa-solid fa-chevron-left"></i></button>
+                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-300">May 2026</span>
+                                    <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-xs"><i class="fa-solid fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                            
+                            <!-- Static Calendar Grid Mock -->
+                            <div class="grid grid-cols-7 gap-1 text-center font-bold text-[10px] text-slate-400 uppercase mb-2">
+                                <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                            </div>
+                            <div class="grid grid-cols-7 gap-1" id="calendar-days-matrix">
+                                <!-- Days injected via JS code -->
+                            </div>
+                        </div>
+
+                        <!-- Calendar Event Addition and Event List -->
+                        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 p-6 shadow-sm flex flex-col justify-between space-y-4">
+                            <div>
+                                <h3 class="font-extrabold text-sm uppercase tracking-widest text-slate-800 dark:text-white mb-4">Add Study Event</h3>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-slate-400 uppercase">Event Title</label>
+                                        <input type="text" id="event-title" placeholder="e.g. Physics Final Revision" class="w-full text-xs bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 mt-1 text-slate-800 dark:text-white font-medium">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-[10px] font-bold text-slate-400 uppercase">Date</label>
+                                            <input type="date" id="event-date" class="w-full text-xs bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 mt-1 text-slate-800 dark:text-white font-medium">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-bold text-slate-400 uppercase">Time</label>
+                                            <input type="time" id="event-time" class="w-full text-xs bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 mt-1 text-slate-800 dark:text-white font-medium">
+                                        </div>
+                                    </div>
+                                    <button onclick="createNewEvent()" class="w-full bg-slate-800 dark:bg-indigo-600 hover:bg-slate-700 dark:hover:bg-indigo-550 text-white font-bold text-xs py-3.5 rounded-xl shadow-md transition-all">
+                                        Create Event Block
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 border-t border-slate-200/60 dark:border-slate-700/50">
+                                <h4 class="font-bold text-xs uppercase tracking-widest text-slate-800 dark:text-white mb-3">Today's Agenda</h4>
+                                <div id="agenda-event-list" class="space-y-2 max-h-48 overflow-y-auto">
+                                    <!-- List of added items in calendar -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANEL 4: SCHOLAR BUDDY AI CHATBOT -->
+                <section id="panel-chatbot" class="tab-panel h-[calc(100vh-140px)] flex flex-col justify-between hidden">
+                    
+                    <!-- Chat Container Layout -->
+                    <div class="flex-1 flex flex-col md:flex-row gap-6 overflow-hidden h-full">
+                        
+                        <!-- Left Chat Workspace Box -->
+                        <div class="flex-1 flex flex-col bg-white dark:bg-slate-800 rounded-3xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm overflow-hidden h-full">
+                            
+                            <!-- Chatbot Header Details -->
+                            <div class="p-4 bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200/60 dark:border-slate-700/50 flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="h-10 w-10 bg-indigo-100 dark:bg-indigo-550/20 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center text-lg font-bold"><i class="fa-solid fa-robot"></i></div>
+                                    <div>
+                                        <h3 class="font-extrabold text-sm text-slate-800 dark:text-white">Scholar Buddy</h3>
+                                        <p class="text-[10px] text-emerald-500 font-bold flex items-center gap-1"><span class="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-ping"></span> Gemini Multi-Modal Secured</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] bg-indigo-50 text-indigo-600 dark:bg-indigo-550/10 dark:text-indigo-400 font-bold px-2.5 py-1 rounded-lg">Gemini 3 Flash Powered</span>
+                                </div>
+                            </div>
+
+                            <!-- Active Chat Scroll Area -->
+                            <div id="chatbot-messages-scroll" class="flex-1 overflow-y-auto p-6 space-y-4">
+                                <!-- Initial greetings with instructions of constraints -->
+                                <div class="flex items-start gap-3">
+                                    <div class="h-8 w-8 bg-indigo-100 dark:bg-indigo-550/20 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"><i class="fa-solid fa-robot"></i></div>
+                                    <div class="bg-slate-100 dark:bg-slate-700 p-4 rounded-2xl max-w-lg text-xs leading-relaxed text-slate-700 dark:text-slate-200 space-y-2">
+                                        <p class="font-extrabold text-indigo-600 dark:text-indigo-400">Hello! I'm Scholar Buddy, your academic study concierge.</p>
+                                        <p>I can help you review diagrams, study notes, solve logic matrices, or write quick summaries.</p>
+                                        <p class="font-medium text-[11px] text-slate-400 uppercase tracking-widest pt-1 border-t border-slate-200 dark:border-slate-600">Enhanced Workspace Actions:</p>
+                                        <ul class="list-disc pl-4 space-y-1">
+                                            <li>I **cannot generate images**, but I can **read your diagrams and uploaded notes**! Upload an image file below to test it.</li>
+                                            <li>I am strictly academic. I refuse to chat on non-educational matters.</li>
+                                            <li>Ask me to make notes, edit docs, formulate presentations, or look up YouTube lessons!</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Dynamic chat bubbles here -->
+                            </div>
+
+                            <!-- Image Upload Indicator / Previewer bar -->
+                            <div id="chatbot-image-preview-bar" class="hidden px-6 py-2 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-between text-xs">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-file-image text-indigo-500 text-lg"></i>
+                                    <span class="font-bold text-slate-700 dark:text-slate-200" id="chatbot-image-filename">diagram.png loaded</span>
+                                </div>
+                                <button onclick="clearUploadedImage()" class="text-rose-500 hover:underline font-bold text-xs"><i class="fa-solid fa-trash"></i> Remove</button>
+                            </div>
+
+                            <!-- Bot Active Indicator / Loader -->
+                            <div id="chat-loading-indicator" class="hidden px-6 py-2 flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs font-semibold">
+                                <i class="fa-solid fa-spin fa-circle-notch text-indigo-500"></i>
+                                <span>Scholar Buddy is research processing (using integrated tools)...</span>
+                            </div>
+
+                            <!-- AI Input controls with helper tools quick-buttons -->
+                            <div class="p-4 border-t border-slate-200/60 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 space-y-3">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <button onclick="injectChatPrompt('Generate Python program for Quick Sort')" class="text-[10px] bg-white dark:bg-slate-700 hover:bg-indigo-550/10 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600 font-bold px-3 py-1.5 rounded-lg transition-all">
+                                        <i class="fa-solid fa-code text-indigo-500"></i> Quick Sort Python
+                                    </button>
+                                    <button onclick="injectChatPrompt('Create a Document summarizing Artificial Intelligence history')" class="text-[10px] bg-white dark:bg-slate-700 hover:bg-indigo-550/10 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600 font-bold px-3 py-1.5 rounded-lg transition-all">
+                                        <i class="fa-solid fa-file-invoice text-emerald-500"></i> Auto Create Doc
+                                    </button>
+                                    <button onclick="injectChatPrompt('Prepare a Presentation on Renewable Energy containing 3 slides')" class="text-[10px] bg-white dark:bg-slate-700 hover:bg-indigo-550/10 text-slate-600 dark:text-slate-200 border border-slate-200 dark:border-slate-600 font-bold px-3 py-1.5 rounded-lg transition-all">
+                                        <i class="fa-solid fa-presentation-screen text-blue-500"></i> Generate Slides
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <!-- Hidden File Input for Multimodal Support -->
+                                    <input type="file" id="chatbot-file-input" accept="image/*" class="hidden" onchange="handleImageFileSelect(event)">
+                                    <button onclick="document.getElementById('chatbot-file-input').click()" class="h-12 w-12 bg-white hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-300 rounded-xl flex items-center justify-center text-lg transition-all shadow-sm" title="Upload diagram or study image">
+                                        <i class="fa-solid fa-image"></i>
+                                    </button>
+                                    <div class="relative flex-1">
+                                        <input type="text" id="chat-input" placeholder="Ask Scholar Buddy study concepts or analyze diagrams..." onkeydown="if(event.key === 'Enter') submitChatQuery()" class="w-full text-xs bg-white dark:bg-slate-700 px-4 py-4 rounded-2xl border border-slate-200 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-12 text-slate-800 dark:text-white">
+                                        <button onclick="submitChatQuery()" class="absolute right-3.5 top-3.5 text-indigo-500 hover:text-indigo-600 text-base transition-colors"><i class="fa-solid fa-paper-plane"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Right Tool Companion Workspace Preview -->
+                        <div class="w-full md:w-80 bg-slate-50 dark:bg-slate-800/45 rounded-3xl p-5 border border-slate-200/60 dark:border-slate-700/50 flex flex-col h-full overflow-hidden">
+                            <h4 class="font-extrabold text-xs uppercase tracking-wider text-slate-800 dark:text-white mb-3">Live Integrated Tool Sandbox</h4>
+                            <p class="text-[10px] text-slate-400 mb-4 font-medium leading-relaxed">Scholar Buddy has direct permission to generate objects into your platform workspace below.</p>
+                            
+                            <div class="flex-1 flex flex-col space-y-4 overflow-y-auto">
+                                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+                                    <div class="flex items-center justify-between text-xs font-bold mb-1">
+                                        <span>Notes & Document Maker</span>
+                                        <span class="text-[9px] bg-emerald-100 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-400 px-1.5 py-0.5 rounded uppercase font-mono">Connected</span>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 leading-normal">Creates editable study files directly on your dashboard.</p>
+                                </div>
+
+                                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+                                    <div class="flex items-center justify-between text-xs font-bold mb-1">
+                                        <span>Presentation Canvas</span>
+                                        <span class="text-[9px] bg-emerald-100 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-400 px-1.5 py-0.5 rounded uppercase font-mono">Connected</span>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 leading-normal">Builds interactive study slide structures instantly.</p>
+                                </div>
+
+                                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+                                    <div class="flex items-center justify-between text-xs font-bold mb-1">
+                                        <span>Interactive AI Quizzer</span>
+                                        <span class="text-[9px] bg-purple-100 text-purple-800 dark:bg-purple-500/10 dark:text-purple-400 px-1.5 py-0.5 rounded uppercase font-mono">Ready</span>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 leading-normal">Generate quizzes with strict JSON schemas from study resources.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- PANEL 5: MY STUDY WORKSPACE -->
+                <section id="panel-workspace" class="tab-panel space-y-6 hidden">
+                    <!-- Workspace Inner Navigation Sub-tabs -->
+                    <div class="flex items-center border-b border-slate-200 dark:border-slate-700/50 pb-px gap-6">
+                        <button onclick="selectWorkspaceSub('notes')" id="wsub-notes" class="wsub-item border-b-2 border-indigo-600 px-1 py-3 text-sm font-bold text-indigo-600 dark:text-indigo-400 transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-note-sticky text-amber-500"></i> My Quick Notes
+                        </button>
+                        <button onclick="selectWorkspaceSub('docs')" id="wsub-docs" class="wsub-item border-b-2 border-transparent px-1 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-file-invoice text-blue-500"></i> Deep Documents
+                        </button>
+                        <button onclick="selectWorkspaceSub('slides')" id="wsub-slides" class="wsub-item border-b-2 border-transparent px-1 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-presentation-screen text-emerald-500"></i> Interactive Slide Decks
+                        </button>
+                    </div>
+
+                    <!-- Inner Panel: Quick Notes -->
+                    <div id="wsub-panel-notes" class="wsub-panel space-y-6">
+                        <!-- Controls for adding a quick note manually -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm space-y-3">
+                                <h3 class="font-extrabold text-xs uppercase tracking-widest text-slate-800 dark:text-white">Create Study Note</h3>
+                                <div>
+                                    <input type="text" id="note-title" placeholder="Note Title (e.g. History Notes)" class="w-full text-xs bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 mt-1 text-slate-800 dark:text-white font-semibold">
+                                </div>
+                                <div>
+                                    <textarea id="note-content" placeholder="Type key facts or definitions here..." class="w-full text-xs bg-slate-50 dark:bg-slate-700 p-3 rounded-xl border-none focus:ring-2 focus:ring-indigo-500 mt-1 text-slate-800 dark:text-white h-24 font-medium"></textarea>
+                                </div>
+                                <button onclick="createNewNote()" class="w-full bg-slate-800 dark:bg-indigo-600 hover:bg-slate-700 dark:hover:bg-indigo-550 text-white font-bold text-xs py-3.5 rounded-xl shadow-md transition-all">
+                                    Save Study Note
+                                </button>
+                            </div>
+
+                            <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4" id="notes-grid-container">
+                                <!-- Notes injected here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inner Panel: Deep Documents -->
+                    <div id="wsub-panel-docs" class="wsub-panel hidden space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            <!-- Document selector list -->
+                            <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm h-96 overflow-y-auto flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <h4 class="font-bold text-[10px] uppercase tracking-wider text-slate-400 mb-2">Available Documents</h4>
+                                    <div id="docs-select-list" class="space-y-1">
+                                        <!-- Documents injected here -->
+                                    </div>
+                                </div>
+                                <button onclick="createBlankDocument()" class="w-full bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 font-bold text-xs py-3 rounded-xl transition-all">
+                                    + Blank Document
+                                </button>
+                            </div>
+                            <!-- Document content previewer/editor -->
+                            <div class="lg:col-span-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm flex flex-col justify-between min-h-[400px]">
+                                <div id="doc-active-editor" class="space-y-4">
+                                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-2">
+                                        <input type="text" id="active-doc-title" class="text-xl font-bold bg-transparent border-none text-slate-800 dark:text-white focus:ring-0 focus:outline-none w-2/3" placeholder="Untitled Document">
+                                        <div class="flex items-center gap-1.5">
+                                            <!-- Gemini Speech synthesis trigger -->
+                                            <button onclick="triggerAIVoiceAloud()" class="px-3 py-1.5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1 hover:shadow-lg transition-all" title="Listen with Gemini Audio synthesis">
+                                                <i class="fa-solid fa-volume-high"></i> <span id="voice-btn-text">AI Voice Aloud</span>
+                                            </button>
+                                            <!-- Gemini structured JSON Quiz generator trigger -->
+                                            <button onclick="triggerQuizGeneration()" class="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg text-xs font-bold flex items-center gap-1 hover:shadow-lg transition-all" title="Generate interactive MCQ study quiz">
+                                                <i class="fa-solid fa-circle-question"></i> AI Study Quiz
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <textarea id="active-doc-content" class="w-full text-sm leading-relaxed text-slate-600 dark:text-slate-300 bg-transparent border-none focus:ring-0 focus:outline-none min-h-[250px] resize-y" placeholder="Start typing study reports or summaries..."></textarea>
+                                </div>
+                                <div class="flex items-center justify-between border-t border-slate-100 dark:border-slate-700 pt-4 mt-4">
+                                    <button onclick="deleteActiveDocument()" class="text-rose-500 hover:underline text-xs font-bold">Delete Doc</button>
+                                    <button onclick="saveActiveDocument()" class="bg-slate-800 dark:bg-indigo-600 hover:bg-slate-700 dark:hover:bg-indigo-550 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
+                                        Update Document
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inner Panel: Interactive Slide Decks -->
+                    <div id="wsub-panel-slides" class="wsub-panel hidden space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            <!-- Presentation list selector -->
+                            <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm h-96 overflow-y-auto flex flex-col justify-between">
+                                <div class="space-y-2">
+                                    <h4 class="font-bold text-[10px] uppercase tracking-wider text-slate-400 mb-2">Available Slide Decks</h4>
+                                    <div id="slides-select-list" class="space-y-1">
+                                        <!-- Decks injected here -->
+                                    </div>
+                                </div>
+                                <button onclick="createBlankPresentation()" class="w-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs py-3 rounded-xl transition-all">
+                                    + Blank Slide Deck
+                                </button>
+                            </div>
+                            <!-- Slide deck workspace interactive viewer -->
+                            <div class="lg:col-span-3 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm flex flex-col justify-between min-h-[400px]">
+                                <div id="slide-viewer-box" class="flex-1 flex flex-col justify-between bg-gradient-to-tr from-slate-900 to-slate-800 text-white rounded-2xl p-8 relative overflow-hidden min-h-[280px]">
+                                    <!-- Slide watermark badge -->
+                                    <div class="absolute right-6 top-6 bg-white/10 text-white/80 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full" id="slide-number-indicator">Slide 1 of 3</div>
+                                    
+                                    <div class="space-y-4 max-w-xl">
+                                        <h2 id="active-slide-title" class="text-2xl md:text-3xl font-black bg-gradient-to-r from-white to-slate-200 bg-clip-text text-transparent">Slide Title Goes Here</h2>
+                                        <ul id="active-slide-bullets" class="space-y-2 list-disc pl-5 text-sm md:text-base text-slate-300">
+                                            <li>Key summary bullet points</li>
+                                            <li>Relevant scientific details</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="flex items-center justify-between border-t border-white/10 pt-4 mt-6">
+                                        <span class="text-xs text-indigo-300 font-medium font-mono" id="slide-deck-title">Active Presentation Title</span>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="prevSlide()" class="p-2.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+                                            <button onclick="nextSlide()" class="p-2.5 bg-white/10 hover:bg-white/20 rounded-xl text-xs">Next <i class="fa-solid fa-chevron-right"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                                    <button onclick="deleteActivePresentation()" class="text-rose-500 hover:underline text-xs font-bold">Delete Slide Deck</button>
+                                    <div class="flex gap-2">
+                                        <button onclick="addSlideToDeck()" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl transition-all">+ Add Slide</button>
+                                        <button onclick="openSlidesEditorModal()" class="bg-indigo-600 hover:bg-indigo-550 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all">Edit Deck Code</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- AI Study Quiz Play Modal -->
+    <div id="quiz-play-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-xl rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-2">
+                <h3 class="font-extrabold text-base text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-brain text-pink-500 animate-pulse"></i> Gemini AI Structured Quiz
+                </h3>
+                <button onclick="closeQuizModal()" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div id="quiz-question-container" class="space-y-4">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span id="quiz-progress-text">Question 1 of 5</span>
+                    <span id="quiz-score-text">Current Score: 0/0</span>
+                </div>
+                <h4 id="quiz-question-title" class="font-bold text-sm text-slate-800 dark:text-white">Loading question...</h4>
+                
+                <div id="quiz-options-grid" class="grid grid-cols-1 gap-2.5">
+                    <!-- MCQ options generated dynamically -->
+                </div>
+                
+                <div id="quiz-explanation-box" class="hidden p-3 bg-indigo-50 dark:bg-indigo-950/40 rounded-xl border border-indigo-200/50 dark:border-indigo-800/40 text-xs">
+                    <span class="font-extrabold text-indigo-600 dark:text-indigo-400 block mb-1">Answer Context</span>
+                    <p id="quiz-explanation-text" class="text-slate-600 dark:text-slate-300 font-medium"></p>
+                </div>
+
+                <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden w-full bg-indigo-600 hover:bg-indigo-550 text-white font-bold text-xs py-3 rounded-xl transition-all">
+                    Next Question <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gemini API Key configuration modal -->
+    <div id="api-settings-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+                <h3 class="font-extrabold text-base text-slate-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-gears text-indigo-500"></i> Gemini API Settings
+                </h3>
+                <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="space-y-3">
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    Running Scholar Bud locally on your machine requires a free Google Gemini API Key to enable the AI Chatbot, Quiz Generator, Voice Synthesis, and automatic Study Planner.
+                </p>
+                
+                <div class="p-3 bg-indigo-50 dark:bg-indigo-950/30 rounded-xl border border-indigo-200/50 dark:border-indigo-800/40 text-[11px] text-indigo-700 dark:text-indigo-300">
+                    <span class="font-bold block mb-1">🔑 How to get a free API Key:</span>
+                    <ol class="list-decimal pl-4 space-y-1">
+                        <li>Visit <a href="https://aistudio.google.com/" target="_blank" class="underline font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">Google AI Studio (Click Here)</a></li>
+                        <li>Sign in with any Google account.</li>
+                        <li>Click <strong>"Get API Key"</strong> then create one. It's completely free!</li>
+                    </ol>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Your Gemini API Key</label>
+                    <input type="password" id="api-key-input" placeholder="Paste your AI Studio key (AIzaSy...)" class="w-full text-xs bg-slate-50 dark:bg-slate-700 p-3.5 rounded-xl border border-slate-200 dark:border-slate-600 mt-1 text-slate-800 dark:text-white font-mono">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-700">
+                <button onclick="closeApiKeyModal()" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl">Cancel</button>
+                <button onclick="saveApiKey()" class="bg-indigo-600 hover:bg-indigo-550 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-500/20">Save Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide Editing Modal -->
+    <div id="slide-edit-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-extrabold text-base text-slate-800 dark:text-white">Edit Slide Deck Code (JSON Structure)</h3>
+                <button onclick="closeSlidesEditorModal()" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <p class="text-[10px] text-slate-400">Edit raw slides database. Useful for correcting Scholar Buddy slide generations directly.</p>
+            <textarea id="slide-json-textarea" class="w-full text-xs font-mono bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 h-64 text-slate-800 dark:text-white"></textarea>
+            <div class="flex items-center justify-end gap-2">
+                <button onclick="closeSlidesEditorModal()" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl">Cancel</button>
+                <button onclick="saveSlidesJSON()" class="bg-indigo-600 hover:bg-indigo-550 text-white font-bold text-xs px-4 py-2.5 rounded-xl">Apply Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Notification Hub manager
+        class NotificationManager {
+            static show(msg, type = "success") {
+                const banner = document.getElementById('notification-banner');
+                const text = document.getElementById('notification-text');
+                
+                banner.className = `mx-6 mt-4 p-3 rounded-xl text-xs font-semibold flex items-center justify-between transition-all duration-300 animate-pulse `;
+                
+                if (type === "success") {
+                    banner.classList.add("bg-indigo-50", "text-indigo-700", "dark:bg-indigo-500/10", "dark:text-indigo-400", "border", "border-indigo-500/20");
+                } else if (type === "info") {
+                    banner.classList.add("bg-amber-50", "text-amber-700", "dark:bg-amber-500/10", "dark:text-amber-400", "border", "border-amber-500/20");
+                } else {
+                    banner.classList.add("bg-rose-50", "text-rose-700", "dark:bg-rose-500/10", "dark:text-rose-400", "border", "border-rose-500/20");
+                }
+                
+                text.innerText = msg;
+                banner.classList.remove('hidden');
+
+                // Auto hide after 6 seconds
+                setTimeout(() => {
+                    banner.classList.add('hidden');
+                }, 6000);
+            }
+        }
+
+        function closeNotification() {
+            document.getElementById('notification-banner').classList.add('hidden');
+        }
+
+        // Sidebar actions
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-left-64')) {
+                sidebar.classList.remove('-left-64');
+                sidebar.classList.add('left-0');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.remove('left-0');
+                sidebar.classList.add('-left-64');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                window.appState.theme = 'light';
+                icon.className = "fa-solid fa-moon";
+            } else {
+                html.classList.add('dark');
+                window.appState.theme = 'dark';
+                icon.className = "fa-solid fa-sun";
+            }
+        }
+
+        // Tab Switching Engine
+        function switchTab(tabId) {
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+            
+            // Show target panel
+            const panel = document.getElementById(`panel-${tabId}`);
+            if (panel) panel.classList.remove('hidden');
+
+            // Deactivate other tabs highlights
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.className = "nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-slate-300 hover:bg-slate-700/50 hover:text-white";
+            });
+
+            // Activate current navigation tab highlight
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                if (tabId === 'chatbot') {
+                    activeBtn.className = "nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/15";
+                } else {
+                    activeBtn.className = "nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold transition-all bg-slate-700 text-white shadow-sm";
+                }
+            }
+
+            // Update Header Name
+            const titles = {
+                'dashboard': 'My Academic Workspace',
+                'tasks': 'Day-Bound Task Manager',
+                'calendar': 'Scholar Bud Academic Calendar',
+                'chatbot': 'Scholar Buddy Academic Chatbot',
+                'workspace': 'Study Materials & Vault'
+            };
+            document.getElementById('current-tab-title').innerText = titles[tabId] || 'Scholar Bud';
+            window.appState.activeTab = tabId;
+
+            // Save state or force component rendering
+            renderApp();
+            
+            // Auto close mobile drawer if open
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('left-0')) {
+                toggleMobileSidebar();
+            }
+        }
+
+        // Midnight Countdown Loop
+        function startMidnightCountdown() {
+            setInterval(() => {
+                const now = new Date();
+                const midnight = new Date(now);
+                midnight.setHours(24, 0, 0, 0); // Next midnight
+                
+                const diff = midnight.getTime() - now.getTime();
+                const hrs = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                const secs = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                
+                document.getElementById('midnight-countdown').innerText = `Auto-clear in: ${hrs}:${mins}:${secs}`;
+                
+                // Continuous midnight cleanup assessment
+                if (diff <= 1000) {
+                    TaskManager.checkAndClearExpiredTasks();
+                }
+            }, 1000);
+        }
+
+        function openApiKeyModal() {
+            document.getElementById('api-key-input').value = window.appState.apiKey || '';
+            document.getElementById('api-settings-modal').classList.remove('hidden');
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('api-settings-modal').classList.add('hidden');
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('api-key-input').value.trim();
+            window.appState.apiKey = key;
+            localStorage.setItem('scholarbud_api_key', key);
+            
+            closeApiKeyModal();
+            updateApiStatusIndicators();
+            NotificationManager.show("Gemini API Key saved securely! Ready for local execution.", "success");
+        }
+
+        function updateApiStatusIndicators() {
+            const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const hasKey = !!window.appState.apiKey;
+            
+            const warningBadge = document.getElementById('local-key-warning');
+            const statusDot = document.getElementById('api-status-dot');
+
+            if (hasKey) {
+                statusDot.className = "absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-slate-800 bg-emerald-500 animate-pulse";
+                if (warningBadge) warningBadge.classList.add('hidden');
+            } else {
+                statusDot.className = "absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-slate-800 bg-rose-500";
+                if (isLocal && warningBadge) {
+                    warningBadge.classList.remove('hidden');
+                }
+            }
+        }
+    </script>
+
+    <script>
+        // AI query submissions with advanced tools schema (Notes, Docs, Presentation & YT integrations)
+        async function submitChatQuery() {
+            const input = document.getElementById('chat-input');
+            const query = input.value.trim();
+
+            if (!query && !window.appState.uploadedImageBase64) return;
+
+            if (!window.appState.apiKey && (window.location.protocol === 'file:' || window.location.hostname === 'localhost')) {
+                openApiKeyModal();
+                NotificationManager.show("Please configure your free Gemini API Key first to chat locally.", "error");
+                return;
+            }
+
+            // Render User Chat Bubble Immediately
+            appendChatBubble('user', query || "Please review this uploaded study document/image.");
+            input.value = '';
+
+            // Setup loading
+            document.getElementById('chat-loading-indicator').classList.remove('hidden');
+            
+            // Invoke Gemini Core API
+            try {
+                const responseText = await queryScholarBuddyAI(query || "Describe this attached study resource in detail, and explain how we can format it as a quick note.");
+                appendChatBubble('bot', responseText);
+            } catch (e) {
+                console.error("AI Generation Error: ", e);
+                appendChatBubble('bot', "I apologize, but I encountered issues executing that study query. Please check your internet connection or verify your API key is correct.");
+            } finally {
+                document.getElementById('chat-loading-indicator').classList.add('hidden');
+                clearUploadedImage(); // Clean uploader state after response completes
+            }
+        }
+
+        function injectChatPrompt(text) {
+            document.getElementById('chat-input').value = text;
+            switchTab('chatbot');
+            document.getElementById('chat-input').focus();
+        }
+
+        function appendChatBubble(sender, text) {
+            const container = document.getElementById('chatbot-messages-scroll');
+            const bubble = document.createElement('div');
+            bubble.className = "flex items-start gap-3 animate-fade-in";
+
+            const botAvatar = `<div class="h-8 w-8 bg-indigo-100 dark:bg-indigo-550/20 text-indigo-600 dark:text-indigo-400 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"><i class="fa-solid fa-robot"></i></div>`;
+            const userAvatar = `<div class="h-8 w-8 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"><i class="fa-solid fa-user"></i></div>`;
+
+            const avatar = (sender === 'bot') ? botAvatar : userAvatar;
+            const bubbleStyle = (sender === 'bot') 
+                ? "bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-100 p-4 rounded-2xl max-w-lg text-xs leading-relaxed"
+                : "bg-indigo-600 text-white p-4 rounded-2xl max-w-lg text-xs leading-relaxed ml-auto";
+
+            // Format markdown code segments elegantly for study materials
+            const formattedText = formatStudyMarkdown(text);
+
+            bubble.innerHTML = `
+                ${sender === 'bot' ? avatar : ''}
+                <div class="${bubbleStyle}">
+                    ${formattedText}
+                </div>
+                ${sender === 'user' ? avatar : ''}
+            `;
+
+            container.appendChild(bubble);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Basic formatting utility for code and headers
+        function formatStudyMarkdown(text) {
+            return text
+                .replace(/```(.*?)\n([\s\S]*?)```/g, '<pre class="bg-slate-900 text-slate-100 p-3 rounded-lg my-2 font-mono text-[11px] overflow-x-auto"><code>$2</code></pre>')
+                .replace(/`([^`]+)`/g, '<code class="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-[11px] font-mono">$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // Strict academic constraints prompt and function declarations for AI
+        async function queryScholarBuddyAI(userQuery) {
+            const systemInstruction = `
+            You are Scholar Buddy, an elite study assistant chatbot for the Scholar Bud platform.
+            
+            STRICT GUARDRAILS:
+            - ONLY answer questions related to Studies, Coding, Science, Literature, Math, History, and General Knowledge.
+            - ABSOLUTELY REFUSE to assist with irrelevant queries, games, jokes, entertainment gossip, creative roleplays, shopping advice, or personal opinions.
+            - If a query is NOT academic or educational, politely state: "As your Scholar Buddy study partner, I must only assist you with studies, coding, general knowledge, or academic task creations! Let's find a study topic to research instead."
+            - You CANNOT generate images under any circumstances. If requested, remind the user you have no visual generator tools.
+
+            TOOL WORKSPACE CAPABILITY:
+            You are connected to live student workspace tools. If the user asks you to write notes, construct slide presentations, outline deep documents, or search tutorials, you should call the appropriate tool.
+            
+            Always output standard clean responses. When creating slide presentation code structures via createPresentation, use standard JSON slide structures.
+            `;
+
+            // Function calling definitions
+            const tools = [{
+                functionDeclarations: [
+                    {
+                        name: 'createNote',
+                        description: 'Generates a quick revision note for the student side panel.',
+                        parameters: {
+                            type: 'OBJECT',
+                            properties: {
+                                title: { type: 'STRING', description: 'Brief descriptive title' },
+                                content: { type: 'STRING', description: 'Key academic concepts or details' }
+                            },
+                            required: ['title', 'content']
+                        }
+                    },
+                    {
+                        name: 'createDocument',
+                        description: 'Creates a deep dive text document summarizing complex theories or essays.',
+                        parameters: {
+                            type: 'OBJECT',
+                            properties: {
+                                title: { type: 'STRING', description: 'Formal study document header' },
+                                content: { type: 'STRING', description: 'Detailed full study notes text content' }
+                            },
+                            required: ['title', 'content']
+                        }
+                    },
+                    {
+                        name: 'createPresentation',
+                        description: 'Designs an interactive slides deck with custom slides.',
+                        parameters: {
+                            type: 'OBJECT',
+                            properties: {
+                                title: { type: 'STRING', description: 'Presentation Topic Header' },
+                                slides: {
+                                    type: 'ARRAY',
+                                    description: 'List of individual slide bodies',
+                                    items: {
+                                        type: 'OBJECT',
+                                        properties: {
+                                            title: { type: 'STRING', description: 'Individual slide title' },
+                                            bullets: {
+                                                type: 'ARRAY',
+                                                description: 'Key bullet summaries (strings)',
+                                                items: { type: 'STRING' }
+                                            }
+                                        },
+                                        required: ['title', 'bullets']
+                                    }
+                                }
+                            },
+                            required: ['title', 'slides']
+                        }
+                    },
+                    {
+                        name: 'searchYouTube',
+                        description: 'Simulates extraction of academic video tutorial links dynamically.',
+                        parameters: {
+                            type: 'OBJECT',
+                            properties: {
+                                query: { type: 'STRING', description: 'Academic search queries (e.g. quantum mechanics physics tutorial)' }
+                            },
+                            required: ['query']
+                        }
+                    }
+                ]
+            }];
+
+            const apiKey = window.appState.apiKey || ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            // Build payload with support for Multimodal base64 attachments if active
+            const userContentParts = [];
+            if (window.appState.uploadedImageBase64) {
+                userContentParts.push({
+                    inlineData: {
+                        mimeType: "image/png",
+                        data: window.appState.uploadedImageBase64
+                    }
+                });
+            }
+            userContentParts.push({ text: userQuery });
+
+            const chatHistory = [
+                { role: "user", parts: userContentParts }
+            ];
+
+            const payload = {
+                contents: chatHistory,
+                tools: tools,
+                systemInstruction: {
+                    parts: [{ text: systemInstruction }]
+                }
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            const candidate = result.candidates?.[0];
+
+            if (candidate) {
+                // Check if Tool/Function Call was triggered
+                if (candidate.content?.parts?.[0]?.functionCall) {
+                    const fc = candidate.content.parts[0].functionCall;
+                    return await handleAIToolCall(fc);
+                }
+
+                // Standard generated text response
+                if (candidate.content?.parts?.[0]?.text) {
+                    return candidate.content.parts[0].text;
+                }
+            }
+
+            return "I apologize, but I could not interpret that concept clearly. Try adjusting the query.";
+        }
+
+        // Processing Tool Actions Triggered by Gemini Flash
+        async function handleAIToolCall(fc) {
+            console.log("Interpreted AI Tool Call: ", fc);
+            const { name, args } = fc;
+
+            if (name === 'createNote') {
+                const note = {
+                    id: crypto.randomUUID(),
+                    title: args.title || 'AI Quick Note',
+                    content: args.content || ''
+                };
+                window.appState.notes.unshift(note);
+                renderApp();
+                NotificationManager.show(`Scholar Buddy created a Quick Note: "${note.title}"!`, "success");
+                return `[LIVE TOOL ACTIVATED] I have successfully added a Quick Note titled "${args.title}" to your Resource Vault tab. Click 'My Workspace' to access it!`;
+            }
+
+            if (name === 'createDocument') {
+                const docItem = {
+                    id: crypto.randomUUID(),
+                    title: args.title || 'AI Document Analysis',
+                    content: args.content || ''
+                };
+                window.appState.documents.push(docItem);
+                window.currentDocId = docItem.id;
+                renderApp();
+                NotificationManager.show(`Scholar Buddy formulated a Document: "${docItem.title}"!`, "success");
+                return `[LIVE TOOL ACTIVATED] I created a Deep Study Document: "${args.title}". You can check and refine this right inside 'My Workspace' under the Documents sub-tab!`;
+            }
+
+            if (name === 'createPresentation') {
+                const pres = {
+                    id: crypto.randomUUID(),
+                    title: args.title || 'AI Slide Structure',
+                    slides: args.slides || []
+                };
+                window.appState.presentations.push(pres);
+                window.currentPresentationId = pres.id;
+                window.currentSlideIndex = 0;
+                renderApp();
+                NotificationManager.show(`Scholar Buddy built Slides: "${pres.title}"!`, "success");
+                return `[LIVE TOOL ACTIVATED] I have successfully structured a brand-new Slide Deck: "${args.title}" consisting of ${args.slides.length} revision slides. Open 'My Workspace' -> Slide Decks to review them!`;
+            }
+
+            if (name === 'searchYouTube') {
+                executeYouTubeFetch(args.query);
+                NotificationManager.show(`Scholar Buddy initiated YouTube Search for "${args.query}"`, "info");
+                return `[LIVE TOOL ACTIVATED] I launched our integrated YouTube Engine to search for: "${args.query}". The video blocks are now rendering directly in your Dashboard tutorial feed!`;
+            }
+
+            return "Tool executed successfully.";
+        }
+    </script>
+
+    <script>
+        // Feature 1: Structured AI Quiz Generator (Gemini MimeType JSON Output)
+        async function triggerQuizGeneration() {
+            const activeDoc = window.appState.documents.find(d => d.id === window.currentDocId);
+            if (!activeDoc) {
+                NotificationManager.show("Please create/select a valid Study Document first.", "error");
+                return;
+            }
+
+            if (!window.appState.apiKey && (window.location.protocol === 'file:' || window.location.hostname === 'localhost')) {
+                openApiKeyModal();
+                NotificationManager.show("Please configure your free Gemini API Key to generate study quizzes.", "error");
+                return;
+            }
+
+            NotificationManager.show("Generating structured study quiz from document content...", "info");
+            
+            const prompt = `Based on the following academic study content, generate 5 challenging multiple choice questions. Format each question with 4 options, a correct answer index, and a brief explanation of why the answer is correct.\n\nDOCUMENT BODY:\n${activeDoc.content}`;
+            
+            const apiKey = window.appState.apiKey || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                question: { type: "STRING" },
+                                options: { type: "ARRAY", items: { type: "STRING" } },
+                                answerIndex: { type: "INTEGER", description: "Zero-based index of correct option" },
+                                explanation: { type: "STRING" }
+                            },
+                            required: ["question", "options", "answerIndex", "explanation"]
+                        }
+                    }
+                }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (jsonText) {
+                    window.appState.activeQuizQuestions = JSON.parse(jsonText);
+                    window.appState.activeQuizIndex = 0;
+                    window.appState.activeQuizScore = 0;
+                    
+                    openQuizModal();
+                    displayActiveQuizQuestion();
+                    NotificationManager.show("AI Structured Quiz generated successfully!", "success");
+                }
+            } catch (error) {
+                console.error("Structured quiz parsing failed: ", error);
+                NotificationManager.show("Failed to compile structured academic quiz. Try again.", "error");
+            }
+        }
+
+        function openQuizModal() {
+            document.getElementById('quiz-play-modal').classList.remove('hidden');
+        }
+
+        function closeQuizModal() {
+            document.getElementById('quiz-play-modal').classList.add('hidden');
+        }
+
+        function displayActiveQuizQuestion() {
+            const index = window.appState.activeQuizIndex;
+            const total = window.appState.activeQuizQuestions.length;
+            const q = window.appState.activeQuizQuestions[index];
+
+            if (!q) return;
+
+            document.getElementById('quiz-progress-text').innerText = `Question ${index + 1} of ${total}`;
+            document.getElementById('quiz-score-text').innerText = `Current Score: ${window.appState.activeQuizScore}/${index}`;
+            document.getElementById('quiz-question-title').innerText = q.question;
+            
+            const grid = document.getElementById('quiz-options-grid');
+            grid.innerHTML = '';
+            document.getElementById('quiz-explanation-box').classList.add('hidden');
+            document.getElementById('quiz-next-btn').classList.add('hidden');
+
+            q.options.forEach((opt, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left text-xs p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 font-medium transition-all flex items-center justify-between";
+                btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle text-slate-300"></i>`;
+                btn.onclick = () => submitQuizAnswer(optIdx, btn);
+                grid.appendChild(btn);
+            });
+        }
+
+        function submitQuizAnswer(selectedIndex, clickedBtn) {
+            const index = window.appState.activeQuizIndex;
+            const q = window.appState.activeQuizQuestions[index];
+            const correctIndex = q.answerIndex;
+            const grid = document.getElementById('quiz-options-grid');
+            const buttons = grid.getElementsByTagName('button');
+
+            // Disable all options
+            for (let btn of buttons) {
+                btn.disabled = true;
+            }
+
+            if (selectedIndex === correctIndex) {
+                clickedBtn.className = "w-full text-left text-xs p-3 rounded-xl border border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-400 font-bold transition-all flex items-center justify-between";
+                clickedBtn.innerHTML += `<i class="fa-solid fa-circle-check text-emerald-500 text-sm"></i>`;
+                window.appState.activeQuizScore++;
+            } else {
+                clickedBtn.className = "w-full text-left text-xs p-3 rounded-xl border-rose-500 bg-rose-50 dark:bg-rose-950/20 text-rose-800 dark:text-rose-400 font-bold transition-all flex items-center justify-between";
+                clickedBtn.innerHTML += `<i class="fa-solid fa-circle-xmark text-rose-500 text-sm"></i>`;
+                
+                // Highlight correct answer
+                const correctBtn = buttons[correctIndex];
+                if (correctBtn) {
+                    correctBtn.className = "w-full text-left text-xs p-3 rounded-xl border border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-400 font-bold transition-all flex items-center justify-between";
+                }
+            }
+
+            // Show explanation
+            document.getElementById('quiz-explanation-text').innerText = q.explanation;
+            document.getElementById('quiz-explanation-box').classList.remove('hidden');
+            document.getElementById('quiz-next-btn').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            window.appState.activeQuizIndex++;
+            if (window.appState.activeQuizIndex < window.appState.activeQuizQuestions.length) {
+                displayActiveQuizQuestion();
+            } else {
+                // Quiz completed
+                const score = window.appState.activeQuizScore;
+                const total = window.appState.activeQuizQuestions.length;
+                
+                const grid = document.getElementById('quiz-options-grid');
+                grid.innerHTML = `
+                    <div class="text-center py-6 space-y-3">
+                        <i class="fa-solid fa-trophy text-amber-500 text-5xl animate-bounce"></i>
+                        <h4 class="font-extrabold text-sm text-slate-800 dark:text-white">AI Structured Quiz Completed!</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">You scored ${score} out of ${total} points. Excellent effort study partner!</p>
+                    </div>
+                `;
+                document.getElementById('quiz-explanation-box').classList.add('hidden');
+                document.getElementById('quiz-next-btn').classList.add('hidden');
+            }
+        }
+
+        // Feature 2: AI Study Planner Calendar Analysis (Structured JSON Generation)
+        async function triggerAIStudyPlanner() {
+            if (window.appState.calendarEvents.length === 0) {
+                NotificationManager.show("Please sync or add upcoming Academic Calendar exams first.", "error");
+                return;
+            }
+
+            if (!window.appState.apiKey && (window.location.protocol === 'file:' || window.location.hostname === 'localhost')) {
+                openApiKeyModal();
+                NotificationManager.show("Please configure your free Gemini API Key to use the AI Study Planner.", "error");
+                return;
+            }
+
+            NotificationManager.show("Analyzing synchronized calendar timelines...", "info");
+
+            const prompt = `Analyze these upcoming calendar milestones and generate a structured list of 4 highly focused day-bound study tasks to complete. Format as standard JSON array.\n\nCALENDAR BLOCKS:\n${JSON.stringify(window.appState.calendarEvents)}`;
+            
+            const apiKey = window.appState.apiKey || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                text: { type: "STRING", description: "Focused task description" },
+                                category: { type: "STRING", description: "Studies, Coding, or Exam Prep" }
+                            },
+                            required: ["text", "category"]
+                        }
+                    }
+                }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (jsonText) {
+                    const plannerTasks = JSON.parse(jsonText);
+                    
+                    plannerTasks.forEach(pt => {
+                        window.appState.tasks.push({
+                            id: crypto.randomUUID(),
+                            text: pt.text,
+                            completed: false,
+                            category: pt.category,
+                            addedTime: new Date().getTime()
+                        });
+                    });
+                    
+                    await TaskManager.saveTasks();
+                    switchTab('tasks');
+                    NotificationManager.show("Gemini automatically scheduled 4 highly tailored study planner tasks on your Todo list!", "success");
+                }
+            } catch (error) {
+                console.error("Study planner structuring failed: ", error);
+                NotificationManager.show("Could not generate plan structures. Try manual planning.", "error");
+            }
+        }
+
+        // Image Selection and Upload helpers
+        function handleImageFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    NotificationManager.show("Please select a valid image study file.", "error");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Data = e.target.result.split(',')[1];
+                    window.appState.uploadedImageBase64 = base64Data;
+                    
+                    document.getElementById('chatbot-image-filename').innerText = file.name;
+                    document.getElementById('chatbot-image-preview-bar').classList.remove('hidden');
+                    NotificationManager.show("Study image loaded successfully! Scholar Buddy is ready to inspect it.", "success");
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearUploadedImage() {
+            window.appState.uploadedImageBase64 = null;
+            document.getElementById('chatbot-file-input').value = '';
+            document.getElementById('chatbot-image-preview-bar').classList.add('hidden');
+        }
+    </script>
+
+    <script>
+        // Feature 3: Gemini 2.5 Voice Synthesis (TTS - Text to Speech Engine)
+        async function triggerAIVoiceAloud() {
+            if (window.appState.voicePlaying) {
+                stopAIVoice();
+                return;
+            }
+
+            const activeDoc = window.appState.documents.find(d => d.id === window.currentDocId);
+            if (!activeDoc) {
+                NotificationManager.show("Please create/select a valid Study Document first.", "error");
+                return;
+            }
+
+            if (!window.appState.apiKey && (window.location.protocol === 'file:' || window.location.hostname === 'localhost')) {
+                openApiKeyModal();
+                NotificationManager.show("Please configure your free Gemini API Key to use AI Voice synthesis.", "error");
+                return;
+            }
+
+            NotificationManager.show("Synthesizing high-fidelity audio explanation with Scholar Buddy Voice...", "info");
+            document.getElementById('voice-btn-text').innerText = "Generating Voice...";
+
+            // Clean synthesis query
+            const summaryText = `Summarize and explain warmly: ${activeDoc.title}. ${activeDoc.content.substring(0, 400)}`;
+
+            const payload = {
+                contents: [{
+                    parts: [{ text: summaryText }]
+                }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: "Sulafat" } // Distinct warm & balanced voice
+                        }
+                    }
+                }
+            };
+
+            const apiKey = window.appState.apiKey || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const base64AudioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType;
+
+                if (base64AudioData && mimeType && mimeType.startsWith("audio/")) {
+                    // Raw Signed PCM16 Audio Stream Conversion
+                    const sampleRate = parseInt(mimeType.match(/rate=(\d+)/)?.[1] || "24000", 10);
+                    const pcmData = base64ToArrayBuffer(base64AudioData);
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+
+                    // Stream execution
+                    window.appState.voiceAudio = new Audio(audioUrl);
+                    window.appState.voiceAudio.play();
+                    window.appState.voicePlaying = true;
+                    
+                    document.getElementById('voice-btn-text').innerText = "Stop Reading";
+                    NotificationManager.show("Scholar Buddy is explaining your document aloud!", "success");
+
+                    window.appState.voiceAudio.onended = () => {
+                        stopAIVoice();
+                    };
+                } else {
+                    throw new Error("Invalid voice modality returned from Gemini API");
+                }
+            } catch (error) {
+                console.error("Audio synthesis failed: ", error);
+                document.getElementById('voice-btn-text').innerText = "AI Voice Aloud";
+                NotificationManager.show("Voice synthesis encountered issues. Try again.", "error");
+            }
+        }
+
+        function stopAIVoice() {
+            if (window.appState.voiceAudio) {
+                window.appState.voiceAudio.pause();
+                window.appState.voiceAudio = null;
+            }
+            window.appState.voicePlaying = false;
+            document.getElementById('voice-btn-text').innerText = "AI Voice Aloud";
+            NotificationManager.show("Audio explanation paused.", "info");
+        }
+
+        // PCM 16-bit to WAV Container Binary Conversion Helpers
+        function base64ToArrayBuffer(base64) {
+            const binaryString = window.atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function pcmToWav(pcm16Array, sampleRate) {
+            const buffer = new ArrayBuffer(44 + pcm16Array.length * 2);
+            const view = new DataView(buffer);
+
+            // "RIFF" Header chunk
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + pcm16Array.length * 2, true);
+            writeString(view, 8, 'WAVE');
+
+            // Format descriptor chunk
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true); // Size of format chunk descriptor
+            view.setUint16(20, 1, true); // Compression format (PCM = 1)
+            view.setUint16(22, 1, true); // Channel count (mono)
+            view.setUint32(24, sampleRate, true); // Voice sample rate
+            view.setUint32(28, sampleRate * 2, true); // Bytes per second
+            view.setUint16(32, 2, true); // Block align structure
+            view.setUint16(34, 16, true); // Bits per sample (PCM16)
+
+            // "data" chunk structure
+            writeString(view, 36, 'data');
+            view.setUint32(40, pcm16Array.length * 2, true);
+
+            // Flush signed PCM 16-bit streams
+            for (let i = 0; i < pcm16Array.length; i++) {
+                view.setInt16(44 + i * 2, pcm16Array[i], true);
+            }
+
+            return new Blob([view], { type: 'audio/wav' });
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+    </script>
+
+    <script>
+        // Workspace sub-tabs controls (Notes, Docs, Presentations)
+        function selectWorkspaceSub(subTabId) {
+            // Hide all sub-panels
+            document.querySelectorAll('.wsub-panel').forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            // Show selected panel
+            const panel = document.getElementById(`wsub-panel-${subTabId}`);
+            if (panel) panel.classList.remove('hidden');
+
+            // Deactivate visual sub-navigation styles
+            document.querySelectorAll('.wsub-item').forEach(btn => {
+                btn.className = "wsub-item border-b-2 border-transparent px-1 py-3 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center gap-2";
+            });
+
+            // Activate visual sub-navigation styles
+            const activeBtn = document.getElementById(`wsub-${subTabId}`);
+            if (activeBtn) {
+                if (subTabId === 'notes') {
+                    activeBtn.className = "wsub-item border-b-2 border-indigo-600 px-1 py-3 text-sm font-bold text-indigo-600 dark:text-indigo-400 transition-all flex items-center gap-2";
+                } else if (subTabId === 'docs') {
+                    activeBtn.className = "wsub-item border-b-2 border-blue-600 px-1 py-3 text-sm font-bold text-blue-600 dark:text-blue-400 transition-all flex items-center gap-2";
+                } else if (subTabId === 'slides') {
+                    activeBtn.className = "wsub-item border-b-2 border-emerald-600 px-1 py-3 text-sm font-bold text-emerald-600 dark:text-emerald-400 transition-all flex items-center gap-2";
+                }
+            }
+        }
+
+        // Quick Notes manual handlers
+        function createNewNote() {
+            const titleInput = document.getElementById('note-title');
+            const contentInput = document.getElementById('note-content');
+            const title = titleInput.value.trim();
+            const content = contentInput.value.trim();
+
+            if (!title || !content) {
+                NotificationManager.show("Notes must have a title and key study concepts.", "error");
+                return;
+            }
+
+            window.appState.notes.unshift({
+                id: crypto.randomUUID(),
+                title: title,
+                content: content
+            });
+
+            titleInput.value = '';
+            contentInput.value = '';
+            renderApp();
+            NotificationManager.show("Study note cached successfully!", "success");
+        }
+
+        function deleteNote(id) {
+            window.appState.notes = window.appState.notes.filter(n => n.id !== id);
+            renderApp();
+            NotificationManager.show("Study note removed from Vault.", "info");
+        }
+
+        // Deep Documents interactive handlers
+        function selectDocument(id) {
+            window.currentDocId = id;
+            const docItem = window.appState.documents.find(d => d.id === id);
+            if (docItem) {
+                document.getElementById('active-doc-title').value = docItem.title;
+                document.getElementById('active-doc-content').value = docItem.content;
+            }
+            renderDocumentsSelectors();
+        }
+
+        function createBlankDocument() {
+            const docItem = {
+                id: crypto.randomUUID(),
+                title: 'Untitled Study Document',
+                content: 'Insert detailed scientific concepts or essays here...'
+            };
+            window.appState.documents.push(docItem);
+            selectDocument(docItem.id);
+            NotificationManager.show("New Blank Document initialized.", "success");
+        }
+
+        function deleteActiveDocument() {
+            if (window.appState.documents.length <= 1) {
+                NotificationManager.show("Cannot delete the last remaining workspace document.", "error");
+                return;
+            }
+            window.appState.documents = window.appState.documents.filter(d => d.id !== window.currentDocId);
+            selectDocument(window.appState.documents[0].id);
+            NotificationManager.show("Study Document deleted.", "info");
+        }
+
+        function saveActiveDocument() {
+            const title = document.getElementById('active-doc-title').value.trim();
+            const content = document.getElementById('active-doc-content').value.trim();
+
+            if (!title) {
+                NotificationManager.show("Documents require an active study header title.", "error");
+                return;
+            }
+
+            const docItem = window.appState.documents.find(d => d.id === window.currentDocId);
+            if (docItem) {
+                docItem.title = title;
+                docItem.content = content;
+                renderDocumentsSelectors();
+                NotificationManager.show("Document content updated!", "success");
+            }
+        }
+
+        // Slide Presentations interactive handlers
+        function selectPresentation(id) {
+            window.currentPresentationId = id;
+            window.currentSlideIndex = 0;
+            renderPresentationsSelector();
+            renderActiveSlide();
+        }
+
+        function createBlankPresentation() {
+            const pres = {
+                id: crypto.randomUUID(),
+                title: 'Untitled Lecture Deck',
+                slides: [
+                    { title: 'Intro Lecture Slide', bullets: ['Key concept bullet point details here'] }
+                ]
+            };
+            window.appState.presentations.push(pres);
+            selectPresentation(pres.id);
+            NotificationManager.show("New Lecture Presentation Deck initialized.", "success");
+        }
+
+        function deleteActivePresentation() {
+            if (window.appState.presentations.length <= 1) {
+                NotificationManager.show("Cannot delete the last remaining slide presentation deck.", "error");
+                return;
+            }
+            window.appState.presentations = window.appState.presentations.filter(p => p.id !== window.currentPresentationId);
+            selectPresentation(window.appState.presentations[0].id);
+            NotificationManager.show("Lecture Deck deleted.", "info");
+        }
+
+        function addSlideToDeck() {
+            const pres = window.appState.presentations.find(p => p.id === window.currentPresentationId);
+            if (pres) {
+                pres.slides.push({
+                    title: `Key Slide Title ${pres.slides.length + 1}`,
+                    bullets: ['Study detail facts...']
+                });
+                window.currentSlideIndex = pres.slides.length - 1;
+                renderActiveSlide();
+                NotificationManager.show("Slide added to active presentation.", "success");
+            }
+        }
+
+        function prevSlide() {
+            if (window.currentSlideIndex > 0) {
+                window.currentSlideIndex--;
+                renderActiveSlide();
+            }
+        }
+
+        function nextSlide() {
+            const pres = window.appState.presentations.find(p => p.id === window.currentPresentationId);
+            if (pres && window.currentSlideIndex < pres.slides.length - 1) {
+                window.currentSlideIndex++;
+                renderActiveSlide();
+            }
+        }
+
+        function openSlidesEditorModal() {
+            const pres = window.appState.presentations.find(p => p.id === window.currentPresentationId);
+            if (pres) {
+                document.getElementById('slide-json-textarea').value = JSON.stringify(pres.slides, null, 2);
+                document.getElementById('slide-edit-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeSlidesEditorModal() {
+            document.getElementById('slide-edit-modal').classList.add('hidden');
+        }
+
+        function saveSlidesJSON() {
+            const val = document.getElementById('slide-json-textarea').value.trim();
+            const pres = window.appState.presentations.find(p => p.id === window.currentPresentationId);
+            if (!pres) return;
+
+            try {
+                const parsed = JSON.parse(val);
+                if (Array.isArray(parsed) && parsed.every(s => typeof s.title === 'string' && Array.isArray(s.bullets))) {
+                    pres.slides = parsed;
+                    window.currentSlideIndex = 0;
+                    closeSlidesEditorModal();
+                    renderActiveSlide();
+                    NotificationManager.show("Slides database successfully compiled!", "success");
+                } else {
+                    throw new Error("Missing correct slide structures");
+                }
+            } catch (error) {
+                NotificationManager.show("Could not apply JSON slide structures. Keep layout: [{'title': '...', 'bullets': [...]}]", "error");
+            }
+        }
+    </script>
+
+    <script>
+        // Tasks modification engines
+        async function toggleTask(id) {
+            const task = window.appState.tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                await TaskManager.saveTasks();
+            }
+        }
+
+        async function deleteTask(id) {
+            window.appState.tasks = window.appState.tasks.filter(t => t.id !== id);
+            await TaskManager.saveTasks();
+            NotificationManager.show("Milestone deleted successfully.", "info");
+        }
+
+        async function createNewTask() {
+            const input = document.getElementById('task-input');
+            const text = input.value.trim();
+            const cat = document.getElementById('task-category').value;
+
+            if (!text) {
+                NotificationManager.show("Todo task text cannot be empty.", "error");
+                return;
+            }
+
+            window.appState.tasks.push({
+                id: crypto.randomUUID(),
+                text: text,
+                completed: false,
+                category: cat,
+                addedTime: new Date().getTime()
+            });
+
+            input.value = '';
+            await TaskManager.saveTasks();
+            NotificationManager.show("New milestone added! Strikes out at midnight.", "success");
+        }
+
+        async function clearAllTasks() {
+            window.appState.tasks = [];
+            await TaskManager.saveTasks();
+            NotificationManager.show("Taskboard cleared.", "info");
+        }
+
+        // Calendar connection triggers
+        function toggleCalendarConnection() {
+            if (window.appState.isCalendarConnected) {
+                disconnectCalendar();
+            } else {
+                window.appState.isCalendarConnected = true;
+                document.getElementById('btn-connect-calendar').innerHTML = '<i class="fa-solid fa-link-slash"></i> Connected';
+                document.getElementById('btn-connect-calendar').className = "bg-emerald-600 hover:bg-emerald-550 text-white font-bold text-xs px-5 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2";
+                
+                // Inject connected mocked academic exams to test planner AI
+                window.appState.calendarEvents = [
+                    { id: 'ev1', title: 'Data Structures Exam Revision', date: '2026-05-24', time: '10:00' },
+                    { id: 'ev2', title: 'World History Lecture Deadline', date: '2026-05-28', time: '14:30' }
+                ];
+                
+                document.getElementById('calendar-sync-banner').classList.remove('hidden');
+                renderApp();
+                NotificationManager.show("Academic calendar successfully synchronized!", "success");
+            }
+        }
+
+        function disconnectCalendar() {
+            window.appState.isCalendarConnected = false;
+            document.getElementById('btn-connect-calendar').innerHTML = '<i class="fa-solid fa-calendar-plus"></i> Connect Calendar';
+            document.getElementById('btn-connect-calendar').className = "bg-indigo-600 hover:bg-indigo-550 text-white font-bold text-xs px-5 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2";
+            window.appState.calendarEvents = [];
+            document.getElementById('calendar-sync-banner').classList.add('hidden');
+            renderApp();
+            NotificationManager.show("Calendar synchronization severed.", "info");
+        }
+
+        function createNewEvent() {
+            const titleInput = document.getElementById('event-title');
+            const dateInput = document.getElementById('event-date');
+            const timeInput = document.getElementById('event-time');
+
+            const title = titleInput.value.trim();
+            const date = dateInput.value;
+            const time = timeInput.value;
+
+            if (!title || !date || !time) {
+                NotificationManager.show("All event descriptors (title, date, and time) are required.", "error");
+                return;
+            }
+
+            window.appState.calendarEvents.push({
+                id: crypto.randomUUID(),
+                title: title,
+                date: date,
+                time: time
+            });
+
+            // Sort calendar elements chronologically
+            window.appState.calendarEvents.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+
+            titleInput.value = '';
+            dateInput.value = '';
+            timeInput.value = '';
+
+            renderApp();
+            NotificationManager.show("Study session block established in calendar agenda!", "success");
+        }
+
+        function deleteEvent(id) {
+            window.appState.calendarEvents = window.appState.calendarEvents.filter(e => e.id !== id);
+            renderApp();
+            NotificationManager.show("Study sessions removed.", "info");
+        }
+    </script>
+
+    <script>
+        // Custom search generator matching standard search requests for study keywords
+        function searchYouTubeWidget() {
+            const input = document.getElementById('youtube-search-input');
+            const query = input.value.trim();
+            if (query) {
+                executeYouTubeFetch(query);
+                NotificationManager.show(`YouTube search completed for: "${query}"`, "success");
+            }
+        }
+
+        function executeYouTubeFetch(query) {
+            // Generating custom contextual mockup objects so users have beautiful study materials matching any input keyword
+            const templates = [
+                { title: `Ultimate Crash Course on ${query}`, views: '240K views', length: '14:20', channel: 'Academic Core Lessons' },
+                { title: `Learn ${query} step-by-step for Beginners`, views: '1.2M views', length: '32:05', channel: 'The Dev Academy' },
+                { title: `Avoid These 5 Common Mistakes in ${query}`, views: '98K views', length: '08:45', channel: 'Exam Revision Pro' }
+            ];
+
+            window.appState.youtubeResults = templates;
+            renderYouTubeResults();
+        }
+
+        function renderYouTubeResults() {
+            const container = document.getElementById('youtube-results-container');
+            container.innerHTML = '';
+
+            if (window.appState.youtubeResults.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-6 text-slate-400 text-xs font-semibold">Search a study topic above to look up visual tutorial resources.</div>`;
+                return;
+            }
+
+            window.appState.youtubeResults.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 dark:bg-slate-700/60 p-4 rounded-xl border border-slate-200/50 dark:border-slate-600/50 hover:shadow-md transition-all flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="h-28 bg-slate-200 dark:bg-slate-800 rounded-lg flex items-center justify-center relative mb-3 overflow-hidden group">
+                            <span class="absolute bottom-2 right-2 bg-black text-white text-[10px] px-1.5 py-0.5 rounded font-mono font-bold">${item.length}</span>
+                            <i class="fa-brands fa-youtube text-red-600 text-3xl group-hover:scale-110 transition-transform"></i>
+                        </div>
+                        <h5 class="text-xs font-extrabold text-slate-800 dark:text-slate-100 line-clamp-2">${item.title}</h5>
+                        <p class="text-[10px] text-slate-400 mt-1 font-bold">${item.channel}</p>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px] text-slate-400 mt-3 border-t border-slate-100 dark:border-slate-700/60 pt-2">
+                        <span>${item.views}</span>
+                        <a href="https://www.youtube.com/results?search_query=${encodeURIComponent(item.title)}" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline font-extrabold flex items-center gap-0.5">
+                            Watch Lesson <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
+
+    <script>
+        // Renders the entire dashboard UI states
+        function renderApp() {
+            // Task counter badges
+            const activeCount = window.appState.tasks.filter(t => !t.completed).length;
+            document.getElementById('task-badge').innerText = activeCount;
+
+            // Render Task Board list
+            renderTasksList();
+
+            // Render Dashboard task progress ring
+            renderTaskDashboardProgress();
+
+            // Render Agenda list
+            renderAgendaList();
+
+            // Render Calendar Matrix Grid
+            renderCalendarMatrix();
+
+            // Render Workspace Resources Count metrics
+            renderWorkspaceCounts();
+
+            // Render Notes Grid
+            renderNotesGrid();
+
+            // Render Documents elements
+            renderDocumentsSelectors();
+
+            // Render Slide Decks elements
+            renderPresentationsSelector();
+            renderActiveSlide();
+        }
+
+        // 1. Task Board rendering
+        function renderTasksList() {
+            const list = document.getElementById('todo-tasks-list');
+            list.innerHTML = '';
+
+            if (window.appState.tasks.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-8 text-slate-400">
+                        <i class="fa-solid fa-square-check text-3xl mb-2 text-indigo-100 dark:text-slate-700"></i>
+                        <p class="text-xs font-semibold">Today's agenda is completely empty. Start fresh and type your daily milestones!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            window.appState.tasks.forEach(task => {
+                const div = document.createElement('div');
+                div.className = `flex items-center justify-between p-3.5 rounded-xl border transition-all duration-150 ${
+                    task.completed 
+                    ? 'bg-slate-50 dark:bg-slate-700/35 border-slate-200/50 dark:border-slate-800' 
+                    : 'bg-white dark:bg-slate-800 border-slate-200/80 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-slate-600 shadow-sm'
+                }`;
+
+                const categoryColors = {
+                    'Studies': 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
+                    'Coding': 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400',
+                    'General': 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300',
+                    'Exam Prep': 'bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400'
+                };
+
+                const tagColor = categoryColors[task.category] || categoryColors.General;
+
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3 flex-1 overflow-hidden" onclick="toggleTask('${task.id}')">
+                        <button class="text-base shrink-0 focus:outline-none">
+                            ${task.completed 
+                                ? '<i class="fa-solid fa-circle-check text-indigo-600 dark:text-indigo-400"></i>' 
+                                : '<i class="fa-regular fa-circle text-slate-300 hover:text-indigo-500"></i>'
+                            }
+                        </button>
+                        <span class="text-xs font-medium text-slate-700 dark:text-slate-200 select-none cursor-pointer truncate strike-through ${task.completed ? 'strike-active text-slate-400 dark:text-slate-500' : ''}">
+                            ${task.text}
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-md ${tagColor}">${task.category}</span>
+                        <button onclick="deleteTask('${task.id}')" class="text-slate-400 hover:text-rose-500 p-1.5 rounded transition-colors text-xs">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        // 2. Task dashboard progress
+        function renderTaskDashboardProgress() {
+            const total = window.appState.tasks.length;
+            const completed = window.appState.tasks.filter(t => t.completed).length;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            document.getElementById('dash-task-percent').innerText = `${percentage}%`;
+            
+            // Adjust SVG ring stroke-dashoffset (circumference of r=32 is ~201)
+            const ring = document.getElementById('dash-task-ring');
+            const offset = 201 - (201 * percentage) / 100;
+            ring.setAttribute('stroke-dashoffset', offset);
+
+            const statusText = document.getElementById('dash-task-status-text');
+            if (total === 0) {
+                statusText.innerText = "No active milestones outlined for today yet.";
+            } else if (percentage === 100) {
+                statusText.innerText = "Exceptional work! You completed all scheduled milestones for today.";
+            } else {
+                statusText.innerText = `You finished ${completed} out of ${total} study milestones today.`;
+            }
+        }
+
+        // 3. Agenda Events
+        function renderAgendaList() {
+            const container = document.getElementById('agenda-event-list');
+            const sneakPeek = document.getElementById('dash-upcoming-events');
+            
+            container.innerHTML = '';
+            sneakPeek.innerHTML = '';
+
+            const todayEvents = window.appState.calendarEvents;
+
+            if (todayEvents.length === 0) {
+                const emptyMsg = `
+                    <div class="text-center py-4 text-slate-400 text-[11px]">
+                        <p class="font-bold">No academic events scheduled.</p>
+                    </div>
+                `;
+                container.innerHTML = emptyMsg;
+                sneakPeek.innerHTML = emptyMsg;
+                return;
+            }
+
+            todayEvents.forEach(event => {
+                // Main calendar list
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-700/50 rounded-xl border border-slate-200/40 dark:border-slate-600/30";
+                row.innerHTML = `
+                    <div class="overflow-hidden">
+                        <h5 class="text-xs font-extrabold text-slate-800 dark:text-slate-100 truncate">${event.title}</h5>
+                        <p class="text-[9px] text-slate-400 font-bold">${event.date} • ${event.time}</p>
+                    </div>
+                    <button onclick="deleteEvent('${event.id}')" class="text-slate-400 hover:text-rose-500 p-1 rounded"><i class="fa-solid fa-trash-can text-[10px]"></i></button>
+                `;
+                container.appendChild(row);
+            });
+
+            // Dash upcoming preview (first event)
+            const first = todayEvents[0];
+            sneakPeek.innerHTML = `
+                <div class="p-3 bg-indigo-50/50 dark:bg-indigo-500/10 rounded-xl border border-indigo-200/30">
+                    <span class="text-[9px] bg-indigo-100 text-indigo-700 dark:bg-indigo-550/20 dark:text-indigo-400 px-2 py-0.5 rounded font-bold uppercase">Next Milestone</span>
+                    <h5 class="text-xs font-black text-slate-800 dark:text-slate-100 mt-1 truncate">${first.title}</h5>
+                    <p class="text-[10px] text-slate-400 font-bold mt-0.5"><i class="fa-regular fa-clock"></i> ${first.date} at ${first.time}</p>
+                </div>
+            `;
+        }
+
+        // 4. Calendar matrix rendering
+        function renderCalendarMatrix() {
+            const matrix = document.getElementById('calendar-days-matrix');
+            if (!matrix) return;
+            matrix.innerHTML = '';
+
+            const startDayOffset = 5; 
+            const totalDays = 31;
+
+            // Render padding days
+            for (let i = 0; i < startDayOffset; i++) {
+                const cell = document.createElement('div');
+                cell.className = "h-12 bg-slate-50 dark:bg-slate-800/20 rounded-lg opacity-30";
+                matrix.appendChild(cell);
+            }
+
+            // Render calendar active days
+            for (let day = 1; day <= totalDays; day++) {
+                const cell = document.createElement('div');
+                const dateString = `2026-05-${day.toString().padStart(2, '0')}`;
+                
+                // Check if date has events
+                const hasEvent = window.appState.calendarEvents.some(e => e.date === dateString);
+                
+                cell.className = `h-12 relative rounded-xl border border-slate-100 dark:border-slate-700/30 flex flex-col items-center justify-between p-1 cursor-pointer transition-all hover:bg-slate-100 dark:hover:bg-slate-700 ${
+                    hasEvent ? 'bg-indigo-50/50 dark:bg-indigo-550/15 border-indigo-200' : 'bg-white dark:bg-slate-800'
+                }`;
+
+                cell.innerHTML = `
+                    <span class="text-xs font-black ${hasEvent ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-slate-300'}">${day}</span>
+                    ${hasEvent ? '<span class="h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-400 mb-1 animate-pulse"></span>' : ''}
+                `;
+
+                cell.onclick = () => {
+                    document.getElementById('event-date').value = dateString;
+                    NotificationManager.show(`Selected Date: May ${day}, 2026 for event planning.`);
+                };
+
+                matrix.appendChild(cell);
+            }
+        }
+
+        // 5. Workspace counts previewers
+        function renderWorkspaceCounts() {
+            document.getElementById('dash-note-count').innerText = window.appState.notes.length;
+            document.getElementById('dash-doc-count').innerText = window.appState.documents.length;
+            document.getElementById('dash-slide-count').innerText = window.appState.presentations.length;
+        }
+
+        // 6. Notes rendering
+        function renderNotesGrid() {
+            const container = document.getElementById('notes-grid-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (window.appState.notes.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-400 text-xs font-semibold">Your quick notes vault is empty. Try creating one!</div>`;
+                return;
+            }
+
+            window.appState.notes.forEach(note => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 shadow-sm flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-extrabold text-sm text-slate-800 dark:text-slate-100 truncate pr-2">${note.title}</h4>
+                            <button onclick="deleteNote('${note.id}')" class="text-slate-400 hover:text-rose-500 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium whitespace-pre-wrap">${note.content}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 7. Document selection menu
+        function renderDocumentsSelectors() {
+            const container = document.getElementById('docs-select-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            window.appState.documents.forEach(docItem => {
+                const btn = document.createElement('button');
+                btn.onclick = () => selectDocument(docItem.id);
+                
+                const activeStyle = (docItem.id === window.currentDocId)
+                    ? "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold"
+                    : "text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-700/50";
+
+                btn.className = `w-full text-left text-xs px-3 py-2.5 rounded-xl transition-all truncate flex items-center gap-1.5 ${activeStyle}`;
+                btn.innerHTML = `<i class="fa-solid fa-file-invoice ${docItem.id === window.currentDocId ? 'text-indigo-500' : 'text-slate-400'}"></i> ${docItem.title}`;
+                container.appendChild(btn);
+            });
+        }
+
+        // 8. Presentations slide view & selectors
+        function renderPresentationsSelector() {
+            const container = document.getElementById('slides-select-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            window.appState.presentations.forEach(p => {
+                const btn = document.createElement('button');
+                btn.onclick = () => selectPresentation(p.id);
+
+                const activeStyle = (p.id === window.currentPresentationId)
+                    ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold"
+                    : "text-slate-600 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-700/50";
+
+                btn.className = `w-full text-left text-xs px-3 py-2.5 rounded-xl transition-all truncate flex items-center gap-1.5 ${activeStyle}`;
+                btn.innerHTML = `<i class="fa-solid fa-presentation-screen ${p.id === window.currentPresentationId ? 'text-emerald-500' : 'text-slate-400'}"></i> ${p.title}`;
+                container.appendChild(btn);
+            });
+        }
+
+        function renderActiveSlide() {
+            const activePres = window.appState.presentations.find(p => p.id === window.currentPresentationId);
+            if (!activePres) return;
+
+            const titleContainer = document.getElementById('slide-deck-title');
+            if (titleContainer) {
+                titleContainer.innerText = activePres.title;
+            }
+
+            const slide = activePres.slides[window.currentSlideIndex];
+            if (slide) {
+                document.getElementById('active-slide-title').innerText = slide.title;
+                document.getElementById('slide-number-indicator').innerText = `Slide ${window.currentSlideIndex + 1} of ${activePres.slides.length}`;
+
+                const list = document.getElementById('active-slide-bullets');
+                list.innerHTML = '';
+                slide.bullets.forEach(point => {
+                    const li = document.createElement('li');
+                    li.innerText = point;
+                    list.appendChild(li);
+                });
+            }
+        }
+    </script>
+
+    <script>
+        // Start engine functions on complete body load
+        window.onload = async function() {
+            // Load Tasks and verify midnight auto-delete limits
+            await TaskManager.loadTasks();
+
+            // Load mock notes/docs
+            window.appState.notes = StudyWorkspaceManager.getMockNotes();
+            window.appState.documents = StudyWorkspaceManager.getMockDocs();
+            window.appState.presentations = StudyWorkspaceManager.getMockPresentations();
+
+            // Force date string update
+            const opt = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date-string').innerText = new Date().toLocaleDateString('en-US', opt);
+
+            // Start countdown clocks
+            startMidnightCountdown();
+
+            updateApiStatusIndicators();
+
+            // First-time draw
+            renderApp();
+            selectDocument('d1');
+
+            NotificationManager.show("Scholar Bud Upgraded! Use 'AI Study Quiz' or 'AI Voice Aloud' inside 'Deep Documents' to test Gemini LLM integrations.", "success");
+        };
+    </script>
+</body>
+</html>
