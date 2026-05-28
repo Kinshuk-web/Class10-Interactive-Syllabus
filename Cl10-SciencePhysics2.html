@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity & Circuits | Class 10 Interactive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        'brand-green': '#147a6b', 
+                        'brand-dark': '#0f5e52',
+                        'brand-orange': '#f59e0b',
+                        'brand-orange-light': '#fef3c7',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #1e293b; }
+        
+        /* Custom styles for range sliders to match theme */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #f59e0b;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        input[type=range]:focus { outline: none; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #147a6b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0f5e52; }
+    </style>
+</head>
+<body class="antialiased font-sans flex flex-col min-h-screen">
+
+    <!-- Navigation Header -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Branding -->
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-brand-orange text-2xl"></i>
+                    <span class="text-2xl font-black tracking-tight">
+                        <span class="text-brand-green">Electric</span><span class="text-brand-orange">ity</span>
+                    </span>
+                </div>
+                
+                <!-- Desktop Navigation Buttons: Perfectly Aligned with Uniform Padding & Margins -->
+                <div class="hidden md:flex items-center gap-2">
+                    <a href="#intro" class="px-4 py-2 text-sm text-gray-600 hover:text-brand-green hover:bg-emerald-50/50 font-semibold rounded-lg transition-all duration-200">Current & Potential</a>
+                    <a href="#ohmslaw" class="px-4 py-2 text-sm text-gray-600 hover:text-brand-green hover:bg-emerald-50/50 font-semibold rounded-lg transition-all duration-200">Ohm's Law</a>
+                    <a href="#resistance" class="px-4 py-2 text-sm text-gray-600 hover:text-brand-green hover:bg-emerald-50/50 font-semibold rounded-lg transition-all duration-200">Resistance</a>
+                    <a href="#power" class="px-4 py-2 text-sm text-gray-600 hover:text-brand-green hover:bg-emerald-50/50 font-semibold rounded-lg transition-all duration-200">Heating</a>
+                    <a href="#questions" class="px-4 py-2 text-sm text-white bg-brand-orange hover:bg-amber-600 font-bold rounded-lg transition-all duration-200 shadow-sm ml-2">Exam Vault</a>
+                </div>
+
+                <!-- Mobile Navigation Toggle Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg text-gray-600 hover:text-brand-green hover:bg-gray-100 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Navigation Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 bg-white px-4 py-4 space-y-2 shadow-inner">
+            <a href="#intro" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-gray-600 hover:text-brand-green hover:bg-emerald-50 rounded-lg font-semibold transition">Current & Potential</a>
+            <a href="#ohmslaw" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-gray-600 hover:text-brand-green hover:bg-emerald-50 rounded-lg font-semibold transition">Ohm's Law</a>
+            <a href="#resistance" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-gray-600 hover:text-brand-green hover:bg-emerald-50 rounded-lg font-semibold transition">Resistance</a>
+            <a href="#power" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-gray-600 hover:text-brand-green hover:bg-emerald-50 rounded-lg font-semibold transition">Heating</a>
+            <a href="#questions" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-white bg-brand-orange hover:bg-amber-600 font-bold rounded-lg transition text-center shadow-sm">Exam Vault</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-brand-green text-white py-20 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <div class="inline-block px-4 py-1 rounded-full bg-brand-dark border border-emerald-500 text-sm font-mono text-brand-orange-light mb-6 shadow-lg">
+                👨‍🏫 Prof's Note: NCERT Chapter 12
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">Master the Flow of Electrons</h1>
+            <p class="text-xl text-emerald-50 max-w-2xl mx-auto leading-relaxed">
+                Interactive modules, strictly NCERT concepts, and high-yield board questions from Educart, MTG & Oswal. Let's make Physics visual!
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24 w-full">
+
+        <!-- 1. Electric Current & Potential -->
+        <section id="intro" class="scroll-mt-24">
+            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
+                <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-brand-green text-2xl font-bold border border-emerald-200 shadow-sm">1</div>
+                <h3 class="text-3xl font-bold text-gray-800">Electric Current & Potential</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- Theory Cards -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-green opacity-5 rounded-bl-full transition-transform group-hover:scale-110"></div>
+                        <h4 class="text-xl font-bold text-brand-green mb-3"><i class="fa-solid fa-water mr-2"></i>The Flow (Current)</h4>
+                        <p class="text-gray-600 mb-4 text-sm">Electric current is expressed by the amount of charge flowing through a particular area in unit time. It is the rate of flow of electric charges.</p>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono text-center">
+                            <span class="text-brand-green font-bold text-xl">I = Q / t</span>
+                        </div>
+                        <ul class="mt-4 space-y-2 text-sm text-gray-500">
+                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>SI Unit: Ampere (A)</li>
+                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>Measured by: Ammeter (connected in series)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-orange opacity-5 rounded-bl-full transition-transform group-hover:scale-110"></div>
+                        <h4 class="text-xl font-bold text-brand-orange mb-3"><i class="fa-solid fa-battery-full mr-2"></i>The Push (Potential)</h4>
+                        <p class="text-gray-600 mb-4 text-sm">Electric potential difference between two points is the work done to move a unit charge from one point to the other.</p>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono text-center">
+                            <span class="text-brand-orange font-bold text-xl">V = W / Q</span>
+                        </div>
+                        <ul class="mt-4 space-y-2 text-sm text-gray-500">
+                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i>SI Unit: Volt (V)</li>
+                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Measured by: Voltmeter (connected in parallel)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Interactive Calculator & Symbols -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fa-solid fa-calculator text-brand-green mr-2"></i>Interactive Calculator</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Charge (Q) in Coulombs</label>
+                                <input type="number" id="calcQ" value="10" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-green outline-none" oninput="calculateBasics()">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Time (t) in Sec</label>
+                                    <input type="number" id="calcT" value="2" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-green outline-none" oninput="calculateBasics()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Work (W) in Joules</label>
+                                    <input type="number" id="calcW" value="50" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-green outline-none" oninput="calculateBasics()">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 pt-4 border-t">
+                                <div class="bg-emerald-50 rounded-lg p-3 text-center border border-emerald-100">
+                                    <p class="text-xs text-brand-green font-bold uppercase mb-1">Current (I)</p>
+                                    <p class="text-xl font-black text-brand-dark" id="resI">5.00 A</p>
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-3 text-center border border-orange-100">
+                                    <p class="text-xs text-brand-orange font-bold uppercase mb-1">Potential (V)</p>
+                                    <p class="text-xl font-black text-orange-800" id="resV">5.00 V</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Circuit Symbols Grid -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">NCERT Circuit Symbols</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-gray-50 p-3 rounded-xl shadow-sm border flex flex-col items-center justify-center hover:shadow-md transition">
+                                <svg width="60" height="40" viewBox="0 0 60 40">
+                                    <line x1="0" y1="20" x2="25" y2="20" stroke="black" stroke-width="2"/>
+                                    <line x1="25" y1="5" x2="25" y2="35" stroke="black" stroke-width="2"/>
+                                    <line x1="35" y1="12" x2="35" y2="28" stroke="black" stroke-width="4"/>
+                                    <line x1="35" y1="20" x2="60" y2="20" stroke="black" stroke-width="2"/>
+                                    <text x="20" y="10" font-size="10" fill="black">+</text>
+                                    <text x="38" y="10" font-size="10" fill="black">-</text>
+                                </svg>
+                                <span class="text-xs font-medium mt-2 text-gray-600">Electric Cell</span>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded-xl shadow-sm border flex flex-col items-center justify-center hover:shadow-md transition">
+                                <svg width="60" height="40" viewBox="0 0 60 40">
+                                    <polyline points="0,20 10,20 15,10 25,30 35,10 45,30 50,20 60,20" stroke="black" fill="none" stroke-width="2"/>
+                                </svg>
+                                <span class="text-xs font-medium mt-2 text-gray-600">Resistor</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Ohm's Law Simulator -->
+        <section id="ohmslaw" class="scroll-mt-24">
+            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
+                <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-brand-orange text-2xl font-bold border border-orange-200 shadow-sm">2</div>
+                <h3 class="text-3xl font-bold text-gray-800">Ohm's Law Simulator</h3>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <div class="p-10 bg-brand-green text-white flex flex-col justify-center">
+                        <h4 class="text-3xl font-bold mb-4">V $\propto$ I</h4>
+                        <p class="text-emerald-100 mb-6 text-lg leading-relaxed">
+                            The potential difference, V, across the ends of a given metallic wire in an electric circuit is directly proportional to the current flowing through it, provided its temperature remains the same.
+                        </p>
+                        <div class="bg-brand-dark p-6 rounded-xl border border-emerald-500 mb-6 text-center shadow-inner">
+                            <h5 class="text-5xl font-mono font-black text-brand-orange mb-2">V = I &times; R</h5>
+                            <p class="text-sm text-emerald-200 font-medium">R is a constant called Resistance.</p>
+                        </div>
+                        <p class="text-sm bg-emerald-800/50 p-3 rounded-lg border border-emerald-600"><i class="fa-solid fa-star text-brand-orange mr-2"></i><strong>High Yield:</strong> The V-I graph for Ohmic conductors is always a straight line passing through the origin.</p>
+                    </div>
+
+                    <!-- Simulator UI & Graph -->
+                    <div class="p-10 flex flex-col justify-center bg-gray-50">
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <label class="font-bold text-gray-700 text-sm uppercase tracking-wider">Voltage (V)</label>
+                                    <span id="ohmValV" class="font-bold text-brand-green">10 V</span>
+                                </div>
+                                <input type="range" id="ohmVolt" min="0" max="24" step="1" value="10" oninput="updateOhmsLaw()">
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <label class="font-bold text-gray-700 text-sm uppercase tracking-wider">Resistance (R)</label>
+                                    <span id="ohmValR" class="font-bold text-brand-orange">5 Ω</span>
+                                </div>
+                                <input type="range" id="ohmRes" min="1" max="50" step="1" value="5" oninput="updateOhmsLaw()">
+                            </div>
+
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between mt-4">
+                                <span class="text-gray-500 font-bold uppercase text-sm">Resulting Current (I)</span>
+                                <div class="text-4xl font-black text-brand-green tracking-tighter" id="ohmValI">2.00 <span class="text-xl text-gray-400">A</span></div>
+                            </div>
+                            
+                            <!-- Graph representation -->
+                            <div class="mt-6 relative h-40 bg-white border-l-2 border-b-2 border-gray-400 p-2 shadow-inner rounded-tr-lg">
+                                <span class="absolute -left-8 top-0 text-xs font-bold text-gray-500">I (A)</span>
+                                <span class="absolute bottom-[-24px] right-0 text-xs font-bold text-gray-500">V (Volts)</span>
+                                <canvas id="ohmCanvas" class="w-full h-full absolute inset-0"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Resistance Factors & Systems -->
+        <section id="resistance" class="scroll-mt-24">
+            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
+                <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-brand-green text-2xl font-bold border border-emerald-200 shadow-sm">3</div>
+                <h3 class="text-3xl font-bold text-gray-800">Resistance & Systems</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Factors Affecting Resistance -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 font-sans">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-1">Factors affecting Resistance</h3>
+                            <p class="text-sm text-gray-500">Length (l), Area (A), and Material (ρ)</p>
+                        </div>
+                        <div class="bg-brand-orange-light text-brand-orange px-3 py-1 rounded font-bold font-mono">R = ρ(l/A)</div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-semibold text-gray-700">Length (l)</label>
+                                <span id="wireLenVal" class="text-sm font-bold text-brand-green">5 m</span>
+                            </div>
+                            <input type="range" id="wireLen" min="1" max="10" value="5" oninput="updateWire()">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-sm font-semibold text-gray-700">Area of Cross-section (A)</label>
+                                <span id="wireAreaVal" class="text-sm font-bold text-brand-green">2 mm²</span>
+                            </div>
+                            <input type="range" id="wireArea" min="1" max="10" value="2" oninput="updateWire()">
+                        </div>
+
+                        <!-- Visual representation of wire -->
+                        <div class="h-24 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center p-4 overflow-hidden relative shadow-inner">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-5">
+                                <i class="fa-solid fa-plug text-6xl text-brand-dark"></i>
+                            </div>
+                            <!-- The Wire -->
+                            <div id="visualWire" class="bg-gradient-to-r from-orange-400 to-brand-orange rounded-sm shadow-sm transition-all duration-300" style="width: 50%; height: 20%;"></div>
+                        </div>
+
+                        <div class="bg-emerald-50 rounded-lg p-4 text-center border border-emerald-100">
+                            <p class="text-xs font-bold uppercase tracking-wider text-brand-green">Calculated Resistance (Relative)</p>
+                            <p class="text-3xl font-black text-brand-dark mt-1" id="wireResVal">2.50 Ω</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System of Resistors -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 font-sans">System of Resistors</h3>
+                        <p class="text-sm text-gray-600 mb-6">Calculate equivalent resistance for Series and Parallel combinations.</p>
+                        
+                        <div class="flex bg-gray-100 rounded-lg p-1 mb-6 border border-gray-200">
+                            <button id="btnSeries" class="flex-1 bg-white shadow text-brand-green rounded-md py-2 text-sm font-bold transition" onclick="setResistorMode('series')">Series</button>
+                            <button id="btnParallel" class="flex-1 text-gray-500 py-2 text-sm font-bold transition hover:text-gray-800" onclick="setResistorMode('parallel')">Parallel</button>
+                        </div>
+                        
+                        <div class="flex space-x-3 mb-6">
+                            <div class="w-1/3">
+                                <label class="block text-xs text-gray-500 font-semibold mb-1 text-center">R1 (Ω)</label>
+                                <input type="number" id="r1" value="10" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-brand-green outline-none" oninput="calcSystem()">
+                            </div>
+                            <div class="w-1/3">
+                                <label class="block text-xs text-gray-500 font-semibold mb-1 text-center">R2 (Ω)</label>
+                                <input type="number" id="r2" value="10" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-brand-green outline-none" oninput="calcSystem()">
+                            </div>
+                            <div class="w-1/3">
+                                <label class="block text-xs text-gray-500 font-semibold mb-1 text-center">R3 (Ω)</label>
+                                <input type="number" id="r3" value="0" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-brand-green outline-none" oninput="calcSystem()">
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 text-center">
+                            <p id="systemFormula" class="text-sm font-mono text-gray-600 mb-2">Rs = R1 + R2 + R3</p>
+                            <div class="flex justify-center items-end gap-3">
+                                <span class="text-gray-500 font-bold uppercase text-xs mb-2">Equivalent:</span>
+                                <span class="text-4xl font-black text-brand-orange" id="sysResVal">20.00 Ω</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-orange-50 p-3 rounded-lg border border-orange-100 text-xs text-gray-700">
+                        <i class="fa-solid fa-lightbulb text-brand-orange mr-1"></i> In parallel, voltage is constant & overall resistance decreases (used in homes). In series, current is constant.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Heating Effect & Power -->
+        <section id="power" class="scroll-mt-24">
+            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
+                <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-brand-orange text-2xl font-bold border border-orange-200 shadow-sm">4</div>
+                <h3 class="text-3xl font-bold text-gray-800">Heating Effect & Power</h3>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Joule's Law -->
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 text-9xl text-brand-orange/10"><i class="fa-solid fa-fire"></i></div>
+                    <h4 class="text-2xl font-bold text-brand-orange mb-3 relative z-10 font-sans">Joule's Law of Heating</h4>
+                    <p class="text-gray-600 mb-6 relative z-10">Heat produced in a resistor is directly proportional to the square of current (I²), resistance (R), and time (t).</p>
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 font-mono text-center relative z-10 mb-6">
+                        <span class="text-brand-dark font-black text-4xl">H = I<sup>2</sup>Rt</span>
+                    </div>
+                    
+                    <h4 class="font-bold text-gray-800 mt-4 mb-2"><i class="fa-solid fa-plug text-brand-green mr-2"></i>Electric Power</h4>
+                    <p class="text-sm text-gray-600 mb-3">Rate at which electric energy is dissipated in a circuit.</p>
+                    <div class="flex gap-2 font-mono text-sm bg-emerald-50 p-3 rounded border border-emerald-100 text-brand-green font-bold justify-center">
+                        <span>P = VI</span> | <span>P = I²R</span> | <span>P = V²/R</span>
+                    </div>
+                </div>
+
+                <!-- Electricity Bill Calculator -->
+                <div class="bg-brand-dark p-8 rounded-2xl border border-brand-green shadow-xl text-white">
+                    <h3 class="text-2xl font-bold mb-6 text-brand-orange-light"><i class="fa-solid fa-file-invoice-dollar mr-2"></i>Electricity Bill Calculator</h3>
+                    <p class="text-emerald-100 text-sm mb-6 font-sans">Calculate the monthly cost based on the commercial unit (kWh).<br>1 kWh = 3.6 &times; 10<sup>6</sup> Joules.</p>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-emerald-200 mb-1">Appliance Power (Watts)</label>
+                            <input type="number" id="pwrW" value="1000" class="w-full px-4 py-2 bg-emerald-900 border border-emerald-700 rounded-lg text-white focus:ring-2 focus:ring-brand-orange outline-none font-mono" oninput="calcBill()">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-emerald-200 mb-1">Hours/Day</label>
+                                <input type="number" id="pwrH" value="5" class="w-full px-4 py-2 bg-emerald-900 border border-emerald-700 rounded-lg text-white focus:ring-2 focus:ring-brand-orange outline-none font-mono" oninput="calcBill()">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-emerald-200 mb-1">Cost/Unit (₹)</label>
+                                <input type="number" id="pwrC" value="8" class="w-full px-4 py-2 bg-emerald-900 border border-emerald-700 rounded-lg text-white focus:ring-2 focus:ring-brand-orange outline-none font-mono" oninput="calcBill()">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-emerald-700/50 flex justify-between items-end">
+                            <div>
+                                <p class="text-sm font-semibold text-emerald-200 uppercase tracking-wider">Monthly Cost (30 days)</p>
+                                <p class="text-4xl font-black text-brand-orange mt-1">₹ <span id="billRes">1200</span></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-emerald-300 uppercase tracking-wider">Units Consumed</p>
+                                <p class="text-xl font-bold text-white"><span id="unitRes">150</span> kWh</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Exam Vault: Board Questions -->
+        <section id="questions" class="scroll-mt-24 pb-12">
+            <div class="text-center mb-10">
+                <span class="bg-orange-100 text-orange-800 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block border border-orange-200">Exam Vault</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Board Impact Questions</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Curated strictly from NCERT, MTG, Educart, and Oswal. Use the panel below to test your knowledge and reveal the professor's answers.
+                </p>
+            </div>
+
+            <!-- Quiz Filter Controls -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button onclick="loadQuiz('all')" class="quiz-btn active px-5 py-2 rounded-full font-bold text-sm bg-brand-green text-white shadow transition hover:bg-brand-dark">All Topics</button>
+                <button onclick="loadQuiz('conceptual')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">Conceptual</button>
+                <button onclick="loadQuiz('numerical')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">Numerical</button>
+                <button onclick="loadQuiz('reasoning')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">Reasoning</button>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <!-- Clean, Sliding Question & Answer Panel -->
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 flex flex-col items-center justify-between min-h-[350px]">
+                    <div class="w-full relative">
+                        <span id="qType" class="text-xs font-bold uppercase tracking-widest text-brand-orange bg-orange-50 border border-orange-100 px-3 py-1 rounded-full inline-block mb-6">Reasoning</span>
+                        
+                        <!-- Question Text -->
+                        <h3 id="qText" class="text-xl md:text-2xl font-bold text-gray-800 leading-snug text-center mt-2 px-2">
+                            Why is tungsten used almost exclusively for filament of electric lamps?
+                        </h3>
+                    </div>
+
+                    <!-- Answer Section (Expanding Drawer) -->
+                    <div id="answerDrawer" class="w-full mt-6 bg-emerald-50 rounded-2xl border border-emerald-100 transition-all duration-300 max-h-0 overflow-hidden opacity-0">
+                        <div class="p-6">
+                            <span class="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-full inline-block mb-3">Model Answer</span>
+                            <p id="aText" class="text-gray-700 font-medium text-lg leading-relaxed">
+                                Tungsten has a very high melting point (3380°C) and does not oxidize (burn) at high temperatures, allowing it to emit light when heated.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action Controls -->
+                    <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-100">
+                        <p class="font-bold text-gray-400 bg-gray-50 px-4 py-2 rounded-full border border-gray-200 text-sm">
+                            Question <span id="qCount" class="text-brand-orange">1</span> of <span id="qTotal">12</span>
+                        </p>
+
+                        <!-- Reveal Toggle Button -->
+                        <button id="revealBtn" onclick="toggleAnswer()" class="px-6 py-3 bg-brand-orange hover:bg-amber-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2">
+                            <span>Show Model Answer</span>
+                            <i id="revealIcon" class="fa-solid fa-eye"></i>
+                        </button>
+
+                        <!-- Navigation Controls -->
+                        <div class="flex items-center gap-3">
+                            <button onclick="prevQuestion()" class="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-200 text-gray-600 hover:text-brand-green hover:border-brand-green hover:bg-emerald-50/20 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button onclick="nextQuestion()" class="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-200 text-gray-600 hover:text-brand-green hover:border-brand-green hover:bg-emerald-50/20 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-8 text-center text-gray-500 text-sm mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="font-bold text-gray-700 mb-1"><span class="text-brand-green">Electric</span><span class="text-brand-orange">ity</span> | Class 10 Interactive</p>
+            <p>Developed with <i class="fa-solid fa-bolt text-brand-orange mx-1"></i> by your AI Professor.</p>
+            <p class="mt-2 text-xs">Content curated strictly from NCERT Class 10 Science, supported by MTG & Educart standards.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Toggle mobile navigation menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            const isHidden = menu.classList.contains('hidden');
+            
+            if (isHidden) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        // Section 1: Basics Calculator
+        function calculateBasics() {
+            const Q = parseFloat(document.getElementById('calcQ').value) || 0;
+            const t = parseFloat(document.getElementById('calcT').value) || 1; // Prevent div 0
+            const W = parseFloat(document.getElementById('calcW').value) || 0;
+            
+            const I = Q / t;
+            const V = Q !== 0 ? W / Q : 0; 
+            
+            document.getElementById('resI').innerText = I.toFixed(2) + ' A';
+            document.getElementById('resV').innerText = V.toFixed(2) + ' V';
+        }
+
+        // Section 2: Ohm's Law Graph & Calc
+        const canvas = document.getElementById('ohmCanvas');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+        
+        function drawOhmsGraph(V, R, I) {
+            if(!ctx) return;
+            const w = canvas.width = canvas.offsetWidth;
+            const h = canvas.height = canvas.offsetHeight;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            // Background grid
+            ctx.strokeStyle = '#f1f5f9';
+            ctx.lineWidth = 1;
+            for(let i=0; i<w; i+=20) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,h); ctx.stroke(); }
+            for(let i=0; i<h; i+=20) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(w,i); ctx.stroke(); }
+
+            const maxV = 24; 
+            const maxI = 24; // To allow 24V/1Ω
+
+            // Draw theoretical line (V = IR)
+            ctx.strokeStyle = '#147a6b'; // brand-green
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, h);
+            const endI = maxV / R;
+            const x = (maxV / maxV) * w;
+            const y = h - ((endI / maxI) * h);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+
+            // Draw specific Plot Point based on user slider V
+            const plotX = (V / maxV) * w;
+            const plotY = h - ((I / maxI) * h);
+            
+            ctx.fillStyle = '#f59e0b'; // brand-orange
+            ctx.beginPath();
+            ctx.arc(plotX, plotY, 7, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Dashed lines to axis
+            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.beginPath();
+            ctx.moveTo(plotX, plotY);
+            ctx.lineTo(plotX, h); // drop down to V axis
+            ctx.moveTo(plotX, plotY);
+            ctx.lineTo(0, plotY); // go left to I axis
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function updateOhmsLaw() {
+            const V = parseFloat(document.getElementById('ohmVolt').value);
+            const R = parseFloat(document.getElementById('ohmRes').value);
+            const I = V / R;
+            
+            document.getElementById('ohmValV').innerText = V + ' V';
+            document.getElementById('ohmValR').innerText = R + ' Ω';
+            document.getElementById('ohmValI').innerHTML = I.toFixed(2) + ' <span class="text-xl text-gray-400">A</span>';
+            
+            // Only draw if canvas exists and is visible
+            if(canvas && canvas.offsetWidth > 0) {
+                drawOhmsGraph(V, R, I);
+            }
+        }
+
+        // Section 3: Wire Resistance Factors
+        function updateWire() {
+            const l = parseFloat(document.getElementById('wireLen').value);
+            const A = parseFloat(document.getElementById('wireArea').value);
+            
+            document.getElementById('wireLenVal').innerText = l + ' m';
+            document.getElementById('wireAreaVal').innerText = A + ' mm²';
+            
+            // Fake resistivity rho=1 for visual relative calc
+            const R = 1.0 * (l / A);
+            document.getElementById('wireResVal').innerText = R.toFixed(2) + ' Ω';
+
+            // Visual update
+            const visual = document.getElementById('visualWire');
+            visual.style.width = (l * 10) + '%';
+            visual.style.height = (A * 10) + '%';
+        }
+
+        // System of Resistors
+        let resistorMode = 'series';
+        function setResistorMode(mode) {
+            resistorMode = mode;
+            const btnS = document.getElementById('btnSeries');
+            const btnP = document.getElementById('btnParallel');
+            const formulaText = document.getElementById('systemFormula');
+            
+            if(mode === 'series') {
+                btnS.className = 'flex-1 bg-white shadow text-brand-green rounded-md py-2 text-sm font-bold transition';
+                btnP.className = 'flex-1 text-gray-500 py-2 text-sm font-bold transition hover:text-gray-800';
+                formulaText.innerText = "Rs = R1 + R2 + R3";
+            } else {
+                btnP.className = 'flex-1 bg-white shadow text-brand-green rounded-md py-2 text-sm font-bold transition';
+                btnS.className = 'flex-1 text-gray-500 py-2 text-sm font-bold transition hover:text-gray-800';
+                formulaText.innerText = "1/Rp = 1/R1 + 1/R2 + 1/R3";
+            }
+            calcSystem();
+        }
+
+        function calcSystem() {
+            const r1 = parseFloat(document.getElementById('r1').value) || 0;
+            const r2 = parseFloat(document.getElementById('r2').value) || 0;
+            const r3 = parseFloat(document.getElementById('r3').value) || 0;
+            
+            let R = 0;
+            if(resistorMode === 'series') {
+                R = r1 + r2 + r3;
+            } else {
+                let inv = 0;
+                if(r1 > 0) inv += 1/r1;
+                if(r2 > 0) inv += 1/r2;
+                if(r3 > 0) inv += 1/r3;
+                R = inv > 0 ? 1/inv : 0;
+            }
+            document.getElementById('sysResVal').innerText = R.toFixed(2) + ' Ω';
+        }
+
+        // Section 4: Heating/Power Calc
+        function calcBill() {
+            const W = parseFloat(document.getElementById('pwrW').value) || 0;
+            const h = parseFloat(document.getElementById('pwrH').value) || 0;
+            const c = parseFloat(document.getElementById('pwrC').value) || 0;
+            
+            const kW = W / 1000;
+            const unitsPerDay = kW * h;
+            const monthlyUnits = unitsPerDay * 30;
+            const cost = monthlyUnits * c;
+            
+            document.getElementById('unitRes').innerText = monthlyUnits.toFixed(1);
+            document.getElementById('billRes').innerText = cost.toFixed(0);
+        }
+
+        // Section 5: Quiz Logic (12 Comprehensive High-Yield Questions)
+        const allQuestions = [
+            { type: "Conceptual", q: "Define 1 Ampere of current. (NCERT)", a: "One ampere is constituted by the flow of one coulomb of charge per second. (1 A = 1 C / 1 s)." },
+            { type: "Conceptual", q: "Name a device that helps to maintain a potential difference across a conductor. (NCERT)", a: "A cell or a battery." },
+            { type: "Numerical", q: "How much work is done in moving a charge of 2 C across two points having a potential difference 12 V?", a: "W = V × Q. Work done = 12 V × 2 C = 24 Joules." },
+            { type: "Conceptual", q: "What is the shape of the V-I graph for an ohmic conductor? (MTG)", a: "A straight line passing through the origin, signifying V is directly proportional to I." },
+            { type: "Conceptual", q: "State Ohm's Law. (CBSE Prev Year)", a: "Ohm's law states that the potential difference across the ends of a given metallic wire is directly proportional to the current flowing through it, provided its temperature remains constant." },
+            { type: "Reasoning", q: "Will current flow more easily through a thick wire or a thin wire of the same material? Why?", a: "Current will flow more easily through a thick wire. Resistance is inversely proportional to the area of cross-section (R ∝ 1/A). A thicker wire has less resistance." },
+            { type: "Reasoning", q: "Why is an arrangement of resistors in parallel highly recommended for domestic circuits?", a: "1. If one appliance fails, others keep working. 2. Each appliance gets full voltage (220V). 3. Total resistance decreases, ensuring necessary current flow." },
+            { type: "Numerical", q: "How can three resistors of 2 Ω, 3 Ω, and 6 Ω be connected to give a total resistance of 4 Ω?", a: "Connect 3 Ω and 6 Ω in parallel (yields 2 Ω), then connect them in series with the 2 Ω resistor. (2 + 2 = 4 Ω)." },
+            { type: "Reasoning", q: "Why is tungsten used almost exclusively for filament of electric lamps?", a: "Tungsten has a very high melting point (3380°C) and a high resistivity. It does not oxidize (burn) readily at high temperatures." },
+            { type: "Reasoning", q: "Why does the cord of an electric heater not glow while the heating element does?", a: "The cord has very low resistance (copper). The element has high resistance (alloy). Heat produced (H=I²Rt) is much higher in the element, making it hot enough to glow." },
+            { type: "Numerical", q: "An electric bulb is rated 220 V and 100 W. When operated on 110 V, what is the power consumed?", a: "Resistance R = V²/P = (220)²/100 = 484 Ω. If V = 110V, Power = V²/R = (110)²/484 = 25 W." },
+            { type: "Conceptual", q: "What is the commercial unit of electrical energy? Convert it into Joules.", a: "The commercial unit is kilowatt-hour (kWh). 1 kWh = 1000 W × 3600 s = 3.6 × 10⁶ Joules." }
+        ];
+
+        let currentFilter = 'all';
+        let filteredQuestions = [...allQuestions];
+        let qIndex = 0;
+        let isAnswerVisible = false;
+
+        function loadQuiz(filter) {
+            currentFilter = filter;
+            collapseAnswer();
+            
+            // Update active button styles
+            document.querySelectorAll('.quiz-btn').forEach(btn => {
+                if(btn.innerText.toLowerCase() === filter || (filter === 'all' && btn.innerText === 'All Topics')) {
+                    btn.classList.add('bg-brand-green', 'text-white', 'shadow');
+                    btn.classList.remove('bg-white', 'text-gray-600', 'shadow-sm', 'border', 'border-gray-300');
+                } else {
+                    btn.classList.remove('bg-brand-green', 'text-white', 'shadow');
+                    btn.classList.add('bg-white', 'text-gray-600', 'shadow-sm', 'border', 'border-gray-300');
+                }
+            });
+
+            if(filter === 'all') {
+                filteredQuestions = [...allQuestions];
+            } else {
+                filteredQuestions = allQuestions.filter(q => q.type.toLowerCase() === filter);
+            }
+            
+            qIndex = 0;
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            if(filteredQuestions.length === 0) return;
+            const q = filteredQuestions[qIndex];
+            
+            collapseAnswer();
+            
+            // Wait slightly for transition collapse before updating content text
+            setTimeout(() => {
+                document.getElementById('qType').innerText = q.type;
+                document.getElementById('qText').innerText = q.q;
+                document.getElementById('aText').innerText = q.a;
+                
+                document.getElementById('qCount').innerText = qIndex + 1;
+                document.getElementById('qTotal').innerText = filteredQuestions.length;
+            }, 150);
+        }
+
+        function toggleAnswer() {
+            const drawer = document.getElementById('answerDrawer');
+            const btnText = document.querySelector('#revealBtn span');
+            const btnIcon = document.getElementById('revealIcon');
+            
+            if (isAnswerVisible) {
+                collapseAnswer();
+            } else {
+                // Show answer
+                drawer.classList.remove('max-h-0', 'opacity-0');
+                drawer.classList.add('max-h-[500px]', 'opacity-100');
+                btnText.innerText = "Hide Model Answer";
+                btnIcon.className = "fa-solid fa-eye-slash";
+                isAnswerVisible = true;
+            }
+        }
+
+        function collapseAnswer() {
+            const drawer = document.getElementById('answerDrawer');
+            const btnText = document.querySelector('#revealBtn span');
+            const btnIcon = document.getElementById('revealIcon');
+            
+            if(drawer) {
+                drawer.classList.add('max-h-0', 'opacity-0');
+                drawer.classList.remove('max-h-[500px]', 'opacity-100');
+            }
+            if(btnText) btnText.innerText = "Show Model Answer";
+            if(btnIcon) btnIcon.className = "fa-solid fa-eye";
+            isAnswerVisible = false;
+        }
+
+        function nextQuestion() {
+            qIndex = (qIndex + 1) % filteredQuestions.length;
+            renderQuestion();
+        }
+
+        function prevQuestion() {
+            qIndex = (qIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
+            renderQuestion();
+        }
+
+        // Initialize all functions on load
+        window.onload = () => {
+            calculateBasics();
+            calcSystem();
+            updateWire();
+            calcBill();
+            loadQuiz('all');
+            
+            // Slight delay for canvas to ensure layout is done
+            setTimeout(updateOhmsLaw, 100);
+            
+            // Redraw canvas on window resize to maintain responsiveness
+            window.addEventListener('resize', updateOhmsLaw);
+        };
+    </script>
+</body>
+</html>
