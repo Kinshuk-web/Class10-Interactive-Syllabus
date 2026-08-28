@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Eye & The Colourful World | Class 10 Interactive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-green': '#1a564e', /* Matches the screenshot dark green */
+                        'brand-green-light': '#2a7a70',
+                        'brand-orange': '#e88a1a', /* Matches the screenshot orange */
+                        'brand-orange-light': '#fdf2e3',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #1e293b; }
+        
+        /* Custom styles for range sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #e88a1a;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        input[type=range]:focus { outline: none; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #1a564e; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #113c36; }
+
+        /* SVG Interactive Elements */
+        .eye-part { cursor: pointer; transition: all 0.3s ease; }
+        .eye-part:hover { filter: drop-shadow(0 0 8px rgba(232, 138, 26, 0.8)); stroke-width: 3; }
+        .active-part { filter: drop-shadow(0 0 8px rgba(232, 138, 26, 0.8)); stroke-width: 3; fill-opacity: 0.8; }
+        
+        /* Prism Animations */
+        .ray { transition: all 0.5s ease-in-out; }
+    </style>
+</head>
+<body class="antialiased font-sans flex flex-col min-h-screen">
+
+    <!-- Navigation Header -->
+    <nav class="bg-white sticky top-0 z-50 shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Branding -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="text-brand-green font-bold text-xl sm:text-2xl tracking-tight">Human Eye </span>
+                    <span class="text-brand-orange font-bold text-xl sm:text-2xl tracking-tight ml-1">& Colourful World</span>
+                </div>
+                
+                <!-- Desktop Navigation Buttons -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#anatomy" class="text-gray-500 hover:text-brand-green font-medium transition-colors">The Eye</a>
+                    <a href="#defects" class="text-gray-500 hover:text-brand-green font-medium transition-colors">Vision Defects</a>
+                    <a href="#prism" class="text-gray-500 hover:text-brand-green font-medium transition-colors">Prism & Rainbow</a>
+                    <a href="#atmosphere" class="text-gray-500 hover:text-brand-green font-medium transition-colors">Atmospheric Refraction</a>
+                    <a href="#scattering" class="text-gray-500 hover:text-brand-green font-medium transition-colors">Scattering</a>
+                    <a href="#questions" class="px-5 py-2 text-sm text-white bg-brand-orange hover:bg-orange-600 font-bold rounded-lg transition-all shadow-sm">Board Quiz</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-600 hover:text-brand-green focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white shadow-inner">
+            <div class="px-4 py-2 space-y-1">
+                <a href="#anatomy" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">The Eye</a>
+                <a href="#defects" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Vision Defects</a>
+                <a href="#prism" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Prism & Rainbow</a>
+                <a href="#atmosphere" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Atmospheric Refraction</a>
+                <a href="#scattering" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Scattering</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-brand-green text-white py-24 relative overflow-hidden">
+        <!-- Abstract Background shapes -->
+        <div class="absolute inset-0 opacity-10">
+            <svg class="absolute w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0,50 Q25,20 50,50 T100,50 L100,100 L0,100 Z" fill="#ffffff"></path>
+            </svg>
+        </div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <div class="inline-block px-4 py-1 rounded-full border border-brand-orange text-xs font-bold text-brand-orange mb-6 tracking-widest uppercase">
+                CBSE Class 10 Physics
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+                Human Eye & <span class="text-brand-orange">Colourful World</span> Mastery Portal
+            </h1>
+            <p class="text-lg md:text-xl text-teal-100 max-w-3xl mx-auto leading-relaxed font-light">
+                An exhaustive, interactive guide written from the perspectives of NCERT, Educart, and Oswaal. Designed with real-time optics simulations and core conceptual break-downs suitable for both self-studying students and science teachers.
+            </p>
+        </div>
+    </div>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+
+        <!-- 1. The Human Eye Anatomy -->
+        <section id="anatomy" class="scroll-mt-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">1. Anatomy of the Human Eye</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                    The human eye is like a camera. Its lens system forms an image on a light-sensitive screen called the retina. Click on the parts below to explore their functions.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
+                <!-- Interactive SVG Diagram -->
+                <div class="relative w-full h-64 md:h-96 bg-blue-50 rounded-2xl flex justify-center items-center overflow-hidden border border-blue-100">
+                    <svg viewBox="0 0 400 300" class="w-full h-full max-w-md drop-shadow-md">
+                        <!-- Sclera/Eyeball (Background) -->
+                        <path d="M 200,150 m -120,0 a 120,120 0 1,0 240,0 a 120,120 0 1,0 -240,0" fill="#ffffff" stroke="#cbd5e1" stroke-width="4" />
+                        <!-- Optic Nerve path -->
+                        <path id="part-optic" class="eye-part" onclick="selectEyePart('optic')" d="M 315,130 C 350,130 380,110 390,150 C 380,190 350,170 315,170 Z" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+                        <!-- Retina (Inner lining) -->
+                        <path id="part-retina" class="eye-part" onclick="selectEyePart('retina')" d="M 120,70 A 110,110 0 0,1 300,210" fill="none" stroke="#f87171" stroke-width="8" stroke-linecap="round"/>
+                        <!-- Cornea (Front bulge) -->
+                        <path id="part-cornea" class="eye-part" onclick="selectEyePart('cornea')" d="M 110,70 A 70,70 0 0,0 110,230" fill="#bae6fd" fill-opacity="0.5" stroke="#38bdf8" stroke-width="4"/>
+                        <!-- Ciliary Muscles (Top and bottom of lens) -->
+                        <path id="part-ciliary" class="eye-part" onclick="selectEyePart('ciliary')" d="M 130,90 C 140,90 140,110 130,110 Z M 130,190 C 140,190 140,210 130,210 Z" fill="#f472b6" stroke="#db2777" stroke-width="2"/>
+                        <!-- Iris (Colored part) -->
+                        <path id="part-iris" class="eye-part" onclick="selectEyePart('iris')" d="M 115,90 L 115,130 L 125,130 Z M 115,210 L 115,170 L 125,170 Z" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2"/>
+                        <!-- Pupil (Gap between iris) - just an invisible hit area -->
+                        <rect id="part-pupil" class="eye-part" onclick="selectEyePart('pupil')" x="100" y="130" width="20" height="40" fill="transparent"/>
+                        <!-- Crystalline Lens -->
+                        <ellipse id="part-lens" class="eye-part" onclick="selectEyePart('lens')" cx="140" cy="150" rx="15" ry="35" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="3"/>
+                        
+                        <!-- Labels (Static for clarity, clickable parts highlight) -->
+                        <text x="50" y="50" font-size="12" fill="#64748b" font-weight="bold">Cornea</text>
+                        <line x1="70" y1="55" x2="100" y2="100" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2"/>
+                        
+                        <text x="140" y="40" font-size="12" fill="#64748b" font-weight="bold">Lens</text>
+                        <line x1="145" y1="45" x2="140" y2="110" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2"/>
+                        
+                        <text x="310" y="60" font-size="12" fill="#64748b" font-weight="bold">Retina</text>
+                        <line x1="305" y1="65" x2="270" y2="90" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2"/>
+                    </svg>
+                    
+                    <div class="absolute bottom-4 left-0 right-0 text-center pointer-events-none">
+                        <span class="bg-white/90 px-3 py-1 rounded-full text-xs font-semibold text-gray-600 shadow-sm border border-gray-200">
+                            Tap parts of the eye to learn more
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="flex flex-col h-full justify-center">
+                    <div id="eye-info-card" class="bg-gray-50 p-8 rounded-2xl border border-gray-200 transition-all duration-300">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-brand-green/10 text-brand-green rounded-xl mb-4">
+                            <i class="fa-solid fa-eye text-2xl"></i>
+                        </div>
+                        <h3 id="eye-title" class="text-2xl font-bold text-gray-900 mb-2">The Human Eye</h3>
+                        <p id="eye-desc" class="text-gray-600 leading-relaxed mb-4">
+                            Select a part of the eye on the diagram to see its specific function in image formation. The eye is a remarkable optical instrument.
+                        </p>
+                        <div id="eye-highlight" class="hidden bg-orange-50 border-l-4 border-brand-orange p-3 text-sm text-gray-700 font-medium">
+                            <!-- High yield tip goes here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Defects of Vision -->
+        <section id="defects" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-900">2. Defects of Vision & Correction</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                    Sometimes the eye loses its power of accommodation (adjusting focal length). Observe how light rays behave in different conditions and how lenses fix them.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+                <!-- Tabs -->
+                <div class="flex flex-wrap border-b border-gray-200 bg-gray-50">
+                    <button onclick="setDefect('normal')" id="tab-normal" class="flex-1 py-4 px-6 text-center font-bold text-brand-green bg-white border-b-2 border-brand-green transition-all">Normal Vision</button>
+                    <button onclick="setDefect('myopia')" id="tab-myopia" class="flex-1 py-4 px-6 text-center font-semibold text-gray-500 hover:text-gray-700 transition-all">Myopia (Short-sighted)</button>
+                    <button onclick="setDefect('hypermetropia')" id="tab-hypermetropia" class="flex-1 py-4 px-6 text-center font-semibold text-gray-500 hover:text-gray-700 transition-all">Hypermetropia (Long-sighted)</button>
+                </div>
+
+                <div class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                    
+                    <!-- Controls & Explanation -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <div id="defect-info">
+                            <h3 id="defect-title" class="text-2xl font-bold text-gray-900 mb-2">Normal Eye</h3>
+                            <p id="defect-desc" class="text-gray-600 text-sm mb-4">
+                                Light rays from an object focus perfectly on the retina. The ciliary muscles relax for distant objects and contract for nearby objects (Accommodation).
+                            </p>
+                        </div>
+                        
+                        <div id="correction-control" class="hidden p-5 bg-blue-50 rounded-xl border border-blue-100">
+                            <h4 class="font-bold text-blue-900 mb-2"><i class="fa-solid fa-glasses mr-2"></i>Apply Correction</h4>
+                            <p class="text-xs text-blue-700 mb-4">Place the appropriate corrective lens in front of the eye.</p>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="lens-toggle" class="sr-only peer" onchange="toggleCorrection()">
+                                <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-green"></div>
+                                <span class="ml-3 text-sm font-bold text-gray-700" id="lens-status">Without Lens</span>
+                            </label>
+                        </div>
+
+                        <div class="bg-orange-50 p-4 rounded-xl border-l-4 border-brand-orange">
+                            <p id="defect-cause" class="text-sm font-medium text-gray-800">
+                                <strong>Near Point:</strong> 25 cm.<br><strong>Far Point:</strong> Infinity.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Simulator Diagram -->
+                    <div class="lg:col-span-2 relative h-64 md:h-80 bg-gray-900 rounded-2xl overflow-hidden shadow-inner flex justify-center items-center">
+                        <svg viewBox="0 0 600 300" class="w-full h-full">
+                            <!-- Object (Tree or Candle) -->
+                            <text x="30" y="155" fill="#e88a1a" font-size="24" font-family="Arial">🕯️</text>
+                            
+                            <!-- The Eye Background -->
+                            <path d="M 500,150 m -80,0 a 80,80 0 1,0 160,0 a 80,80 0 1,0 -160,0" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+                            <!-- Cornea & Lens -->
+                            <path d="M 430,95 A 60,60 0 0,0 430,205" fill="#38bdf8" fill-opacity="0.2"/>
+                            <ellipse cx="450" cy="150" rx="8" ry="25" fill="#e0f2fe" fill-opacity="0.8"/>
+                            
+                            <!-- Corrective Lens (Hidden by default) -->
+                            <g id="sim-corrective-lens" class="opacity-0 transition-opacity duration-500">
+                                <!-- Path drawn via JS depending on concave/convex -->
+                                <path id="sim-lens-shape" d="" fill="#7dd3fc" fill-opacity="0.4" stroke="#38bdf8" stroke-width="1"/>
+                            </g>
+
+                            <!-- Light Rays -->
+                            <g id="sim-rays" stroke="#e88a1a" stroke-width="2" fill="none" class="ray">
+                                <!-- Top Ray -->
+                                <path id="ray-top" d="M 60,140 L 450,130 L 580,150" />
+                                <!-- Bottom Ray -->
+                                <path id="ray-bottom" d="M 60,160 L 450,170 L 580,150" />
+                            </g>
+                            
+                            <!-- Retina Marker -->
+                            <line x1="580" y1="70" x2="580" y2="230" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4"/>
+                            <text x="565" y="60" fill="#ef4444" font-size="12">Retina</text>
+                        </svg>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Refraction through a Prism & Rainbow Formation -->
+        <section id="prism" class="scroll-mt-24">
+            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
+                <div class="w-12 h-12 rounded-lg bg-brand-green/10 flex items-center justify-center text-brand-green text-2xl font-bold border border-brand-green/20">3</div>
+                <h3 class="text-3xl font-bold text-gray-800">Refraction & Dispersion by a Prism</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Interactive Prism Simulator -->
+                <div class="bg-gray-900 rounded-3xl p-8 shadow-xl border border-gray-800 flex flex-col items-center">
+                    <h4 class="text-white font-bold mb-4">Dispersion of White Light</h4>
+                    
+                    <div class="relative w-full h-64 flex justify-center items-center mb-6">
+                        <svg viewBox="0 0 400 300" class="w-full h-full">
+                            <!-- Glass Prism -->
+                            <polygon points="200,50 100,250 300,250" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                            
+                            <!-- Incident White Light -->
+                            <line x1="0" y1="180" x2="135" y2="180" stroke="#ffffff" stroke-width="4" id="incident-ray"/>
+                            
+                            <!-- Internal Rays -->
+                            <line x1="135" y1="180" x2="230" y2="150" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+                            
+                            <!-- Emerging Spectrum (VIBGYOR) -->
+                            <g id="spectrum-rays" class="ray">
+                                <!-- Red -->
+                                <line x1="230" y1="150" x2="400" y2="100" stroke="#ef4444" stroke-width="3"/>
+                                <!-- Orange -->
+                                <line x1="230" y1="150" x2="400" y2="110" stroke="#f97316" stroke-width="3"/>
+                                <!-- Yellow -->
+                                <line x1="230" y1="150" x2="400" y2="120" stroke="#eab308" stroke-width="3"/>
+                                <!-- Green -->
+                                <line x1="230" y1="150" x2="400" y2="130" stroke="#22c55e" stroke-width="3"/>
+                                <!-- Blue -->
+                                <line x1="230" y1="150" x2="400" y2="140" stroke="#3b82f6" stroke-width="3"/>
+                                <!-- Indigo -->
+                                <line x1="230" y1="150" x2="400" y2="150" stroke="#6366f1" stroke-width="3"/>
+                                <!-- Violet (Bends the most) -->
+                                <line x1="230" y1="150" x2="400" y2="160" stroke="#8b5cf6" stroke-width="3"/>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <p class="text-gray-400 text-sm text-center">
+                        White light consists of 7 colors. Different colors of light bend through different angles with respect to the incident ray. <strong class="text-white">Red bends the least, Violet bends the most.</strong>
+                    </p>
+                </div>
+
+                <!-- Rainbow Formation Explanation -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 h-full flex flex-col justify-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mb-4 shadow-inner">
+                            🌈
+                        </div>
+                        <h4 class="text-2xl font-bold text-gray-900 mb-3">Rainbow Formation</h4>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            A rainbow is a natural spectrum appearing in the sky after a rain shower. It is caused by dispersion of sunlight by tiny water droplets, present in the atmosphere.
+                        </p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-xs mt-1">1</div>
+                                <p class="ml-3 text-sm text-gray-700"><strong>Refraction & Dispersion:</strong> Sunlight enters a water droplet, refracting and splitting into constituent colors.</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-xs mt-1">2</div>
+                                <p class="ml-3 text-sm text-gray-700"><strong>Total Internal Reflection:</strong> The light hits the back of the droplet and reflects entirely internally.</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-xs mt-1">3</div>
+                                <p class="ml-3 text-sm text-gray-700"><strong>Final Refraction:</strong> The light refracts again as it exits the droplet, creating the rainbow we see.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 bg-brand-green/10 p-3 rounded-lg text-sm text-brand-green font-medium border border-brand-green/20">
+                            <i class="fa-solid fa-lightbulb mr-2"></i><strong>Crucial Condition:</strong> You can only see a rainbow if the Sun is <em>behind</em> you.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Atmospheric Refraction -->
+        <section id="atmosphere" class="scroll-mt-24">
+            <div class="bg-blue-50 rounded-3xl p-8 md:p-12 shadow-inner border border-blue-100 relative overflow-hidden">
+                <!-- Background decoration -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-40 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
+                
+                <h2 class="text-3xl font-bold text-blue-900 mb-6 relative z-10">4. Atmospheric Refraction</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
+                    <!-- Text Content -->
+                    <div class="space-y-6">
+                        <p class="text-gray-700 leading-relaxed text-lg">
+                            The earth's atmosphere is not uniform. The optical density increases as we go lower (hotter air is lighter, cooler air is denser). When starlight enters the atmosphere, it undergoes <strong>continuous refraction</strong>, bending towards the normal.
+                        </p>
+                        
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-blue-200 hover:shadow-md transition">
+                            <h4 class="font-bold text-blue-800 mb-2">⭐ Why do Stars Twinkle?</h4>
+                            <p class="text-sm text-gray-600">
+                                The physical conditions of the earth's atmosphere are not stationary. The apparent position of the star fluctuates, and the amount of starlight entering the eye flickers (sometimes brighter, sometimes fainter). Planets are closer and act as extended sources, thus their total variation averages out to zero (no twinkling).
+                            </p>
+                        </div>
+                        
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-orange-200 hover:shadow-md transition">
+                            <h4 class="font-bold text-brand-orange mb-2">🌅 Advanced Sunrise & Delayed Sunset</h4>
+                            <p class="text-sm text-gray-600">
+                                The Sun is visible to us about <strong>2 minutes before</strong> actual sunrise, and about <strong>2 minutes after</strong> actual sunset because of atmospheric refraction. We see the apparent image of the sun slightly above the horizon.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Diagram -->
+                    <div class="bg-slate-900 rounded-2xl p-6 flex flex-col items-center justify-center relative shadow-lg">
+                        <div class="w-full flex justify-between items-center mb-4 text-white">
+                            <span class="font-bold text-sm">Simulator</span>
+                            <button onclick="toggleAtmosphere()" id="btn-atmos" class="bg-brand-orange text-white text-xs px-3 py-1 rounded-full font-bold hover:bg-orange-600 transition">Show Actual Path</button>
+                        </div>
+                        
+                        <svg viewBox="0 0 300 300" class="w-full max-w-sm h-64">
+                            <!-- Earth -->
+                            <circle cx="150" cy="350" r="150" fill="#0f766e" />
+                            <text x="130" y="220" fill="#ccfbf1" font-size="14" font-weight="bold">Earth</text>
+                            
+                            <!-- Observer -->
+                            <rect x="145" y="180" width="10" height="20" fill="#ffffff" />
+                            
+                            <!-- Atmosphere Layers (Gradients indicated by strokes) -->
+                            <circle cx="150" cy="350" r="180" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="20"/>
+                            <circle cx="150" cy="350" r="210" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20"/>
+                            <text x="210" y="160" fill="rgba(255,255,255,0.5)" font-size="10">Atmosphere</text>
+
+                            <!-- Star (Apparent) -->
+                            <g id="star-apparent">
+                                <circle cx="50" cy="50" r="4" fill="#fde047" />
+                                <text x="60" y="55" fill="#fde047" font-size="12">Apparent Position</text>
+                                <!-- Apparent Line of sight (Straight) -->
+                                <line x1="145" y1="180" x2="50" y2="50" stroke="#fde047" stroke-dasharray="4,4" stroke-width="1"/>
+                            </g>
+                            
+                            <!-- Star (Actual - hidden initially) -->
+                            <g id="star-actual" class="opacity-0 transition-opacity duration-500">
+                                <circle cx="20" cy="90" r="4" fill="#94a3b8" />
+                                <text x="10" y="110" fill="#94a3b8" font-size="12">Actual Position</text>
+                                <!-- Bending Light path -->
+                                <path d="M 20,90 Q 90,140 145,180" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            </g>
+                        </svg>
+                        
+                        <p id="atmos-caption" class="text-gray-400 text-xs mt-4 text-center">Because of atmospheric refraction, the star appears slightly higher than its actual position.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Scattering of Light & Tyndall Effect -->
+        <section id="scattering" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-gray-900">5. Scattering of Light</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                    The interplay of light with objects around us gives rise to spectacular phenomena. This is based on the <strong>Tyndall Effect</strong> and Rayleigh scattering.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
+                <!-- Sky Color Simulator -->
+                <div class="md:w-1/2 p-8 relative flex flex-col items-center justify-center transition-colors duration-1000" id="sky-sim" style="background-color: #38bdf8;">
+                    
+                    <div class="text-white text-center z-10">
+                        <div class="text-5xl mb-2 drop-shadow-md" id="sun-emoji">☀️</div>
+                        <h4 class="text-2xl font-bold drop-shadow-md" id="time-label">Mid-Day</h4>
+                        <p class="mt-2 text-sm max-w-xs mx-auto drop-shadow-md opacity-90" id="scatter-explanation">
+                            Sun is overhead. Light travels less distance through the atmosphere. Only a little blue and violet light is scattered. Sun appears white.
+                        </p>
+                    </div>
+                    
+                    <div class="absolute bottom-8 w-3/4 bg-white/20 p-4 rounded-xl backdrop-blur-sm border border-white/30 z-10">
+                        <label class="block text-white text-xs font-bold uppercase tracking-wider mb-2 text-center">Time of Day</label>
+                        <input type="range" id="time-slider" min="0" max="100" value="50" oninput="updateSkyColor()">
+                    </div>
+                    
+                    <!-- Ground -->
+                    <div class="absolute bottom-0 w-full h-1/5 bg-gray-900 rounded-t-[50%] scale-150 transform translate-y-1/2"></div>
+                </div>
+
+                <!-- Theory Content -->
+                <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center space-y-6">
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">The Tyndall Effect</h4>
+                        <p class="text-sm text-gray-600">
+                            The earth's atmosphere is a heterogeneous mixture of minute particles (smoke, water droplets, dust, air molecules). When a beam of light strikes such fine particles, the path of the beam becomes visible.
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">Why is the clear sky blue?</h4>
+                        <p class="text-sm text-gray-600">
+                            Molecules of air (N₂, O₂) have sizes smaller than the wavelength of visible light. They are more effective in scattering light of shorter wavelengths at the blue end. The scattered blue light enters our eyes.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">Color of Sun at Sunrise/Sunset</h4>
+                        <p class="text-sm text-gray-600">
+                            Light from the sun near the horizon passes through thicker layers of air and larger distance. Most of the blue light and shorter wavelengths are scattered away by the particles. Therefore, the light that reaches our eyes is of longer wavelengths (red). This gives rise to the reddish appearance.
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <p class="text-xs text-gray-500 font-medium">
+                            <strong class="text-red-500">Danger Signals:</strong> "Danger" signal lights are red in colour. Do you know why? Red is least scattered by fog or smoke. Therefore, it can be seen in the same colour at a distance.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Board Exam Vault (Quiz) -->
+        <section id="questions" class="scroll-mt-24 pb-12">
+            <div class="text-center mb-10">
+                <span class="bg-orange-100 text-orange-800 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block border border-orange-200">Exam Vault</span>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Board Impact Questions</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Test your understanding with frequently asked questions from previous CBSE exams. Click to reveal the model answer.
+                </p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 flex flex-col items-center justify-between min-h-[350px]">
+                    
+                    <div class="w-full relative text-center">
+                        <span id="qType" class="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full inline-block mb-6">Conceptual</span>
+                        
+                        <h3 id="qText" class="text-xl md:text-2xl font-bold text-gray-800 leading-snug mt-2 px-2">
+                            A student has difficulty reading the blackboard while sitting in the last row. What could be the defect the child is suffering from? How can it be corrected?
+                        </h3>
+                    </div>
+
+                    <!-- Answer Drawer -->
+                    <div id="answerDrawer" class="w-full mt-6 bg-orange-50 rounded-2xl border border-orange-100 transition-all duration-300 max-h-0 overflow-hidden opacity-0">
+                        <div class="p-6">
+                            <span class="text-xs font-bold uppercase tracking-widest text-brand-orange bg-white border border-orange-200 px-3 py-1 rounded-full inline-block mb-3">Model Answer</span>
+                            <p id="aText" class="text-gray-700 font-medium text-lg leading-relaxed">
+                                The student is suffering from Myopia (short-sightedness), as they cannot see distant objects clearly. It can be corrected by using spectacles containing concave lenses of suitable power.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action Controls -->
+                    <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-100">
+                        <p class="font-bold text-gray-400 bg-gray-50 px-4 py-2 rounded-full border border-gray-200 text-sm">
+                            Question <span id="qCount" class="text-brand-orange">1</span> of <span id="qTotal">6</span>
+                        </p>
+
+                        <button id="revealBtn" onclick="toggleAnswer()" class="px-6 py-3 bg-brand-green hover:bg-brand-green-light text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2">
+                            <span>Show Answer</span>
+                            <i id="revealIcon" class="fa-solid fa-eye"></i>
+                        </button>
+
+                        <div class="flex items-center gap-3">
+                            <button onclick="prevQuestion()" class="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-200 text-gray-600 hover:text-brand-green hover:border-brand-green hover:bg-teal-50 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button onclick="nextQuestion()" class="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-200 text-gray-600 hover:text-brand-green hover:border-brand-green hover:bg-teal-50 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-green text-white py-8 border-t border-brand-green-light mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-lg mb-2">Class 10 Physics <span class="text-brand-orange">Study Material</span></p>
+            <p class="text-emerald-100 text-sm mb-4">Based strictly on NCERT / Educart / Oswaal curriculum patterns.</p>
+            <p class="text-emerald-300 text-xs">Developed by your AI Science Professor to help you become a topper.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts for Interactivity -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        // --- Section 1: Eye Anatomy Data ---
+        const eyeData = {
+            'cornea': { title: 'Cornea', desc: 'The transparent spherical membrane covering the front of the eye. Light enters the eye through this membrane. Most of the refraction of light rays occurs at the outer surface of the cornea.', tip: 'It forms a transparent bulge on the front surface of the eyeball.' },
+            'iris': { title: 'Iris', desc: 'A dark muscular diaphragm located behind the cornea. It controls the size of the pupil.', tip: 'The color of the iris dictates the color of the eye.' },
+            'pupil': { title: 'Pupil', desc: 'The small hole in the center of the iris. It regulates and controls the amount of light entering the eye. It expands in dim light and contracts in bright light.', tip: 'Looks black because no light reflects from it.' },
+            'lens': { title: 'Crystalline Lens', desc: 'A transparent, flexible, jelly-like structure behind the pupil. It provides the finer adjustment of focal length required to focus objects at different distances on the retina.', tip: 'It is a convex lens.' },
+            'ciliary': { title: 'Ciliary Muscles', desc: 'Muscles attached to the lens that modify its curvature. When they relax, the lens becomes thin (focusing distant objects). When they contract, the lens becomes thick (focusing nearby objects).', tip: 'This ability to adjust focal length is called Power of Accommodation.' },
+            'retina': { title: 'Retina', desc: 'A delicate membrane having enormous number of light-sensitive cells (rods and cones). The lens forms an inverted, real image of the object on the retina.', tip: 'Light-sensitive cells get activated upon illumination and generate electrical signals.' },
+            'optic': { title: 'Optic Nerve', desc: 'Transmits visual information in the form of electrical signals from the retina to the brain. The brain interprets these signals so we see objects as they are.', tip: 'The blind spot is where the optic nerve leaves the eye.' }
+        };
+
+        function selectEyePart(partId) {
+            // Remove active classes
+            document.querySelectorAll('.eye-part').forEach(el => el.classList.remove('active-part'));
+            // Add active class to selected
+            document.getElementById('part-' + partId).classList.add('active-part');
+            
+            // Update Text
+            const data = eyeData[partId];
+            document.getElementById('eye-title').innerText = data.title;
+            document.getElementById('eye-desc').innerText = data.desc;
+            
+            const highlight = document.getElementById('eye-highlight');
+            highlight.innerHTML = `<strong>Board Tip:</strong> ${data.tip}`;
+            highlight.classList.remove('hidden');
+        }
+
+        // --- Section 2: Defects of Vision Simulator ---
+        let currentDefect = 'normal';
+        let isCorrected = false;
+
+        const defectData = {
+            'normal': {
+                title: 'Normal Vision',
+                desc: 'A normal eye can see objects clearly from 25 cm (near point) to infinity (far point). Light rays focus exactly on the retina.',
+                cause: '<strong>Near Point:</strong> 25 cm. <br><strong>Far Point:</strong> Infinity.',
+                uncorrectedRays: { top: "M 60,140 L 450,130 L 580,150", bottom: "M 60,160 L 450,170 L 580,150" }
+            },
+            'myopia': {
+                title: 'Myopia (Short-sightedness)',
+                desc: 'A person with myopia can see nearby objects clearly but cannot see distant objects distinctly. The image of a distant object is formed IN FRONT of the retina.',
+                cause: '<strong>Causes:</strong> 1. Excessive curvature of the eye lens.<br>2. Elongation of the eyeball.',
+                uncorrectedRays: { top: "M 60,140 L 450,130 L 550,150 L 580,160", bottom: "M 60,160 L 450,170 L 550,150 L 580,140" },
+                correctedRays: { top: "M 60,140 L 400,125 L 450,140 L 580,150", bottom: "M 60,160 L 400,175 L 450,160 L 580,150" },
+                lensPath: "M 390,100 Q 410,150 390,200 L 400,200 Q 420,150 400,100 Z" // Concave
+            },
+            'hypermetropia': {
+                title: 'Hypermetropia (Long-sightedness)',
+                desc: 'A person can see distant objects clearly but cannot see nearby objects distinctly. The near point is farther away than normal (25cm). Image is formed BEHIND the retina.',
+                cause: '<strong>Causes:</strong> 1. Focal length of the eye lens is too long.<br>2. Eyeball has become too small.',
+                uncorrectedRays: { top: "M 60,100 L 450,130 L 610,150", bottom: "M 60,200 L 450,170 L 610,150" }, // Rays diverging from near
+                correctedRays: { top: "M 60,100 L 400,115 L 450,135 L 580,150", bottom: "M 60,200 L 400,185 L 450,165 L 580,150" },
+                lensPath: "M 390,100 Q 410,150 390,200 Q 370,150 390,100 Z" // Convex
+            }
+        };
+
+        function setDefect(type) {
+            currentDefect = type;
+            isCorrected = false;
+            document.getElementById('lens-toggle').checked = false;
+            
+            // UI Tabs update
+            ['normal', 'myopia', 'hypermetropia'].forEach(tab => {
+                const el = document.getElementById('tab-' + tab);
+                if(tab === type) {
+                    el.className = 'flex-1 py-4 px-6 text-center font-bold text-brand-green bg-white border-b-2 border-brand-green transition-all';
+                } else {
+                    el.className = 'flex-1 py-4 px-6 text-center font-semibold text-gray-500 hover:text-gray-700 bg-gray-50 border-b border-gray-200 transition-all';
+                }
+            });
+
+            // Update Text
+            const data = defectData[type];
+            document.getElementById('defect-title').innerText = data.title;
+            document.getElementById('defect-desc').innerText = data.desc;
+            document.getElementById('defect-cause').innerHTML = data.cause;
+
+            // Show/Hide Correction Control
+            const ctrl = document.getElementById('correction-control');
+            if(type === 'normal') {
+                ctrl.classList.add('hidden');
+            } else {
+                ctrl.classList.remove('hidden');
+                document.getElementById('lens-status').innerText = 'Without Lens';
+            }
+
+            drawRays();
+        }
+
+        function toggleCorrection() {
+            isCorrected = document.getElementById('lens-toggle').checked;
+            document.getElementById('lens-status').innerText = isCorrected ? 'Correction Applied' : 'Without Lens';
+            drawRays();
+        }
+
+        function drawRays() {
+            const data = defectData[currentDefect];
+            const rayTop = document.getElementById('ray-top');
+            const rayBottom = document.getElementById('ray-bottom');
+            const lensLayer = document.getElementById('sim-corrective-lens');
+            const lensShape = document.getElementById('sim-lens-shape');
+
+            if (isCorrected && currentDefect !== 'normal') {
+                rayTop.setAttribute('d', data.correctedRays.top);
+                rayBottom.setAttribute('d', data.correctedRays.bottom);
+                lensShape.setAttribute('d', data.lensPath);
+                lensLayer.classList.remove('opacity-0');
+            } else {
+                rayTop.setAttribute('d', data.uncorrectedRays.top);
+                rayBottom.setAttribute('d', data.uncorrectedRays.bottom);
+                lensLayer.classList.add('opacity-0');
+            }
+        }
+
+        // --- Section 4: Atmospheric Refraction Simulator ---
+        let atmosActualVisible = false;
+        function toggleAtmosphere() {
+            atmosActualVisible = !atmosActualVisible;
+            const btn = document.getElementById('btn-atmos');
+            const actualLayer = document.getElementById('star-actual');
+            const apparentStarPath = document.querySelector('#star-apparent line');
+            
+            if (atmosActualVisible) {
+                actualLayer.classList.remove('opacity-0');
+                btn.innerText = "Hide Actual Path";
+                btn.classList.replace('bg-brand-orange', 'bg-gray-600');
+            } else {
+                actualLayer.classList.add('opacity-0');
+                btn.innerText = "Show Actual Path";
+                btn.classList.replace('bg-gray-600', 'bg-brand-orange');
+            }
+        }
+
+        // --- Section 5: Scattering / Time of Day Simulator ---
+        function updateSkyColor() {
+            const val = document.getElementById('time-slider').value;
+            const sim = document.getElementById('sky-sim');
+            const emoji = document.getElementById('sun-emoji');
+            const label = document.getElementById('time-label');
+            const desc = document.getElementById('scatter-explanation');
+
+            if (val > 80) {
+                // Sunset
+                sim.style.backgroundColor = '#fb923c'; // Orange-red
+                emoji.innerText = '🌇';
+                label.innerText = 'Sunrise / Sunset';
+                desc.innerText = 'Light travels maximum distance through atmosphere. Blue light is scattered away. Least scattered red light reaches eyes.';
+            } else if (val > 20) {
+                // Mid-day
+                sim.style.backgroundColor = '#38bdf8'; // Blue
+                emoji.innerText = '☀️';
+                label.innerText = 'Mid-Day';
+                desc.innerText = 'Sun is overhead. Light travels less distance. Little scattering occurs, mostly blue. Sky appears blue, sun looks white.';
+            } else {
+                // Early Morning (Similar to sunset, slightly different color)
+                sim.style.backgroundColor = '#fca5a5'; // Light red/pink
+                emoji.innerText = '🌅';
+                label.innerText = 'Early Morning';
+                desc.innerText = 'Similar to sunset. Blue scattered away, longer red wavelengths reach the eye.';
+            }
+        }
+
+        // --- Section 6: Quiz Logic ---
+        const quizQuestions = [
+            { type: "Application", q: "A student has difficulty reading the blackboard while sitting in the last row. What could be the defect the child is suffering from? How can it be corrected?", a: "The student is suffering from Myopia (short-sightedness), as they cannot see distant objects clearly. It can be corrected by using spectacles containing concave lenses of suitable power." },
+            { type: "Reasoning", q: "Why do stars twinkle but planets do not?", a: "Stars are point sources of light very far away. Atmospheric refraction causes their apparent position and brightness to fluctuate (twinkle). Planets are much closer, acting as extended sources (collection of point sources), so fluctuations average out to zero." },
+            { type: "Conceptual", q: "What is meant by power of accommodation of the eye?", a: "The ability of the eye lens to adjust its focal length (by contracting or relaxing ciliary muscles) to form sharp images of objects at different distances on the retina." },
+            { type: "Application", q: "A person with a myopic eye cannot see objects beyond 1.2 m distinctly. What should be the type of the corrective lens used?", a: "A concave lens should be used. The lens will diverge the parallel rays from infinity so they appear to come from the person's far point (1.2m), allowing them to focus on the retina." },
+            { type: "Phenomenon", q: "Why does the clear sky appear blue?", a: "Atmospheric molecules (like N2, O2) are smaller than visible light wavelengths. They scatter shorter wavelengths (blue) much more strongly than longer ones (red). This scattered blue light enters our eyes." },
+            { type: "Phenomenon", q: "What is dispersion of white light? Name the natural phenomenon based on it.", a: "The splitting of white light into its component colors (VIBGYOR) on passing through a transparent medium like a glass prism is called dispersion. A Rainbow is a natural phenomenon based on it." }
+        ];
+
+        let qIndex = 0;
+        let isAnswerVisible = false;
+
+        function renderQuestion() {
+            const q = quizQuestions[qIndex];
+            
+            collapseAnswer();
+            
+            setTimeout(() => {
+                document.getElementById('qType').innerText = q.type;
+                document.getElementById('qText').innerText = q.q;
+                document.getElementById('aText').innerText = q.a;
+                document.getElementById('qCount').innerText = qIndex + 1;
+            }, 150);
+        }
+
+        function toggleAnswer() {
+            const drawer = document.getElementById('answerDrawer');
+            const btnText = document.querySelector('#revealBtn span');
+            const btnIcon = document.getElementById('revealIcon');
+            
+            if (isAnswerVisible) {
+                collapseAnswer();
+            } else {
+                drawer.classList.remove('max-h-0', 'opacity-0');
+                drawer.classList.add('max-h-[500px]', 'opacity-100');
+                btnText.innerText = "Hide Answer";
+                btnIcon.className = "fa-solid fa-eye-slash";
+                isAnswerVisible = true;
+            }
+        }
+
+        function collapseAnswer() {
+            const drawer = document.getElementById('answerDrawer');
+            const btnText = document.querySelector('#revealBtn span');
+            const btnIcon = document.getElementById('revealIcon');
+            
+            if(drawer) {
+                drawer.classList.add('max-h-0', 'opacity-0');
+                drawer.classList.remove('max-h-[500px]', 'opacity-100');
+            }
+            if(btnText) btnText.innerText = "Show Answer";
+            if(btnIcon) btnIcon.className = "fa-solid fa-eye";
+            isAnswerVisible = false;
+        }
+
+        function nextQuestion() {
+            qIndex = (qIndex + 1) % quizQuestions.length;
+            renderQuestion();
+        }
+
+        function prevQuestion() {
+            qIndex = (qIndex - 1 + quizQuestions.length) % quizQuestions.length;
+            renderQuestion();
+        }
+
+        // Initialize Everything
+        window.onload = () => {
+            selectEyePart('lens'); // Select lens by default for demo
+            setDefect('normal');
+            document.getElementById('qTotal').innerText = quizQuestions.length;
+            renderQuestion();
+        };
+    </script>
+</body>
+</html>

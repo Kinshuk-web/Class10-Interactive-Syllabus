@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control and Coordination | Class 10 Biology Interactive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-green': '#1a564e', /* Matches screenshot hero green */
+                        'brand-green-light': '#2a7a70',
+                        'brand-green-dark': '#113c36',
+                        'brand-orange': '#e88a1a', /* Matches screenshot hero orange */
+                        'brand-orange-light': '#fdf2e3',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #1e293b; scroll-behavior: smooth; }
+        
+        /* Custom styles for range sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #e88a1a;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        input[type=range]:focus { outline: none; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #1a564e; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #113c36; }
+
+        /* SVG Interactive Elements */
+        .interactive-part { cursor: pointer; transition: all 0.3s ease; }
+        .interactive-part:hover { filter: drop-shadow(0 0 8px rgba(232, 138, 26, 0.9)); stroke-width: 3; }
+        .active-part { filter: drop-shadow(0 0 8px rgba(232, 138, 26, 1)); stroke-width: 3; fill-opacity: 0.9 !important; }
+        
+        /* Pulse Animation */
+        @keyframes pulse-signal {
+            0% { r: 4px; opacity: 1; }
+            100% { r: 12px; opacity: 0; }
+        }
+        .signal-pulse { animation: pulse-signal 1.5s infinite; }
+    </style>
+</head>
+<body class="antialiased font-sans flex flex-col min-h-screen">
+
+    <!-- Navigation Header -->
+    <nav class="bg-white sticky top-0 z-50 shadow-sm border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Branding -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <span class="text-brand-green font-bold text-xl sm:text-2xl tracking-tight">Control </span>
+                    <span class="text-brand-orange font-bold text-xl sm:text-2xl tracking-tight ml-1">& Coordination</span>
+                </div>
+                
+                <!-- Desktop Navigation Buttons -->
+                <div class="hidden lg:flex items-center space-x-6 text-sm">
+                    <a href="#neuron" class="text-gray-600 hover:text-brand-green font-medium transition-colors">Neuron & Synapse</a>
+                    <a href="#reflex" class="text-gray-600 hover:text-brand-green font-medium transition-colors">Reflex Arc</a>
+                    <a href="#brain" class="text-gray-600 hover:text-brand-green font-medium transition-colors">Human Brain</a>
+                    <a href="#plants" class="text-gray-600 hover:text-brand-green font-medium transition-colors">Plant Hormones & Movement</a>
+                    <a href="#endocrine" class="text-gray-600 hover:text-brand-green font-medium transition-colors">Endocrine System</a>
+                    <a href="#questions" class="px-4 py-2 text-white bg-brand-orange hover:bg-orange-600 font-bold rounded-lg transition-all shadow-sm">Board Quiz</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="lg:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-600 hover:text-brand-green focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-2xl" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-gray-100 bg-white shadow-inner">
+            <div class="px-4 py-3 space-y-2">
+                <a href="#neuron" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Neuron & Synapse</a>
+                <a href="#reflex" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Reflex Arc</a>
+                <a href="#brain" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Human Brain</a>
+                <a href="#plants" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Plant Movements & Hormones</a>
+                <a href="#endocrine" onclick="toggleMobileMenu()" class="block px-3 py-2 text-gray-600 font-medium hover:text-brand-green hover:bg-gray-50 rounded-md">Endocrine System</a>
+                <a href="#questions" onclick="toggleMobileMenu()" class="block px-3 py-2 text-white bg-brand-orange font-bold text-center rounded-md">Board Quiz</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-brand-green text-white py-20 md:py-24 relative overflow-hidden">
+        <div class="max-w-5xl mx-auto px-4 text-center relative z-10">
+            <div class="inline-block px-4 py-1 rounded-full border border-brand-orange text-xs font-bold text-brand-orange mb-6 tracking-widest uppercase bg-brand-green-dark/40">
+                CBSE Class 10 Biology
+            </div>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-tight">
+                Control & Coordination <span class="text-brand-orange">Mastery Portal</span>
+            </h1>
+            <p class="text-base sm:text-lg md:text-xl text-teal-100 max-w-3xl mx-auto leading-relaxed font-light">
+                An exhaustive, interactive learning system strictly based on NCERT, Educart, MTG, and Oswaal patterns. Featuring real-time interactive diagrams, reflex action simulations, plant tropism models, and human endocrine gland visualizers.
+            </p>
+        </div>
+    </div>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+
+        <!-- 1. Neuron & Neuromuscular Junction -->
+        <section id="neuron" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <div class="inline-block px-3 py-1 bg-teal-50 text-brand-green rounded-full text-xs font-bold uppercase tracking-wider mb-2">Section 1</div>
+                <h2 class="text-3xl font-bold text-gray-900">1. Nervous System: Structure of a Neuron & Synapse</h2>
+                <p class="mt-3 text-gray-600 max-w-3xl mx-auto">
+                    The nervous tissue is made up of an organized network of nerve cells or <strong>neurons</strong>. They conduct information via electrical and chemical impulses across synaptic gaps.
+                </p>
+            </div>
+
+            <!-- Toggle between Neuron and Neuromuscular Junction -->
+            <div class="flex justify-center mb-6">
+                <div class="bg-gray-200 p-1 rounded-xl flex space-x-2">
+                    <button onclick="switchNeuronView('neuron')" id="btn-view-neuron" class="px-5 py-2 rounded-lg font-bold text-sm bg-brand-green text-white shadow-sm transition-all">Structure of Neuron</button>
+                    <button onclick="switchNeuronView('junction')" id="btn-view-junction" class="px-5 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-brand-green transition-all">Neuromuscular Junction</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100">
+                
+                <!-- Interactive SVG Canvas (Left - 7 Cols) -->
+                <div class="lg:col-span-7 bg-slate-900 rounded-2xl p-4 md:p-6 flex flex-col justify-center items-center relative overflow-hidden min-h-[380px]">
+                    
+                    <!-- View A: Neuron Diagram -->
+                    <div id="svg-neuron-container" class="w-full flex justify-center">
+                        <svg viewBox="0 0 600 300" class="w-full h-auto max-h-[350px]">
+                            <!-- Dendrites -->
+                            <g id="npart-dendrite" class="interactive-part" onclick="selectNeuronPart('dendrite')">
+                                <path d="M 60,110 L 100,140 M 50,150 L 90,150 M 60,190 L 100,160 M 80,80 L 110,130 M 80,220 L 110,170" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+                                <circle cx="55" cy="110" r="4" fill="#e88a1a"/>
+                                <circle cx="45" cy="150" r="4" fill="#e88a1a"/>
+                                <circle cx="55" cy="190" r="4" fill="#e88a1a"/>
+                            </g>
+
+                            <!-- Cyton / Cell Body -->
+                            <polygon id="npart-cyton" class="interactive-part" onclick="selectNeuronPart('cyton')" points="100,150 120,120 150,130 160,150 150,170 120,180" fill="#38bdf8" stroke="#0284c7" stroke-width="3"/>
+                            
+                            <!-- Nucleus -->
+                            <circle id="npart-nucleus" class="interactive-part" onclick="selectNeuronPart('nucleus')" cx="130" cy="150" r="14" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+
+                            <!-- Axon Line -->
+                            <line x1="160" y1="150" x2="440" y2="150" stroke="#fbbf24" stroke-width="6"/>
+
+                            <!-- Myelin Sheath / Schwann Cells -->
+                            <g id="npart-myelin" class="interactive-part" onclick="selectNeuronPart('myelin')">
+                                <rect x="180" y="135" width="50" height="30" rx="6" fill="#10b981" stroke="#047857" stroke-width="2"/>
+                                <rect x="245" y="135" width="50" height="30" rx="6" fill="#10b981" stroke="#047857" stroke-width="2"/>
+                                <rect x="310" y="135" width="50" height="30" rx="6" fill="#10b981" stroke="#047857" stroke-width="2"/>
+                                <rect x="375" y="135" width="50" height="30" rx="6" fill="#10b981" stroke="#047857" stroke-width="2"/>
+                            </g>
+
+                            <!-- Axon Terminals -->
+                            <g id="npart-terminal" class="interactive-part" onclick="selectNeuronPart('terminal')">
+                                <path d="M 440,150 L 480,120 M 440,150 L 490,150 M 440,150 L 480,180" stroke="#f59e0b" stroke-width="4" stroke-linecap="round"/>
+                                <circle cx="485" cy="120" r="6" fill="#ef4444"/>
+                                <circle cx="495" cy="150" r="6" fill="#ef4444"/>
+                                <circle cx="485" cy="180" r="6" fill="#ef4444"/>
+                            </g>
+
+                            <!-- Synaptic Knob/Gap Area -->
+                            <g id="npart-synapse" class="interactive-part" onclick="selectNeuronPart('synapse')">
+                                <rect x="500" y="100" width="80" height="100" rx="10" fill="none" stroke="#e88a1a" stroke-width="2" stroke-dasharray="4,4"/>
+                                <text x="508" y="118" fill="#e88a1a" font-size="11" font-weight="bold">Synapse</text>
+                            </g>
+
+                            <!-- Impulse Animated Arrow -->
+                            <path d="M 60,250 L 520,250" stroke="#e88a1a" stroke-width="2" stroke-dasharray="6,6"/>
+                            <text x="210" y="270" fill="#cbd5e1" font-size="12" font-weight="bold">Direction of Nerve Impulse Transmission</text>
+                            <polygon points="520,250 510,245 510,255" fill="#e88a1a"/>
+                        </svg>
+                    </div>
+
+                    <!-- View B: Neuromuscular Junction Diagram -->
+                    <div id="svg-junction-container" class="w-full justify-center hidden">
+                        <svg viewBox="0 0 600 300" class="w-full h-auto max-h-[350px]">
+                            <!-- Axon Terminal Button -->
+                            <path id="jpart-axon" class="interactive-part" onclick="selectJunctionPart('axon')" d="M 220,20 L 220,100 C 220,160 140,180 180,220 C 220,250 380,250 420,220 C 460,180 380,160 380,100 L 380,20 Z" fill="#38bdf8" fill-opacity="0.2" stroke="#0284c7" stroke-width="3"/>
+                            
+                            <!-- Synaptic Vesicles -->
+                            <g id="jpart-vesicle" class="interactive-part" onclick="selectJunctionPart('vesicle')">
+                                <circle cx="260" cy="120" r="10" fill="#ef4444"/>
+                                <circle cx="300" cy="140" r="10" fill="#ef4444"/>
+                                <circle cx="340" cy="120" r="10" fill="#ef4444"/>
+                                <circle cx="280" cy="170" r="8" fill="#ef4444"/>
+                                <circle cx="320" cy="170" r="8" fill="#ef4444"/>
+                            </g>
+
+                            <!-- Neurotransmitter Molecules (Acetylcholine) -->
+                            <g id="jpart-chemical">
+                                <circle cx="250" cy="210" r="3" fill="#f59e0b"/>
+                                <circle cx="300" cy="215" r="3" fill="#f59e0b"/>
+                                <circle cx="350" cy="210" r="3" fill="#f59e0b"/>
+                            </g>
+
+                            <!-- Muscle Fiber (Post-synaptic membrane) -->
+                            <path id="jpart-muscle" class="interactive-part" onclick="selectJunctionPart('muscle')" d="M 100,260 Q 200,240 300,260 T 500,260 L 500,290 L 100,290 Z" fill="#f43f5e" stroke="#be123c" stroke-width="3"/>
+                            
+                            <!-- Receptors on Muscle -->
+                            <rect x="230" y="245" width="8" height="12" fill="#10b981"/>
+                            <rect x="290" y="245" width="8" height="12" fill="#10b981"/>
+                            <rect x="350" y="245" width="8" height="12" fill="#10b981"/>
+
+                            <!-- Labels -->
+                            <text x="270" y="50" fill="#e2e8f0" font-size="12" font-weight="bold">Axon Terminal</text>
+                            <text x="220" y="280" fill="#ffffff" font-size="12" font-weight="bold">Muscle Fiber (Effector)</text>
+                        </svg>
+                    </div>
+
+                    <p class="text-xs text-gray-400 mt-2 text-center">Click on any labeled structure in the diagram to inspect its role.</p>
+                </div>
+
+                <!-- Detail Panel (Right - 5 Cols) -->
+                <div class="lg:col-span-5 flex flex-col justify-center">
+                    <div id="neuron-info-card" class="bg-slate-50 p-6 md:p-8 rounded-2xl border border-gray-200">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="p-3 bg-brand-green/10 text-brand-green rounded-xl">
+                                <i class="fa-solid fa-bolt text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 id="neuron-part-title" class="text-2xl font-bold text-gray-900">Dendrite</h3>
+                                <span id="neuron-part-tag" class="text-xs font-semibold uppercase tracking-wider text-brand-orange bg-brand-orange-light px-2.5 py-0.5 rounded-full">Receptor End</span>
+                            </div>
+                        </div>
+
+                        <p id="neuron-part-desc" class="text-gray-600 text-sm sm:text-base leading-relaxed mb-4">
+                            Dendrites are branch-like projections at the receiving end of a neuron. They acquire information/stimuli from sensory receptors or adjacent neurons and convert it into an electrical impulse.
+                        </p>
+
+                        <div id="neuron-part-tip" class="bg-teal-50 border-l-4 border-brand-green p-3 rounded-r-lg text-xs sm:text-sm text-teal-900">
+                            <strong>Board Exam Tip:</strong> Information always travels in a unidirectional manner: Dendrite $\rightarrow$ Cell Body $\rightarrow$ Axon $\rightarrow$ Axonal End $\rightarrow$ Synapse.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 2. Reflex Action & Reflex Arc -->
+        <section id="reflex" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <div class="inline-block px-3 py-1 bg-amber-50 text-brand-orange rounded-full text-xs font-bold uppercase tracking-wider mb-2">Section 2</div>
+                <h2 class="text-3xl font-bold text-gray-900">2. Involuntary Response: Reflex Arc</h2>
+                <p class="mt-3 text-gray-600 max-w-3xl mx-auto">
+                    A <strong>reflex action</strong> is an extremely quick, automatic, and sudden involuntary response to a stimulus (e.g. touching a boiling hot flame) without conscious thinking by the brain.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 md:p-10 shadow-xl border border-gray-100">
+                
+                <!-- Interactive Reflex Simulator Controls -->
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 bg-slate-50 p-6 rounded-2xl border border-gray-200">
+                    <div>
+                        <h4 class="text-lg font-bold text-gray-800">Reflex Arc Step-by-Step Simulator</h4>
+                        <p class="text-xs text-gray-500 mt-1">Click "Trigger Stimulus" to observe how the impulse travels through the spinal cord before reaching the brain.</p>
+                    </div>
+                    <button onclick="runReflexArcSim()" id="btn-trigger-reflex" class="px-6 py-3 bg-brand-orange hover:bg-amber-600 text-white font-bold rounded-xl shadow-md transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                        <span>Trigger Stimulus (Hot Flame)</span>
+                    </button>
+                </div>
+
+                <!-- Step Pathway Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                    
+                    <!-- Step 1 -->
+                    <div id="rstep-1" class="p-4 rounded-xl border border-gray-200 bg-gray-50 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="w-7 h-7 rounded-full bg-brand-orange text-white text-xs font-bold flex items-center justify-center">1</span>
+                            <i class="fa-solid fa-hand-pointer text-gray-400 text-lg"></i>
+                        </div>
+                        <h5 class="font-bold text-sm text-gray-800">Receptors</h5>
+                        <p class="text-xs text-gray-500 mt-1">Heat/Pain receptors in the skin detect the dangerous stimulus.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div id="rstep-2" class="p-4 rounded-xl border border-gray-200 bg-gray-50 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="w-7 h-7 rounded-full bg-brand-orange text-white text-xs font-bold flex items-center justify-center">2</span>
+                            <i class="fa-solid fa-wave-square text-gray-400 text-lg"></i>
+                        </div>
+                        <h5 class="font-bold text-sm text-gray-800">Sensory Neuron</h5>
+                        <p class="text-xs text-gray-500 mt-1">Carries the electrical signal from skin to the Spinal Cord.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div id="rstep-3" class="p-4 rounded-xl border border-gray-200 bg-gray-50 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="w-7 h-7 rounded-full bg-brand-orange text-white text-xs font-bold flex items-center justify-center">3</span>
+                            <i class="fa-solid fa-diagram-project text-gray-400 text-lg"></i>
+                        </div>
+                        <h5 class="font-bold text-sm text-gray-800">Spinal Cord (Relay)</h5>
+                        <p class="text-xs text-gray-500 mt-1">Relay neuron processes signal immediately in spinal cord.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div id="rstep-4" class="p-4 rounded-xl border border-gray-200 bg-gray-50 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="w-7 h-7 rounded-full bg-brand-orange text-white text-xs font-bold flex items-center justify-center">4</span>
+                            <i class="fa-solid fa-arrow-right-long text-gray-400 text-lg"></i>
+                        </div>
+                        <h5 class="font-bold text-sm text-gray-800">Motor Neuron</h5>
+                        <p class="text-xs text-gray-500 mt-1">Transmits the response signal from spinal cord to arm muscles.</p>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div id="rstep-5" class="p-4 rounded-xl border border-gray-200 bg-gray-50 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="w-7 h-7 rounded-full bg-brand-orange text-white text-xs font-bold flex items-center justify-center">5</span>
+                            <i class="fa-solid fa-child-reaching text-gray-400 text-lg"></i>
+                        </div>
+                        <h5 class="font-bold text-sm text-gray-800">Effector (Muscle)</h5>
+                        <p class="text-xs text-gray-500 mt-1">Muscle contracts instantly, withdrawing the hand from danger.</p>
+                    </div>
+
+                </div>
+
+                <!-- High Yield Note Box -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 flex items-start space-x-3">
+                    <i class="fa-solid fa-circle-info text-blue-600 text-xl mt-0.5"></i>
+                    <div class="text-sm text-blue-900">
+                        <strong>Why are Reflex Arcs formed in the Spinal Cord instead of the Brain?</strong><br>
+                        Thinking by the complex neural network of the brain takes time. Since detecting heat and thinking about moving the hand could cause severe burns, reflex arcs evolved in animals as quick, efficient response mechanisms formed directly at the spinal cord!
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. Human Brain -->
+        <section id="brain" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <div class="inline-block px-3 py-1 bg-teal-50 text-brand-green rounded-full text-xs font-bold uppercase tracking-wider mb-2">Section 3</div>
+                <h2 class="text-3xl font-bold text-gray-900">3. Human Brain & Central Nervous System</h2>
+                <p class="mt-3 text-gray-600 max-w-3xl mx-auto">
+                    The brain is the main coordinating center of the human body. Protected inside the fluid-filled skull (cranium), it has three major regions: <strong>Forebrain, Midbrain, and Hindbrain</strong>.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100">
+                
+                <!-- SVG Brain Section (7 Cols) -->
+                <div class="lg:col-span-7 bg-slate-900 rounded-2xl p-6 flex flex-col items-center justify-center relative min-h-[360px]">
+                    <svg viewBox="0 0 500 380" class="w-full h-auto max-h-[360px]">
+                        
+                        <!-- Skull / Cranium Outer Line -->
+                        <path d="M 100,200 C 80,80 380,60 400,200 C 400,280 340,290 300,280 C 260,340 210,340 180,290 Z" fill="#1e293b" stroke="#64748b" stroke-width="4"/>
+                        <text x="190" y="55" fill="#94a3b8" font-size="12" font-weight="bold">Cranium (Bony Skull)</text>
+
+                        <!-- Forebrain / Cerebrum -->
+                        <path id="bpart-forebrain" class="interactive-part" onclick="selectBrainPart('forebrain')" d="M 120,180 C 110,100 370,100 380,180 C 350,220 280,200 240,210 C 180,210 140,220 120,180 Z" fill="#f59e0b" fill-opacity="0.6" stroke="#d97706" stroke-width="3"/>
+
+                        <!-- Midbrain -->
+                        <path id="bpart-midbrain" class="interactive-part" onclick="selectBrainPart('midbrain')" d="M 230,210 C 260,200 280,200 290,220 C 280,240 250,250 230,230 Z" fill="#ec4899" fill-opacity="0.8" stroke="#be185d" stroke-width="2"/>
+
+                        <!-- Hindbrain: Cerebellum -->
+                        <path id="bpart-cerebellum" class="interactive-part" onclick="selectBrainPart('cerebellum')" d="M 310,230 C 370,220 380,290 320,300 C 290,290 290,250 310,230 Z" fill="#10b981" fill-opacity="0.7" stroke="#047857" stroke-width="3"/>
+
+                        <!-- Hindbrain: Pons & Medulla -->
+                        <path id="bpart-medulla" class="interactive-part" onclick="selectBrainPart('medulla')" d="M 240,230 L 280,230 L 270,300 L 230,300 Z" fill="#3b82f6" fill-opacity="0.8" stroke="#1d4ed8" stroke-width="2"/>
+
+                        <!-- Pituitary Gland -->
+                        <circle id="bpart-pituitary" class="interactive-part" onclick="selectBrainPart('pituitary')" cx="205" cy="225" r="8" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
+
+                        <!-- Spinal Cord Extension -->
+                        <path d="M 230,300 L 230,360 L 270,360 L 270,300 Z" fill="#cbd5e1" stroke="#94a3b8" stroke-width="2"/>
+                        <text x="280" y="340" fill="#cbd5e1" font-size="11" font-weight="bold">Spinal Cord</text>
+
+                        <!-- Static Labels -->
+                        <text x="220" y="140" fill="#ffffff" font-size="14" font-weight="bold" class="pointer-events-none">Cerebrum (Forebrain)</text>
+                        <text x="325" y="265" fill="#ffffff" font-size="11" font-weight="bold" class="pointer-events-none">Cerebellum</text>
+                        <text x="120" y="230" fill="#f43f5e" font-size="10" font-weight="bold">Pituitary Gland</text>
+                    </svg>
+
+                    <div class="text-xs text-gray-400 mt-2 text-center">Tap any region of the brain to examine its functions.</div>
+                </div>
+
+                <!-- Brain Function Info (5 Cols) -->
+                <div class="lg:col-span-5 flex flex-col justify-center">
+                    <div id="brain-info-card" class="bg-slate-50 p-6 md:p-8 rounded-2xl border border-gray-200">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="p-3 bg-brand-orange/10 text-brand-orange rounded-xl">
+                                <i class="fa-solid fa-brain text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 id="brain-part-title" class="text-2xl font-bold text-gray-900">Forebrain (Cerebrum)</h3>
+                                <span id="brain-part-tag" class="text-xs font-semibold uppercase tracking-wider text-brand-green bg-teal-100 px-2.5 py-0.5 rounded-full">Main Thinking Part</span>
+                            </div>
+                        </div>
+
+                        <p id="brain-part-desc" class="text-gray-600 text-sm sm:text-base leading-relaxed mb-4">
+                            The Forebrain is the most complex and specialized part of the brain. It consists of the Cerebrum. It receives sensory impulses from visual, auditory, and olfactory receptors, and controls all voluntary actions like thinking, memory, learning, and reasoning.
+                        </p>
+
+                        <div id="brain-part-functions" class="bg-white p-4 rounded-xl border border-gray-200 space-y-2 text-xs sm:text-sm">
+                            <div class="flex items-center text-gray-700">
+                                <i class="fa-solid fa-check text-brand-orange mr-2"></i>
+                                <span>Center for intelligence, memory, hearing, smell, and sight.</span>
+                            </div>
+                            <div class="flex items-center text-gray-700">
+                                <i class="fa-solid fa-check text-brand-orange mr-2"></i>
+                                <span>Sensation of feeling full (Hunger Center).</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. Movements in Plants (Tropism & Nastic Movements) -->
+        <section id="plants" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <div class="inline-block px-3 py-1 bg-amber-50 text-brand-orange rounded-full text-xs font-bold uppercase tracking-wider mb-2">Section 4</div>
+                <h2 class="text-3xl font-bold text-gray-900">4. Coordination in Plants</h2>
+                <p class="mt-3 text-gray-600 max-w-3xl mx-auto">
+                    Unlike animals, plants have neither a nervous system nor muscles! They show two distinct types of movement: <strong>Tropic movements</strong> (directional, growth-dependent) and <strong>Nastic movements</strong> (immediate, growth-independent).
+                </p>
+            </div>
+
+            <!-- Phototropism Interactive Module -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                
+                <!-- Interactive Phototropism Box -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-900">Phototropism & Auxin Bending</h3>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">Growth Dependent</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-6">
+                            When growing plants detect light, a hormone called <strong>Auxin</strong> synthesized at the shoot tip helps the cells grow longer. Auxin diffuses towards the <em>shaded side</em> of the shoot, stimulating cell elongation there and causing the stem to bend towards light.
+                        </p>
+
+                        <!-- Direction Control -->
+                        <div class="mb-6 bg-slate-50 p-4 rounded-2xl border border-gray-200">
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Select Sunlight Direction:</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <button onclick="setLightDirection('left')" id="btn-light-left" class="py-2 text-xs font-bold rounded-lg border border-gray-300 bg-white hover:bg-teal-50 transition-all">Left Light ☀️</button>
+                                <button onclick="setLightDirection('top')" id="btn-light-top" class="py-2 text-xs font-bold rounded-lg border border-gray-300 bg-brand-green text-white shadow-sm transition-all">Overhead ☀️</button>
+                                <button onclick="setLightDirection('right')" id="btn-light-right" class="py-2 text-xs font-bold rounded-lg border border-gray-300 bg-white hover:bg-teal-50 transition-all">Right Light ☀️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Plant Canvas -->
+                    <div class="h-52 bg-slate-900 rounded-2xl p-4 flex items-center justify-center relative overflow-hidden">
+                        <svg viewBox="0 0 300 180" class="w-full h-full">
+                            <!-- Pot -->
+                            <polygon points="120,160 180,160 170,180 130,180" fill="#b45309"/>
+                            
+                            <!-- Plant Shoot (Path dynamically bends) -->
+                            <path id="plant-stem" d="M 150,160 Q 150,100 150,40" stroke="#22c55e" stroke-width="12" stroke-linecap="round" fill="none"/>
+                            <circle id="plant-tip" cx="150" cy="40" r="8" fill="#f59e0b"/>
+
+                            <!-- Sun Icon -->
+                            <g id="sun-position" transform="translate(150, 20)">
+                                <circle cx="0" cy="0" r="12" fill="#fde047"/>
+                            </g>
+                        </svg>
+                        <div id="auxin-status-tag" class="absolute bottom-3 left-4 text-xs font-semibold text-amber-300 bg-slate-800/80 px-3 py-1 rounded-full border border-amber-500/30">
+                            Auxin evenly distributed at tip
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nastic Movement & Other Tropisms -->
+                <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-900">Nastic Movement (*Mimosa pudica*)</h3>
+                            <span class="text-xs bg-rose-100 text-rose-800 font-bold px-2.5 py-1 rounded-full">Growth Independent</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">
+                            When we touch the leaves of 'Touch-me-not' (*Chhui-mui*), they fold up and droop immediately. Plants use <strong>electrical-chemical means</strong> to convey information and change the amount of water (turgor pressure) in their cells, leading to swelling or shrinking!
+                        </p>
+
+                        <!-- Interactive Mimosa Leaf Folding Demo -->
+                        <div class="bg-rose-50 border border-rose-100 p-5 rounded-2xl mb-4 text-center">
+                            <div id="mimosa-icon" class="text-5xl mb-2 cursor-pointer transition-transform duration-500 hover:scale-110 inline-block" onclick="toggleMimosa()">
+                                🌿
+                            </div>
+                            <p id="mimosa-status" class="text-xs font-bold text-rose-900">Click the leaf above to touch it!</p>
+                        </div>
+                    </div>
+
+                    <!-- Tropisms Quick Table -->
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
+                            <strong class="text-brand-green">Geotropism:</strong> Growth response to gravity (roots grow down $+$, shoots grow up $-$).
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
+                            <strong class="text-brand-green">Hydrotropism:</strong> Roots bending towards water sources.
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
+                            <strong class="text-brand-green">Chemotropism:</strong> Growth of pollen tubes towards ovules during fertilization.
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
+                            <strong class="text-brand-green">Thigmotropism:</strong> Tendrils clinging around a support for climb.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Plant Hormones Table Matrix -->
+            <div class="bg-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-xl">
+                <h3 class="text-2xl font-bold text-brand-orange mb-4 flex items-center">
+                    <i class="fa-solid fa-seedling mr-3"></i>
+                    NCERT Plant Hormones (Phytohormones) Matrix
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-slate-800 text-brand-orange font-bold uppercase text-xs">
+                            <tr>
+                                <th class="p-3 rounded-l-lg">Hormone</th>
+                                <th class="p-3">Category</th>
+                                <th class="p-3">Primary Function</th>
+                                <th class="p-3 rounded-r-lg">NCERT Board Key Point</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            <tr class="hover:bg-slate-800/50">
+                                <td class="p-3 font-bold text-white">Auxin</td>
+                                <td class="p-3"><span class="bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded text-xs">Promoter</span></td>
+                                <td class="p-3">Promotes cell elongation at shoot tips. Helps in phototropism.</td>
+                                <td class="p-3 text-gray-400">Concentrates on shaded side of shoot.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50">
+                                <td class="p-3 font-bold text-white">Gibberellins</td>
+                                <td class="p-3"><span class="bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded text-xs">Promoter</span></td>
+                                <td class="p-3">Promotes growth of stem, internode elongation, and seed germination.</td>
+                                <td class="p-3 text-gray-400">Works in tandem with Auxin for stem height.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50">
+                                <td class="p-3 font-bold text-white">Cytokinins</td>
+                                <td class="p-3"><span class="bg-emerald-900/60 text-emerald-300 px-2 py-0.5 rounded text-xs">Promoter</span></td>
+                                <td class="p-3">Promotes rapid cell division.</td>
+                                <td class="p-3 text-gray-400">Present in high concentration in fruits and seeds.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50">
+                                <td class="p-3 font-bold text-white">Abscisic Acid (ABA)</td>
+                                <td class="p-3"><span class="bg-rose-900/60 text-rose-300 px-2 py-0.5 rounded text-xs">Inhibitor</span></td>
+                                <td class="p-3">Inhibits growth, causes wilting of leaves, and induces seed dormancy.</td>
+                                <td class="p-3 text-gray-400">Known as the "Stress Hormone" in plants.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Hormones in Animals & Human Endocrine System -->
+        <section id="endocrine" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <div class="inline-block px-3 py-1 bg-teal-50 text-brand-green rounded-full text-xs font-bold uppercase tracking-wider mb-2">Section 5</div>
+                <h2 class="text-3xl font-bold text-gray-900">5. Hormones in Animals: Human Endocrine System</h2>
+                <p class="mt-3 text-gray-600 max-w-3xl mx-auto">
+                    Hormones are chemical messengers secreted directly into the bloodstream by ductless <strong>endocrine glands</strong> to reach target organs.
+                </p>
+            </div>
+
+            <!-- Gender View Toggle -->
+            <div class="flex justify-center mb-8">
+                <div class="bg-gray-200 p-1 rounded-xl flex space-x-2">
+                    <button onclick="setGenderView('male')" id="btn-gender-male" class="px-5 py-2 rounded-lg font-bold text-sm bg-brand-green text-white shadow-sm transition-all">Male Anatomy</button>
+                    <button onclick="setGenderView('female')" id="btn-gender-female" class="px-5 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-brand-green transition-all">Female Anatomy</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100">
+                
+                <!-- Interactive Endocrine SVG Diagram (7 Cols) -->
+                <div class="lg:col-span-7 bg-slate-900 rounded-2xl p-6 flex items-center justify-center relative min-h-[420px]">
+                    <svg viewBox="0 0 350 480" class="w-full h-auto max-h-[420px]">
+                        
+                        <!-- Human Outline Silhouette -->
+                        <path d="M 175,30 C 145,30 145,80 145,90 C 120,110 110,180 110,250 C 110,320 135,340 145,460 L 205,460 C 215,340 240,320 240,250 C 240,180 230,110 205,90 C 205,80 205,30 175,30 Z" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+
+                        <!-- Hypothalamus & Pituitary -->
+                        <g id="gland-pituitary" class="interactive-part" onclick="selectGland('pituitary')">
+                            <circle cx="175" cy="70" r="8" fill="#e11d48"/>
+                            <line x1="175" y1="70" x2="260" y2="60" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="3,3"/>
+                            <text x="265" y="64" fill="#f43f5e" font-size="11" font-weight="bold">Hypothalamus & Pituitary</text>
+                        </g>
+
+                        <!-- Thyroid Gland -->
+                        <g id="gland-thyroid" class="interactive-part" onclick="selectGland('thyroid')">
+                            <path d="M 168,110 Q 175,105 182,110 Q 185,120 165,120 Z" fill="#f59e0b"/>
+                            <line x1="175" y1="115" x2="260" y2="115" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,3"/>
+                            <text x="265" y="119" fill="#f59e0b" font-size="11" font-weight="bold">Thyroid & Parathyroid</text>
+                        </g>
+
+                        <!-- Adrenal Glands (On top of kidneys) -->
+                        <g id="gland-adrenal" class="interactive-part" onclick="selectGland('adrenal')">
+                            <polygon points="155,210 165,200 168,210" fill="#10b981"/>
+                            <polygon points="185,210 195,200 198,210" fill="#10b981"/>
+                            <line x1="190" y1="205" x2="260" y2="180" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3,3"/>
+                            <text x="265" y="184" fill="#10b981" font-size="11" font-weight="bold">Adrenal Glands</text>
+                        </g>
+
+                        <!-- Pancreas -->
+                        <g id="gland-pancreas" class="interactive-part" onclick="selectGland('pancreas')">
+                            <ellipse cx="175" cy="230" rx="15" ry="5" fill="#38bdf8"/>
+                            <line x1="185" y1="230" x2="260" y2="230" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,3"/>
+                            <text x="265" y="234" fill="#38bdf8" font-size="11" font-weight="bold">Pancreas</text>
+                        </g>
+
+                        <!-- Male Testis (Shown in Male View) -->
+                        <g id="gland-testis" class="interactive-part" onclick="selectGland('testis')">
+                            <circle cx="165" cy="350" r="7" fill="#a855f7"/>
+                            <circle cx="185" cy="350" r="7" fill="#a855f7"/>
+                            <line x1="185" y1="350" x2="260" y2="330" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="3,3"/>
+                            <text x="265" y="334" fill="#a855f7" font-size="11" font-weight="bold">Testes (Male)</text>
+                        </g>
+
+                        <!-- Female Ovary (Shown in Female View) -->
+                        <g id="gland-ovary" class="interactive-part hidden" onclick="selectGland('ovary')">
+                            <circle cx="155" cy="300" r="7" fill="#ec4899"/>
+                            <circle cx="195" cy="300" r="7" fill="#ec4899"/>
+                            <line x1="195" y1="300" x2="260" y2="300" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3,3"/>
+                            <text x="265" y="304" fill="#ec4899" font-size="11" font-weight="bold">Ovaries (Female)</text>
+                        </g>
+
+                    </svg>
+                    <div class="absolute bottom-3 text-xs text-gray-400">Click any gland on the body diagram to inspect its hormones.</div>
+                </div>
+
+                <!-- Gland Details Card (5 Cols) -->
+                <div class="lg:col-span-5 flex flex-col justify-center">
+                    <div id="gland-info-card" class="bg-slate-50 p-6 md:p-8 rounded-2xl border border-gray-200">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="p-3 bg-brand-green/10 text-brand-green rounded-xl">
+                                <i class="fa-solid fa-dna text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 id="gland-title" class="text-2xl font-bold text-gray-900">Thyroid Gland</h3>
+                                <span id="gland-hormone-name" class="text-xs font-semibold uppercase tracking-wider text-brand-orange bg-amber-100 px-2.5 py-0.5 rounded-full">Hormone: Thyroxine</span>
+                            </div>
+                        </div>
+
+                        <p id="gland-desc" class="text-gray-600 text-sm sm:text-base leading-relaxed mb-4">
+                            Located attached to the windpipe in the neck. Thyroxine regulates carbohydrate, protein, and fat metabolism in the body to provide the best balance for growth.
+                        </p>
+
+                        <div id="gland-disease" class="bg-amber-50 border-l-4 border-brand-orange p-3 rounded-r-lg text-xs sm:text-sm text-amber-900 mb-4">
+                            <strong>Iodine Deficiency:</strong> Iodine is essential for thyroxine synthesis. Lack of iodine leads to <strong>Goitre</strong> (swollen neck).
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Feedback Mechanism Box -->
+            <div class="mt-8 bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Hormone Feedback Mechanism (Blood Sugar Control)</h3>
+                <p class="text-sm text-gray-600 mb-6">
+                    Hormones must be released in precise quantities. The timing and amount of hormone released are regulated by <strong>feedback mechanisms</strong>.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                    <div class="p-4 bg-rose-50 rounded-xl border border-rose-100">
+                        <span class="text-xs font-bold text-rose-800 uppercase">Trigger</span>
+                        <h5 class="font-bold text-sm text-gray-800 mt-1">High Blood Sugar</h5>
+                        <p class="text-xs text-gray-500 mt-1">Glucose rises after eating meals.</p>
+                    </div>
+
+                    <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                        <span class="text-xs font-bold text-blue-800 uppercase">Detection</span>
+                        <h5 class="font-bold text-sm text-gray-800 mt-1">Pancreas Cells</h5>
+                        <p class="text-xs text-gray-500 mt-1">Detect elevated blood glucose levels.</p>
+                    </div>
+
+                    <div class="p-4 bg-teal-50 rounded-xl border border-teal-100">
+                        <span class="text-xs font-bold text-teal-800 uppercase">Response</span>
+                        <h5 class="font-bold text-sm text-gray-800 mt-1">Insulin Secreted</h5>
+                        <p class="text-xs text-gray-500 mt-1">Pancreas produces and secretes Insulin.</p>
+                    </div>
+
+                    <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <span class="text-xs font-bold text-emerald-800 uppercase">Result</span>
+                        <h5 class="font-bold text-sm text-gray-800 mt-1">Sugar Level Falls</h5>
+                        <p class="text-xs text-gray-500 mt-1">Insulin secretion stops via negative feedback.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Board Exam Vault (Quiz & High-Yield Questions) -->
+        <section id="questions" class="scroll-mt-24 pb-12">
+            <div class="text-center mb-10">
+                <span class="bg-orange-100 text-orange-800 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block border border-orange-200">Exam Vault</span>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Board Impact Questions</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Practice top-tier NCERT, Educart, and Oswaal board exam questions. Click to review model answers.
+                </p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 flex flex-col items-center justify-between min-h-[350px]">
+                    
+                    <div class="w-full relative text-center">
+                        <span id="qType" class="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full inline-block mb-6">Conceptual</span>
+                        
+                        <h3 id="qText" class="text-xl md:text-2xl font-bold text-gray-800 leading-snug mt-2 px-2">
+                            What is a synapse? How does a chemical signal transmit across it?
+                        </h3>
+                    </div>
+
+                    <!-- Answer Drawer -->
+                    <div id="answerDrawer" class="w-full mt-6 bg-orange-50 rounded-2xl border border-orange-100 transition-all duration-300 max-h-0 overflow-hidden opacity-0">
+                        <div class="p-6">
+                            <span class="text-xs font-bold uppercase tracking-widest text-brand-orange bg-white border border-orange-200 px-3 py-1 rounded-full inline-block mb-3">Model Answer</span>
+                            <p id="aText" class="text-gray-700 font-medium text-base sm:text-lg leading-relaxed">
+                                A synapse is a micro gap between the axon terminal of one neuron and the dendrite of the next. When an electrical impulse reaches the axonal end, it triggers the release of chemical neurotransmitters across the gap, generating a new electrical impulse in the next neuron.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action Controls -->
+                    <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-100">
+                        <p class="font-bold text-gray-400 bg-gray-50 px-4 py-2 rounded-full border border-gray-200 text-sm">
+                            Question <span id="qCount" class="text-brand-orange">1</span> of <span id="qTotal">6</span>
+                        </p>
+
+                        <button id="revealBtn" onclick="toggleAnswer()" class="px-6 py-3 bg-brand-green hover:bg-brand-green-light text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2">
+                            <span>Show Answer</span>
+                            <i id="revealIcon" class="fa-solid fa-eye"></i>
+                        </button>
+
+                        <div class="flex items-center gap-3">
+                            <button onclick="prevQuestion()" class="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-200 text-gray-600 hover:text-brand-green hover:border-brand-green hover:bg-teal-50 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button onclick="nextQuestion()" class="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-200 text-gray-600 hover:text-brand-green hover:border-brand-green hover:bg-teal-50 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-green text-white py-8 border-t border-brand-green-light mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-lg mb-2">Class 10 Biology <span class="text-brand-orange">Control & Coordination</span></p>
+            <p class="text-teal-100 text-sm mb-4">Strictly aligned with NCERT, Educart, MTG & Oswaal board guidelines.</p>
+            <p class="text-teal-300 text-xs">Built for Class 10th students & teachers.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts for Interactivity -->
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        // --- Section 1: Neuron Interactivity ---
+        const neuronData = {
+            'dendrite': { title: 'Dendrite', tag: 'Receptor End', desc: 'Branch-like structures that acquire sensory input or chemical signals from sensory receptors or preceding neurons, converting them into electrical impulses.', tip: 'Information acquisition starts here!' },
+            'cyton': { title: 'Cell Body (Cyton)', tag: 'Processing Unit', desc: 'Contains cytoplasm and the nucleus. It aggregates incoming electrical signals from dendrites and prepares them for axon transmission.', tip: 'Maintains metabolic health of the nerve cell.' },
+            'nucleus': { title: 'Nucleus', tag: 'Cell Center', desc: 'The central organelle regulating all cellular functions and protein production of the neuron.', tip: 'Neurons cannot undergo cell division (mitosis).' },
+            'myelin': { title: 'Axon with Myelin Sheath', tag: 'Signal Conductor', desc: 'The long single tail that conducts impulses away from the cell body. Insulated by a fatty Myelin Sheath that accelerates signal transmission.', tip: 'Nodes between myelin sheaths speed up impulse transmission.' },
+            'terminal': { title: 'Axon Terminal', tag: 'Transmission End', desc: 'Fine branches at the end of axon that end in bulbous knobs. They release chemical neurotransmitters into the synapse upon electrical arrival.', tip: 'Converts electrical impulse into chemical signal.' },
+            'synapse': { title: 'Synaptic Gap', tag: 'Microscopic Gap', desc: 'The physical gap between two adjacent neurons. Signals cross via chemical neurotransmitters (like Acetylcholine).', tip: 'Ensures unidirectional flow of nerve impulses!' }
+        };
+
+        const junctionData = {
+            'axon': { title: 'Axon Terminal', tag: 'Motor Nerve End', desc: 'Carries motor nerve commands from the Central Nervous System to muscle fibers.', tip: 'Releases acetylcholine into the neuromuscular gap.' },
+            'vesicle': { title: 'Synaptic Vesicles', tag: 'Chemical Storage', desc: 'Tiny membrane-bound sacs storing neurotransmitter chemicals ready for release upon electrical excitation.', tip: 'Fuses with the terminal membrane when impulse arrives.' },
+            'muscle': { title: 'Muscle Fiber (Effector)', tag: 'Target Tissue', desc: 'Specialized muscle cell containing contractile proteins. Receives neurotransmitter signals causing muscle contraction and movement.', tip: 'Proteins change shape in response to nerve signals!' }
+        };
+
+        function switchNeuronView(view) {
+            const neuronSvg = document.getElementById('svg-neuron-container');
+            const junctionSvg = document.getElementById('svg-junction-container');
+            const btnN = document.getElementById('btn-view-neuron');
+            const btnJ = document.getElementById('btn-view-junction');
+
+            if(view === 'neuron') {
+                neuronSvg.classList.remove('hidden');
+                junctionSvg.classList.add('hidden');
+                btnN.className = 'px-5 py-2 rounded-lg font-bold text-sm bg-brand-green text-white shadow-sm transition-all';
+                btnJ.className = 'px-5 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-brand-green transition-all';
+                selectNeuronPart('dendrite');
+            } else {
+                neuronSvg.classList.add('hidden');
+                junctionSvg.classList.remove('hidden');
+                btnJ.className = 'px-5 py-2 rounded-lg font-bold text-sm bg-brand-green text-white shadow-sm transition-all';
+                btnN.className = 'px-5 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-brand-green transition-all';
+                selectJunctionPart('axon');
+            }
+        }
+
+        function selectNeuronPart(partKey) {
+            const data = neuronData[partKey];
+            document.getElementById('neuron-part-title').innerText = data.title;
+            document.getElementById('neuron-part-tag').innerText = data.tag;
+            document.getElementById('neuron-part-desc').innerText = data.desc;
+            document.getElementById('neuron-part-tip').innerHTML = `<strong>Board Exam Tip:</strong> ${data.tip}`;
+        }
+
+        function selectJunctionPart(partKey) {
+            const data = junctionData[partKey];
+            document.getElementById('neuron-part-title').innerText = data.title;
+            document.getElementById('neuron-part-tag').innerText = data.tag;
+            document.getElementById('neuron-part-desc').innerText = data.desc;
+            document.getElementById('neuron-part-tip').innerHTML = `<strong>Board Exam Tip:</strong> ${data.tip}`;
+        }
+
+        // --- Section 2: Reflex Arc Simulator ---
+        function runReflexArcSim() {
+            const btn = document.getElementById('btn-trigger-reflex');
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+
+            for(let i=1; i<=5; i++) {
+                setTimeout(() => {
+                    // Reset all
+                    for(let j=1; j<=5; j++) {
+                        const stepEl = document.getElementById(`rstep-${j}`);
+                        stepEl.className = 'p-4 rounded-xl border border-gray-200 bg-gray-50 transition-all duration-300';
+                    }
+                    // Highlight active
+                    const activeEl = document.getElementById(`rstep-${i}`);
+                    activeEl.className = 'p-4 rounded-xl border-2 border-brand-orange bg-amber-50 shadow-md transform scale-105 transition-all duration-300';
+                    
+                    if(i === 5) {
+                        setTimeout(() => {
+                            btn.disabled = false;
+                            btn.classList.remove('opacity-50');
+                        }, 500);
+                    }
+                }, (i-1) * 600);
+            }
+        }
+
+        // --- Section 3: Brain Interactivity ---
+        const brainData = {
+            'forebrain': { 
+                title: 'Forebrain (Cerebrum)', 
+                tag: 'Main Thinking Part', 
+                desc: 'The Cerebrum is the largest part of the human brain. It controls all voluntary actions like thinking, memory, reasoning, emotion, and sensory interpretation (sight, hearing, smell).',
+                funcs: ['Stores memories and learned experiences.', 'Center for hunger sensation.', 'Controls voluntary movements like writing and speaking.']
+            },
+            'midbrain': { 
+                title: 'Midbrain', 
+                tag: 'Relay Center', 
+                desc: 'Connects the Forebrain to the Hindbrain. Relays auditory and visual responses and regulates pupil reflex movements.',
+                funcs: ['Controls reflex movements of head, neck, and trunk in response to visual/auditory stimuli.', 'Controls reflex eye movements.']
+            },
+            'cerebellum': { 
+                title: 'Cerebellum (Hindbrain)', 
+                tag: 'Posture & Balance', 
+                desc: 'Located at the base of the brain behind the brainstem. Responsible for precision of voluntary actions and maintaining body posture and balance.',
+                funcs: ['Walking in a straight line.', 'Riding a bicycle or picking up a pencil.', 'Maintains muscular equilibrium.']
+            },
+            'medulla': { 
+                title: 'Pons & Medulla (Hindbrain)', 
+                tag: 'Involuntary Control', 
+                desc: 'The Medulla oblongata continues into the spinal cord. It controls crucial life-sustaining involuntary activities without our conscious thought.',
+                funcs: ['Blood pressure regulation.', 'Salivation and vomiting reflexes.', 'Respiration rate (Pons).']
+            },
+            'pituitary': { 
+                title: 'Pituitary Gland', 
+                tag: 'Master Gland', 
+                desc: 'A pea-sized endocrine gland located at the base of the brain, controlled by the Hypothalamus. Secretes Growth Hormone and regulates other glands.',
+                funcs: ['Secretes Growth Hormone (GH).', 'Regulates body growth and development.']
+            }
+        };
+
+        function selectBrainPart(partKey) {
+            const data = brainData[partKey];
+            document.getElementById('brain-part-title').innerText = data.title;
+            document.getElementById('brain-part-tag').innerText = data.tag;
+            document.getElementById('brain-part-desc').innerText = data.desc;
+
+            let html = '';
+            data.funcs.forEach(f => {
+                html += `<div class="flex items-center text-gray-700"><i class="fa-solid fa-check text-brand-orange mr-2"></i><span>${f}</span></div>`;
+            });
+            document.getElementById('brain-part-functions').innerHTML = html;
+        }
+
+        // --- Section 4: Phototropism & Mimosa ---
+        function setLightDirection(dir) {
+            const stem = document.getElementById('plant-stem');
+            const tip = document.getElementById('plant-tip');
+            const sun = document.getElementById('sun-position');
+            const tag = document.getElementById('auxin-status-tag');
+
+            document.getElementById('btn-light-left').className = "py-2 text-xs font-bold rounded-lg border border-gray-300 bg-white hover:bg-teal-50 transition-all";
+            document.getElementById('btn-light-top').className = "py-2 text-xs font-bold rounded-lg border border-gray-300 bg-white hover:bg-teal-50 transition-all";
+            document.getElementById('btn-light-right').className = "py-2 text-xs font-bold rounded-lg border border-gray-300 bg-white hover:bg-teal-50 transition-all";
+
+            if(dir === 'left') {
+                document.getElementById('btn-light-left').className = "py-2 text-xs font-bold rounded-lg border border-brand-green bg-brand-green text-white shadow-sm transition-all";
+                stem.setAttribute('d', 'M 150,160 Q 150,100 80,40');
+                tip.setAttribute('cx', '80');
+                tip.setAttribute('cy', '40');
+                sun.setAttribute('transform', 'translate(50, 20)');
+                tag.innerText = "Auxin diffuses to RIGHT side -> Left side bends to light!";
+            } else if(dir === 'right') {
+                document.getElementById('btn-light-right').className = "py-2 text-xs font-bold rounded-lg border border-brand-green bg-brand-green text-white shadow-sm transition-all";
+                stem.setAttribute('d', 'M 150,160 Q 150,100 220,40');
+                tip.setAttribute('cx', '220');
+                tip.setAttribute('cy', '40');
+                sun.setAttribute('transform', 'translate(250, 20)');
+                tag.innerText = "Auxin diffuses to LEFT side -> Right side bends to light!";
+            } else {
+                document.getElementById('btn-light-top').className = "py-2 text-xs font-bold rounded-lg border border-brand-green bg-brand-green text-white shadow-sm transition-all";
+                stem.setAttribute('d', 'M 150,160 Q 150,100 150,40');
+                tip.setAttribute('cx', '150');
+                tip.setAttribute('cy', '40');
+                sun.setAttribute('transform', 'translate(150, 20)');
+                tag.innerText = "Auxin evenly distributed at shoot tip";
+            }
+        }
+
+        let mimosaFolded = false;
+        function toggleMimosa() {
+            const icon = document.getElementById('mimosa-icon');
+            const status = document.getElementById('mimosa-status');
+            mimosaFolded = !mimosaFolded;
+            if(mimosaFolded) {
+                icon.innerText = "🥀";
+                status.innerText = "Touched! Cells lost water (turgor pressure dropped). Leaves folded!";
+                status.className = "text-xs font-bold text-rose-600";
+            } else {
+                icon.innerText = "🌿";
+                status.innerText = "Water restored to cells. Leaf expanded back!";
+                status.className = "text-xs font-bold text-emerald-700";
+            }
+        }
+
+        // --- Section 5: Endocrine System ---
+        const glandData = {
+            'pituitary': { name: 'Growth Hormone (GH)', gland: 'Pituitary Gland', desc: 'Located at base of brain. Secretes Growth Hormone. Regulates growth and development of bones and tissues.', disease: '<strong>Disorders:</strong> Deficiency in childhood causes <strong>Dwarfism</strong>; Excess secretion causes <strong>Gigantism</strong>.' },
+            'thyroid': { name: 'Thyroxine', gland: 'Thyroid Gland', desc: 'Located attached to windpipe in neck. Requires Iodine. Regulates carbohydrate, protein, and fat metabolism.', disease: '<strong>Iodine Deficiency:</strong> Lack of iodine leads to <strong>Goitre</strong> (swelling of neck).' },
+            'adrenal': { name: 'Adrenaline', gland: 'Adrenal Gland', desc: 'Located on top of both kidneys. Called "Emergency Hormone" or "Fight/Flight Hormone". Increases heart rate and blood pressure during stress.', disease: '<strong>Emergency Function:</strong> Prepares body to either fight or run away during fear.' },
+            'pancreas': { name: 'Insulin & Glucagon', gland: 'Pancreas', desc: 'Located below stomach. Secretes Insulin hormone directly into blood to reduce and maintain blood sugar levels.', disease: '<strong>Diabetes:</strong> Caused due to deficiency of Insulin secretion by Pancreas.' },
+            'testis': { name: 'Testosterone', gland: 'Testes (Male)', desc: 'Located in scrotum outside abdominal cavity. Secretes Testosterone hormone in males during puberty.', disease: '<strong>Functions:</strong> Controls secondary sexual characteristics in males (facial hair, voice change) and sperm production.' },
+            'ovary': { name: 'Estrogen & Progesterone', gland: 'Ovaries (Female)', desc: 'Located in female lower abdomen. Secretes Estrogen during puberty.', disease: '<strong>Functions:</strong> Controls secondary sexual characteristics in females and regulates menstrual cycle.' }
+        };
+
+        function setGenderView(gender) {
+            const maleBtn = document.getElementById('btn-gender-male');
+            const femaleBtn = document.getElementById('btn-gender-female');
+            const testisGland = document.getElementById('gland-testis');
+            const ovaryGland = document.getElementById('gland-ovary');
+
+            if(gender === 'male') {
+                maleBtn.className = "px-5 py-2 rounded-lg font-bold text-sm bg-brand-green text-white shadow-sm transition-all";
+                femaleBtn.className = "px-5 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-brand-green transition-all";
+                testisGland.classList.remove('hidden');
+                ovaryGland.classList.add('hidden');
+                selectGland('pituitary');
+            } else {
+                femaleBtn.className = "px-5 py-2 rounded-lg font-bold text-sm bg-brand-green text-white shadow-sm transition-all";
+                maleBtn.className = "px-5 py-2 rounded-lg font-bold text-sm text-gray-700 hover:text-brand-green transition-all";
+                ovaryGland.classList.remove('hidden');
+                testisGland.classList.add('hidden');
+                selectGland('ovary');
+            }
+        }
+
+        function selectGland(glandKey) {
+            const data = glandData[glandKey];
+            document.getElementById('gland-title').innerText = data.gland;
+            document.getElementById('gland-hormone-name').innerText = `Hormone: ${data.name}`;
+            document.getElementById('gland-desc').innerText = data.desc;
+            document.getElementById('gland-disease').innerHTML = data.disease;
+        }
+
+        // --- Section 6: Quiz Logic ---
+        const quizQuestions = [
+            { type: "Conceptual", q: "What is a synapse? How does a chemical signal transmit across it?", a: "A synapse is a micro gap between the axon terminal of one neuron and the dendrite of the next. When an electrical impulse reaches the axonal end, it triggers the release of chemical neurotransmitters across the gap, generating a new electrical impulse in the next neuron." },
+            { type: "Reasoning", q: "Why is the use of iodised salt advisable?", a: "Iodine is required by the thyroid gland to synthesize thyroxine hormone. Thyroxine regulates carbohydrate, protein, and fat metabolism. Deficiency of iodine causes goitre (swollen neck)." },
+            { type: "Application", q: "How does the body respond when adrenaline is secreted into the blood?", a: "Adrenaline speeds up heart rate to supply more oxygen to muscles, reduces blood flow to the digestive system and skin, increases breathing rate, and prepares the body for emergency action (fight or flight response)." },
+            { type: "Comparative", q: "Which plant hormone promotes cell division, and which causes wilting of leaves?", a: "Cytokinin promotes cell division (found in fruits & seeds). Abscisic Acid (ABA) inhibits growth and causes wilting of leaves." },
+            { type: "Diagram-based", q: "Which part of the human brain controls: (i) Posture and balance, (ii) Salivation and vomiting, (iii) Thinking?", a: "(i) Cerebellum (Hindbrain), (ii) Medulla (Hindbrain), (iii) Cerebrum (Forebrain)." },
+            { type: "Reasoning", q: "Why do plants bend towards light?", a: "When light shines on one side of a plant shoot, auxin hormone diffuses to the shaded side. Higher auxin concentration stimulates stem cells on the shaded side to grow longer, causing the shoot to bend towards the light source (Phototropism)." }
+        ];
+
+        let qIndex = 0;
+        let isAnswerVisible = false;
+
+        function renderQuestion() {
+            const q = quizQuestions[qIndex];
+            collapseAnswer();
+            setTimeout(() => {
+                document.getElementById('qType').innerText = q.type;
+                document.getElementById('qText').innerText = q.q;
+                document.getElementById('aText').innerText = q.a;
+                document.getElementById('qCount').innerText = qIndex + 1;
+            }, 150);
+        }
+
+        function toggleAnswer() {
+            const drawer = document.getElementById('answerDrawer');
+            const btnText = document.querySelector('#revealBtn span');
+            const btnIcon = document.getElementById('revealIcon');
+            
+            if (isAnswerVisible) {
+                collapseAnswer();
+            } else {
+                drawer.classList.remove('max-h-0', 'opacity-0');
+                drawer.classList.add('max-h-[500px]', 'opacity-100');
+                btnText.innerText = "Hide Answer";
+                btnIcon.className = "fa-solid fa-eye-slash";
+                isAnswerVisible = true;
+            }
+        }
+
+        function collapseAnswer() {
+            const drawer = document.getElementById('answerDrawer');
+            const btnText = document.querySelector('#revealBtn span');
+            const btnIcon = document.getElementById('revealIcon');
+            
+            if(drawer) {
+                drawer.classList.add('max-h-0', 'opacity-0');
+                drawer.classList.remove('max-h-[500px]', 'opacity-100');
+            }
+            if(btnText) btnText.innerText = "Show Answer";
+            if(btnIcon) btnIcon.className = "fa-solid fa-eye";
+            isAnswerVisible = false;
+        }
+
+        function nextQuestion() {
+            qIndex = (qIndex + 1) % quizQuestions.length;
+            renderQuestion();
+        }
+
+        function prevQuestion() {
+            qIndex = (qIndex - 1 + quizQuestions.length) % quizQuestions.length;
+            renderQuestion();
+        }
+
+        // Initialize Everything
+        window.onload = () => {
+            selectNeuronPart('dendrite');
+            selectBrainPart('forebrain');
+            selectGland('thyroid');
+            document.getElementById('qTotal').innerText = quizQuestions.length;
+            renderQuestion();
+        };
+    </script>
+</body>
+</html>

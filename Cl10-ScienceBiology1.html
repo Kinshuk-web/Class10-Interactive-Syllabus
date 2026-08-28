@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Processes Mastery Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#245e54',
+                            light: '#2d7a6d',
+                            orange: '#e48625',
+                            orangeHover: '#d1751a',
+                            bg: '#f8faf9',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { scroll-behavior: smooth; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Custom styling for native details/summary accordions */
+        details {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        summary {
+            padding: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #245e54;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary::after {
+            content: '+';
+            font-size: 1.25rem;
+            color: #e48625;
+            transition: transform 0.2s;
+        }
+        details[open] summary::after { content: '−'; }
+        .details-content {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+        }
+        
+        .diagram-placeholder {
+            background-image: repeating-linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 75%, #f3f4f6 75%, #f3f4f6), repeating-linear-gradient(45deg, #f3f4f6 25%, #ffffff 25%, #ffffff 75%, #f3f4f6 75%, #f3f4f6);
+            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-gray-800 font-sans antialiased">
+
+    <nav class="bg-white sticky top-0 z-50 shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <span class="text-2xl font-extrabold text-brand-dark tracking-tight">Life <span class="text-brand-orange">Processes</span></span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#intro" class="text-sm font-semibold text-gray-600 hover:text-brand-dark transition">Introduction</a>
+                    <a href="#nutrition" class="text-sm font-semibold text-gray-600 hover:text-brand-dark transition">Nutrition</a>
+                    <a href="#respiration" class="text-sm font-semibold text-gray-600 hover:text-brand-dark transition">Respiration</a>
+                    <a href="#transportation" class="text-sm font-semibold text-gray-600 hover:text-brand-dark transition">Transportation</a>
+                    <a href="#excretion" class="text-sm font-semibold text-gray-600 hover:text-brand-dark transition">Excretion</a>
+                    <a href="#exercises" class="bg-brand-orange hover:bg-brand-orangeHover text-white px-5 py-2 rounded-md font-bold text-sm shadow-md transition transform hover:-translate-y-0.5">Chapter Quiz</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-brand-dark py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-dark to-brand-light opacity-90"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-block border border-brand-orange/50 text-brand-orange font-bold text-xs tracking-widest uppercase py-1 px-3 rounded-full mb-6">CBSE Class 10 Biology</span>
+            <h1 class="text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+                Life Processes <span class="text-brand-orange">Mastery Portal</span>
+            </h1>
+            <p class="text-lg md:text-xl text-teal-100 max-w-3xl mx-auto leading-relaxed font-light">
+                An exhaustive, interactive guide covering Nutrition, Respiration, Transportation, and Excretion. Designed with core conceptual break-downs, interactive diagrams, and laboratory activities suitable for both self-studying students and teachers.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white shadow-xl -mt-8 rounded-t-2xl relative z-20">
+        
+        <!-- INTRO SECTION -->
+        <section id="intro" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-brand-dark mb-6 border-b-2 border-brand-orange inline-block pb-2">What is Alive?</h2>
+            <div class="prose max-w-none text-gray-700 leading-loose text-lg">
+                <p>
+                    How do we tell the difference between what is alive and what is not alive? If we see a dog running, or a cow chewing cud, or a man shouting loudly on the street, we know that these are living beings. What if the dog or the cow or the man were asleep? We would still think that they were alive, but how did we know that? We see them breathing, and we know that they are alive.
+                </p>
+                <p>
+                    What about plants? How do we know that they are alive? We see them green, some of us will say. But what about plants that have leaves of colours other than green? They grow over time, so we know that they are alive, some will say. In other words, we tend to think of some sort of movement, either growth-related or not, as common evidence for being alive.
+                </p>
+                <p>
+                    But a plant that is not visibly growing is still alive, and some animals can breathe without visible movement. So <strong>using visible movement as the defining characteristic of life is not enough.</strong>
+                </p>
+                <p>
+                    Movements over very small scales will be invisible to the naked eye - movements of molecules, for example. Is this invisible molecular movement necessary for life? If we ask this question to professional biologists, they will say yes. In fact, viruses do not show any molecular movement in them (until they infect some cell), and that is partly why there is a controversy about whether they are truly alive or not.
+                </p>
+                <div class="bg-teal-50 border-l-4 border-brand-dark p-6 my-8 rounded-r-lg">
+                    <h3 class="text-xl font-bold text-brand-dark mb-3">Why are molecular movements needed for life?</h3>
+                    <p class="text-sm">
+                        We have seen in earlier classes that living organisms are well-organised structures; they can have tissues, tissues have cells, cells have smaller components in them, and so on. Because of the effects of the environment, this organised, ordered nature of living structures is very likely to keep breaking down over time. If order breaks down, the organism will no longer be alive. So <strong>living creatures must keep repairing and maintaining their structures</strong>. Since all these structures are made up of molecules, they must move molecules around all the time.
+                    </p>
+                </div>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-brand-dark mt-12 mb-4">5.1 What are Life Processes?</h3>
+            <div class="prose max-w-none text-gray-700 leading-loose">
+                <p>
+                    The maintenance functions of living organisms must go on even when they are not doing anything particular. Even when we are just sitting in class, even if we are just asleep, this maintenance job has to go on. <strong>The processes which together perform this maintenance job are life processes.</strong>
+                </p>
+                <p>
+                    Since these maintenance processes are needed to prevent damage and break-down, energy is needed for them. This energy comes from outside the body of the individual organism. So there must be a process to transfer a source of energy from outside the body of the organism, which we call food, to the inside, a process we commonly call <strong>nutrition</strong>.
+                </p>
+                <p>
+                    If the body size of the organisms is to grow, additional raw material will also be needed from outside. Since life on earth depends on carbon-based molecules, most of these food sources are also carbon-based. Depending on the complexity of these carbon sources, different organisms can then use different kinds of nutritional processes.
+                </p>
+                <p>
+                    The outside sources of energy could be quite varied, since the environment is not under the control of the individual organism. These sources of energy, therefore, need to be broken down or built up in the body, and must be finally converted to a uniform source of energy that can be used for the various molecular movements needed for maintaining living structures, as well as to the kind of molecules the body needs to grow. For this, a series of chemical reactions in the body are necessary. Oxidising-reducing reactions are some of the most common chemical means to break-down molecules. For this, many organisms use oxygen sourced from outside the body. The process of acquiring oxygen from outside the body, and to use it in the process of break-down of food sources for cellular needs, is what we call <strong>respiration</strong>.
+                </p>
+                <p>
+                    In the case of a single-celled organism, no specific organs for taking in food, exchange of gases or removal of wastes may be needed because the entire surface of the organism is in contact with the environment. But what happens when the body size of the organism increases and the body design becomes more complex? In multi-cellular organisms, all the cells may not be in direct contact with the surrounding environment. Thus, simple diffusion will not meet the requirements of all the cells.
+                </p>
+                <p>
+                    We have seen previously how, in multi-cellular organisms, various body parts have specialised in the functions they perform. We are familiar with the idea of these specialised tissues, and with their organisation in the body of the organism. It is therefore not surprising that the uptake of food and of oxygen will also be the function of specialised tissues. However, this poses a problem, since the food and oxygen are now taken up at one place in the body of the organisms, while all parts of the body need them. This situation creates a need for a <strong>transportation system</strong> for carrying food and oxygen from one place to another in the body.
+                </p>
+                <p>
+                    When chemical reactions use the carbon source and the oxygen for energy generation, they create by-products that are not only useless for the cells of the body, but could even be harmful. These waste by-products are therefore needed to be removed from the body and discarded outside by a process called <strong>excretion</strong>. Again, if the basic rules for body design in multi-cellular organisms are followed, a specialised tissue for excretion will be developed, which means that the transportation system will need to transport waste away from cells to this excretory tissue.
+                </p>
+            </div>
+
+            <details class="mt-8">
+                <summary>Questions Section 5.1</summary>
+                <div class="details-content">
+                    <ol class="list-decimal pl-5 space-y-2 text-gray-700">
+                        <li>Why is diffusion insufficient to meet the oxygen requirements of multi-cellular organisms like humans?</li>
+                        <li>What criteria do we use to decide whether something is alive?</li>
+                        <li>What are outside raw materials used for by an organism?</li>
+                        <li>What processes would you consider essential for maintaining life?</li>
+                    </ol>
+                </div>
+            </details>
+        </section>
+
+        <section id="nutrition" class="mb-16 scroll-mt-24 pt-8 border-t border-gray-200">
+            <h2 class="text-4xl font-extrabold text-brand-dark mb-8">5.2 Nutrition</h2>
+            
+            <p class="text-gray-700 leading-loose mb-6">
+                When we walk or ride a bicycle, we are using up energy. Even when we are not doing any apparent activity, energy is needed to maintain a state of order in our body. We also need materials from outside in order to grow, develop, synthesise protein and other substances needed in the body. This source of energy and materials is the food we eat.
+            </p>
+
+            <h3 class="text-xl font-bold text-gray-800 mb-4">How do living things get their food?</h3>
+            <p class="text-gray-700 leading-loose mb-8">
+                The general requirement for energy and materials is common in all organisms, but it is fulfilled in different ways. Some organisms use simple food material obtained from inorganic sources in the form of carbon dioxide and water. These organisms, the <strong>autotrophs</strong>, include green plants and some bacteria. Other organisms utilise complex substances. These complex substances have to be broken down into simpler ones before they can be used for the upkeep and growth of the body. To achieve this, organisms use bio-catalysts called <strong>enzymes</strong>. Thus, the <strong>heterotrophs</strong> survival depends directly or indirectly on autotrophs. Heterotrophic organisms include animals and fungi.
+            </p>
+
+            <!-- Tabs for Nutrition Subtopics -->
+            <div class="border-b border-gray-200 mb-6">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                    <button onclick="openTab('nut-auto')" id="tab-nut-auto" class="tab-btn border-brand-orange text-brand-orange whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm">5.2.1 Autotrophic Nutrition</button>
+                    <button onclick="openTab('nut-hetero')" id="tab-nut-hetero" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">5.2.2 Heterotrophic</button>
+                    <button onclick="openTab('nut-human')" id="tab-nut-human" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">5.2.4 Human Beings</button>
+                </nav>
+            </div>
+
+            <!-- Autotrophic Tab Content -->
+            <div id="nut-auto" class="tab-content active text-gray-700 leading-loose">
+                <p class="mb-4">
+                    Carbon and energy requirements of the autotrophic organism are fulfilled by <strong>photosynthesis</strong>. It is the process by which autotrophs take in substances from the outside and convert them into stored forms of energy. This material is taken in the form of carbon dioxide and water which is converted into carbohydrates in the presence of sunlight and chlorophyll. Carbohydrates are utilised for providing energy to the plant. The carbohydrates which are not used immediately are stored in the form of <strong>starch</strong>, which serves as the internal energy reserve to be used as and when required by the plant. A somewhat similar situation is seen in us where some of the energy derived from the food we eat is stored in our body in the form of <strong>glycogen</strong>.
+                </p>
+
+                <div class="bg-gray-50 rounded-lg p-6 my-6 text-center shadow-inner border border-gray-200">
+                    <p class="font-mono text-lg font-bold text-brand-dark mb-2">
+                        6CO<sub>2</sub> + 12H<sub>2</sub>O <span class="text-sm font-sans mx-2 inline-flex flex-col items-center justify-center transform -translate-y-1"><span class="text-[10px] text-gray-500">Chlorophyll</span><span>&#10232;</span><span class="text-[10px] text-gray-500">Sunlight</span></span> C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> (Glucose) + 6O<sub>2</sub> + 6H<sub>2</sub>O
+                    </p>
+                    <p class="text-sm text-gray-500">Equation for Photosynthesis</p>
+                </div>
+
+                <div class="diagram-placeholder border-2 border-dashed border-gray-400 rounded-lg p-12 flex flex-col items-center justify-center text-gray-500 mb-6 relative">
+                    <span class="font-bold text-gray-600 mb-2">Figure 5.1: Cross-section of a leaf</span>
+                    <span class="text-sm text-center max-w-md">Depicts Midrib, Lamina/leaf blade, Vein, Phloem, Xylem (Vascular bundle), Waxy cuticle, Upper epidermis, Chloroplast, Air spaces, Guard cell, Lower epidermis.</span>
+                </div>
+
+                <p class="font-bold text-brand-dark mb-2">Let us now see what actually happens during the process of photosynthesis. The following events occur during this process -</p>
+                <ol class="list-[lower-roman] pl-8 mb-6 space-y-2">
+                    <li>Absorption of light energy by chlorophyll.</li>
+                    <li>Conversion of light energy to chemical energy and splitting of water molecules into hydrogen and oxygen.</li>
+                    <li>Reduction of carbon dioxide to carbohydrates.</li>
+                </ol>
+                <p class="mb-6">
+                    These steps need not take place one after the other immediately. For example, desert plants take up carbon dioxide at night and prepare an intermediate which is acted upon by the energy absorbed by the chlorophyll during the day.
+                </p>
+                
+                <p class="mb-4">
+                    If you carefully observe a cross-section of a leaf under the microscope (shown in Fig. 5.1), you will notice that some cells contain green dots. These green dots are cell organelles called <strong>chloroplasts</strong> which contain <strong>chlorophyll</strong>. Let us do an activity which demonstrates that chlorophyll is essential for photosynthesis.
+                </p>
+
+                <details class="mb-6 border-brand-orange/30">
+                    <summary class="bg-orange-50 text-brand-orange">Activity 5.1 (Chlorophyll is essential)</summary>
+                    <div class="details-content text-sm">
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Take a potted plant with variegated leaves - for example, money plant or crotons.</li>
+                            <li>Keep the plant in a dark room for three days so that all the starch gets used up.</li>
+                            <li>Now keep the plant in sunlight for about six hours.</li>
+                            <li>Pluck a leaf from the plant. Mark the green areas in it and trace them on a sheet of paper.</li>
+                            <li>Dip the leaf in boiling water for a few minutes.</li>
+                            <li>After this, immerse it in a beaker containing alcohol.</li>
+                            <li>Carefully place the above beaker in a water-bath and heat till the alcohol begins to boil.</li>
+                            <li>What happens to the colour of the leaf? What is the colour of the solution?</li>
+                            <li>Now dip the leaf in a dilute solution of iodine for a few minutes.</li>
+                            <li>Take out the leaf and rinse off the iodine solution.</li>
+                            <li>Observe the colour of the leaf and compare this with the tracing of the leaf done in the beginning (Fig. 5.2).</li>
+                            <li>What can you conclude about the presence of starch in various areas of the leaf?</li>
+                        </ul>
+                        <div class="mt-4 diagram-placeholder h-24 rounded border flex items-center justify-center text-xs text-gray-500">
+                            [Figure 5.2: Variegated leaf (a) before and (b) after starch test]
+                        </div>
+                    </div>
+                </details>
+
+                <p class="mb-4">
+                    Now, let us study how the plant obtains carbon dioxide. In Class IX, we had talked about <strong>stomata</strong> (Fig. 5.3) which are tiny pores present on the surface of the leaves. Massive amounts of gaseous exchange takes place in the leaves through these pores for the purpose of photosynthesis. But it is important to note here that exchange of gases occurs across the surface of stems, roots and leaves as well. Since large amounts of water can also be lost through these stomata, the plant closes these pores when it does not need carbon dioxide for photosynthesis.
+                </p>
+                <p class="mb-6">
+                    The opening and closing of the pore is a function of the <strong>guard cells</strong>. The guard cells swell when water flows into them, causing the stomatal pore to open. Similarly the pore closes if the guard cells shrink.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="diagram-placeholder border rounded-lg p-6 flex flex-col items-center justify-center text-gray-500">
+                         <span class="font-bold text-gray-600 mb-1">Figure 5.3 (a)</span>
+                         <span class="text-sm">Open stomatal pore (Guard cells, Stomatal pore, Chloroplast)</span>
+                    </div>
+                    <div class="diagram-placeholder border rounded-lg p-6 flex flex-col items-center justify-center text-gray-500">
+                         <span class="font-bold text-gray-600 mb-1">Figure 5.3 (b)</span>
+                         <span class="text-sm">Closed stomatal pore</span>
+                    </div>
+                </div>
+
+                <details class="mb-6 border-brand-orange/30">
+                    <summary class="bg-orange-50 text-brand-orange">Activity 5.2 (Carbon Dioxide is essential)</summary>
+                    <div class="details-content text-sm">
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li>Take two healthy potted plants which are nearly the same size.</li>
+                            <li>Keep them in a dark room for three days.</li>
+                            <li>Now place each plant on separate glass plates. Place a watch-glass containing potassium hydroxide by the side of one of the plants. The potassium hydroxide is used to absorb carbon dioxide.</li>
+                            <li>Cover both plants with separate bell-jars as shown in Fig. 5.4.</li>
+                            <li>Use vaseline to seal the bottom of the jars to the glass plates so that the set-up is air-tight.</li>
+                            <li>Keep the plants in sunlight for about two hours.</li>
+                            <li>Pluck a leaf from each plant and check for the presence of starch as in the above activity.</li>
+                            <li>Do both the leaves show the presence of the same amount of starch?</li>
+                            <li>What can you conclude from this activity?</li>
+                        </ul>
+                         <div class="diagram-placeholder h-32 rounded border flex flex-col items-center justify-center text-xs text-gray-500 p-2 text-center">
+                            <span class="font-bold block mb-1">Figure 5.4</span>
+                            Experimental set-up (a) with potassium hydroxide (b) without potassium hydroxide
+                        </div>
+                    </div>
+                </details>
+                
+                <p>
+                    Based on the two activities performed above, can we design an experiment to demonstrate that sunlight is essential for photosynthesis?
+                </p>
+                <p class="mt-4">
+                    So far, we have talked about how autotrophs meet their energy requirements. But they also need other raw materials for building their body. Water used in photosynthesis is taken up from the soil by the roots in terrestrial plants. Other materials like nitrogen, phosphorus, iron and magnesium are taken up from the soil. <strong>Nitrogen</strong> is an essential element used in the synthesis of proteins and other compounds. This is taken up in the form of inorganic nitrates or nitrites. Or it is taken up as organic compounds which have been prepared by bacteria from atmospheric nitrogen.
+                </p>
+            </div>
+
+            <!-- Heterotrophic Tab Content -->
+            <div id="nut-hetero" class="tab-content text-gray-700 leading-loose">
+                <p class="mb-4">
+                    Each organism is adapted to its environment. The form of nutrition differs depending on the type and availability of food material as well as how it is obtained by the organism. For example, whether the food source is stationary (such as grass) or mobile (such as a deer), would allow for differences in how the food is accessed and what is the nutritive apparatus used by a cow and a lion.
+                </p>
+                <p class="mb-6">
+                    There is a range of strategies by which the food is taken in and used by the organism. Some organisms break-down the food material outside the body and then absorb it. Examples are fungi like bread moulds, yeast and mushrooms. Others take in whole material and break it down inside their bodies. What can be taken in and broken down depends on the body design and functioning. Some other organisms derive nutrition from plants or animals without killing them. This parasitic nutritive strategy is used by a wide variety of organisms like <em>cuscuta</em> (amar-bel), ticks, lice, leeches and tape-worms.
+                </p>
+
+                <h4 class="text-lg font-bold text-brand-dark mt-8 mb-4">5.2.3 How do Organisms obtain their Nutrition?</h4>
+                <p class="mb-4">
+                    Since the food and the way it is obtained differ, the digestive system is different in various organisms. In single-celled organisms, the food may be taken in by the entire surface. But as the complexity of the organism increases, different parts become specialised to perform different functions.
+                </p>
+                <div class="flex flex-col md:flex-row gap-6 items-center mb-6">
+                    <div class="md:w-2/3">
+                        <p>
+                            For example, <em>Amoeba</em> takes in food using temporary finger-like extensions of the cell surface which fuse over the food particle forming a food-vacuole (Fig. 5.5). Inside the food-vacuole, complex substances are broken down into simpler ones which then diffuse into the cytoplasm. The remaining undigested material is moved to the surface of the cell and thrown out. 
+                        </p>
+                        <p class="mt-4">
+                            In <em>Paramoecium</em>, which is also a unicellular organism, the cell has a definite shape and food is taken in at a specific spot. Food is moved to this spot by the movement of cilia which cover the entire surface of the cell.
+                        </p>
+                    </div>
+                    <div class="md:w-1/3">
+                        <div class="diagram-placeholder h-48 rounded-lg flex flex-col items-center justify-center text-xs text-gray-500 text-center p-4">
+                            <span class="font-bold block mb-2 text-sm text-gray-600">Figure 5.5</span>
+                            Nutrition in Amoeba showing Nucleus, Food particle, Pseudopodia, Food vacuole.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Human Nutrition Tab Content -->
+            <div id="nut-human" class="tab-content text-gray-700 leading-loose">
+                <p class="mb-4">
+                    The alimentary canal is basically a long tube extending from the mouth to the anus. In Fig. 5.6, we can see that the tube has different parts. Various regions are specialised to perform different functions. What happens to the food once it enters our body? We shall discuss this process here.
+                </p>
+
+                <details class="mb-6 border-brand-orange/30">
+                    <summary class="bg-orange-50 text-brand-orange">Activity 5.3 (Action of Saliva)</summary>
+                    <div class="details-content text-sm">
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Take 1 mL starch solution (1%) in two test tubes (A and B).</li>
+                            <li>Add 1 mL saliva to test tube A and leave both test tubes undisturbed for 20-30 minutes.</li>
+                            <li>Now add a few drops of dilute iodine solution to the test tubes.</li>
+                            <li>In which test tube do you observe a colour change?</li>
+                            <li>What does this indicate about the presence or absence of starch in the two test tubes?</li>
+                            <li>What does this tell us about the action of saliva on starch?</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <p class="mb-4">
+                    We eat various types of food which has to pass through the same digestive tract. Naturally the food has to be processed to generate particles which are small and of the same texture. This is achieved by crushing the food with our teeth. Since the lining of the canal is soft, the food is also wetted to make its passage smooth. When we eat something we like, our mouth 'waters'. This is actually not only water, but a fluid called <strong>saliva</strong> secreted by the salivary glands. Another aspect of the food we ingest is its complex nature. If it is to be absorbed from the alimentary canal, it has to be broken into smaller molecules. This is done with the help of biological catalysts called <strong>enzymes</strong>. The saliva contains an enzyme called <strong>salivary amylase</strong> that breaks down starch which is a complex molecule to give simple sugar. The food is mixed thoroughly with saliva and moved around the mouth while chewing by the muscular tongue.
+                </p>
+                
+                <div class="diagram-placeholder h-64 rounded-lg my-8 flex flex-col items-center justify-center text-sm text-gray-500 text-center p-4">
+                    <span class="font-bold text-gray-600 block mb-2 text-lg">Figure 5.6: Human alimentary canal</span>
+                    Includes: Mouth (Buccal cavity), Tongue, Oesophagus, Diaphragm, Stomach, Small intestine, Large intestine (Colon), Liver, Gall bladder (stores bile), Bile duct, Pancreas, Appendix, Anus.
+                </div>
+
+                <p class="mb-4">
+                    It is necessary to move the food in a regulated manner along the digestive tube so that it can be processed properly in each part. The lining of canal has muscles that contract rhythmically in order to push the food forward. These <strong>peristaltic movements</strong> occur all along the gut.
+                </p>
+                <p class="mb-4">
+                    From the mouth, the food is taken to the stomach through the food-pipe or <strong>oesophagus</strong>. The stomach is a large organ which expands when food enters it. The muscular walls of the stomach help in mixing the food thoroughly with more digestive juices.
+                </p>
+                <p class="mb-4">
+                    The digestion in stomach is taken care of by the gastric glands present in the wall of the stomach. These release <strong>hydrochloric acid</strong>, a protein digesting enzyme called <strong>pepsin</strong>, and mucus. The hydrochloric acid creates an acidic medium which facilitates the action of the enzyme pepsin. What other function do you think is served by the acid? The mucus protects the inner lining of the stomach from the action of the acid under normal conditions. We have often heard adults complaining about 'acidity'. Can this be related to what has been discussed above?
+                </p>
+                <p class="mb-4">
+                    The exit of food from the stomach is regulated by a sphincter muscle which releases it in small amounts into the small intestine. From the stomach, the food now enters the small intestine. This is the longest part of the alimentary canal which is fitted into a compact space because of extensive coiling. The length of the small intestine differs in various animals depending on the food they eat. Herbivores eating grass need a longer small intestine to allow the cellulose to be digested. Meat is easier to digest, hence carnivores like tigers have a shorter small intestine.
+                </p>
+                <p class="mb-4">
+                    The <strong>small intestine</strong> is the site of the complete digestion of carbohydrates, proteins and fats. It receives the secretions of the liver and pancreas for this purpose. The food coming from the stomach is acidic and has to be made alkaline for the pancreatic enzymes to act. <strong>Bile juice</strong> from the liver accomplishes this in addition to acting on fats. Fats are present in the intestine in the form of large globules which makes it difficult for enzymes to act on them. Bile salts break them down into smaller globules increasing the efficiency of enzyme action. This is similar to the emulsifying action of soaps on dirt that we have learnt about in Chapter 4. The <strong>pancreas</strong> secretes pancreatic juice which contains enzymes like <strong>trypsin</strong> for digesting proteins and <strong>lipase</strong> for breaking down emulsified fats. The walls of the small intestine contain glands which secrete intestinal juice. The enzymes present in it finally convert the proteins to amino acids, complex carbohydrates into glucose and fats into fatty acids and glycerol.
+                </p>
+                <p class="mb-4">
+                    Digested food is taken up by the walls of the intestine. The inner lining of the small intestine has numerous finger-like projections called <strong>villi</strong> which increase the surface area for absorption. The villi are richly supplied with blood vessels which take the absorbed food to each and every cell of the body, where it is utilised for obtaining energy, building up new tissues and the repair of old tissues.
+                </p>
+                <p class="mb-4">
+                    The unabsorbed food is sent into the large intestine where its wall absorb more water from this material. The rest of the material is removed from the body via the anus. The exit of this waste material is regulated by the anal sphincter.
+                </p>
+
+                <details class="my-6 border-blue-200">
+                    <summary class="bg-blue-50 text-blue-800">More to Know! Dental caries</summary>
+                    <div class="details-content text-sm bg-blue-50/50">
+                        Dental caries or tooth decay causes gradual softening of enamel and dentine. It begins when bacteria acting on sugars produce acids that softens or demineralises the enamel. Masses of bacterial cells together with food particles stick to the teeth to form dental plaque. Saliva cannot reach the tooth surface to neutralise the acid as plaque covers the teeth. Brushing the teeth after eating removes the plaque before the bacteria produce acids. If untreated, microorganisms may invade the pulp, causing inflammation and infection.
+                    </div>
+                </details>
+            </div>
+
+            <details class="mt-8">
+                <summary>Questions Section 5.2</summary>
+                <div class="details-content">
+                    <ol class="list-decimal pl-5 space-y-2 text-gray-700">
+                        <li>What are the differences between autotrophic nutrition and heterotrophic nutrition?</li>
+                        <li>Where do plants get each of the raw materials required for photosynthesis?</li>
+                        <li>What is the role of the acid in our stomach?</li>
+                        <li>What is the function of digestive enzymes?</li>
+                        <li>How is the small intestine designed to absorb digested food?</li>
+                    </ol>
+                </div>
+            </details>
+
+        </section>
+
+        <section id="respiration" class="mb-16 scroll-mt-24 pt-8 border-t border-gray-200">
+            <h2 class="text-4xl font-extrabold text-brand-dark mb-8">5.3 Respiration</h2>
+
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                 <details class="border-brand-orange/30 h-fit">
+                    <summary class="bg-orange-50 text-brand-orange">Activity 5.4</summary>
+                    <div class="details-content text-sm">
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li>Take some freshly prepared lime water in a test tube.</li>
+                            <li>Blow air through this lime water.</li>
+                            <li>Note how long it takes for the lime water to turn milky.</li>
+                            <li>Use a syringe or pichkari to pass air through some fresh lime water taken in another test tube (Fig. 5.7).</li>
+                            <li>Note how long it takes for this lime water to turn milky.</li>
+                            <li>What does this tell us about the amount of carbon dioxide in the air that we breathe out?</li>
+                        </ul>
+                    </div>
+                </details>
+                <details class="border-brand-orange/30 h-fit">
+                    <summary class="bg-orange-50 text-brand-orange">Activity 5.5</summary>
+                    <div class="details-content text-sm">
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Take some fruit juice or sugar solution and add some yeast to this. Take this mixture in a test tube fitted with a one-holed cork.</li>
+                            <li>Fit the cork with a bent glass tube. Dip the free end of the glass tube into a test tube containing freshly prepared lime water.</li>
+                            <li>What change is observed in the lime water and how long does it take for this change to occur?</li>
+                            <li>What does this tell us about the products of fermentation?</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <p class="text-gray-700 leading-loose mb-6">
+                We have discussed nutrition in organisms in the last section. The food material taken in during the process of nutrition is used in cells to provide energy for various life processes. Diverse organisms do this in different ways - some use oxygen to break-down glucose completely into carbon dioxide and water, some use other pathways that do not involve oxygen (Fig. 5.8).
+            </p>
+            <p class="text-gray-700 leading-loose mb-6">
+                In all cases, the first step is the break-down of <strong>glucose</strong>, a six-carbon molecule, into a three-carbon molecule called <strong>pyruvate</strong>. This process takes place in the cytoplasm. Further, the pyruvate may be converted into ethanol and carbon dioxide. This process takes place in yeast during fermentation. Since this process takes place in the absence of air (oxygen), it is called <strong>anaerobic respiration</strong>.
+            </p>
+            <p class="text-gray-700 leading-loose mb-6">
+                Break-down of pyruvate using oxygen takes place in the mitochondria. This process breaks up the three-carbon pyruvate molecule to give three molecules of carbon dioxide. The other product is water. Since this process takes place in the presence of air (oxygen), it is called <strong>aerobic respiration</strong>. The release of energy in this aerobic process is a lot greater than in the anaerobic process. Sometimes, when there is a lack of oxygen in our muscle cells, another pathway for the break-down of pyruvate is taken. Here the pyruvate is converted into <strong>lactic acid</strong> which is also a three-carbon molecule. This build-up of lactic acid in our muscles during sudden activity causes cramps.
+            </p>
+
+            <!-- Break-down of glucose flowchart built with HTML/CSS -->
+            <div class="bg-[#f0f9ff] border border-blue-200 rounded-xl p-6 my-8 overflow-x-auto relative">
+                <h4 class="text-center font-bold text-gray-700 mb-6 text-lg">Figure 5.8 Break-down of glucose by various pathways</h4>
+                
+                <div class="flex flex-col items-center min-w-[600px]">
+                    <!-- Starting block -->
+                    <div class="text-center mb-8">
+                        <div class="inline-block bg-white border-2 border-brand-dark px-4 py-2 rounded shadow-sm font-bold text-brand-dark">Glucose <span class="block text-xs font-normal text-gray-500">(6-carbon molecule)</span></div>
+                        <div class="h-8 border-l-2 border-brand-dark mx-auto mt-2"></div>
+                        <div class="text-sm font-medium text-gray-600 bg-white inline-block px-2 transform -translate-y-4">In cytoplasm</div>
+                        <div class="inline-block bg-white border-2 border-brand-dark px-4 py-2 rounded shadow-sm font-bold text-brand-dark mt-[-10px]">Pyruvate <span class="block text-xs font-normal text-gray-500">(3-carbon molecule)<br>+ Energy</span></div>
+                    </div>
+
+                    <!-- Branching -->
+                    <div class="flex justify-between w-full relative">
+                        <!-- Connecting horizontal line -->
+                        <div class="absolute top-0 left-1/6 right-1/6 border-t-2 border-brand-dark" style="left: 15%; right: 15%;"></div>
+                        
+                        <!-- Path 1 -->
+                        <div class="flex flex-col items-center w-1/3">
+                            <div class="h-6 border-l-2 border-brand-dark"></div>
+                            <div class="text-center text-xs font-semibold text-gray-600 mb-2 mt-1">Absence of oxygen<br><span class="font-normal">(in yeast)</span></div>
+                            <div class="text-center bg-white border border-gray-300 p-3 rounded shadow-sm text-sm">Ethanol + Carbon dioxide + Energy<br><span class="text-xs text-gray-500">(2-carbon molecule)</span></div>
+                        </div>
+
+                        <!-- Path 2 -->
+                        <div class="flex flex-col items-center w-1/3">
+                            <div class="h-6 border-l-2 border-brand-dark"></div>
+                            <div class="text-center text-xs font-semibold text-gray-600 mb-2 mt-1">Lack of oxygen<br><span class="font-normal">(in our muscle cells)</span></div>
+                            <div class="text-center bg-white border border-gray-300 p-3 rounded shadow-sm text-sm">Lactic acid + Energy<br><span class="text-xs text-gray-500">(3-carbon molecule)</span></div>
+                        </div>
+
+                        <!-- Path 3 -->
+                        <div class="flex flex-col items-center w-1/3">
+                            <div class="h-6 border-l-2 border-brand-dark"></div>
+                            <div class="text-center text-xs font-semibold text-gray-600 mb-2 mt-1">Presence of oxygen<br><span class="font-normal">(in mitochondria)</span></div>
+                            <div class="text-center bg-white border border-gray-300 p-3 rounded shadow-sm text-sm">Carbon dioxide + Water + Energy</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <details class="my-6 border-blue-200">
+                <summary class="bg-blue-50 text-blue-800">More to Know! ATP</summary>
+                <div class="details-content text-sm bg-blue-50/50">
+                    <p class="mb-2">ATP is the energy currency for most cellular processes. The energy released during the process of respiration is used to make an ATP molecule from ADP and inorganic phosphate.</p>
+                    <p class="font-mono text-center my-2 font-bold bg-white p-2 border inline-block mx-auto rounded">ADP + Ⓟ <span class="mx-2">Energy &rarr;</span> ADP ~ Ⓟ = ATP</p>
+                    <p class="mt-2">Endothermic processes in the cell then use this ATP to drive the reactions. When the terminal phosphate linkage in ATP is broken using water, the energy equivalent to 30.5 kJ/mol is released.</p>
+                    <p class="mt-2">Think of how a battery can provide energy for many different kinds of uses... Similarly, ATP can be used in the cells for the contraction of muscles, protein synthesis, conduction of nervous impulses and many other activities.</p>
+                </div>
+            </details>
+
+            <p class="text-gray-700 leading-loose mb-4">
+                Since the aerobic respiration pathway depends on oxygen, aerobic organisms need to ensure that there is sufficient intake of oxygen. We have seen that plants exchange gases through stomata, and the large inter-cellular spaces ensure that all cells are in contact with air. Carbon dioxide and oxygen are exchanged by diffusion here. They can go into cells, or away from them and out into the air. The direction of diffusion depends upon the environmental conditions and the requirements of the plant. At night, when there is no photosynthesis occurring, CO<sub>2</sub> elimination is the major exchange activity going on. During the day, CO<sub>2</sub> generated during respiration is used up for photosynthesis, hence there is no CO<sub>2</sub> release. Instead, oxygen release is the major event at this time.
+            </p>
+
+            <details class="my-6 border-brand-orange/30">
+                <summary class="bg-orange-50 text-brand-orange">Activity 5.6 (Breathing in fish)</summary>
+                <div class="details-content text-sm">
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Observe fish in an aquarium. They open and close their mouths and the gill-slits (or the operculum which covers the gill-slits) behind their eyes also open and close. Are the timings of the opening and closing of the mouth and gill-slits coordinated in some manner?</li>
+                        <li>Count the number of times the fish opens and closes its mouth in a minute.</li>
+                        <li>Compare this to the number of times you breathe in and out in a minute.</li>
+                    </ul>
+                </div>
+            </details>
+
+            <p class="text-gray-700 leading-loose mb-4">
+                Since the amount of dissolved oxygen is fairly low compared to the amount of oxygen in the air, the rate of breathing in aquatic organisms is much faster than that seen in terrestrial organisms. Fishes take in water through their mouths and force it past the gills where the dissolved oxygen is taken up by blood.
+            </p>
+            <p class="text-gray-700 leading-loose mb-8">
+                Terrestrial organisms use the oxygen in the atmosphere for respiration. This oxygen is absorbed by different organs in different animals. All these organs have a structure that increases the surface area which is in contact with the oxygen-rich atmosphere. Since the exchange of oxygen and carbon dioxide has to take place across this surface, this surface is very fine and delicate. In order to protect this surface, it is usually placed within the body, so there have to be passages that will take air to this area. In addition, there is a mechanism for moving the air in and out of this area where the oxygen is absorbed.
+            </p>
+
+            <h3 class="text-2xl font-bold text-brand-dark mb-4">Human Respiratory System</h3>
+            <p class="text-gray-700 leading-loose mb-6">
+                In human beings (Fig. 5.9), air is taken into the body through the nostrils. The air passing through the nostrils is filtered by fine hairs that line the passage. The passage is also lined with mucus which helps in this process. From here, the air passes through the throat and into the lungs. Rings of cartilage are present in the throat. These ensure that the air-passage does not collapse.
+            </p>
+
+            <div class="diagram-placeholder h-72 rounded-lg my-8 flex flex-col items-center justify-center text-sm text-gray-500 text-center p-4">
+                <span class="font-bold text-gray-600 block mb-2 text-lg">Figure 5.9: Human respiratory system</span>
+                Includes: Nasal passage, Mouth cavity, Pharynx, Larynx, Trachea, Rings of cartilage, Lung, Bronchi, Bronchioles, Alveolar sac, Diaphragm, Alveoli, Respiratory bronchioles.
+            </div>
+
+            <p class="text-gray-700 leading-loose mb-4">
+                Within the lungs, the passage divides into smaller and smaller tubes which finally terminate in balloon-like structures which are called <strong>alveoli</strong> (singular-alveolus). The alveoli provide a surface where the exchange of gases can take place. The walls of the alveoli contain an extensive network of blood-vessels. As we have seen in earlier years, when we breathe in, we lift our ribs and flatten our diaphragm, and the chest cavity becomes larger as a result. Because of this, air is sucked into the lungs and fills the expanded alveoli. The blood brings carbon dioxide from the rest of the body for release into the alveoli, and the oxygen in the alveolar air is taken up by blood in the alveolar blood vessels to be transported to all the cells in the body. During the breathing cycle, when air is taken in and let out, the lungs always contain a residual volume of air so that there is sufficient time for oxygen to be absorbed and for the carbon dioxide to be released.
+            </p>
+            <p class="text-gray-700 leading-loose mb-4">
+                When the body size of animals is large, the diffusion pressure alone cannot take care of oxygen delivery to all parts of the body. Instead, respiratory pigments take up oxygen from the air in the lungs and carry it to tissues which are deficient in oxygen before releasing it. In human beings, the respiratory pigment is <strong>haemoglobin</strong> which has a very high affinity for oxygen. This pigment is present in the red blood corpuscles. Carbon dioxide is more soluble in water than oxygen is and hence is mostly transported in the dissolved form in our blood.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-4 mt-8 mb-4">
+                 <details class="border-red-200">
+                    <summary class="bg-red-50 text-red-800">More to Know! Tobacco</summary>
+                    <div class="details-content text-sm bg-red-50/50">
+                        Using tobacco directly or any product of tobacco in the form of cigar, cigarettes, bidis, hookah, gutkha, etc. is harmful. Use of tobacco most commonly affects the tongue, lungs, heart and liver. Smokeless tobacco is also a major risk factor for heart attacks, strokes, pulmonary diseases and several forms of cancers. There is a high incidence of oral cancer in India due to the chewing of tobacco in the form of gutkha. Stay healthy; just say NO to tobacco and its products!
+                    </div>
+                </details>
+                <details class="border-purple-200">
+                    <summary class="bg-purple-50 text-purple-800">Do You Know? Smoking / Alveoli</summary>
+                    <div class="details-content text-sm bg-purple-50/50">
+                        <p class="mb-2"><strong>Smoking is injurious to health.</strong> Lung cancer is one of common causes of deaths in the world. The upper part of respiratory tract is provided with small hair-like structures called cilia. These cilia help to remove germs, dust and other harmful particles from inhaled air. Smoking destroys these hair due to which germs, dust, smoke and other harmful chemicals enter lungs and cause infection, cough and even lung cancer.</p>
+                        <hr class="my-2 border-purple-200">
+                        <p>If the alveolar surface were spread out, it would cover about 80 m<sup>2</sup>... If diffusion were to move oxygen in our body, it is estimated that it would take 3 years for a molecule of oxygen to get to our toes from our lungs. Aren't you glad that we have haemoglobin?</p>
+                    </div>
+                </details>
+            </div>
+
+            <details class="mt-8">
+                <summary>Questions Section 5.3</summary>
+                <div class="details-content">
+                    <ol class="list-decimal pl-5 space-y-2 text-gray-700">
+                        <li>What advantage over an aquatic organism does a terrestrial organism have with regard to obtaining oxygen for respiration?</li>
+                        <li>What are the different ways in which glucose is oxidised to provide energy in various organisms?</li>
+                        <li>How is oxygen and carbon dioxide transported in human beings?</li>
+                        <li>How are the lungs designed in human beings to maximise the area for exchange of gases?</li>
+                    </ol>
+                </div>
+            </details>
+        </section>
+
+
+        <section id="transportation" class="mb-16 scroll-mt-24 pt-8 border-t border-gray-200">
+            <h2 class="text-4xl font-extrabold text-brand-dark mb-8">5.4 Transportation</h2>
+            
+            <div class="border-b border-gray-200 mb-6">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                    <button onclick="openTab('trans-human')" id="tab-trans-human" class="tab-btn border-brand-orange text-brand-orange whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm">5.4.1 In Human Beings</button>
+                    <button onclick="openTab('trans-plant')" id="tab-trans-plant" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">5.4.2 In Plants</button>
+                </nav>
+            </div>
+
+            <!-- Human Transport Tab Content -->
+            <div id="trans-human" class="tab-content active text-gray-700 leading-loose">
+                <details class="mb-6 border-brand-orange/30">
+                    <summary class="bg-orange-50 text-brand-orange">Activity 5.7 (Haemoglobin)</summary>
+                    <div class="details-content text-sm">
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Visit a health centre in your locality and find out what is the normal range of haemoglobin content in human beings.</li>
+                            <li>Is it the same for children and adults? Is there any difference in the haemoglobin levels for men and women?</li>
+                            <li>Visit a veterinary clinic... find out what is the normal range... in an animal like the buffalo or cow. Is this content different in calves, male and female animals?</li>
+                            <li>Compare the difference seen in male and female human beings and animals. How would the difference, if any, be explained?</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <p class="mb-4">
+                    We have seen in previous sections that blood transports food, oxygen and waste materials in our bodies. In Class IX, we learnt about blood being a fluid connective tissue. Blood consists of a fluid medium called plasma in which the cells are suspended. Plasma transports food, carbon dioxide and nitrogenous wastes in dissolved form. Oxygen is carried by the red blood corpuscles. Many other substances like salts, are also transported by the blood. We thus need a pumping organ to push blood around the body, a network of tubes to reach all the tissues and a system in place to ensure that this network can be repaired if damaged.
+                </p>
+
+                <h3 class="text-2xl font-bold text-brand-dark mt-8 mb-4">Our pump — the heart</h3>
+                <p class="mb-4">
+                    The heart is a muscular organ which is as big as our fist (Fig. 5.10). Because both oxygen and carbon dioxide have to be transported by the blood, the heart has different chambers to prevent the oxygen-rich blood from mixing with the blood containing carbon dioxide. The carbon dioxide-rich blood has to reach the lungs for the carbon dioxide to be removed, and the oxygenated blood from the lungs has to be brought back to the heart. This oxygen-rich blood is then pumped to the rest of the body.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6 my-8">
+                    <div class="diagram-placeholder h-64 rounded-lg flex flex-col items-center justify-center text-sm text-gray-500 text-center p-4">
+                        <span class="font-bold text-gray-600 block mb-2 text-lg">Figure 5.10: Schematic sectional view of the human heart</span>
+                        Includes: Vena Cava (upper/lower), Right atrium, Right ventricle, Septum, Aorta, Pulmonary arteries, Pulmonary veins, Left atrium, Left ventricle.
+                    </div>
+                    <div class="diagram-placeholder h-64 rounded-lg flex flex-col items-center justify-center text-sm text-gray-500 text-center p-4">
+                        <span class="font-bold text-gray-600 block mb-2 text-lg">Figure 5.11: Schematic of circulation</span>
+                        Shows: Lungs, Pulmonary vein, Aorta, Body organs, Vena cava, Pulmonary artery.
+                    </div>
+                </div>
+
+                <p class="mb-4">
+                    We can follow this process step by step (Fig. 5.11). Oxygen-rich blood from the lungs comes to the thin-walled upper chamber of the heart on the left, the left atrium. The left atrium relaxes when it is collecting this blood. It then contracts, while the next chamber, the left ventricle, relaxes, so that the blood is transferred to it. When the muscular left ventricle contracts in its turn, the blood is pumped out to the body. De-oxygenated blood comes from the body to the upper chamber on the right, the right atrium, as it relaxes. As the right atrium contracts, the corresponding lower chamber, the right ventricle, dilates. This transfers blood to the right ventricle, which in turn pumps it to the lungs for oxygenation. Since ventricles have to pump blood into various organs, they have thicker muscular walls than the atria do. Valves ensure that blood does not flow backwards when the atria or ventricles contract.
+                </p>
+                <p class="mb-4 bg-teal-50 p-4 border-l-4 border-brand-dark">
+                    <strong>Oxygen enters the blood in the lungs:</strong> The separation of the right side and the left side of the heart is useful to keep oxygenated and de-oxygenated blood from mixing. Such separation allows a highly efficient supply of oxygen to the body. This is useful in animals that have high energy needs, such as birds and mammals, which constantly use energy to maintain their body temperature. In animals that do not use energy for this purpose... such animals, like amphibians or many reptiles have three-chambered hearts... Fishes, on the other hand, have only two chambers to their hearts... Thus, blood goes only once through the heart in the fish during one cycle... On the other hand, it goes through the heart twice during each cycle in other vertebrates. This is known as <strong>double circulation</strong>.
+                </p>
+
+                <details class="my-6 border-blue-200">
+                    <summary class="bg-blue-50 text-blue-800">More to Know! Blood pressure</summary>
+                    <div class="details-content text-sm bg-blue-50/50">
+                        The force that blood exerts against the wall of a vessel is called blood pressure. This pressure is much greater in arteries than in veins. The pressure of blood inside the artery during ventricular systole (contraction) is called systolic pressure and pressure in artery during ventricular diastole (relaxation) is called diastolic pressure. The normal systolic pressure is about 120 mm of Hg and diastolic pressure is 80 mm of Hg. Blood pressure is measured with an instrument called sphygmomanometer. High blood pressure is also called hypertension...
+                    </div>
+                </details>
+
+                <h3 class="text-xl font-bold text-brand-dark mt-6 mb-2">The tubes — blood vessels</h3>
+                <p class="mb-4">
+                    <strong>Arteries</strong> are the vessels which carry blood away from the heart to various organs of the body. Since the blood emerges from the heart under high pressure, the arteries have thick, elastic walls. <strong>Veins</strong> collect the blood from different organs and bring it back to the heart. They do not need thick walls because the blood is no longer under pressure, instead they have valves that ensure that the blood flows only in one direction.
+                </p>
+                <p class="mb-4">
+                    On reaching an organ or tissue, the artery divides into smaller and smaller vessels to bring the blood in contact with all the individual cells. The smallest vessels have walls which are one-cell thick and are called <strong>capillaries</strong>.
+                </p>
+
+                <h3 class="text-xl font-bold text-brand-dark mt-6 mb-2">Maintenance by platelets</h3>
+                <p class="mb-4">
+                    What happens if this system of tubes develops a leak? ... To avoid this, the blood has platelet cells which circulate around the body and plug these leaks by helping to clot the blood at these points of injury.
+                </p>
+
+                <h3 class="text-xl font-bold text-brand-dark mt-6 mb-2">Lymph</h3>
+                <p class="mb-4">
+                    There is another type of fluid also involved in transportation. This is called <strong>lymph</strong> or tissue fluid. Through the pores present in the walls of capillaries some amount of plasma, proteins and blood cells escape into intercellular spaces in the tissues to form the tissue fluid or lymph... Lymph carries digested and absorbed fat from intestine and drains excess fluid from extra cellular space back into the blood.
+                </p>
+            </div>
+
+            <!-- Plant Transport Tab Content -->
+            <div id="trans-plant" class="tab-content text-gray-700 leading-loose">
+                <p class="mb-4">
+                    We have discussed earlier how plants take in simple compounds such as CO<sub>2</sub> and photosynthesise energy stored in their chlorophyll-containing organs, namely leaves. The other kinds of raw materials needed for building plant bodies will also have to be taken up separately... The absorption of these substances therefore occurs through the part in contact with the soil, namely roots.
+                </p>
+                <p class="mb-4">
+                    Energy needs differ between different body designs. Plants do not move, and plant bodies have a large proportion of dead cells in many tissues. As a result, plants have low energy needs, and can use relatively slow transport systems.
+                </p>
+                <p class="mb-6 font-semibold">
+                    Plant transport systems will move energy stores from leaves and raw materials from roots. These two pathways are constructed as independently organised conducting tubes. One, the <strong>xylem</strong> moves water and minerals obtained from the soil. The other, <strong>phloem</strong> transports products of photosynthesis from the leaves where they are synthesised to other parts of the plant.
+                </p>
+
+                <h3 class="text-2xl font-bold text-brand-dark mt-8 mb-4">Transport of water</h3>
+                <p class="mb-4">
+                    In xylem tissue, vessels and tracheids of the roots, stems and leaves are interconnected to form a continuous system of water-conducting channels reaching all parts of the plant. At the roots, cells in contact with the soil actively take up ions. This creates a difference in the concentration of these ions between the root and the soil. Water, therefore, moves into the root from the soil to eliminate this difference. This means that there is steady movement of water into root xylem, creating a column of water that is steadily pushed upwards.
+                </p>
+                <p class="mb-4">
+                    However, this pressure by itself is unlikely to be enough to move water over the heights that we commonly see in plants. Plants use another strategy to move water in the xylem upwards to the highest points of the plant body.
+                </p>
+
+                <details class="mb-6 border-brand-orange/30">
+                    <summary class="bg-orange-50 text-brand-orange">Activity 5.8 (Transpiration)</summary>
+                    <div class="details-content text-sm">
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Take two small pots of approximately the same size and having the same amount of soil. One should have a plant in it. Place a stick of the same height as the plant in the other pot.</li>
+                            <li>Cover the soil in both pots with a plastic sheet so that moisture cannot escape by evaporation.</li>
+                            <li>Cover both sets... with plastic sheets and place in bright sunlight for half an hour.</li>
+                            <li>Do you observe any difference in the two cases?</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <div class="flex flex-col md:flex-row gap-6 mb-6">
+                    <div class="md:w-2/3">
+                        <p class="mb-4">
+                            Provided that the plant has an adequate supply of water, the water which is lost through the stomata is replaced by water from the xylem vessels in the leaf. In fact, evaporation of water molecules from the cells of a leaf creates a suction which pulls water from the xylem cells of roots. The loss of water in the form of vapour from the aerial parts of the plant is known as <strong>transpiration</strong>.
+                        </p>
+                        <p>
+                            Thus, transpiration helps in the absorption and upward movement of water and minerals dissolved in it from roots to the leaves. It also helps in temperature regulation. The effect of root pressure in transport of water is more important at night. During the day when the stomata are open, the transpiration pull becomes the major driving force in the movement of water in the xylem.
+                        </p>
+                    </div>
+                    <div class="md:w-1/3">
+                        <div class="diagram-placeholder h-full min-h-[150px] rounded-lg flex flex-col items-center justify-center text-xs text-gray-500 text-center p-4">
+                            <span class="font-bold block mb-1">Figure 5.12</span>
+                            Movement of water during transpiration in a tree. Shows water vapour leaving leaves.
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-brand-dark mt-8 mb-4">Transport of food and other substances</h3>
+                <p class="mb-4">
+                    So far we have discussed the transport of water and minerals in plants. Now let us consider how the products of metabolic processes, particularly photosynthesis, are moved from leaves, where they are formed, to other parts of the plant. This transport of soluble products of photosynthesis is called <strong>translocation</strong> and it occurs in the part of the vascular tissue known as <strong>phloem</strong>. Besides the products of photosynthesis, the phloem transports amino acids and other substances. These substances are especially delivered to the storage organs of roots, fruits and seeds and to growing organs. The translocation of food and other substances takes place in the sieve tubes with the help of adjacent companion cells both in upward and downward directions.
+                </p>
+                <p class="mb-4">
+                    Unlike transport in xylem which can be largely explained by simple physical forces, the translocation in phloem is achieved by utilising energy. Material like sucrose is transferred into phloem tissue using energy from ATP. This increases the osmotic pressure of the tissue causing water to move into it. This pressure moves the material in the phloem to tissues which have less pressure. This allows the phloem to move material according to the plant's needs.
+                </p>
+            </div>
+
+            <details class="mt-8">
+                <summary>Questions Section 5.4</summary>
+                <div class="details-content">
+                    <ol class="list-decimal pl-5 space-y-2 text-gray-700">
+                        <li>What are the components of the transport system in human beings? What are the functions of these components?</li>
+                        <li>Why is it necessary to separate oxygenated and deoxygenated blood in mammals and birds?</li>
+                        <li>What are the components of the transport system in highly organised plants?</li>
+                        <li>How are water and minerals transported in plants?</li>
+                        <li>How is food transported in plants?</li>
+                    </ol>
+                </div>
+            </details>
+        </section>
+
+
+        <section id="excretion" class="mb-16 scroll-mt-24 pt-8 border-t border-gray-200">
+            <h2 class="text-4xl font-extrabold text-brand-dark mb-8">5.5 Excretion</h2>
+
+            <p class="text-gray-700 leading-loose mb-6">
+                We have already discussed how organisms get rid of gaseous wastes generated during photosynthesis or respiration. Other metabolic activities generate nitrogenous materials which need to be removed. The biological process involved in the removal of these harmful metabolic wastes from the body is called <strong>excretion</strong>. Different organisms use varied strategies to do this. Many unicellular organisms remove these wastes by simple diffusion from the body surface into the surrounding water. As we have seen in other processes, complex multi-cellular organisms use specialised organs to perform the same function.
+            </p>
+
+            <div class="border-b border-gray-200 mb-6">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                    <button onclick="openTab('exc-human')" id="tab-exc-human" class="tab-btn border-brand-orange text-brand-orange whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm">5.5.1 In Human Beings</button>
+                    <button onclick="openTab('exc-plant')" id="tab-exc-plant" class="tab-btn border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">5.5.2 In Plants</button>
+                </nav>
+            </div>
+
+            <!-- Human Excretion Tab Content -->
+            <div id="exc-human" class="tab-content active text-gray-700 leading-loose">
+                <div class="flex flex-col md:flex-row gap-6 mb-6">
+                    <div class="md:w-2/3">
+                        <p class="mb-4">
+                            The excretory system of human beings (Fig. 5.13) includes a pair of kidneys, a pair of ureters, a urinary bladder and a urethra. Kidneys are located in the abdomen, one on either side of the backbone. Urine produced in the kidneys passes through the ureters into the urinary bladder where it is stored until it is released through the urethra.
+                        </p>
+                        <p class="mb-4">
+                            How is urine produced? The purpose of making urine is to filter out waste products from the blood. Just as CO<sub>2</sub> is removed from the blood in the lungs, nitrogenous waste such as urea or uric acid are removed from blood in the kidneys. It is then no surprise that the basic filtration unit in the kidneys, like in the lungs, is a cluster of very thin-walled blood capillaries. Each capillary cluster in the kidney is associated with the cup-shaped end of a coiled tube called <strong>Bowman's capsule</strong> that collects the filtrate (Fig. 5.14). Each kidney has large numbers of these filtration units called <strong>nephrons</strong> packed close together.
+                        </p>
+                    </div>
+                    <div class="md:w-1/3">
+                        <div class="diagram-placeholder h-64 rounded-lg flex flex-col items-center justify-center text-xs text-gray-500 text-center p-4">
+                            <span class="font-bold block mb-1 text-sm text-gray-600">Figure 5.13</span>
+                            Excretory system in human beings. Shows Left kidney, Left renal artery/vein, Aorta, Vena cava, Left ureter, Urinary bladder, Urethra.
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mb-4">
+                    Some substances in the initial filtrate, such as glucose, amino acids, salts and a major amount of water, are selectively re-absorbed as the urine flows along the tube. The amount of water re-absorbed depends on how much excess water there is in the body, and on how much of dissolved waste there is to be excreted. The urine forming in each kidney eventually enters a long tube, the ureter, which connects the kidneys with the urinary bladder. Urine is stored in the urinary bladder until the pressure of the expanded bladder leads to the urge to pass it out through the urethra. The bladder is muscular, so it is under nervous control... As a result, we can usually control the urge to urinate.
+                </p>
+
+                <div class="diagram-placeholder h-48 rounded-lg my-8 flex flex-col items-center justify-center text-sm text-gray-500 text-center p-4">
+                    <span class="font-bold text-gray-600 block mb-2 text-lg">Figure 5.14: Structure of a nephron</span>
+                    Includes: Glomerulus, Bowman's capsule, Branch of renal artery/vein, Tubular part of nephron, Capillaries, Collecting duct.
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 mt-8">
+                     <details class="border-blue-200">
+                        <summary class="bg-blue-50 text-blue-800">More to Know! Artificial kidney</summary>
+                        <div class="details-content text-sm bg-blue-50/50">
+                            Kidneys are vital organs for survival... In case of kidney failure, an artificial kidney can be used. An artificial kidney is a device to remove nitrogenous waste products from the blood through dialysis. Artificial kidneys contain a number of tubes with a semi-permeable lining, suspended in a tank filled with dialysing fluid. This fluid has the same osmotic pressure as blood, except that it is devoid of nitrogenous wastes. The patient's blood is passed through these tubes. During this passage, the waste products from the blood pass into dialysing fluid by diffusion. The purified blood is pumped back into the patient.
+                        </div>
+                    </details>
+                    <details class="border-green-200">
+                        <summary class="bg-green-50 text-green-800">Think it over! Organ donation</summary>
+                        <div class="details-content text-sm bg-green-50/50">
+                            Organ donation is a generous act of donating an organ to a person who suffers from non-function of organ(s)... In organ transplantation the organ is surgically removed from one person (organ donor) and transplanted to another person (the recipient). Common transplantations include corneas, kidneys, heart, liver, pancreas, lungs, intestines and bone marrow.
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Plant Excretion Tab Content -->
+            <div id="exc-plant" class="tab-content text-gray-700 leading-loose">
+                <p class="mb-4">
+                    Plants use completely different strategies for excretion than those of animals. Oxygen itself can be thought of as a waste product generated during photosynthesis! We have discussed earlier how plants deal with oxygen as well as CO<sub>2</sub>. They can get rid of excess water by transpiration. 
+                </p>
+                <p class="mb-4">
+                    For other wastes, plants use the fact that many of their tissues consist of dead cells, and that they can even lose some parts such as leaves. Many plant waste products are stored in cellular vacuoles. Waste products may be stored in leaves that fall off. Other waste products are stored as resins and gums, especially in old xylem. Plants also excrete some waste substances into the soil around them.
+                </p>
+            </div>
+
+             <details class="mt-8">
+                <summary>Questions Section 5.5</summary>
+                <div class="details-content">
+                    <ol class="list-decimal pl-5 space-y-2 text-gray-700">
+                        <li>Describe the structure and functioning of nephrons.</li>
+                        <li>What are the methods used by plants to get rid of excretory products?</li>
+                        <li>How is the amount of urine produced regulated?</li>
+                    </ol>
+                </div>
+            </details>
+        </section>
+
+        <section id="exercises" class="mb-16 scroll-mt-24 pt-8 border-t-4 border-brand-orange">
+            <h2 class="text-3xl font-extrabold text-brand-dark mb-6">What you have learnt</h2>
+            <ul class="list-disc pl-6 space-y-2 text-gray-700 mb-8 bg-gray-50 p-6 rounded-lg">
+                <li>Movement of various types can be taken as an indication of life.</li>
+                <li>Maintenance of life requires processes like nutrition, respiration, transport of materials within the body and excretion of waste products.</li>
+                <li>Autotrophic nutrition involves the intake of simple inorganic materials from the environment and using an external energy source like the Sun to synthesise complex high-energy organic material.</li>
+                <li>Heterotrophic nutrition involves the intake of complex material prepared by other organisms.</li>
+                <li>In human beings, the food eaten is broken down by various steps along the alimentary canal and the digested food is absorbed in the small intestine to be sent to all cells in the body.</li>
+                <li>During the process of respiration, organic compounds such as glucose are broken down to provide energy in the form of ATP. ATP is used to provide energy for other reactions in the cell.</li>
+                <li>Respiration may be aerobic or anaerobic. Aerobic respiration makes more energy available to the organism.</li>
+                <li>In human beings, the transport of materials such as oxygen, carbon dioxide, food and excretory products is a function of the circulatory system. The circulatory system consists of the heart, blood and blood vessels.</li>
+                <li>In highly differentiated plants, transport of water, minerals, food and other materials is a function of the vascular tissue which consists of xylem and phloem.</li>
+                <li>In human beings, excretory products in the form of soluble nitrogen compounds are removed by the nephrons in the kidneys.</li>
+                <li>Plants use a variety of techniques to get rid of waste material. For example, waste material may be stored in the cell-vacuoles or as gum and resin, removed in the falling leaves, or excreted into the surrounding soil.</li>
+            </ul>
+
+            <h2 class="text-3xl font-extrabold text-brand-dark mb-6">Exercises</h2>
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+                <ol class="list-decimal pl-5 space-y-4 text-gray-800 font-medium">
+                    <li>The kidneys in human beings are a part of the system for (a) nutrition. (b) respiration. (c) excretion. (d) transportation.</li>
+                    <li>The xylem in plants are responsible for (a) transport of water. (b) transport of food. (c) transport of amino acids. (d) transport of oxygen.</li>
+                    <li>The autotrophic mode of nutrition requires (a) carbon dioxide and water. (b) chlorophyll. (c) sunlight. (d) all of the above.</li>
+                    <li>The breakdown of pyruvate to give carbon dioxide, water and energy takes place in (a) cytoplasm. (b) mitochondria. (c) chloroplast. (d) nucleus.</li>
+                    <li>How are fats digested in our bodies? Where does this process take place?</li>
+                    <li>What is the role of saliva in the digestion of food?</li>
+                    <li>What are the necessary conditions for autotrophic nutrition and what are its by-products?</li>
+                    <li>What are the differences between aerobic and anaerobic respiration? Name some organisms that use the anaerobic mode of respiration.</li>
+                    <li>How are the alveoli designed to maximise the exchange of gases?</li>
+                    <li>What would be the consequences of a deficiency of haemoglobin in our bodies?</li>
+                    <li>Describe double circulation of blood in human beings. Why is it necessary?</li>
+                    <li>What are the differences between the transport of materials in xylem and phloem?</li>
+                    <li>Compare the functioning of alveoli in the lungs and nephrons in the kidneys with respect to their structure and functioning.</li>
+                </ol>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-brand-dark text-white py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-teal-100/70 text-sm">Life Processes Mastery Portal &copy; 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        function openTab(tabId) {
+            // Determine which section the tab belongs to based on prefix
+            const sectionPrefix = tabId.split('-')[0]; // e.g., 'nut'
+            
+            // Hide all contents in that section
+            const contents = document.querySelectorAll(`[id^="${sectionPrefix}-"].tab-content`);
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Deactivate all buttons in that section
+            const buttons = document.querySelectorAll(`[id^="tab-${sectionPrefix}-"]`);
+            buttons.forEach(btn => {
+                btn.classList.remove('border-brand-orange', 'text-brand-orange', 'font-bold');
+                btn.classList.add('border-transparent', 'text-gray-500', 'font-medium');
+            });
+            
+            // Show target content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate target button
+            const targetBtn = document.getElementById(`tab-${tabId}`);
+            targetBtn.classList.remove('border-transparent', 'text-gray-500', 'font-medium');
+            targetBtn.classList.add('border-brand-orange', 'text-brand-orange', 'font-bold');
+        }
+    </script>
+</body>
+</html>
