@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How do Organisms Reproduce? | NCERT Class 10 Interactive Mastery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-indigo': '#4f46e5',
+                        'brand-indigo-dark': '#312e81',
+                        'brand-indigo-light': '#e0e7ff',
+                        'brand-rose': '#e11d48',
+                        'brand-rose-light': '#ffe4e6',
+                        'brand-emerald': '#059669',
+                        'brand-amber': '#d97706',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; color: #0f172a; scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #312e81; }
+
+        .interactive-part { cursor: pointer; transition: all 0.25s ease; }
+        .interactive-part:hover { filter: drop-shadow(0 0 8px rgba(225, 29, 72, 0.8)); stroke-width: 3; }
+        .active-part { filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.9)); stroke-width: 3.5; fill-opacity: 0.95 !important; }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-element { animation: pulse-ring 3s infinite ease-in-out; }
+
+        /* Pollen tube growth animation styling */
+        .pollen-tube-dash {
+            stroke-dasharray: 200;
+            stroke-dashoffset: 200;
+            transition: stroke-dashoffset 3s ease-in-out;
+        }
+        .pollen-tube-dash.grow {
+            stroke-dashoffset: 0;
+        }
+    </style>
+</head>
+<body class="antialiased font-sans flex flex-col min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-indigo to-brand-rose flex items-center justify-center text-white font-black text-xl shadow-md mr-3">
+                        <i class="fa-solid fa-dna"></i>
+                    </div>
+                    <div>
+                        <span class="text-slate-900 font-extrabold text-xl tracking-tight">Reproduction</span>
+                        <span class="text-brand-rose font-extrabold text-xl tracking-tight">Mastery</span>
+                        <span class="hidden sm:inline-block ml-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-md">NCERT Ch 7</span>
+                    </div>
+                </div>
+                
+                <div class="hidden lg:flex items-center space-x-5 text-sm font-semibold">
+                    <a href="#dna-copying" class="text-slate-600 hover:text-brand-indigo transition-colors py-1">DNA & Variation</a>
+                    <a href="#asexual" class="text-slate-600 hover:text-brand-indigo transition-colors py-1">Asexual Modes</a>
+                    <a href="#plants" class="text-slate-600 hover:text-brand-indigo transition-colors py-1">Plant Reproduction</a>
+                    <a href="#human" class="text-slate-600 hover:text-brand-indigo transition-colors py-1">Human Systems</a>
+                    <a href="#health" class="text-slate-600 hover:text-brand-indigo transition-colors py-1">Contraception</a>
+                    <a href="#activities" class="text-slate-600 hover:text-brand-indigo transition-colors py-1">NCERT Labs</a>
+                    <a href="#questions" class="px-4 py-2 text-white bg-gradient-to-r from-brand-indigo to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 font-bold rounded-xl transition-all shadow-md shadow-indigo-200 flex items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap"></i> Board & NCERT Vault
+                    </a>
+                </div>
+
+                <div class="lg:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-slate-700 hover:text-brand-indigo focus:outline-none p-2 rounded-lg bg-slate-100">
+                        <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 bg-white shadow-xl">
+            <div class="px-4 py-4 space-y-2 font-medium">
+                <a href="#dna-copying" onclick="toggleMobileMenu()" class="block px-3 py-2 text-slate-700 hover:text-brand-indigo hover:bg-slate-50 rounded-lg">DNA & Variation</a>
+                <a href="#asexual" onclick="toggleMobileMenu()" class="block px-3 py-2 text-slate-700 hover:text-brand-indigo hover:bg-slate-50 rounded-lg">Asexual Modes</a>
+                <a href="#plants" onclick="toggleMobileMenu()" class="block px-3 py-2 text-slate-700 hover:text-brand-indigo hover:bg-slate-50 rounded-lg">Plant Reproduction</a>
+                <a href="#human" onclick="toggleMobileMenu()" class="block px-3 py-2 text-slate-700 hover:text-brand-indigo hover:bg-slate-50 rounded-lg">Human Systems</a>
+                <a href="#health" onclick="toggleMobileMenu()" class="block px-3 py-2 text-slate-700 hover:text-brand-indigo hover:bg-slate-50 rounded-lg">Contraception & Health</a>
+                <a href="#activities" onclick="toggleMobileMenu()" class="block px-3 py-2 text-slate-700 hover:text-brand-indigo hover:bg-slate-50 rounded-lg">NCERT Lab Activities</a>
+                <a href="#questions" onclick="toggleMobileMenu()" class="block px-3 py-2 text-white bg-brand-rose font-bold text-center rounded-lg shadow-sm">Board Vault & NCERT Answers</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-slate-900 text-white py-16 md:py-24 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="hero-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#hero-grid)" />
+            </svg>
+        </div>
+        
+        <div class="max-w-6xl mx-auto px-4 text-center relative z-10">
+            <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full border border-indigo-400/30 text-xs font-extrabold text-indigo-300 mb-6 bg-indigo-950/60 backdrop-blur-sm tracking-wider uppercase">
+                <i class="fa-solid fa-book-bookmark text-brand-rose"></i>
+                <span>Complete NCERT Class 10 Biology Coverage</span>
+            </div>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight">
+                How do Organisms <span class="bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-pink-400 to-amber-300">Reproduce?</span>
+            </h1>
+            <p class="text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed font-normal">
+                An interactive learning experience strictly matching NCERT Chapter 7. Includes high-yield diagrams, step-by-step simulations, NCERT activities (7.1 to 7.7), and board exam solutions.
+            </p>
+
+            <div class="mt-8 flex flex-wrap justify-center gap-4 text-sm font-semibold">
+                <a href="#activities" class="px-5 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl border border-white/20 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-flask text-emerald-400"></i> Explore 7 NCERT Activities
+                </a>
+                <a href="#plants" class="px-5 py-3 bg-brand-rose hover:bg-rose-600 text-white rounded-xl transition-all shadow-lg shadow-rose-900/50 flex items-center gap-2">
+                    <i class="fa-solid fa-seedling text-amber-300"></i> Interactive Diagrams
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
+
+        <section id="dna-copying" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <span class="px-3 py-1 bg-indigo-50 text-brand-indigo rounded-full text-xs font-bold uppercase tracking-wider">NCERT Section 7.1</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Do Organisms Create Exact Copies of Themselves?</h2>
+                <p class="mt-2 text-slate-600 max-w-3xl mx-auto text-sm sm:text-base">
+                    Reproduction involves creating a DNA blueprint copy along with a cellular apparatus. Biochemical copying reactions are precise, but not 100% accurate!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                <!-- Theory Card -->
+                <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-md flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-dna text-brand-indigo"></i> DNA Copying & Biochemical Variation
+                        </h3>
+                        <p class="text-slate-700 text-sm leading-relaxed mb-4">
+                            Chromosomes in the nucleus contain DNA (Deoxyribo Nucleic Acid), which is the information source for making proteins. If information changes, different proteins are made, leading to altered body designs.
+                        </p>
+                        <div class="space-y-3 text-sm text-slate-700">
+                            <div class="p-3 bg-indigo-50/70 border-l-4 border-brand-indigo rounded-r-xl">
+                                <strong>Cellular Apparatus Creation:</strong> DNA copying is always accompanied by the creation of an additional cellular apparatus so each daughter cell gets its own operational machinery.
+                            </div>
+                            <div class="p-3 bg-rose-50/70 border-l-4 border-brand-rose rounded-r-xl">
+                                <strong>Survival vs Drastic Errors:</strong> Drastic copying errors cause the newborn cell to die because it can't work with its apparatus. Minor variations survive, giving subtle differences!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500">
+                        <span>Basis of Evolution & Population Stability</span>
+                        <span class="text-brand-indigo bg-indigo-50 px-2.5 py-1 rounded-md">NCERT Page 113-114</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Thermal Variant Bacteria Simulator -->
+                <div class="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-amber-300 flex items-center gap-2">
+                                <i class="fa-solid fa-[# temperature-high] fa-temperature-full"></i> Bacterial Niche & Variation Simulator
+                            </h3>
+                            <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-mono">NCERT Example</span>
+                        </div>
+                        <p class="text-xs text-slate-300 mb-4">
+                            Simulate global warming on a population of bacteria in temperate water. Slide the water temperature to see how heat-resistant variants survive!
+                        </p>
+
+                        <!-- Simulation Canvas Container -->
+                        <div id="bacteria-niche-canvas" class="w-full h-44 bg-slate-950 rounded-2xl border border-slate-800 relative overflow-hidden flex items-center justify-center p-4">
+                            <div id="bacteria-container" class="grid grid-cols-8 gap-3 w-full max-w-xs justify-items-center">
+                                <!-- Populated dynamically by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Temperature Controls -->
+                        <div class="mt-5 bg-slate-800/80 p-4 rounded-xl border border-slate-700/80 space-y-2">
+                            <div class="flex justify-between text-xs font-bold">
+                                <span>Water Temperature: <span id="temp-val" class="text-amber-400">25°C (Normal)</span></span>
+                                <span>Survivors: <span id="survivor-count" class="text-emerald-400">16 / 16</span></span>
+                            </div>
+                            <input type="range" id="tempSlider" min="20" max="80" value="25" oninput="updateBacteriaSim(this.value)" class="w-full accent-brand-rose cursor-pointer">
+                        </div>
+                    </div>
+
+                    <p id="bacteria-sim-desc" class="text-xs text-slate-400 mt-4 italic">
+                        At normal temperature (25°C), all bacterial cells thrive in their temperate water niche.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="asexual" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <span class="px-3 py-1 bg-emerald-50 text-brand-emerald rounded-full text-xs font-bold uppercase tracking-wider">NCERT Section 7.2</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Modes of Asexual Reproduction</h2>
+                <p class="mt-2 text-slate-600 max-w-3xl mx-auto text-sm sm:text-base">
+                    Single organisms create new generations without gamete fusion. Explore each mode with interactive step-by-step visual models.
+                </p>
+            </div>
+
+            <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200/80">
+                <!-- Navigation Tabs -->
+                <div class="flex flex-wrap justify-center gap-2 mb-8 border-b border-slate-100 pb-4">
+                    <button onclick="setAsexualMode('fission')" id="btn-fission" class="px-4 py-2 rounded-xl font-bold text-xs sm:text-sm bg-brand-indigo text-white shadow-md transition-all">Fission</button>
+                    <button onclick="setAsexualMode('fragmentation')" id="btn-fragmentation" class="px-4 py-2 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-100 transition-all">Fragmentation</button>
+                    <button onclick="setAsexualMode('regeneration')" id="btn-regeneration" class="px-4 py-2 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-100 transition-all">Regeneration</button>
+                    <button onclick="setAsexualMode('budding')" id="btn-budding" class="px-4 py-2 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-100 transition-all">Budding</button>
+                    <button onclick="setAsexualMode('vegetative')" id="btn-vegetative" class="px-4 py-2 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-100 transition-all">Vegetative Prop.</button>
+                    <button onclick="setAsexualMode('spore')" id="btn-spore" class="px-4 py-2 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-100 transition-all">Spore Formation</button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <!-- Interactive Visualizer SVG (7 cols) -->
+                    <div class="lg:col-span-7 bg-slate-950 rounded-2xl p-6 flex flex-col justify-center items-center relative overflow-hidden min-h-[380px]">
+                        <div id="asexual-svg-container" class="w-full h-full flex items-center justify-center">
+                            <!-- Injected by JavaScript -->
+                        </div>
+                        <span id="asexual-fig-caption" class="absolute bottom-3 text-xs text-slate-400 font-mono text-center">NCERT Fig 7.1</span>
+                    </div>
+
+                    <!-- Explanatory Details (5 cols) -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 id="asex-title" class="text-2xl font-black text-slate-900">Binary Fission</h3>
+                                <span id="asex-badge" class="text-xs font-bold text-indigo-700 bg-indigo-100 px-2.5 py-1 rounded-full">Amoeba / Leishmania</span>
+                            </div>
+                            <p id="asex-desc" class="text-slate-700 text-sm leading-relaxed mb-4">
+                                Unicellular organisms divide into two equal halves. In Amoeba, division takes place in any plane. In Leishmania, binary fission occurs in a definite orientation relative to its whip-like flagellum.
+                            </p>
+
+                            <!-- High-Yield NCERT Highlight -->
+                            <div class="bg-amber-50/80 border-l-4 border-amber-500 p-4 rounded-r-xl space-y-1">
+                                <h4 class="text-xs font-extrabold text-amber-900 uppercase tracking-wider">NCERT Exam Key Point</h4>
+                                <p id="asex-keypoint" class="text-xs sm:text-sm text-amber-800 leading-relaxed">
+                                    Plasmodium (malarial parasite) divides simultaneously into many daughter cells by <b>Multiple Fission</b> inside a protective cyst.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Additional NCERT Deep Dive / Tissue Culture Box -->
+                        <div id="asex-extra-box" class="bg-indigo-50/80 border border-indigo-200 p-4 rounded-2xl text-xs text-indigo-900 space-y-1">
+                            <strong class="font-bold flex items-center gap-1 text-indigo-950">
+                                <i class="fa-solid fa-vial"></i> Tissue Culture (More to Know):
+                            </strong>
+                            <p>New plants are grown by isolating callus cells in hormone medium for growth & differentiation under sterile conditions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="plants" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <span class="px-3 py-1 bg-rose-50 text-brand-rose rounded-full text-xs font-bold uppercase tracking-wider">NCERT Section 7.3.2</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Sexual Reproduction in Flowering Plants</h2>
+                <p class="mt-2 text-slate-600 max-w-3xl mx-auto text-sm sm:text-base">
+                    Angiosperms carry reproductive parts in flowers. Click different anatomical structures and run the pollination-fertilization simulation.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200/80">
+                
+                <!-- Interactive Flower SVG (7 Cols) -->
+                <div class="lg:col-span-7 bg-slate-900 rounded-2xl p-6 flex flex-col items-center justify-center relative min-h-[440px]">
+                    
+                    <svg viewBox="0 0 500 420" class="w-full h-auto max-h-[380px]">
+                        <!-- Receptacle / Base -->
+                        <path d="M 230,350 C 230,370 270,370 270,350 L 260,410 L 240,410 Z" fill="#15803d" stroke="#166534" stroke-width="2"/>
+                        
+                        <!-- Sepal (Calyx) -->
+                        <path id="fpart-sepal" class="interactive-part" onclick="selectFlowerPart('sepal')" d="M 230,350 C 170,350 140,300 140,300 C 140,300 180,330 230,350 Z" fill="#4ade80" stroke="#15803d" stroke-width="2"/>
+                        <path class="interactive-part" onclick="selectFlowerPart('sepal')" d="M 270,350 C 330,350 360,300 360,300 C 360,300 320,330 270,350 Z" fill="#4ade80" stroke="#15803d" stroke-width="2"/>
+
+                        <!-- Petals (Corolla) -->
+                        <path id="fpart-petal" class="interactive-part" onclick="selectFlowerPart('petal')" d="M 190,330 C 80,280 60,140 170,200 C 190,80 310,80 330,200 C 440,140 420,280 310,330 Z" fill="#fb7185" fill-opacity="0.85" stroke="#e11d48" stroke-width="2.5"/>
+
+                        <!-- Left Stamen -->
+                        <g id="fpart-stamen-left" class="interactive-part" onclick="selectFlowerPart('stamen')">
+                            <path d="M 220,330 Q 160,250 140,170" fill="none" stroke="#fef08a" stroke-width="4"/>
+                            <ellipse cx="140" cy="160" rx="16" ry="11" fill="#eab308" stroke="#854d0e" stroke-width="2"/>
+                            <circle cx="132" cy="155" r="2" fill="#fef08a"/>
+                            <circle cx="148" cy="165" r="2" fill="#fef08a"/>
+                        </g>
+
+                        <!-- Right Stamen -->
+                        <g id="fpart-stamen-right" class="interactive-part" onclick="selectFlowerPart('stamen')">
+                            <path d="M 280,330 Q 340,250 360,170" fill="none" stroke="#fef08a" stroke-width="4"/>
+                            <ellipse cx="360" cy="160" rx="16" ry="11" fill="#eab308" stroke="#854d0e" stroke-width="2"/>
+                            <circle cx="352" cy="155" r="2" fill="#fef08a"/>
+                            <circle cx="368" cy="165" r="2" fill="#fef08a"/>
+                        </g>
+
+                        <!-- Pistil / Carpel (Center) -->
+                        <g id="fpart-pistil" class="interactive-part" onclick="selectFlowerPart('pistil')">
+                            <!-- Ovary -->
+                            <ellipse cx="250" cy="315" rx="38" ry="42" fill="#86efac" stroke="#15803d" stroke-width="2.5"/>
+                            <!-- Style -->
+                            <rect x="241" y="130" width="18" height="150" fill="#86efac" stroke="#15803d" stroke-width="2"/>
+                            <!-- Stigma -->
+                            <ellipse cx="250" cy="130" rx="26" ry="11" fill="#22c55e" stroke="#15803d" stroke-width="2.5"/>
+                        </g>
+
+                        <!-- Ovules in Ovary -->
+                        <g id="fpart-ovule" class="interactive-part" onclick="selectFlowerPart('ovule')">
+                            <circle cx="240" cy="305" r="10" fill="#fde047" stroke="#a16207" stroke-width="2"/>
+                            <circle cx="260" cy="325" r="10" fill="#fde047" stroke="#a16207" stroke-width="2"/>
+                        </g>
+
+                        <!-- Pollen Grain landing and Pollen Tube path -->
+                        <circle id="anim-pollen" class="hidden" cx="250" cy="120" r="5" fill="#eab308" stroke="#ffffff" stroke-width="1.5"/>
+                        <path id="anim-pollen-tube" class="pollen-tube-dash" d="M 250,125 L 250,305" fill="none" stroke="#eab308" stroke-width="4" stroke-dasharray="200" stroke-linecap="round"/>
+
+                        <!-- Text Annotations -->
+                        <text x="50" y="165" fill="#fde047" font-size="13" font-weight="bold">Anther (Stamen)</text>
+                        <text x="375" y="135" fill="#4ade80" font-size="13" font-weight="bold">Stigma (Pistil)</text>
+                        <text x="310" y="320" fill="#86efac" font-size="13" font-weight="bold">Ovary</text>
+                    </svg>
+
+                    <!-- Interactive Trigger Button -->
+                    <button onclick="triggerPollenTubeAnimation()" id="btn-pollen-anim" class="absolute bottom-4 bg-gradient-to-r from-amber-500 to-brand-rose hover:from-amber-600 hover:to-rose-700 text-white px-5 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold shadow-lg transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-play"></i> <span>Simulate Pollination & Germination (Fig 7.8)</span>
+                    </button>
+                </div>
+
+                <!-- Part Info Panel (5 Cols) -->
+                <div class="lg:col-span-5 flex flex-col justify-between space-y-4">
+                    <div id="flower-info-card" class="bg-slate-50 p-6 rounded-2xl border border-slate-200 min-h-[280px]">
+                        <div class="flex items-center space-x-3 mb-3">
+                            <div class="p-3 bg-emerald-100 text-emerald-700 rounded-xl">
+                                <i class="fa-solid fa-spa text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 id="flower-part-title" class="text-xl font-bold text-slate-900">L.S. of a Flower</h3>
+                                <span id="flower-part-tag" class="text-xs font-extrabold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">NCERT Fig 7.7</span>
+                            </div>
+                        </div>
+
+                        <p id="flower-part-desc" class="text-slate-700 text-sm leading-relaxed mb-4">
+                            Click any organ in the SVG diagram (Sepals, Petals, Stamen, Pistil, Ovule) to inspect its exact biological role in reproduction.
+                        </p>
+
+                        <div id="flower-extra-facts" class="bg-rose-50 border-l-4 border-brand-rose p-3.5 rounded-r-xl text-xs text-rose-900 space-y-1">
+                            <strong class="font-bold">Unisexual vs Bisexual Flowers:</strong>
+                            <p>Papaya & Watermelon are <i>unisexual</i> (contain either stamen or pistil). Hibiscus & Mustard are <i>bisexual</i> (contain both).</p>
+                        </div>
+                    </div>
+
+                    <!-- Seed Germination Sub-Card (NCERT Activity 7.7 & Fig 7.9) -->
+                    <div class="bg-indigo-950 text-white p-5 rounded-2xl border border-indigo-900 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-xs text-indigo-300 uppercase tracking-wider">Seed Structure (Gram / Chana - Fig 7.9)</h4>
+                            <span class="text-[10px] bg-indigo-800 text-indigo-200 px-2 py-0.5 rounded">Activity 7.7</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs pt-1">
+                            <div class="bg-indigo-900/80 p-2 rounded-lg border border-indigo-800">
+                                <span class="block text-amber-400 font-extrabold">Plumule</span>
+                                <span class="text-[10px] text-indigo-300">Future Shoot</span>
+                            </div>
+                            <div class="bg-indigo-900/80 p-2 rounded-lg border border-indigo-800">
+                                <span class="block text-emerald-400 font-extrabold">Radicle</span>
+                                <span class="text-[10px] text-indigo-300">Future Root</span>
+                            </div>
+                            <div class="bg-indigo-900/80 p-2 rounded-lg border border-indigo-800">
+                                <span class="block text-rose-300 font-extrabold">Cotyledon</span>
+                                <span class="text-[10px] text-indigo-300">Food Store</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="human" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <span class="px-3 py-1 bg-indigo-50 text-brand-indigo rounded-full text-xs font-bold uppercase tracking-wider">NCERT Section 7.3.3</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Human Reproductive Systems & Puberty</h2>
+                <p class="mt-2 text-slate-600 max-w-3xl mx-auto text-sm sm:text-base">
+                    Puberty marks the transition where general body growth slows down and reproductive tissues mature.
+                </p>
+            </div>
+
+            <!-- Gender System Toggle -->
+            <div class="flex justify-center">
+                <div class="bg-slate-200/80 p-1.5 rounded-2xl flex space-x-2 border border-slate-300/60 shadow-inner">
+                    <button onclick="setHumanSystem('male')" id="btn-sys-male" class="px-6 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm bg-brand-indigo text-white shadow-md transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-mars text-base"></i> <span>Male System (Fig 7.10)</span>
+                    </button>
+                    <button onclick="setHumanSystem('female')" id="btn-sys-female" class="px-6 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm text-slate-700 hover:text-brand-rose transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-venus text-base"></i> <span>Female System (Fig 7.11)</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white p-6 sm:p-8 rounded-3xl shadow-xl border border-slate-200/80">
+                
+                <!-- Interactive Canvas (7 Cols) -->
+                <div class="lg:col-span-7 bg-slate-950 rounded-2xl p-6 flex flex-col justify-center items-center relative overflow-hidden min-h-[440px]">
+                    
+                    <!-- Male System SVG -->
+                    <div id="svg-male-container" class="w-full flex justify-center">
+                        <svg viewBox="0 0 400 420" class="w-full h-auto max-h-[380px]">
+                            <!-- Pelvis outline -->
+                            <path d="M 100,40 C 100,190 140,240 140,380" fill="none" stroke="#334155" stroke-width="2"/>
+                            
+                            <!-- Bladder -->
+                            <ellipse id="mpart-bladder" class="interactive-part" onclick="selectMalePart('bladder')" cx="220" cy="160" rx="38" ry="32" fill="#fcd34d" stroke="#b45309" stroke-width="2"/>
+                            
+                            <!-- Seminal Vesicle & Prostate Gland -->
+                            <circle id="mpart-vesicle" class="interactive-part" onclick="selectMalePart('glands')" cx="270" cy="200" r="15" fill="#a78bfa" stroke="#6d28d9" stroke-width="2"/>
+                            <rect id="mpart-prostate" class="interactive-part" onclick="selectMalePart('glands')" x="205" y="195" width="30" height="25" rx="5" fill="#f472b6" stroke="#be185d" stroke-width="2"/>
+
+                            <!-- Vas Deferens -->
+                            <path id="mpart-vas" class="interactive-part" onclick="selectMalePart('vas')" d="M 180,310 C 150,230 150,130 220,130 C 260,130 280,160 270,200" fill="none" stroke="#fbbf24" stroke-width="5"/>
+
+                            <!-- Urethra -->
+                            <path id="mpart-urethra" class="interactive-part" onclick="selectMalePart('urethra')" d="M 220,220 L 220,360" fill="none" stroke="#38bdf8" stroke-width="6"/>
+
+                            <!-- Penis -->
+                            <path id="mpart-penis" class="interactive-part" onclick="selectMalePart('penis')" d="M 200,240 C 200,240 200,370 220,380 C 240,370 240,240 240,240" fill="none" stroke="#cbd5e1" stroke-width="3"/>
+
+                            <!-- Scrotum & Testis -->
+                            <path id="mpart-scrotum" class="interactive-part" onclick="selectMalePart('scrotum')" d="M 150,300 C 130,350 180,390 210,360 Z" fill="#94a3b8" fill-opacity="0.4" stroke="#475569" stroke-width="2"/>
+                            <ellipse id="mpart-testis" class="interactive-part" onclick="selectMalePart('testis')" cx="175" cy="335" rx="18" ry="24" fill="#f87171" stroke="#b91c1c" stroke-width="2.5"/>
+
+                            <!-- Labels -->
+                            <text x="80" y="340" fill="#f87171" font-size="12" font-weight="bold">Testis</text>
+                            <text x="110" y="140" fill="#fbbf24" font-size="12" font-weight="bold">Vas deferens</text>
+                            <text x="290" y="205" fill="#a78bfa" font-size="12" font-weight="bold">Seminal vesicle</text>
+                        </svg>
+                    </div>
+
+                    <!-- Female System SVG -->
+                    <div id="svg-female-container" class="w-full justify-center hidden">
+                        <svg viewBox="0 0 500 420" class="w-full h-auto max-h-[380px]">
+                            <!-- Uterus -->
+                            <path id="fpart-uterus" class="interactive-part" onclick="selectFemalePart('uterus')" d="M 150,140 C 250,40 350,140 310,240 C 280,310 220,310 190,240 Z" fill="#fbcfe8" stroke="#db2777" stroke-width="3"/>
+                            
+                            <!-- Endometrium Lining -->
+                            <path d="M 170,150 C 250,70 330,150 290,230 C 270,280 230,280 210,230 Z" fill="#f472b6" fill-opacity="0.6"/>
+
+                            <!-- Fallopian Tubes / Oviducts -->
+                            <path id="fpart-oviduct-l" class="interactive-part" onclick="selectFemalePart('oviduct')" d="M 150,140 C 100,90 50,140 80,170" fill="none" stroke="#f472b6" stroke-width="12" stroke-linecap="round"/>
+                            <path id="fpart-oviduct-r" class="interactive-part" onclick="selectFemalePart('oviduct')" d="M 350,140 C 400,90 450,140 420,170" fill="none" stroke="#f472b6" stroke-width="12" stroke-linecap="round"/>
+
+                            <!-- Ovaries -->
+                            <ellipse id="fpart-ovary-l" class="interactive-part" onclick="selectFemalePart('ovary')" cx="90" cy="200" rx="20" ry="28" fill="#fde047" stroke="#b45309" stroke-width="2.5"/>
+                            <ellipse id="fpart-ovary-r" class="interactive-part" onclick="selectFemalePart('ovary')" cx="410" cy="200" rx="20" ry="28" fill="#fde047" stroke="#b45309" stroke-width="2.5"/>
+
+                            <!-- Cervix -->
+                            <rect id="fpart-cervix" class="interactive-part" onclick="selectFemalePart('cervix')" x="230" y="300" width="40" height="25" fill="#f9a8d4" stroke="#db2777" stroke-width="2"/>
+                            
+                            <!-- Vagina -->
+                            <path id="fpart-vagina" class="interactive-part" onclick="selectFemalePart('vagina')" d="M 230,325 L 220,400 L 280,400 L 270,325 Z" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+
+                            <!-- Labels -->
+                            <text x="20" y="205" fill="#fde047" font-size="13" font-weight="bold">Ovary</text>
+                            <text x="370" y="110" fill="#f472b6" font-size="13" font-weight="bold">Oviduct</text>
+                            <text x="230" y="180" fill="#db2777" font-size="15" font-weight="bold">Uterus</text>
+                        </svg>
+                    </div>
+
+                    <p class="text-xs text-slate-400 mt-2 text-center font-mono">Click organ labels to view NCERT functions</p>
+                </div>
+
+                <!-- Info Box (5 Cols) -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div id="system-info-card" class="bg-slate-50 p-6 rounded-2xl border border-slate-200 min-h-[320px] flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div id="sys-icon-bg" class="p-3 bg-brand-indigo/10 text-brand-indigo rounded-xl">
+                                    <i id="sys-icon" class="fa-solid fa-mars text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h3 id="sys-part-title" class="text-xl font-bold text-slate-900">Male System</h3>
+                                    <span id="sys-part-tag" class="text-xs font-bold text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">Overview</span>
+                                </div>
+                            </div>
+                            <p id="sys-part-desc" class="text-slate-700 text-sm leading-relaxed">
+                                Select an organ in the diagram to inspect its role.
+                            </p>
+                        </div>
+
+                        <!-- Placenta & Embryo Box (NCERT Page 124) -->
+                        <div id="placenta-info-box" class="mt-4 bg-rose-50 border border-rose-200 p-4 rounded-xl text-xs text-rose-900 space-y-1">
+                            <strong class="font-extrabold flex items-center gap-1 text-rose-950">
+                                <i class="fa-solid fa-circle-dot"></i> Placenta (NCERT High Yield):
+                            </strong>
+                            <p>A disc embedded in the uterine wall containing <b>villi</b> on the embryo side and <b>blood spaces</b> on mother side. Provides large surface area for glucose/O₂ supply and waste removal.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Menstruation & Unfertilized Egg Interactive Timeline -->
+            <div id="menstruation-box" class="hidden bg-rose-50/80 border border-rose-200 rounded-3xl p-6 sm:p-8 space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-3 bg-brand-rose text-white rounded-xl text-xl shadow-md">
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-rose-950">What happens when the Egg is NOT Fertilized?</h3>
+                        <span class="text-xs text-rose-700 font-bold">NCERT Section 7.3.3(c) &bull; 28-Day Cycle</span>
+                    </div>
+                </div>
+                <p class="text-slate-700 text-sm leading-relaxed">
+                    The unfertilized egg lives for about 1 day. The uterine lining thickens and becomes spongy every month to receive a zygote. If fertilization does not happen, this lining breaks down and exits through the vagina as blood & mucous (<b>Menstruation</b>, lasting 2 to 8 days).
+                </p>
+            </div>
+        </section>
+
+        <section id="health" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <span class="px-3 py-1 bg-amber-50 text-brand-amber rounded-full text-xs font-bold uppercase tracking-wider">NCERT Section 7.3.3(d)</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Reproductive Health & Contraception</h2>
+                <p class="mt-2 text-slate-600 max-w-3xl mx-auto text-sm sm:text-base">
+                    Preventing unwanted pregnancies and sexually transmitted diseases (STDs).
+                </p>
+            </div>
+
+            <!-- STDs Alert Box -->
+            <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-2xl shadow-sm space-y-2">
+                <div class="flex items-center space-x-2 text-red-900 font-extrabold text-base">
+                    <i class="fa-solid fa-triangle-exclamation text-red-500 text-xl"></i>
+                    <span>Sexually Transmitted Diseases (STDs)</span>
+                </div>
+                <p class="text-xs sm:text-sm text-red-800 leading-relaxed">
+                    Sexually transmitted infections include <b>Bacterial infections</b> (Gonorrhoea, Syphilis) and <b>Viral infections</b> (Warts, HIV-AIDS). Condoms (barrier method) help prevent transmission of many infections!
+                </p>
+            </div>
+
+            <!-- Contraceptive Methods Matrix -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Mechanical Barrier -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h4 class="font-extrabold text-slate-900 text-base">1. Mechanical Barrier</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">Prevents sperm from physically meeting the egg.</p>
+                    <ul class="text-xs text-slate-800 space-y-1 font-semibold">
+                        <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Condoms (Penis / Vagina)</li>
+                        <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i><b>Protects against STDs!</b></li>
+                    </ul>
+                </div>
+
+                <!-- Hormonal / Chemical -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-pills"></i>
+                    </div>
+                    <h4 class="font-extrabold text-slate-900 text-base">2. Hormonal Pills</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">Changes hormonal balance so eggs are not released.</p>
+                    <ul class="text-xs text-slate-800 space-y-1 font-semibold">
+                        <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Oral Pills</li>
+                        <li><i class="fa-solid fa-xmark text-rose-500 mr-1.5"></i>Can cause side-effects</li>
+                    </ul>
+                </div>
+
+                <!-- IUDs -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-anchor"></i>
+                    </div>
+                    <h4 class="font-extrabold text-slate-900 text-base">3. Intrauterine Devices</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">Placed inside the uterus to prevent pregnancy.</p>
+                    <ul class="text-xs text-slate-800 space-y-1 font-semibold">
+                        <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Loop & Copper-T</li>
+                        <li><i class="fa-solid fa-xmark text-rose-500 mr-1.5"></i>Uterine irritation risk</li>
+                    </ul>
+                </div>
+
+                <!-- Surgical Blocks -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-2xl flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-scissors"></i>
+                    </div>
+                    <h4 class="font-extrabold text-slate-900 text-base">4. Surgical Methods</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">Blocks gamete transport permanently.</p>
+                    <ul class="text-xs text-slate-800 space-y-1 font-semibold">
+                        <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Vasectomy (Male vas deferens)</li>
+                        <li><i class="fa-solid fa-check text-emerald-500 mr-1.5"></i>Tubectomy (Female fallopian tube)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sex Ratio & Law Box -->
+            <div class="bg-indigo-950 text-white p-6 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h4 class="font-extrabold text-base text-amber-300">Social Aspects & Sex Ratio</h4>
+                    <p class="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                        Prenatal sex determination is prohibited by law due to illegal female foeticides. Maintaining healthy female-male sex ratio is vital for society.
+                    </p>
+                </div>
+                <span class="text-xs font-bold bg-rose-600 text-white px-3 py-1.5 rounded-xl whitespace-nowrap">NCERT Legal Note</span>
+            </div>
+        </section>
+
+        <section id="activities" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <span class="px-3 py-1 bg-emerald-50 text-brand-emerald rounded-full text-xs font-bold uppercase tracking-wider">Interactive Experiments</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">NCERT Class 10 Biology Lab Vault</h2>
+                <p class="mt-2 text-slate-600 max-w-3xl mx-auto text-sm sm:text-base">
+                    Simulate and review all 7 mandatory NCERT lab activities (7.1 to 7.7) right here!
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Activity 7.1 -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full">Activity 7.1</span>
+                        <i class="fa-solid fa-flask text-indigo-500"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Yeast Sugar Fermentation Culture</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Dissolve 10g sugar in 100mL water + pinch of yeast. Plug with cotton in warm place for 1-2 hours. Observe drop under microscope.
+                    </p>
+                    <div class="p-3 bg-slate-50 rounded-xl text-xs font-semibold text-slate-700">
+                        <span class="text-brand-indigo">Observation:</span> Yeast cells grow rapidly and put out small buds that separate into new individuals.
+                    </div>
+                </div>
+
+                <!-- Activity 7.2 -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">Activity 7.2</span>
+                        <i class="fa-solid fa-bread-slice text-emerald-500"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Bread Mould (Rhizopus) Culture</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Wet a slice of bread and keep in cool, moist, dark place for a week. Observe white thread-like hyphae and black sporangia blobs.
+                    </p>
+                    <div class="p-3 bg-slate-50 rounded-xl text-xs font-semibold text-slate-700">
+                        <span class="text-brand-emerald">Observation:</span> Spore formation in Rhizopus via sporangia blobs atop non-reproductive hyphae threads.
+                    </div>
+                </div>
+
+                <!-- Activity 7.3 -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full">Activity 7.3</span>
+                        <i class="fa-solid fa-microscope text-rose-500"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Amoeba Binary Fission Slides</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Observe permanent slide of normal Amoeba vs Amoeba undergoing binary fission under microscope.
+                    </p>
+                    <div class="p-3 bg-slate-50 rounded-xl text-xs font-semibold text-slate-700">
+                        <span class="text-brand-rose">Observation:</span> Karyokinesis (nucleus division) followed by Cytokinesis (cytoplasm splitting) in any plane.
+                    </div>
+                </div>
+
+                <!-- Activity 7.4 -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full">Activity 7.4</span>
+                        <i class="fa-solid fa-water text-teal-500"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Spirogyra Pond Water Filaments</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Collect dark green pond water with filaments. Mount on slide with glycerine drop and coverslip.
+                    </p>
+                    <div class="p-3 bg-slate-50 rounded-xl text-xs font-semibold text-slate-700">
+                        <span class="text-teal-700">Observation:</span> Filamentous Spirogyra breaks into smaller fragments upon maturation to form new individuals.
+                    </div>
+                </div>
+
+                <!-- Activity 7.5 & 7.6 -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full">Activity 7.5 & 7.6</span>
+                        <i class="fa-solid fa-leaf text-amber-500"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Potato Eyes & Money Plant Cuttings</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Place potato pieces with vs without notch/bud on wet cotton. Cut money plant with vs without leaf node.
+                    </p>
+                    <div class="p-3 bg-slate-50 rounded-xl text-xs font-semibold text-slate-700">
+                        <span class="text-brand-amber">Observation:</span> Only pieces containing buds/notches give rise to fresh green shoots and roots.
+                    </div>
+                </div>
+
+                <!-- Activity 7.7 -->
+                <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-md space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full">Activity 7.7</span>
+                        <i class="fa-solid fa-seedling text-indigo-500"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-base">Bengal Gram (Chana) Germination</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Soak gram seeds overnight, wrap in wet cloth for a day. Carefully cut open to identify cotyledons, plumule, radicle.
+                    </p>
+                    <div class="p-3 bg-slate-50 rounded-xl text-xs font-semibold text-slate-700">
+                        <span class="text-brand-indigo">Observation:</span> Cotyledons store food, Plumule grows into shoot, Radicle grows into root.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="questions" class="scroll-mt-24 pb-12 space-y-8">
+            <div class="text-center">
+                <span class="px-3 py-1 bg-rose-100 text-rose-800 rounded-full text-xs font-black uppercase tracking-wider border border-rose-200">Official Exam Vault</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">NCERT Textbook & Board Questions</h2>
+                <p class="mt-2 text-slate-600 max-w-3xl mx-auto text-sm sm:text-base">
+                    Master all textbook in-text questions and top board exam questions with exemplar model answers.
+                </p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 flex flex-col justify-between min-h-[360px]">
+                    
+                    <div class="w-full text-center space-y-4">
+                        <span id="qType" class="text-xs font-extrabold uppercase tracking-widest text-brand-indigo bg-indigo-50 border border-indigo-100 px-3.5 py-1 rounded-full inline-block">NCERT Page 114</span>
+                        
+                        <h3 id="qText" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 leading-snug px-2">
+                            What is the importance of DNA copying in reproduction?
+                        </h3>
+                    </div>
+
+                    <!-- Model Answer Drawer -->
+                    <div id="answerDrawer" class="w-full mt-6 bg-emerald-50 rounded-2xl border border-emerald-200 transition-all duration-300 max-h-0 overflow-hidden opacity-0">
+                        <div class="p-5 sm:p-6 space-y-2">
+                            <span class="text-[11px] font-extrabold uppercase tracking-widest text-emerald-800 bg-white border border-emerald-300 px-3 py-0.5 rounded-full inline-block">NCERT Model Answer</span>
+                            <p id="aText" class="text-slate-800 font-medium text-xs sm:text-sm md:text-base leading-relaxed">
+                                DNA copying is essential because: 1. It transfers genetic blueprints for body design from parents to offspring. 2. It is accompanied by cellular apparatus creation so daughter cells can survive. 3. Subtle inaccuracies during DNA replication create variations essential for species survival and evolution.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Controls -->
+                    <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-slate-100">
+                        <p class="font-extrabold text-slate-400 bg-slate-50 px-4 py-2 rounded-full border border-slate-200 text-xs">
+                            Question <span id="qCount" class="text-brand-indigo">1</span> of <span id="qTotal">10</span>
+                        </p>
+
+                        <button id="revealBtn" onclick="toggleAnswer()" class="px-6 py-3 bg-gradient-to-r from-brand-rose to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2 text-xs sm:text-sm">
+                            <span>Show Answer</span>
+                            <i id="revealIcon" class="fa-solid fa-eye"></i>
+                        </button>
+
+                        <div class="flex items-center gap-3">
+                            <button onclick="prevQuestion()" class="w-11 h-11 rounded-xl bg-white shadow-sm border border-slate-200 text-slate-600 hover:text-brand-indigo hover:border-brand-indigo hover:bg-indigo-50 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button onclick="nextQuestion()" class="w-11 h-11 rounded-xl bg-white shadow-sm border border-slate-200 text-slate-600 hover:text-brand-indigo hover:border-brand-indigo hover:bg-indigo-50 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-white py-10 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+            <p class="font-bold text-lg">Class 10 Biology <span class="text-brand-rose">Reproduction Interactive Mastery</span></p>
+            <p class="text-slate-400 text-xs max-w-xl mx-auto">
+                Strictly mapped to NCERT Chapter 7 (*How do Organisms Reproduce?*). Designed for CBSE Board Preparation.
+            </p>
+            <p class="text-slate-500 text-[11px]">&copy; NCERT Class 10 Biology Learning Companion</p>
+        </div>
+    </footer>
+
+    <script>
+        
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('menuIcon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        }
+
+        // --- Bacteria Niche Simulation (NCERT Page 114) ---
+        function initBacteriaSim() {
+            const container = document.getElementById('bacteria-container');
+            container.innerHTML = '';
+            for (let i = 0; i < 16; i++) {
+                const isVariant = (i === 3 || i === 11 || i === 14); // 3 heat resistant variants
+                const div = document.createElement('div');
+                div.id = `bac-${i}`;
+                div.className = `w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-500 ${isVariant ? 'bg-amber-400 text-slate-900 shadow-sm shadow-amber-400' : 'bg-emerald-400 text-slate-900'}`;
+                div.innerHTML = `<i class="fa-solid fa-bacterium"></i>`;
+                div.setAttribute('data-variant', isVariant ? 'true' : 'false');
+                container.appendChild(div);
+            }
+        }
+
+        function updateBacteriaSim(temp) {
+            document.getElementById('temp-val').innerText = `${temp}°C ${temp > 50 ? '(Extreme Warming!)' : '(Temperate)'}`;
+            let survivors = 0;
+            const desc = document.getElementById('bacteria-sim-desc');
+
+            for (let i = 0; i < 16; i++) {
+                const bac = document.getElementById(`bac-${i}`);
+                const isVariant = bac.getAttribute('data-variant') === 'true';
+
+                if (temp > 45 && !isVariant) {
+                    bac.style.opacity = '0.15';
+                    bac.style.transform = 'scale(0.6)';
+                } else {
+                    bac.style.opacity = '1';
+                    bac.style.transform = 'scale(1)';
+                    survivors++;
+                }
+            }
+
+            document.getElementById('survivor-count').innerText = `${survivors} / 16`;
+
+            if (temp <= 45) {
+                desc.innerText = "At normal temperate water temperatures, all bacterial cells thrive in their niche.";
+            } else {
+                desc.innerText = "NCERT Concept: Water temperature increased by global warming. Normal bacteria die, but heat-resistant variants survive and grow!";
+            }
+        }
+
+        // --- Section 2: Asexual Reproduction Modes Data ---
+        const asexualData = {
+            'fission': {
+                title: 'Fission (Binary & Multiple)',
+                badge: 'Amoeba / Leishmania / Plasmodium',
+                desc: 'Unicellular organisms split into daughter cells. In <b>Amoeba</b> (Fig 7.1a), division occurs in any plane. In <b>Leishmania</b> (causes Kala-azar - Fig 7.1b), binary fission occurs in a definite longitudinal orientation relative to its whip-like structure. <b>Plasmodium</b> undergoes Multiple Fission.',
+                keypoint: 'Plasmodium divides into many daughter cells simultaneously inside a cyst by Multiple Fission (Fig 7.2).',
+                extra: '<b>Activity 7.3:</b> Compare permanent slide of normal Amoeba with Amoeba undergoing binary fission.',
+                caption: 'NCERT Fig 7.1(a)(b) & Fig 7.2 Simulated',
+                svg: `<svg viewBox="0 0 320 160" class="w-full h-full"><path d="M 30,80 C 30,40 80,40 80,80 C 80,120 30,120 30,80 Z" fill="#60a5fa" opacity="0.6"/><circle cx="55" cy="80" r="8" fill="#1e3a8a"/><path d="M 120,80 C 120,40 180,40 180,80 C 180,120 120,120 120,80 Z" fill="#60a5fa" opacity="0.6"/><ellipse cx="140" cy="80" rx="5" ry="8" fill="#1e3a8a"/><ellipse cx="160" cy="80" rx="5" ry="8" fill="#1e3a8a"/><line x1="150" y1="40" x2="150" y2="120" stroke="#ef4444" stroke-width="2" stroke-dasharray="3,3"/><circle cx="250" cy="80" r="35" fill="#f59e0b" fill-opacity="0.3" stroke="#d97706" stroke-width="3"/><circle cx="235" cy="70" r="5" fill="#d97706"/><circle cx="255" cy="65" r="5" fill="#d97706"/><circle cx="265" cy="85" r="5" fill="#d97706"/><circle cx="240" cy="90" r="5" fill="#d97706"/><text x="35" y="145" fill="#94a3b8" font-size="11" font-weight="bold">1. Amoeba</text><text x="125" y="145" fill="#94a3b8" font-size="11" font-weight="bold">2. Splitting Plane</text><text x="220" y="145" fill="#94a3b8" font-size="11" font-weight="bold">3. Plasmodium</text></svg>`
+            },
+            'fragmentation': {
+                title: 'Fragmentation',
+                badge: 'Spirogyra',
+                desc: 'In simple multicellular organisms like <i>Spirogyra</i>, the body breaks into smaller pieces (fragments) upon maturation. Each fragment grows into a new individual.',
+                keypoint: 'Why can\'t complex multicellular organisms reproduce cell-by-cell? Specialized cells are organized as tissues and organs at definite positions!',
+                extra: '<b>Activity 7.4:</b> Collect dark green pond water with filaments. Observe Spirogyra under microscope with glycerine.',
+                caption: 'NCERT Activity 7.4 Filamentous Spirogyra',
+                svg: `<svg viewBox="0 0 320 160" class="w-full h-full"><rect x="30" y="65" width="260" height="30" rx="5" fill="#4ade80" stroke="#15803d" stroke-width="3"/><line x1="110" y1="40" x2="110" y2="120" stroke="#ef4444" stroke-width="3" stroke-dasharray="4,3"/><line x1="200" y1="40" x2="200" y2="120" stroke="#ef4444" stroke-width="3" stroke-dasharray="4,3"/><path d="M 40,65 L 60,95 M 60,65 L 80,95 M 130,65 L 150,95 M 220,65 L 240,95" stroke="#166534" stroke-width="2"/><text x="100" y="145" fill="#94a3b8" font-size="11" font-weight="bold">Maturation Breakpoints</text></svg>`
+            },
+            'regeneration': {
+                title: 'Regeneration',
+                badge: 'Planaria / Hydra',
+                desc: 'If the organism is cut or broken into pieces, many pieces grow into complete organisms. Carried out by specialized cells that proliferate and undergo development.',
+                keypoint: 'Regeneration is NOT the same as reproduction, because organisms do not normally depend on being cut up to reproduce!',
+                extra: '<b>NCERT Fig 7.3:</b> Planaria cut into 3 pieces produces 3 complete Planaria animals.',
+                caption: 'NCERT Fig 7.3 Regeneration in Planaria',
+                svg: `<svg viewBox="0 0 320 160" class="w-full h-full"><path d="M 60,40 C 90,40 90,120 60,120 C 30,120 30,40 60,40 Z" fill="#f472b6" stroke="#be185d" stroke-width="2"/><line x1="20" y1="65" x2="100" y2="65" stroke="#ef4444" stroke-width="2" stroke-dasharray="3,3"/><line x1="20" y1="95" x2="100" y2="95" stroke="#ef4444" stroke-width="2" stroke-dasharray="3,3"/><path d="M 180,20 C 200,20 200,50 180,50 Z" fill="#f472b6" stroke="#be185d" stroke-width="2"/><path d="M 220,65 C 240,65 240,95 220,95 Z" fill="#f472b6" stroke="#be185d" stroke-width="2"/><path d="M 260,110 C 280,110 280,140 260,140 Z" fill="#f472b6" stroke="#be185d" stroke-width="2"/><text x="35" y="145" fill="#94a3b8" font-size="11" font-weight="bold">Parent Planaria</text><text x="180" y="145" fill="#94a3b8" font-size="11" font-weight="bold">3 Regrown Individuals</text></svg>`
+            },
+            'budding': {
+                title: 'Budding',
+                badge: 'Hydra / Yeast',
+                desc: 'In Hydra, a bud develops as an outgrowth due to repeated cell division at one specific site. These buds develop into tiny individuals, mature, and detach from parent body.',
+                keypoint: 'Uses regenerative cells at a specific body site for reproduction.',
+                extra: '<b>Activity 7.1:</b> Yeast also puts out small buds under warm sugar solution conditions.',
+                caption: 'NCERT Fig 7.4 Budding in Hydra',
+                svg: `<svg viewBox="0 0 320 160" class="w-full h-full"><path d="M 100,130 C 100,70 120,70 120,130 Z" fill="#34d399" stroke="#059669" stroke-width="2"/><path d="M 110,70 Q 80,40 95,20 M 110,70 Q 110,35 110,15 M 110,70 Q 140,40 125,20" stroke="#059669" fill="none" stroke-width="3"/><path d="M 120,110 C 120,95 140,95 140,110 Z" fill="#34d399" stroke="#059669" stroke-width="2"/><text x="145" y="105" fill="#facc15" font-size="12" font-weight="bold">Developing Bud</text></svg>`
+            },
+            'vegetative': {
+                title: 'Vegetative Propagation',
+                badge: 'Bryophyllum / Potato / Money Plant',
+                desc: 'Plant parts like root, stem, and leaves develop into new plants under suitable conditions. Used in agriculture via layering and grafting (sugarcane, roses, grapes).',
+                keypoint: 'Advantage: Propagates seedless plants (banana, orange, rose, jasmine) and produces genetically identical clones earlier!',
+                extra: '<b>Tissue Culture:</b> Callus formed from tip cells in hormone artificial medium for disease-free ornamental plants.',
+                caption: 'NCERT Fig 7.5 Bryophyllum Leaf Buds',
+                svg: `<svg viewBox="0 0 320 160" class="w-full h-full"><path d="M 80,80 Q 160,20 240,80 Q 160,140 80,80 Z" fill="#15803d" stroke="#166534" stroke-width="3"/><circle cx="110" cy="45" r="6" fill="#facc15"/><circle cx="160" cy="30" r="6" fill="#facc15"/><circle cx="210" cy="45" r="6" fill="#facc15"/><text x="100" y="145" fill="#94a3b8" font-size="11" font-weight="bold">Buds in Leaf Notches (Bryophyllum)</text></svg>`
+            },
+            'spore': {
+                title: 'Spore Formation',
+                badge: 'Rhizopus (Bread Mould)',
+                desc: 'Thread-like structures on bread are non-reproductive <i>hyphae</i>. The tiny blob-on-a-stick structures are <i>sporangia</i> containing thick-walled spores.',
+                keypoint: 'Thick walls protect spores until they contact a moist surface to germinate.',
+                extra: '<b>Activity 7.2:</b> Bread mould growth observation over a week.',
+                caption: 'NCERT Fig 7.6 Spore Formation in Rhizopus',
+                svg: `<svg viewBox="0 0 320 160" class="w-full h-full"><path d="M 40,120 Q 160,100 280,120" fill="none" stroke="#94a3b8" stroke-width="3"/><line x1="100" y1="120" x2="100" y2="50" stroke="#94a3b8" stroke-width="3"/><line x1="200" y1="120" x2="200" y2="40" stroke="#94a3b8" stroke-width="3"/><circle cx="100" cy="50" r="16" fill="#475569" stroke="#1e293b" stroke-width="2"/><circle cx="200" cy="40" r="20" fill="#475569" stroke="#1e293b" stroke-width="2"/><circle cx="200" cy="40" r="2" fill="white"/><circle cx="195" cy="35" r="2" fill="white"/><circle cx="205" cy="45" r="2" fill="white"/><text x="225" y="45" fill="#facc15" font-size="11" font-weight="bold">Sporangium & Spores</text></svg>`
+            }
+        };
+
+        function setAsexualMode(mode) {
+            const data = asexualData[mode];
+            const btnIds = ['fission', 'fragmentation', 'regeneration', 'budding', 'vegetative', 'spore'];
+            
+            btnIds.forEach(id => {
+                const btn = document.getElementById(`btn-${id}`);
+                btn.className = 'px-4 py-2 rounded-xl font-bold text-xs sm:text-sm text-slate-600 hover:bg-slate-100 transition-all';
+            });
+            document.getElementById(`btn-${mode}`).className = 'px-4 py-2 rounded-xl font-bold text-xs sm:text-sm bg-brand-indigo text-white shadow-md transition-all';
+
+            document.getElementById('asex-title').innerHTML = data.title;
+            document.getElementById('asex-badge').innerText = data.badge;
+            document.getElementById('asex-desc').innerHTML = data.desc;
+            document.getElementById('asex-keypoint').innerHTML = data.keypoint;
+            document.getElementById('asex-extra-box').innerHTML = data.extra;
+            document.getElementById('asexual-fig-caption').innerText = data.caption;
+            document.getElementById('asexual-svg-container').innerHTML = data.svg;
+        }
+
+        // --- Section 3: Flower Reproduction Data & Pollen Tube Anim ---
+        const flowerData = {
+            'sepal': { title: 'Sepal (Calyx)', tag: 'Protection', desc: 'Outermost green leaf-like structures that protect the flower during its bud stage.' },
+            'petal': { title: 'Petal (Corolla)', tag: 'Attraction', desc: 'Brightly colored parts that attract insects and animal vectors for pollination.' },
+            'stamen': { title: 'Stamen (Male Part)', tag: 'Anther + Filament', desc: 'Produces yellowish pollen grains containing male germ-cells. Consists of a slender filament and an anther top.' },
+            'pistil': { title: 'Pistil / Carpel (Female Part)', tag: 'Stigma, Style, Ovary', desc: 'Located in the center. Consists of terminal sticky Stigma, elongated Style, and swollen bottom Ovary.' },
+            'ovule': { title: 'Ovary & Ovules', tag: 'Egg Cell / Seed Origin', desc: 'Contains ovules with female egg cells. Upon fertilization, ovule becomes Seed and ovary becomes Fruit!' }
+        };
+
+        function selectFlowerPart(part) {
+            const data = flowerData[part];
+            document.getElementById('flower-part-title').innerText = data.title;
+            document.getElementById('flower-part-tag').innerText = data.tag;
+            document.getElementById('flower-part-desc').innerText = data.desc;
+        }
+
+        function triggerPollenTubeAnimation() {
+            const pollen = document.getElementById('anim-pollen');
+            const tube = document.getElementById('anim-pollen-tube');
+            const btn = document.getElementById('btn-pollen-anim');
+
+            btn.disabled = true;
+            pollen.classList.remove('hidden');
+            tube.classList.add('grow');
+
+            selectFlowerPart('ovule');
+
+            setTimeout(() => {
+                setTimeout(() => {
+                    tube.classList.remove('grow');
+                    pollen.classList.add('hidden');
+                    btn.disabled = false;
+                }, 3500);
+            }, 500);
+        }
+
+        // --- Section 4: Human Systems Data ---
+        const maleSystemData = {
+            'testis': { title: 'Testes (Singular: Testis)', tag: 'Sperm & Testosterone', desc: 'Located outside the abdominal cavity in the scrotum because sperm formation requires 2-2.5°C lower temperature than body temp. Secretes testosterone (puberty secondary characteristics).' },
+            'scrotum': { title: 'Scrotum', tag: 'Pouch / Temp Control', desc: 'Pouch of skin holding testes outside the abdomen for essential lower temperature during spermatogenesis.' },
+            'vas': { title: 'Vas Deferens', tag: 'Sperm Duct', desc: 'Tube carrying sperms from testis. Unites with a tube coming from the urinary bladder.' },
+            'glands': { title: 'Prostate Gland & Seminal Vesicles', tag: 'Nutrient Fluid', desc: 'Add secretions along the vas deferens. Fluid (semen) provides nutrition and makes sperm transport smooth.' },
+            'urethra': { title: 'Urethra', tag: 'Common Passage', desc: 'Forms a common passage for both sperms and urine through the penis.' },
+            'bladder': { title: 'Urinary Bladder', tag: 'Excretory Storage', desc: 'Stores urine. Joined near urethra exit by vas deferens.' },
+            'penis': { title: 'Penis', tag: 'Delivery Organ', desc: 'Male copulatory organ that delivers sperms into female vaginal tract.' }
+        };
+
+        const femaleSystemData = {
+            'ovary': { title: 'Ovaries', tag: 'Egg Cells & Estrogen', desc: 'At birth, contain thousands of immature eggs. At puberty, one egg matures every month. Produce estrogen hormone.' },
+            'oviduct': { title: 'Oviduct / Fallopian Tube', tag: 'Site of Fertilization', desc: 'Carries egg from ovary to womb. Sperms meet egg here for fertilization.' },
+            'uterus': { title: 'Uterus (Womb)', tag: 'Embryo Implantation', desc: 'Elastic bag-like organ where fertilized egg implants and grows into fetus via Placenta tissue over ~9 months gestation.' },
+            'cervix': { title: 'Cervix', tag: 'Uterine Neck', desc: 'Lower narrow opening of uterus leading into vagina.' },
+            'vagina': { title: 'Vagina', tag: 'Birth Canal & Entry', desc: 'Muscular passage where sperms enter and serves as birth canal.' }
+        };
+
+        function setHumanSystem(gender) {
+            const maleSvg = document.getElementById('svg-male-container');
+            const femaleSvg = document.getElementById('svg-female-container');
+            const btnMale = document.getElementById('btn-sys-male');
+            const btnFemale = document.getElementById('btn-sys-female');
+            const iconBg = document.getElementById('sys-icon-bg');
+            const icon = document.getElementById('sys-icon');
+            const menstruationBox = document.getElementById('menstruation-box');
+
+            if (gender === 'male') {
+                maleSvg.classList.remove('hidden');
+                femaleSvg.classList.add('hidden');
+                menstruationBox.classList.add('hidden');
+                
+                btnMale.className = "px-6 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm bg-brand-indigo text-white shadow-md transition-all flex items-center space-x-2";
+                btnFemale.className = "px-6 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm text-slate-700 hover:text-brand-rose transition-all flex items-center space-x-2";
+                
+                iconBg.className = "p-3 bg-brand-indigo/10 text-brand-indigo rounded-xl";
+                icon.className = "fa-solid fa-mars text-2xl";
+                
+                document.getElementById('sys-part-title').innerText = "Male System (NCERT Fig 7.10)";
+                document.getElementById('sys-part-tag').innerText = "Overview";
+                document.getElementById('sys-part-desc').innerText = "Select an organ in the diagram to inspect its exact NCERT role.";
+            } else {
+                femaleSvg.classList.remove('hidden');
+                maleSvg.classList.add('hidden');
+                menstruationBox.classList.remove('hidden');
+                
+                btnFemale.className = "px-6 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm bg-brand-rose text-white shadow-md transition-all flex items-center space-x-2";
+                btnMale.className = "px-6 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm text-slate-700 hover:text-brand-indigo transition-all flex items-center space-x-2";
+                
+                iconBg.className = "p-3 bg-brand-rose/10 text-brand-rose rounded-xl";
+                icon.className = "fa-solid fa-venus text-2xl";
+                
+                document.getElementById('sys-part-title').innerText = "Female System (NCERT Fig 7.11)";
+                document.getElementById('sys-part-tag').innerText = "Overview";
+                document.getElementById('sys-part-desc').innerText = "Select an organ in the diagram to inspect its exact NCERT role.";
+            }
+        }
+
+        function selectMalePart(key) {
+            const data = maleSystemData[key];
+            document.getElementById('sys-part-title').innerText = data.title;
+            document.getElementById('sys-part-tag').innerText = data.tag;
+            document.getElementById('sys-part-desc').innerText = data.desc;
+        }
+
+        function selectFemalePart(key) {
+            const data = femaleSystemData[key];
+            document.getElementById('sys-part-title').innerText = data.title;
+            document.getElementById('sys-part-tag').innerText = data.tag;
+            document.getElementById('sys-part-desc').innerText = data.desc;
+        }
+
+        // --- Section 7: NCERT Board Questions Bank ---
+        const quizQuestions = [
+            {
+                type: "NCERT Page 114 Q1",
+                q: "What is the importance of DNA copying in reproduction?",
+                a: "1. Transmits genetic info for body design features from parent to offspring.\n2. Accompanied by cellular apparatus creation so daughter cells are viable.\n3. Subtle inaccuracies generate variations necessary for evolutionary survival."
+            },
+            {
+                type: "NCERT Page 114 Q2",
+                q: "Why is variation beneficial to the species but not necessarily for the individual?",
+                a: "Drastic niche alterations (like global warming raising water temperature) may kill non-variant individuals, but heat-resistant variant bacteria survive and grow. Thus, variation protects the species from extinction even if an individual doesn't directly gain immediately."
+            },
+            {
+                type: "NCERT Page 119 Q1",
+                q: "How does binary fission differ from multiple fission?",
+                a: "In binary fission (Amoeba, Leishmania), a single parent cell divides into two equal daughter cells. In multiple fission (Plasmodium), a parent cell divides simultaneously into many daughter cells inside a cyst."
+            },
+            {
+                type: "NCERT Page 119 Q2",
+                q: "How will an organism be benefited if it reproduces through spores?",
+                a: "Spores (like in Rhizopus) are covered with thick protective walls that protect them against harsh adverse conditions (heat, dryness). They germinate when contacting a moist surface."
+            },
+            {
+                type: "NCERT Page 119 Q3",
+                q: "Can you think of reasons why more complex organisms cannot give rise to new individuals through regeneration?",
+                a: "Complex multicellular organisms are organized into tissues, organs, and organ systems at specific locations. Simple cell-by-cell proliferation cannot recreate complex organ systems from random cut fragments."
+            },
+            {
+                type: "NCERT Page 119 Q4",
+                q: "Why is vegetative propagation practised for growing some types of plants?",
+                a: "1. Allows propagation of seedless plants (banana, orange, rose, jasmine).\n2. Plants bear flowers and fruits earlier than seed-grown plants.\n3. All offspring are genetically identical clones preserving desirable parental characteristics."
+            },
+            {
+                type: "NCERT Page 125 Board Q",
+                q: "Where does fertilization occur in humans and how does the embryo get nourishment?",
+                a: "Fertilization occurs in the Oviduct (Fallopian tube). The embryo gets nutrition from mother's blood through the Placenta (disc tissue with villi on embryo side and blood spaces on mother side)."
+            },
+            {
+                type: "NCERT Page 125 Board Q",
+                q: "Why are testes located outside the abdominal cavity in scrotum?",
+                a: "Testes are located in the scrotum outside the abdomen because sperm formation (spermatogenesis) requires a temperature 2 to 2.5°C lower than normal body temperature."
+            },
+            {
+                type: "NCERT Page 125 Board Q",
+                q: "What happens when the egg is not fertilized in human female?",
+                a: "The unfertilized egg lives for ~1 day. The spongy uterine lining breaks down and exits through the vagina as blood and mucous (Menstruation, lasting 2 to 8 days)."
+            },
+            {
+                type: "NCERT Page 125 Board Q",
+                q: "What are the advantages of barrier methods (condoms) over oral pills?",
+                a: "Condoms physically prevent sperm transfer without changing hormonal balances (no hormonal side-effects) and uniquely protect against Sexually Transmitted Diseases (STDs like HIV, Gonorrhoea)!"
+            }
+        ];
+
+        let qIndex = 0;
+        let isAnswerVisible = false;
+
+        function renderQuestion() {
+            const q = quizQuestions[qIndex];
+            collapseAnswer();
+            setTimeout(() => {
+                document.getElementById('qType').innerText = q.type;
+                document.getElementById('qText').innerText = q.q;
+                document.getElementById('aText').innerText = q.a;
+                document.getElementById('qCount').innerText = qIndex + 1;
+            }, 120);
+        }
+
+        function toggleAnswer() {
+            const drawer = document.getElementById('answerDrawer');
+            const btnText = document.querySelector('#revealBtn span');
+            const btnIcon = document.getElementById('revealIcon');
+            
+            if (isAnswerVisible) {
+                collapseAnswer();
+            } else {
+                drawer.classList.remove('max-h-0', 'opacity-0');
+                drawer.classList.add('max-h-[500px]', 'opacity-100');
+                btnText.innerText = "Hide Answer";
+                btnIcon.className = "fa-solid fa-eye-slash";
+                isAnswerVisible = true;
+            }
+        }
+
+        function collapseAnswer() {
+            const drawer = document.getElementById('answerDrawer');
+            const btnText = document.querySelector('#revealBtn span');
+            const btnIcon = document.getElementById('revealIcon');
+            if (drawer) {
+                drawer.classList.add('max-h-0', 'opacity-0');
+                drawer.classList.remove('max-h-[500px]', 'opacity-100');
+            }
+            if (btnText) btnText.innerText = "Show Answer";
+            if (btnIcon) btnIcon.className = "fa-solid fa-eye";
+            isAnswerVisible = false;
+        }
+
+        function nextQuestion() {
+            qIndex = (qIndex + 1) % quizQuestions.length;
+            renderQuestion();
+        }
+
+        function prevQuestion() {
+            qIndex = (qIndex - 1 + quizQuestions.length) % quizQuestions.length;
+            renderQuestion();
+        }
+
+        // On App Load
+        window.onload = () => {
+            initBacteriaSim();
+            setAsexualMode('fission');
+            selectFlowerPart('stamen');
+            setHumanSystem('male');
+            document.getElementById('qTotal').innerText = quizQuestions.length;
+            renderQuestion();
+        };
+    </script>
+</body>
+</html>
