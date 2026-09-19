@@ -3,27 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acids, Bases and Salts - Class 10 Chemistry Masterclass</title>
-    <!-- Tailwind CSS for modern responsive utility design -->
+    <title>Acids, Bases and Salts - Class 10 Virtual Lab & Masterclass</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- MathJax Configuration for beautiful LaTeX chemistry formulas -->
-	<link rel="icon" type="image/png" href="logo-small.png">
-	<link rel="shortcut icon" href="logo-small.png">
-	<link rel="apple-touch-icon" href="logo-small.png">
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -31,28 +15,20 @@
             scroll-behavior: smooth;
         }
         .hero-bg {
-            background-color: #1a564e; /* Premium dark teal green matches the screenshot */
+            background: linear-gradient(135deg, #134e4a 0%, #1a564e 50%, #0f3d37 100%);
         }
-        .text-logo-green {
-            color: #1a564e;
-        }
-        .text-logo-orange {
-            color: #e88a1a;
-        }
-        .border-logo-orange {
-            border-color: #e88a1a;
-        }
-        .bg-logo-orange {
-            background-color: #e88a1a;
-        }
+        .text-logo-green { color: #1a564e; }
+        .text-logo-orange { color: #e88a1a; }
+        
         .card-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .card-hover:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 30px -4px rgba(26, 86, 78, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
         }
-        /* Custom range slider for pH scale */
+
+        /* Custom range slider for pH */
         input[type=range].ph-slider {
             -webkit-appearance: none;
             width: 100%;
@@ -64,14 +40,14 @@
             width: 28px;
             border-radius: 50%;
             background: #ffffff;
-            border: 3px solid #1a564e;
+            border: 3px solid #1e293b;
             cursor: pointer;
             margin-top: -10px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
             transition: transform 0.1s ease;
         }
         input[type=range].ph-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
         input[type=range].ph-slider::-webkit-slider-runnable-track {
             width: 100%;
@@ -84,1101 +60,1445 @@
                 #1C355E 85%, #2E2B5F 92%, #22194D 100%);
             border-radius: 6px;
         }
-        /* Bubble animations for reactions */
-        @keyframes bubbleUp {
-            0% {
-                transform: translateY(100%) scale(0.3);
-                opacity: 0;
-            }
-            50% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-120px) scale(1.2);
-                opacity: 0;
-            }
+
+        @keyframes steam {
+            0% { transform: translateY(0) scaleX(1); opacity: 0.8; }
+            50% { transform: translateY(-10px) scaleX(1.2); opacity: 0.4; }
+            100% { transform: translateY(-20px) scaleX(1.5); opacity: 0; }
         }
-        .bubble {
-            position: absolute;
-            bottom: 10px;
-            background-color: rgba(255, 255, 255, 0.6);
-            border-radius: 50%;
-            pointer-events: none;
+        .animate-steam {
+            animation: steam 1.8s infinite ease-out;
         }
-        .bubble-active-1 { animation: bubbleUp 1.2s infinite ease-in; }
-        .bubble-active-2 { animation: bubbleUp 1.6s infinite ease-in; animation-delay: 0.3s; }
-        .bubble-active-3 { animation: bubbleUp 0.9s infinite ease-in; animation-delay: 0.1s; }
-        .bubble-active-4 { animation: bubbleUp 1.4s infinite ease-in; animation-delay: 0.5s; }
-        .bubble-active-5 { animation: bubbleUp 1.1s infinite ease-in; animation-delay: 0.7s; }
+
+        @keyframes pop-burst {
+            0% { transform: scale(0.5); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.8; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        .animate-pop {
+            animation: pop-burst 0.6s ease-out forwards;
+        }
+
+        .tab-btn.active {
+            background-color: #1a564e;
+            color: #ffffff;
+            border-color: #1a564e;
+        }
+
+        .font-code {
+            font-family: 'Fira Code', monospace;
+        }
     </style>
 </head>
-<body class="text-slate-800 bg-slate-50">
+<body class="text-slate-800 antialiased selection:bg-teal-200 selection:text-teal-900">
 
-    <!-- Header / Sticky Navigation -->
-    <nav class="bg-white sticky top-0 z-50 shadow-sm border-b border-gray-100">
+    <!-- Navigation Header -->
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                    <span class="text-logo-green font-extrabold text-xl sm:text-2xl tracking-tight">Acids, Bases</span>
-                    <span class="text-logo-orange font-extrabold text-xl sm:text-2xl tracking-tight ml-1">and Salts</span>
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                    <div class="w-10 h-10 rounded-xl bg-teal-800 flex items-center justify-center mr-3 shadow-md">
+                        <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    </div>
+                    <div>
+                        <span class="text-logo-green font-extrabold text-xl sm:text-2xl tracking-tight">Acids, Bases </span>
+                        <span class="text-logo-orange font-extrabold text-xl sm:text-2xl tracking-tight">and Salts</span>
+                        <span class="block text-xs font-semibold text-slate-400">Class 10 Chemistry • NCERT Complete</span>
+                    </div>
                 </div>
+
                 <div class="hidden lg:flex space-x-6">
-                    <a href="#core-concepts" class="text-gray-600 hover:text-logo-green font-semibold text-sm transition-colors">Core Concepts</a>
-                    <a href="#indicator-section" class="text-gray-600 hover:text-logo-green font-semibold text-sm transition-colors">Indicators Matrix</a>
-                    <a href="#interactive-lab" class="text-gray-600 hover:text-logo-green font-semibold text-sm transition-colors">Virtual Reaction Lab</a>
-                    <a href="#ph-mastery" class="text-gray-600 hover:text-logo-green font-semibold text-sm transition-colors">pH Simulator</a>
-                    <a href="#salt-masterclass" class="text-gray-600 hover:text-logo-green font-semibold text-sm transition-colors">Salt Chemistry</a>
-                    <a href="#board-quiz" class="text-white bg-logo-orange hover:bg-amber-600 px-4 py-2 rounded-lg font-bold text-sm transition-all shadow-sm">Board Quiz</a>
+                    <a href="#introduction" class="text-slate-600 hover:text-teal-800 px-3 py-2 text-sm font-medium transition-colors">Indicators</a>
+                    <a href="#reactions-matrix" class="text-slate-600 hover:text-teal-800 px-3 py-2 text-sm font-medium transition-colors">Reactions Matrix</a>
+                    <a href="#virtual-labs" class="text-slate-600 hover:text-teal-800 px-3 py-2 text-sm font-medium transition-colors">Virtual Lab (8 Activities)</a>
+                    <a href="#ph-scale" class="text-slate-600 hover:text-teal-800 px-3 py-2 text-sm font-medium transition-colors">pH Scale & Everyday Life</a>
+                    <a href="#chlor-alkali" class="text-slate-600 hover:text-teal-800 px-3 py-2 text-sm font-medium transition-colors">Chlor-Alkali & Salts</a>
+                    <a href="#quiz-section" class="bg-teal-800 text-white hover:bg-teal-900 px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm">NCERT Quiz</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="lg:hidden">
+                    <button id="mobile-menu-btn" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
                 </div>
             </div>
+        </div>
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 py-3 space-y-2">
+            <a href="#introduction" class="block text-slate-700 font-medium py-2">Indicators</a>
+            <a href="#reactions-matrix" class="block text-slate-700 font-medium py-2">Reactions Matrix</a>
+            <a href="#virtual-labs" class="block text-slate-700 font-medium py-2">Virtual Lab (8 Activities)</a>
+            <a href="#ph-scale" class="block text-slate-700 font-medium py-2">pH Scale & Life</a>
+            <a href="#chlor-alkali" class="block text-slate-700 font-medium py-2">Chlor-Alkali & Salts</a>
+            <a href="#quiz-section" class="block text-teal-800 font-bold py-2">NCERT Practice Quiz</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <div class="hero-bg text-white py-24 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
-        <!-- Visual chemistry-inspired background shapes -->
-        <div class="absolute top-10 left-10 w-24 h-24 rounded-full bg-teal-800 opacity-20 blur-xl"></div>
-        <div class="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-amber-500 opacity-10 blur-2xl"></div>
-
-        <div class="relative z-10 max-w-5xl mx-auto">
-            <span class="bg-teal-900 text-logo-orange font-bold text-xs px-4 py-1.5 rounded-full uppercase tracking-widest border border-teal-700">CBSE Class 10 Chemistry</span>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mt-6 mb-6">
-                Acids, Bases & Salts <span class="text-logo-orange">Mastery Portal</span>
+    <div class="hero-bg text-white py-20 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 opacity-10 pointer-events-none">
+            <svg class="w-96 h-96 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+        </div>
+        <div class="max-w-4xl mx-auto relative z-10">
+            <span class="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-bold bg-teal-900/80 text-amber-300 border border-amber-400/30 mb-6">
+                ✨ Comprehensive Class 10 NCERT Chapter 2 Interactive Suite
+            </span>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                Acids, Bases & Salts
             </h1>
-            <p class="max-w-3xl mx-auto text-lg sm:text-xl text-teal-100 leading-relaxed font-light">
-                An exhaustive, interactive guide written from the perspectives of NCERT, Educart, MTG, and Oswaal. Designed with real-time laboratory simulations, litmus transformations, and core conceptual break-downs suitable for both self-studying students and chemistry teachers.
+            <p class="mt-4 max-w-2xl mx-auto text-lg sm:text-xl text-teal-100 leading-relaxed font-light">
+                Explore $H^+$ and $OH^-$ ion dynamics, chemical reaction rules, interactive activity simulations with animated SVG visuals, pH applications in daily life, and the Chlor-Alkali salt industry.
             </p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+                <a href="#virtual-labs" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-6 py-3.5 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5">
+                    🔬 Open Virtual Lab (8 Activities)
+                </a>
+                <a href="#reactions-matrix" class="bg-teal-900/80 hover:bg-teal-900 text-white border border-teal-600 font-semibold px-6 py-3.5 rounded-xl transition-all">
+                    ⚡ Reaction Rule Matrix
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Section 1: Core Definitions -->
-    <section id="core-concepts" class="py-16 bg-white border-b border-gray-100">
+    <!-- SECTION 1: Indicators (Natural, Synthetic & Olfactory) -->
+    <section id="introduction" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900">1. Core Chemical Concepts</h2>
-                <div class="h-1 w-20 bg-logo-orange mx-auto mt-4 rounded"></div>
-                <p class="mt-4 text-gray-600 max-w-3xl mx-auto text-base sm:text-lg">
-                    Class 10 Board exams require understanding of how acids and bases behave in water, how they dissociate, and the fundamental differences between concentrated/dilute and strong/weak concepts.
+            <div class="text-center mb-12">
+                <span class="text-teal-700 font-extrabold text-sm uppercase tracking-wider">Chapter 2.1 • Identification</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-1">1. How Do We Identify Acids and Bases?</h2>
+                <p class="mt-3 text-base text-slate-600 max-w-3xl mx-auto">
+                    Acids are sour in taste and turn blue litmus red. Bases are bitter, soapy to feel, and turn red litmus blue. 
+                    Instead of tasting unknown chemical substances, we utilize <strong>Chemical & Olfactory Indicators</strong>.
                 </p>
             </div>
 
-            <!-- Conceptual Cards Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Acids Deep Dive -->
-                <div class="bg-slate-50 border border-gray-200/80 rounded-3xl p-8 card-hover flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mb-6">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            <!-- Indicators Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Litmus Paper Card -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 card-hover text-center relative overflow-hidden">
+                    <div class="w-14 h-14 mx-auto mb-4 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2.5 2.5 0 00-2.5-2.5H15"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-1">Litmus Solution / Paper</h3>
+                    <p class="text-xs text-slate-500 mb-4">Extracted from <em>Lichen</em> (Thallophyta). Neutral color is purple.</p>
+                    <div class="space-y-2 text-xs font-semibold">
+                        <div class="bg-red-100 text-red-800 p-2 rounded-lg flex justify-between">
+                            <span>In Acid:</span>
+                            <span class="font-bold">Turns RED</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Nature of Acids</h3>
-                        <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                            Acids are chemical substances that release hydrogen ions ($\text{H}^+$) or hydronium ions ($\text{H}_3\text{O}^+$) when dissolved in water. 
-                        </p>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200/60 font-mono text-xs text-slate-700 mb-6 space-y-2">
-                            <span class="font-bold text-red-600">Dissociation:</span>
-                            <div class="overflow-x-auto select-all py-1">
-                                $\text{HCl} + \text{H}_2\text{O} \rightarrow \text{H}_3\text{O}^+ + \text{Cl}^-$
-                            </div>
-                            <p class="text-[10px] text-gray-400 mt-1">*$\text{H}^+$ cannot exist alone; it binds with water molecules.</p>
+                        <div class="bg-blue-100 text-blue-800 p-2 rounded-lg flex justify-between">
+                            <span>In Base:</span>
+                            <span class="font-bold">Turns BLUE</span>
                         </div>
                     </div>
-                    <ul class="text-xs text-slate-500 space-y-2">
-                        <li class="flex items-start"><span class="text-red-500 mr-2">✔</span> Sour taste & corrosive to skin</li>
-                        <li class="flex items-start"><span class="text-red-500 mr-2">✔</span> Turn blue litmus paper red</li>
-                        <li class="flex items-start"><span class="text-red-500 mr-2">✔</span> pH range strictly less than 7</li>
-                    </ul>
                 </div>
 
-                <!-- Bases Deep Dive -->
-                <div class="bg-slate-50 border border-gray-200/80 rounded-3xl p-8 card-hover flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <!-- Phenolphthalein Card -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 card-hover text-center">
+                    <div class="w-14 h-14 mx-auto mb-4 bg-pink-100 rounded-2xl flex items-center justify-center text-pink-600">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-1">Phenolphthalein</h3>
+                    <p class="text-xs text-slate-500 mb-4">Synthetic indicator used in titrations and neutralization tests.</p>
+                    <div class="space-y-2 text-xs font-semibold">
+                        <div class="bg-slate-200 text-slate-700 p-2 rounded-lg flex justify-between">
+                            <span>In Acid:</span>
+                            <span class="font-bold">Colorless</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Nature of Bases</h3>
-                        <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                            Bases are substances that yield hydroxide ($\text{OH}^-$) ions in aqueous solutions. Water-soluble bases are specifically called **Alkalis**.
-                        </p>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200/60 font-mono text-xs text-slate-700 mb-6 space-y-2">
-                            <span class="font-bold text-blue-600">Dissociation:</span>
-                            <div class="overflow-x-auto select-all py-1">
-                                $\text{NaOH(aq)} \xrightarrow{\text{H}_2\text{O}} \text{Na}^+ + \text{OH}^-$
-                            </div>
-                            <p class="text-[10px] text-gray-400 mt-1">*All Alkalis are Bases, but not all Bases are Alkalis!</p>
+                        <div class="bg-pink-100 text-pink-800 p-2 rounded-lg flex justify-between">
+                            <span>In Base:</span>
+                            <span class="font-bold">Deep Pink</span>
                         </div>
                     </div>
-                    <ul class="text-xs text-slate-500 space-y-2">
-                        <li class="flex items-start"><span class="text-blue-500 mr-2">✔</span> Bitter taste and soapy to touch</li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-2">✔</span> Turn red litmus paper blue</li>
-                        <li class="flex items-start"><span class="text-blue-500 mr-2">✔</span> pH range strictly greater than 7</li>
-                    </ul>
                 </div>
 
-                <!-- Strong vs Weak & Dilution -->
-                <div class="bg-slate-50 border border-gray-200/80 rounded-3xl p-8 card-hover flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <!-- Methyl Orange Card -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 card-hover text-center">
+                    <div class="w-14 h-14 mx-auto mb-4 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-1">Methyl Orange</h3>
+                    <p class="text-xs text-slate-500 mb-4">Synthetic indicator giving crisp, clear color change.</p>
+                    <div class="space-y-2 text-xs font-semibold">
+                        <div class="bg-red-100 text-red-800 p-2 rounded-lg flex justify-between">
+                            <span>In Acid:</span>
+                            <span class="font-bold">Red</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">The Dilution Protocol</h3>
-                        <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                            Diluting an acid/base decreases the concentration of $\text{H}_3\text{O}^+$ or $\text{OH}^-$ per unit volume. This reaction is extremely **Exothermic**.
-                        </p>
-                        <div class="bg-red-50 border-l-4 border-red-500 p-3 rounded text-xs text-red-900 mb-6">
-                            <strong>Golden Rule:</strong> Always add <strong>Acid to Water</strong> slowly with constant stirring. NEVER add water to acid, as the sudden heat can splash acid and break glass containers.
+                        <div class="bg-amber-100 text-amber-800 p-2 rounded-lg flex justify-between">
+                            <span>In Base:</span>
+                            <span class="font-bold">Yellow</span>
                         </div>
                     </div>
-                    <ul class="text-xs text-slate-500 space-y-2">
-                        <li class="flex items-start"><span class="text-amber-500 mr-2">⚡</span> Strong Acids: Complete dissociation ($\text{HCl, H}_2\text{SO}_4$)</li>
-                        <li class="flex items-start"><span class="text-amber-500 mr-2">⚡</span> Weak Acids: Partial dissociation ($\text{CH}_3\text{COOH}$)</li>
-                    </ul>
+                </div>
+
+                <!-- Olfactory Indicators Card -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 card-hover text-center">
+                    <div class="w-14 h-14 mx-auto mb-4 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-1">Olfactory Indicators</h3>
+                    <p class="text-xs text-slate-500 mb-4">Substances whose <strong>odour changes</strong> in acidic/basic media.</p>
+                    <div class="space-y-2 text-xs font-semibold">
+                        <div class="bg-emerald-100 text-emerald-800 p-2 rounded-lg flex justify-between">
+                            <span>In Acid:</span>
+                            <span class="font-bold">Retains Odour</span>
+                        </div>
+                        <div class="bg-slate-200 text-slate-700 p-2 rounded-lg flex justify-between">
+                            <span>In Base:</span>
+                            <span class="font-bold">Loses Odour</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Natural Indicators Box -->
+            <div class="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-6">
+                <h4 class="text-sm font-bold text-amber-900 uppercase tracking-wide flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Other Natural Indicators (NCERT Page 17 & Group Activity)
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3 text-xs text-slate-700">
+                    <div class="bg-white p-3 rounded-xl border border-amber-100 shadow-sm">
+                        <strong class="text-slate-900 font-semibold block mb-1">Turmeric (Haldi):</strong>
+                        Remains yellow in acid. Turns reddish-brown in basic solutions (like soap on curry stains!).
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-amber-100 shadow-sm">
+                        <strong class="text-slate-900 font-semibold block mb-1">Red Cabbage Extract:</strong>
+                        Red/pink in acid, green in basic media.
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-amber-100 shadow-sm">
+                        <strong class="text-slate-900 font-semibold block mb-1">Flower Petals:</strong>
+                        Hydrangea, Petunia, and Geranium change color depending on acidity or alkalinity.
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 2: Complete Indicators Matrix -->
-    <section id="indicator-section" class="py-16 bg-slate-50 border-b border-gray-100">
+    <!-- SECTION 2: Interactive Chemical Reactions Rules Matrix -->
+    <section id="reactions-matrix" class="py-16 bg-slate-100 border-t border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <span class="text-xs font-bold uppercase tracking-widest text-logo-orange">Laboratory Testing</span>
-                <h2 class="text-3xl font-extrabold text-gray-900 mt-2">2. Chemical Indicators Reference Table</h2>
-                <p class="mt-4 text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
-                    How do natural and synthetic indicators transform under various acidic and basic conditions? Ideal cheat sheet for Board MCQs!
+            <div class="text-center mb-10">
+                <span class="text-teal-700 font-extrabold text-sm uppercase tracking-wider">Core Chemical Principles</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-1">2. Chemical Reaction Rules Matrix</h2>
+                <p class="mt-2 text-base text-slate-600 max-w-3xl mx-auto">
+                    Master the foundational reaction rules governing Acids, Bases, Metals, and Oxides in Class 10 Chemistry. Select a rule to inspect formula equations and real examples.
                 </p>
             </div>
 
-            <!-- Indicator Table card -->
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-800 text-white text-xs sm:text-sm font-semibold tracking-wider">
-                                <th class="p-4 sm:p-5">Indicator Category</th>
-                                <th class="p-4 sm:p-5">Indicator Name</th>
-                                <th class="p-4 sm:p-5">Neutral Color</th>
-                                <th class="p-4 sm:p-5 bg-red-900/30 text-red-100">Color in Acidic Media</th>
-                                <th class="p-4 sm:p-5 bg-blue-900/30 text-blue-100">Color in Basic Media</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 text-xs sm:text-sm text-gray-700">
-                            <!-- Litmus -->
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 sm:p-5 font-bold text-gray-500">Natural</td>
-                                <td class="p-4 sm:p-5 font-semibold text-gray-900">Litmus Paper / Solution</td>
-                                <td class="p-4 sm:p-5 text-gray-500">Purple / Violet</td>
-                                <td class="p-4 sm:p-5 font-medium text-red-600 bg-red-50/50">Red</td>
-                                <td class="p-4 sm:p-5 font-medium text-blue-600 bg-blue-50/50">Blue</td>
-                            </tr>
-                            <!-- Red Cabbage -->
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 sm:p-5 font-bold text-gray-500">Natural</td>
-                                <td class="p-4 sm:p-5 font-semibold text-gray-900">Red Cabbage Extract</td>
-                                <td class="p-4 sm:p-5 text-gray-500">Purple</td>
-                                <td class="p-4 sm:p-5 font-medium text-red-600 bg-red-50/50">Red / Pinkish</td>
-                                <td class="p-4 sm:p-5 font-medium text-green-600 bg-green-50/50">Green</td>
-                            </tr>
-                            <!-- Turmeric -->
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 sm:p-5 font-bold text-gray-500">Natural</td>
-                                <td class="p-4 sm:p-5 font-semibold text-gray-900">Turmeric (Haldi)</td>
-                                <td class="p-4 sm:p-5 text-gray-500">Yellow</td>
-                                <td class="p-4 sm:p-5 text-gray-500">Yellow (No Change)</td>
-                                <td class="p-4 sm:p-5 font-medium text-amber-800 bg-amber-50">Reddish Brown</td>
-                            </tr>
-                            <!-- Phenolphthalein -->
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 sm:p-5 font-bold text-purple-500">Synthetic</td>
-                                <td class="p-4 sm:p-5 font-semibold text-gray-900">Phenolphthalein</td>
-                                <td class="p-4 sm:p-5 text-gray-500">Colorless</td>
-                                <td class="p-4 sm:p-5 text-gray-500 bg-red-50/50">Colorless</td>
-                                <td class="p-4 sm:p-5 font-medium text-pink-600 bg-pink-50/50">Pink</td>
-                            </tr>
-                            <!-- Methyl Orange -->
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 sm:p-5 font-bold text-purple-500">Synthetic</td>
-                                <td class="p-4 sm:p-5 font-semibold text-gray-900">Methyl Orange</td>
-                                <td class="p-4 sm:p-5 text-gray-500">Orange</td>
-                                <td class="p-4 sm:p-5 font-medium text-red-600 bg-red-50/50">Red</td>
-                                <td class="p-4 sm:p-5 font-medium text-yellow-600 bg-yellow-50/50">Yellow</td>
-                            </tr>
-                            <!-- Onion -->
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 sm:p-5 font-bold text-emerald-600">Olfactory</td>
-                                <td class="p-4 sm:p-5 font-semibold text-gray-900">Onion Extract / Vanilla</td>
-                                <td class="p-4 sm:p-5 text-gray-500">Pungent Smell</td>
-                                <td class="p-4 sm:p-5 text-gray-700 bg-red-50/50">Retains Characteristic Smell</td>
-                                <td class="p-4 sm:p-5 text-gray-400 bg-blue-50/50 font-light">Destroys Smell entirely</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Rule Selection Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8" id="rule-cards-container">
+                <!-- Cards injected via JS -->
+            </div>
+
+            <!-- Rule Detail Showcase -->
+            <div id="rule-detail-box" class="bg-white rounded-2xl p-6 sm:p-8 shadow-md border border-slate-200">
+                <!-- Active rule details render here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: Virtual Interactive Laboratory (8 Activities) -->
+    <section id="virtual-labs" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="text-teal-700 font-extrabold text-sm uppercase tracking-wider">Hands-on Science</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-1">3. Virtual Interactive Chemistry Laboratory</h2>
+                <p class="mt-2 text-base text-slate-600 max-w-3xl mx-auto">
+                    Simulate all 8 major NCERT activities virtually. Click through steps, observe live animated SVG apparatus, examine observations, and hear audio-visual feedback!
+                </p>
+            </div>
+
+            <!-- Lab Activity Selector Tabs -->
+            <div class="flex overflow-x-auto space-x-2 pb-4 mb-6 scrollbar-thin" id="lab-tabs-container">
+                <!-- JS will generate lab tabs -->
+            </div>
+
+            <!-- Main Lab Simulation Workstation -->
+            <div class="bg-slate-900 rounded-3xl shadow-2xl overflow-hidden border border-slate-800 text-white">
+                <div class="grid grid-cols-1 lg:grid-cols-12">
+                    
+                    <!-- Control Panel (Left 4 cols) -->
+                    <div class="lg:col-span-4 bg-slate-800/80 p-6 border-b lg:border-b-0 lg:border-r border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-teal-900 text-teal-300 text-xs font-bold px-3 py-1 rounded-full border border-teal-700" id="lab-activity-num">
+                                    Activity 2.3
+                                </span>
+                                <span class="text-xs text-slate-400 font-mono" id="lab-ncert-ref">NCERT Page 19</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-amber-400 mb-2" id="lab-title">Reaction of Metal with Acid</h3>
+                            <p class="text-xs text-slate-300 mb-6 leading-relaxed" id="lab-desc">
+                                Observe zinc granules reacting with dilute sulfuric acid to produce hydrogen gas, tested with a burning candle pop sound.
+                            </p>
+
+                            <!-- Interactive Controls for current activity -->
+                            <div class="space-y-4 mb-6" id="lab-controls">
+                                <!-- Dynamic controls generated per activity -->
+                            </div>
+                        </div>
+
+                        <div>
+                            <button id="run-lab-btn" onclick="runCurrentLabStep()" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2">
+                                <span>▶ Run Experiment Action</span>
+                            </button>
+                            <button id="reset-lab-btn" onclick="resetCurrentLab()" class="w-full mt-2 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs font-semibold py-2 px-3 rounded-lg transition-colors">
+                                🔄 Reset Apparatus
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Visual Stage & Diagram (Right 8 cols) -->
+                    <div class="lg:col-span-8 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 relative min-h-[420px]">
+                        
+                        <!-- Top Observation Status -->
+                        <div class="flex items-center justify-between bg-slate-800/60 backdrop-blur border border-slate-700/60 rounded-xl px-4 py-2.5 mb-4">
+                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Apparatus Status</span>
+                            <span class="text-xs font-bold font-mono text-teal-400" id="lab-status-badge">Ready for Reactants</span>
+                        </div>
+
+                        <!-- SVG Animated Canvas Area -->
+                        <div class="flex-1 flex items-center justify-center relative py-6" id="lab-svg-stage">
+                            <!-- SVG renders dynamically -->
+                        </div>
+
+                        <!-- Bottom Equation & Conclusion Panel -->
+                        <div class="bg-slate-800/90 backdrop-blur rounded-2xl p-4 border border-slate-700/80 mt-4 space-y-2">
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-teal-400 font-mono">Balanced Chemical Equation:</span>
+                                <div class="font-code text-sm sm:text-base font-bold text-amber-300 mt-0.5" id="lab-equation-display">
+                                    Zn(s) + H₂SO₄(aq) → ZnSO₄(aq) + H₂(g)↑
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">Key Inference / Observation:</span>
+                                <p class="text-xs text-slate-200 mt-0.5 leading-normal" id="lab-inference-display">
+                                    Select options and press "Run Experiment Action" to trigger the reaction sequence.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Section 3: Interactive Virtual Reaction Lab -->
-    <section id="interactive-lab" class="py-16 bg-white border-b border-gray-100">
+    <!-- SECTION 4: Universal pH Scale & Everyday Life Applications -->
+    <section id="ph-scale" class="py-16 bg-slate-50 border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <span class="text-xs font-bold uppercase tracking-widest text-logo-orange">Interactive Laboratory</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">3. Chemical Reaction Simulator</h2>
-                <p class="mt-4 text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
-                    Mix acids, bases, metals, and salts below. Run simulations to view balanced equations, physical state changes, gas liberation tests, and deep educational analysis.
+            <div class="text-center mb-10">
+                <span class="text-teal-700 font-extrabold text-sm uppercase tracking-wider">Quantifying Acidity</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-1">4. The pH Scale & Everyday Life</h2>
+                <p class="mt-2 text-base text-slate-600 max-w-3xl mx-auto">
+                    pH scale measures $[H^+]$ concentration (0 = extremely acidic, 7 = neutral, 14 = strongly alkaline). 
+                    Slide to analyze hydronium $[H_3O^+]$ vs hydroxide $[OH^-]$ ratio and real substances.
                 </p>
             </div>
 
-            <!-- Virtual Lab App Interface -->
-            <div class="bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-gray-800 grid grid-cols-1 lg:grid-cols-12">
+            <!-- Interactive pH Simulator Card -->
+            <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-slate-200 mb-12">
                 
-                <!-- Controller Box (Left 5 Columns) -->
-                <div class="lg:col-span-5 p-6 sm:p-8 border-b lg:border-b-0 lg:border-r border-gray-800 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center space-x-3 mb-6">
-                            <span class="w-3.5 h-3.5 rounded-full bg-red-500 animate-pulse"></span>
-                            <span class="text-xs text-slate-400 uppercase tracking-widest font-bold">Virtual Lab Workbench</span>
-                        </div>
-
-                        <!-- Step 1: Select Type -->
-                        <div class="mb-6">
-                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Step 1: Select Reaction Pathway</label>
-                            <select id="sim-pathway" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white text-sm focus:ring-2 focus:ring-logo-orange focus:outline-none" onchange="onPathwayChange()">
-                                <option value="metal_acid">Acid + Metal (Gas Evolution)</option>
-                                <option value="metal_base">Base + Metal (Complex Salt)</option>
-                                <option value="carbonate_acid">Metal Carbonate + Acid ($CO_2$ Lime Water Test)</option>
-                                <option value="neutralization">Acid + Base (Exothermic Neutralization)</option>
-                                <option value="metal_oxide_acid">Metal Oxide (Basic) + Acid</option>
-                            </select>
-                        </div>
-
-                        <!-- Step 2: Select Specific Reactants -->
-                        <div class="mb-8">
-                            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Step 2: Choose Specific Reactants</label>
-                            <select id="sim-reactants" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-white text-sm focus:ring-2 focus:ring-logo-orange focus:outline-none">
-                                <!-- Populated dynamically -->
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Action Button -->
-                    <div>
-                        <button onclick="triggerSimulate()" class="w-full bg-logo-orange hover:bg-amber-600 text-white font-bold py-4 px-6 rounded-xl transition-all shadow-md flex items-center justify-center space-x-2 text-sm">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>Trigger Reaction & Analyze</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Live Test Tube & Equations Box (Right 7 Columns) -->
-                <div class="lg:col-span-7 p-6 sm:p-8 bg-slate-950 flex flex-col justify-between min-h-[450px]">
-                    
-                    <!-- Experimental Visual Area -->
-                    <div class="relative flex-grow flex items-center justify-center py-6">
-                        <!-- Beaker Visual container -->
-                        <div class="relative w-32 h-44 border-4 border-slate-700 border-t-0 rounded-b-3xl flex items-end justify-center bg-slate-900/30 overflow-hidden shadow-inner">
-                            <!-- Fluid Inside Beaker -->
-                            <div id="beaker-fluid" class="w-full h-1/2 bg-blue-500/20 transition-all duration-1000 ease-in-out relative">
-                                <!-- Interactive Bubbles -->
-                                <div id="bubble-group" class="absolute inset-0 opacity-0 transition-opacity duration-500">
-                                    <div class="bubble bubble-active-1 w-2.5 h-2.5 left-6"></div>
-                                    <div class="bubble bubble-active-2 w-3.5 h-3.5 left-12"></div>
-                                    <div class="bubble bubble-active-3 w-1.5 h-1.5 left-20"></div>
-                                    <div class="bubble bubble-active-4 w-2 h-2 left-16"></div>
-                                    <div class="bubble bubble-active-5 w-3 w-3 left-24"></div>
-                                </div>
-                            </div>
-                            <!-- Precipitate representation -->
-                            <div id="beaker-precipitate" class="absolute bottom-0 w-full h-0 bg-white/40 transition-all duration-1000 ease-in-out"></div>
-                        </div>
-
-                        <!-- Gas output cloud or indicator change -->
-                        <div id="gas-cloud" class="absolute top-4 opacity-0 transition-all duration-700 transform translate-y-4 text-center bg-slate-800 text-xs text-slate-300 font-mono py-1.5 px-3 rounded-full border border-slate-700">
-                            Gas Evolving...
-                        </div>
-                    </div>
-
-                    <!-- Lab Analysis Readout -->
-                    <div id="lab-readout" class="bg-slate-900 rounded-2xl p-5 border border-slate-800/80">
-                        <div id="lab-empty-state" class="text-center py-4 text-slate-500 text-sm">
-                            Configure reactants on the left panel and trigger the experiment.
-                        </div>
-                        <div id="lab-content" class="hidden space-y-4">
-                            <!-- Balanced Chemical Equation -->
-                            <div>
-                                <span class="text-[10px] font-bold text-logo-orange uppercase tracking-widest">Balanced Chemical Equation</span>
-                                <div id="chemical-equation" class="text-sm sm:text-base font-mono font-bold text-teal-300 bg-slate-950 p-3 rounded-xl border border-slate-850 overflow-x-auto mt-1">
-                                    <!-- LaTeX Reactant Line -->
-                                </div>
-                            </div>
-                            <!-- Physical Observation -->
-                            <div>
-                                <span class="text-[10px] font-bold text-logo-orange uppercase tracking-widest">Physical Observation</span>
-                                <p id="physical-observation" class="text-xs sm:text-sm text-slate-300 leading-relaxed mt-1">
-                                    Observation details...
-                                </p>
-                            </div>
-                            <!-- Board Concept Note -->
-                            <div class="bg-teal-950/40 border-l-4 border-teal-500 p-3 rounded-r-xl">
-                                <span class="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Board Concept Note</span>
-                                <p id="board-concept-note" class="text-xs text-teal-100/90 leading-relaxed mt-1">
-                                    Educational context...
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 4: pH Masterclass & Life Applications -->
-    <section id="ph-mastery" class="py-16 bg-slate-50 border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <span class="text-xs font-bold uppercase tracking-widest text-logo-orange font-semibold">Scale of Acidity</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">4. Interactive pH Simulator</h2>
-                <p class="mt-4 text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
-                    Drag the selector to measure the exact Hydrogen Ion concentration ($\text{[H}^+\text{]}$) and see the physical significance in agriculture, biology, and chemistry.
-                </p>
-            </div>
-
-            <div class="max-w-5xl mx-auto bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-gray-200">
-                <!-- Color bar visualization -->
-                <div class="mb-10 relative">
-                    <input type="range" min="0" max="14" value="7" class="ph-slider" id="ph-range-slider" oninput="handlePhChange()">
-                    <div class="flex justify-between text-[10px] sm:text-xs text-gray-500 font-extrabold mt-3 px-1">
-                        <span class="text-red-600">0 (Strong Acid)</span>
-                        <span class="text-green-600">7 (Neutral)</span>
-                        <span class="text-indigo-900">14 (Strong Base)</span>
-                    </div>
-                </div>
-
-                <!-- Simulation Output -->
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <!-- pH Meter display (Col 5) -->
-                    <div class="lg:col-span-5 flex flex-col items-center justify-center bg-slate-50 border border-gray-200 p-6 rounded-2xl">
-                        <div id="ph-indicator-strip" class="w-32 h-32 rounded-3xl shadow-lg flex flex-col items-center justify-center text-white font-black text-5xl transition-all duration-300" style="background-color: #8CC63F; text-shadow: 2px 2px 4px rgba(0,0,0,0.25);">
-                            7
-                        </div>
-                        <p id="ph-title-nature" class="text-xl font-bold mt-4 text-green-600">Neutral</p>
-                        <p id="ph-ratio-concentration" class="text-xs font-semibold text-gray-400 mt-1">$\text{[H}^+\text{]} = \text{[OH}^-\text{]}$</p>
-                    </div>
-
-                    <!-- pH Significance & Everyday context (Col 7) -->
-                    <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
-                        <!-- Common Substance -->
-                        <div class="bg-slate-50 border border-gray-150 p-5 rounded-2xl">
-                            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Common Representative</span>
-                            <h4 id="ph-substance-name" class="text-lg font-bold text-gray-900 mt-1">Pure Water, Human Blood</h4>
-                            <p id="ph-substance-desc" class="text-xs text-gray-500 mt-2">
-                                Clean water at neutral state has equal concentration of acid and base ions. Blood functions in a narrow window of 7.0 - 7.8.
-                            </p>
-                        </div>
-
-                        <!-- NCERT Practical application -->
-                        <div class="bg-teal-50 border-l-4 border-logo-green p-5 rounded-r-2xl">
-                            <span class="text-xs font-bold text-logo-green uppercase tracking-widest">Practical Board Board Significance</span>
-                            <p id="ph-significance-text" class="text-xs text-teal-900 leading-relaxed mt-2">
-                                Aquatic life cannot survive if rain water pH falls below 5.6 (Acid Rain). Lime or chalk is often added to lakes to neutralize high acidity.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Interactive Board Notes: pH in Everyday Life (MTG Pattern) -->
-                <div class="mt-10 pt-8 border-t border-gray-150">
-                    <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
-                        <svg class="w-5 h-5 text-logo-orange mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                        High-Yield Board Topics: pH in Daily Life
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-amber-50/50 p-4 rounded-xl border border-amber-200/50 text-xs">
-                            <h4 class="font-bold text-amber-900 mb-1">Tooth Decay (pH 5.5)</h4>
-                            <p class="text-amber-800/80 leading-relaxed">
-                                Bacteria degrade food debris into acid. Tooth enamel (Calcium Phosphate) corrodes below 5.5. Alkaline toothpastes are used to prevent this!
-                            </p>
-                        </div>
-                        <div class="bg-teal-50/50 p-4 rounded-xl border border-teal-200/50 text-xs">
-                            <h4 class="font-bold text-teal-900 mb-1">Digestive System (pH ~1.2)</h4>
-                            <p class="text-teal-850/80 leading-relaxed">
-                                HCl digests food. Overproduction causes indigestion and irritation. Magnesium Hydroxide ($\text{Mg(OH)}_2$) acts as an antacid to neutralize it.
-                            </p>
-                        </div>
-                        <div class="bg-red-50/50 p-4 rounded-xl border border-red-200/50 text-xs">
-                            <h4 class="font-bold text-red-900 mb-1">Self-Defense (Chemical War)</h4>
-                            <p class="text-red-850/80 leading-relaxed">
-                                Honeybee stings inject Methanoic/Formic Acid. Rubbing mild bases like baking soda neutralizes the sting and relieves pain.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 5: Salt Masterclass -->
-    <section id="salt-masterclass" class="py-16 bg-white border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="text-xs font-bold uppercase tracking-widest text-logo-orange">Manufacturing Chemistry</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">5. Industrial Production of Salts</h2>
-                <p class="mt-4 text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
-                    Comprehensive chemical breakdowns of the 5 essential salts tested in the Class 10 CBSE Board examination curriculum.
-                </p>
-            </div>
-
-            <!-- Tabbed/Accordion Interface for Salts -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Navigation Column (Left 4 Columns) -->
-                <div class="lg:col-span-4 space-y-3" id="salt-nav-container">
-                    <button onclick="switchSalt(0)" class="w-full text-left p-4 rounded-xl border-l-4 border-logo-orange bg-slate-50 font-bold text-sm text-gray-900 flex justify-between items-center transition-all salt-btn">
-                        <span>Sodium Hydroxide (NaOH)</span>
-                        <span class="text-xs text-gray-400">Chlor-Alkali</span>
-                    </button>
-                    <button onclick="switchSalt(1)" class="w-full text-left p-4 rounded-xl border-l-4 border-transparent hover:bg-slate-50 font-bold text-sm text-gray-600 flex justify-between items-center transition-all salt-btn">
-                        <span>Bleaching Powder (CaOCl₂)</span>
-                        <span class="text-xs text-gray-400">Disinfectant</span>
-                    </button>
-                    <button onclick="switchSalt(2)" class="w-full text-left p-4 rounded-xl border-l-4 border-transparent hover:bg-slate-50 font-bold text-sm text-gray-600 flex justify-between items-center transition-all salt-btn">
-                        <span>Baking Soda (NaHCO₃)</span>
-                        <span class="text-xs text-gray-400">Sodium Bicarbonate</span>
-                    </button>
-                    <button onclick="switchSalt(3)" class="w-full text-left p-4 rounded-xl border-l-4 border-transparent hover:bg-slate-50 font-bold text-sm text-gray-600 flex justify-between items-center transition-all salt-btn">
-                        <span>Washing Soda (Na₂CO₃·10H₂O)</span>
-                        <span class="text-xs text-gray-400">Water Softener</span>
-                    </button>
-                    <button onclick="switchSalt(4)" class="w-full text-left p-4 rounded-xl border-l-4 border-transparent hover:bg-slate-50 font-bold text-sm text-gray-600 flex justify-between items-center transition-all salt-btn">
-                        <span>Plaster of Paris & Gypsum</span>
-                        <span class="text-xs text-gray-400">Dehydration</span>
-                    </button>
-                </div>
-
-                <!-- Salt Info Panel (Right 8 Columns) -->
-                <div class="lg:col-span-8 bg-slate-50 border border-gray-200 rounded-3xl p-6 sm:p-8 relative min-h-[400px] flex flex-col justify-between">
-                    <div id="salt-content-box">
-                        <!-- Dynamic Content injected here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 6: CBSE Mock Test / Board Quiz -->
-    <section id="board-quiz" class="py-16 bg-slate-900 text-white">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <span class="text-xs font-bold uppercase tracking-widest text-logo-orange">Interactive Assessment</span>
-                <h2 class="text-3xl font-extrabold text-white mt-2">CBSE Board Exam Mock Quiz</h2>
-                <p class="mt-3 text-slate-400 text-xs sm:text-sm">
-                    Assess your preparation with conceptual chemistry questions curated from MTG Exemplar and Oswaal papers.
-                </p>
-            </div>
-
-            <!-- Quiz Card -->
-            <div class="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
-                <!-- Progress Header -->
-                <div class="flex justify-between items-center border-b border-slate-800 pb-4 mb-6">
-                    <span class="text-xs font-bold text-logo-orange tracking-widest uppercase" id="quiz-progress">Question 1 of 5</span>
-                    <span class="text-xs bg-slate-800 text-slate-300 font-bold py-1 px-3 rounded-full" id="quiz-score-badge">Score: 0</span>
-                </div>
-
-                <!-- Question Body -->
+                <!-- Range Slider -->
                 <div class="mb-8">
-                    <h3 class="text-lg sm:text-xl font-bold leading-relaxed mb-6" id="quiz-question-text">
-                        Loading question...
-                    </h3>
-                    
-                    <!-- Choices Grid -->
-                    <div class="grid grid-cols-1 gap-4" id="quiz-options-container">
-                        <!-- Populated by JS -->
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-sm font-bold text-slate-700">Slide pH Value (0 to 14):</label>
+                        <span class="font-code text-lg font-extrabold text-teal-800" id="ph-slider-val-text">pH = 7.0</span>
+                    </div>
+                    <input type="range" min="0" max="14" step="0.5" value="7" class="ph-slider" id="ph-range-slider" oninput="updatePHInteractive()">
+                    <div class="flex justify-between text-[11px] font-bold text-slate-500 mt-2 px-1">
+                        <span class="text-red-600">0 (Very Acidic)</span>
+                        <span class="text-emerald-600">7 (Neutral)</span>
+                        <span class="text-indigo-900">14 (Very Alkaline)</span>
                     </div>
                 </div>
 
-                <!-- Feedback & Explanation Box -->
-                <div id="quiz-explanation-box" class="hidden bg-slate-900 border-l-4 border-logo-orange p-5 rounded-r-2xl mb-6">
-                    <p class="text-xs font-bold uppercase tracking-widest text-logo-orange" id="explanation-title">Correct Answer!</p>
-                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2" id="explanation-text">
-                        Explanation details here...
+                <!-- Dynamic Visualizer Box -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    
+                    <!-- Color Box -->
+                    <div id="ph-color-indicator" class="h-36 rounded-2xl shadow-inner flex flex-col items-center justify-center text-white font-black text-5xl transition-colors duration-300" style="background-color: #8CC63F; text-shadow: 0 2px 4px rgba(0,0,0,0.4);">
+                        <span>7.0</span>
+                        <span class="text-xs font-medium tracking-widest uppercase mt-1 text-white/90" id="ph-indicator-label">NEUTRAL</span>
+                    </div>
+
+                    <!-- Ion Balance Visualization -->
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wide block">Ion Concentration Ratio</span>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-red-600">[H⁺ / H₃O⁺] Ions:</span>
+                                <span id="h-ion-percent" class="font-mono">50%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                                <div id="h-ion-bar" class="bg-red-500 h-full transition-all duration-300" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-blue-600">[OH⁻] Hydroxide Ions:</span>
+                                <span id="oh-ion-percent" class="font-mono">50%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                                <div id="oh-ion-bar" class="bg-blue-500 h-full transition-all duration-300" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Substance Detail Card -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-teal-800">Common Substance Example</span>
+                        <h4 class="text-lg font-bold text-slate-900 mt-0.5" id="ph-substance-title">Pure Water & Human Blood</h4>
+                        <p class="text-xs text-slate-600 mt-2 leading-relaxed" id="ph-substance-desc">
+                            Blood maintains a strict narrow range between 7.0 to 7.8 for optimal cellular metabolism.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5 Essential Daily Life Applications Grid -->
+            <div class="mb-12">
+                <h3 class="text-xl font-bold text-slate-900 mb-6 text-center">5 Critical Applications of pH in Daily Life (NCERT Chapter 2.3.1)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Soil pH -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold mb-3">
+                            🌱
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-base mb-1">1. Plant Growth & Soil pH</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Plants require a specific pH range (~6.0–7.5). If soil is too acidic (pH &lt; 6), farmers treat it with <strong>Quicklime (CaO)</strong>, <strong>Slaked Lime ($Ca(OH)_2$)</strong>, or <strong>Chalk ($CaCO_3$)</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Digestive System -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold mb-3">
+                            🩺
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-base mb-1">2. pH in Our Digestive System</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Stomach produces dilute $HCl$ (pH ~1.2) for digestion. Overeating causes excess acid and indigestion pain. <strong>Antacids</strong> like <strong>Milk of Magnesia ($Mg(OH)_2$)</strong> neutralise excess acid.
+                        </p>
+                    </div>
+
+                    <!-- Tooth Decay -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold mb-3">
+                            🦷
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-base mb-1">3. Tooth Decay Prevention</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Tooth enamel is made of <em>Calcium Hydroxyapatite</em> (hardest body substance). Tooth decay starts when mouth pH drops <strong>below 5.5</strong> due to bacterial acid production. Toothpaste (basic) neutralizes acid.
+                        </p>
+                    </div>
+
+                    <!-- Self Defense Plants/Animals -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                        <div class="w-10 h-10 rounded-xl bg-red-100 text-red-700 flex items-center justify-center font-bold mb-3">
+                            🐝
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-base mb-1">4. Animal & Plant Warfare</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Bee sting and Nettle plant leaves inject <strong>Methanoic Acid (HCOOH)</strong> causing pain. Mild bases like baking soda or rubbing basic <strong>Dock plant leaves</strong> neutralizes the sting!
+                        </p>
+                    </div>
+
+                    <!-- Acid Rain -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold mb-3">
+                            🌧️
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-base mb-1">5. Aquatic Life & Acid Rain</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            When rainwater pH drops <strong>below 5.6</strong>, it is called Acid Rain. When it flows into rivers, it lowers aquatic water pH, making fish survival difficult.
+                        </p>
+                    </div>
+
+                    <!-- Venus Atmosphere -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 card-hover">
+                        <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center font-bold mb-3">
+                            🪐
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-base mb-1">Atmosphere of Venus</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Venus atmosphere is made up of thick white and yellowish clouds of concentrated <strong>Sulfuric Acid ($H_2SO_4$)</strong>. Life cannot exist under such hyper-acidic conditions!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Natural Acids Reference Table (Table 2.3 NCERT) -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    NCERT Table 2.3: Naturally Occurring Acids
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><span class="text-slate-500 block">Vinegar</span> <strong class="text-slate-900 text-sm">Acetic Acid</strong></div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><span class="text-slate-500 block">Orange / Lemon</span> <strong class="text-slate-900 text-sm">Citric Acid</strong></div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><span class="text-slate-500 block">Tamarind</span> <strong class="text-slate-900 text-sm">Tartaric Acid</strong></div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><span class="text-slate-500 block">Tomato</span> <strong class="text-slate-900 text-sm">Oxalic Acid</strong></div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><span class="text-slate-500 block">Sour Milk / Curd</span> <strong class="text-slate-900 text-sm">Lactic Acid</strong></div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><span class="text-slate-500 block">Ant Sting</span> <strong class="text-slate-900 text-sm">Methanoic Acid</strong></div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><span class="text-slate-500 block">Nettle Leaf Sting</span> <strong class="text-slate-900 text-sm">Methanoic Acid</strong></div>
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100"><span class="text-slate-500 block">Gastric Juice</span> <strong class="text-slate-900 text-sm">Hydrochloric Acid</strong></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: Chlor-Alkali Process & Chemicals from Common Salt -->
+    <section id="chlor-alkali" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="text-teal-700 font-extrabold text-sm uppercase tracking-wider">Chapter 2.4 • Industrial Chemistry</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-1">5. Chlor-Alkali Process & Important Salts</h2>
+                <p class="mt-2 text-base text-slate-600 max-w-3xl mx-auto">
+                    Common Salt ($NaCl$) is the key raw material for manufacturing essential industrial chemicals. 
+                    Explore the Chlor-Alkali electrolysis cell and master 5 key salts.
+                </p>
+            </div>
+
+            <!-- Chlor-Alkali Interactive Visualizer -->
+            <div class="bg-slate-900 rounded-3xl p-6 sm:p-8 text-white mb-12 shadow-xl border border-slate-800">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-8">
+                    
+                    <!-- Diagram Left -->
+                    <div class="w-full lg:w-1/2">
+                        <span class="text-xs font-bold font-mono text-amber-400 bg-amber-950/80 px-3 py-1 rounded-full border border-amber-600/40">
+                            Electrolysis of Brine: 2NaCl(aq) + 2H₂O(l) → 2NaOH(aq) + Cl₂(g) + H₂(g)
+                        </span>
+                        
+                        <!-- SVG Cell Diagram -->
+                        <div class="mt-6 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                            <svg viewBox="0 0 500 280" class="w-full h-auto">
+                                <!-- Cell Outer Container -->
+                                <rect x="50" y="40" width="400" height="190" rx="16" fill="#0f172a" stroke="#334155" stroke-width="3"/>
+                                
+                                <!-- Membrane in center -->
+                                <line x1="250" y1="40" x2="250" y2="230" stroke="#f59e0b" stroke-width="4" stroke-dasharray="6 6"/>
+                                <text x="250" y="250" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">Membrane</text>
+
+                                <!-- Anode (+) Left -->
+                                <rect x="110" y="60" width="20" height="130" rx="4" fill="#ef4444"/>
+                                <text x="120" y="50" fill="#ef4444" font-size="12" font-weight="bold" text-anchor="middle">ANODE (+)</text>
+                                <!-- Cl2 Gas Bubbles -->
+                                <circle cx="120" cy="100" r="5" fill="#fef08a" class="animate-ping"/>
+                                <circle cx="125" cy="130" r="4" fill="#fef08a"/>
+                                <text x="120" y="210" fill="#fef08a" font-size="13" font-weight="bold" text-anchor="middle">Cl₂ (g)</text>
+
+                                <!-- Cathode (-) Right -->
+                                <rect x="370" y="60" width="20" height="130" rx="4" fill="#3b82f6"/>
+                                <text x="380" y="50" fill="#3b82f6" font-size="12" font-weight="bold" text-anchor="middle">CATHODE (-)</text>
+                                <!-- H2 Gas Bubbles -->
+                                <circle cx="380" cy="90" r="5" fill="#a5f3fc" class="animate-ping"/>
+                                <circle cx="375" cy="140" r="4" fill="#a5f3fc"/>
+                                <text x="380" y="210" fill="#a5f3fc" font-size="13" font-weight="bold" text-anchor="middle">H₂ (g)</text>
+
+                                <!-- Brine Inflow & NaOH Outflow -->
+                                <path d="M 10 120 L 50 120" stroke="#38bdf8" stroke-width="4" marker-end="url(#arrow)"/>
+                                <text x="25" y="110" fill="#38bdf8" font-size="10" font-weight="bold">Brine In</text>
+
+                                <path d="M 450 180 L 490 180" stroke="#10b981" stroke-width="4"/>
+                                <text x="470" y="170" fill="#10b981" font-size="10" font-weight="bold" text-anchor="middle">NaOH Out</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Uses Breakdown Right -->
+                    <div class="w-full lg:w-1/2 space-y-4">
+                        <h3 class="text-xl font-bold text-slate-100">Three Vital Industrial Products</h3>
+                        
+                        <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-amber-400">
+                            <div class="flex justify-between font-bold text-amber-300 text-sm">
+                                <span>1. Chlorine Gas (Cl₂) — At Anode</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mt-1">
+                                Used for water treatment, swimming pools, PVC pipes, disinfectants, CFCs, and pesticides.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-cyan-400">
+                            <div class="flex justify-between font-bold text-cyan-300 text-sm">
+                                <span>2. Hydrogen Gas (H₂) — At Cathode</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mt-1">
+                                Rocket fuel, margarine manufacturing, and ammonia production for agricultural fertilizers.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-800 p-4 rounded-xl border-l-4 border-emerald-400">
+                            <div class="flex justify-between font-bold text-emerald-300 text-sm">
+                                <span>3. Sodium Hydroxide (NaOH) — Near Cathode</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mt-1">
+                                Degreasing metals, soap and detergent manufacturing, paper mills, artificial fibers (rayon).
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Detailed Cards for 5 Key Salts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Sodium Hydroxide -->
+                <div class="bg-slate-50 rounded-2xl p-6 border-t-4 border-t-teal-700 border-x border-b border-slate-200 card-hover">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Caustic Soda</span>
+                    <h3 class="text-xl font-bold text-slate-900">Sodium Hydroxide</h3>
+                    <p class="font-code text-xs font-bold text-teal-800 mb-3">NaOH</p>
+                    <p class="text-xs text-slate-600 mb-3">
+                        Formed via Chlor-Alkali process electrolysis of brine. Highly basic alkali.
                     </p>
+                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-code text-[11px] text-slate-800 mb-3">
+                        2NaCl + 2H₂O → 2NaOH + Cl₂ + H₂
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 block mb-1">Key Board Uses:</span>
+                    <p class="text-xs text-slate-500">Soaps, paper making, metal degreasing.</p>
                 </div>
 
-                <!-- Navigation Controls -->
-                <div class="flex justify-between">
-                    <button onclick="prevQuestion()" id="quiz-prev-btn" class="text-xs text-slate-400 hover:text-white font-bold transition-all disabled:opacity-30 disabled:pointer-events-none" disabled>
+                <!-- Bleaching Powder -->
+                <div class="bg-slate-50 rounded-2xl p-6 border-t-4 border-t-amber-500 border-x border-b border-slate-200 card-hover">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Calcium Oxychloride</span>
+                    <h3 class="text-xl font-bold text-slate-900">Bleaching Powder</h3>
+                    <p class="font-code text-xs font-bold text-amber-700 mb-3">CaOCl₂</p>
+                    <p class="text-xs text-slate-600 mb-3">
+                        Action of chlorine gas on dry slaked lime [$Ca(OH)_2$].
+                    </p>
+                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-code text-[11px] text-slate-800 mb-3">
+                        Ca(OH)₂ + Cl₂ → CaOCl₂ + H₂O
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 block mb-1">Key Board Uses:</span>
+                    <p class="text-xs text-slate-500">Textile cotton bleaching, oxidizing agent, disinfecting drinking water.</p>
+                </div>
+
+                <!-- Baking Soda -->
+                <div class="bg-slate-50 rounded-2xl p-6 border-t-4 border-t-blue-500 border-x border-b border-slate-200 card-hover">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sodium Hydrogen Carbonate</span>
+                    <h3 class="text-xl font-bold text-slate-900">Baking Soda</h3>
+                    <p class="font-code text-xs font-bold text-blue-700 mb-3">NaHCO₃</p>
+                    <p class="text-xs text-slate-600 mb-3">
+                        Mild non-corrosive basic salt. On heating during baking, liberates $CO_2$ gas bubbles.
+                    </p>
+                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-code text-[11px] text-slate-800 mb-3">
+                        2NaHCO₃ --Δ--> Na₂CO₃ + H₂O + CO₂↑
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 block mb-1">Key Board Uses:</span>
+                    <p class="text-xs text-slate-500">Antacids, crispy pakoras, fire extinguishers. (Mixed with tartaric acid = Baking Powder!).</p>
+                </div>
+
+                <!-- Washing Soda -->
+                <div class="bg-slate-50 rounded-2xl p-6 border-t-4 border-t-indigo-600 border-x border-b border-slate-200 card-hover">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hydrated Sodium Carbonate</span>
+                    <h3 class="text-xl font-bold text-slate-900">Washing Soda</h3>
+                    <p class="font-code text-xs font-bold text-indigo-700 mb-3">Na₂CO₃·10H₂O</p>
+                    <p class="text-xs text-slate-600 mb-3">
+                        Recrystallization of anhydrous sodium carbonate with 10 water molecules of crystallization.
+                    </p>
+                    <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-code text-[11px] text-slate-800 mb-3">
+                        Na₂CO₃ + 10H₂O → Na₂CO₃·10H₂O
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 block mb-1">Key Board Uses:</span>
+                    <p class="text-xs text-slate-500">Glass, soap & paper industry, removing permanent hardness of water, Borax compound.</p>
+                </div>
+
+                <!-- Plaster of Paris vs Gypsum -->
+                <div class="bg-slate-50 rounded-2xl p-6 border-t-4 border-t-purple-600 border-x border-b border-slate-200 card-hover lg:col-span-2">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Calcium Sulphate Hemihydrate</span>
+                            <h3 class="text-xl font-bold text-slate-900">Plaster of Paris (POP)</h3>
+                            <p class="font-code text-xs font-bold text-purple-700 mb-3">CaSO₄·½H₂O</p>
+                            <p class="text-xs text-slate-600 mb-3">
+                                Formed by heating Gypsum ($CaSO_4 \cdot 2H_2O$) at <strong>373 K (100°C)</strong>. On adding water, sets back into hard solid Gypsum.
+                            </p>
+                            <div class="bg-white p-2.5 rounded-lg border border-slate-200 font-code text-[11px] text-slate-800 mb-2">
+                                CaSO₄·½H₂O + 1½H₂O → CaSO₄·2H₂O
+                            </div>
+                            <span class="text-xs font-bold text-slate-700 block mb-1">Uses:</span>
+                            <p class="text-xs text-slate-500">Fractured bone plasters, decorative statues, smooth ceiling designs.</p>
+                        </div>
+                        <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 flex flex-col justify-between">
+                            <div>
+                                <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wider mb-2">🚨 Critical Board Question Caution</h4>
+                                <p class="text-xs text-amber-800 leading-relaxed">
+                                    <strong>Why 373 K?</strong> If Gypsum is heated above 373 K, all water of crystallization is lost, yielding anhydrous $CaSO_4$ (known as <em>Dead Burnt Plaster</em>), which loses its setting property with water!
+                                </p>
+                            </div>
+                            <div class="mt-3 text-[11px] font-code text-amber-950 font-semibold bg-amber-100 p-2 rounded">
+                                Water of Crystallization: Copper Sulphate = CuSO₄·5H₂O (Blue)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: NCERT Self-Assessment Quiz & Board Exam Questions -->
+    <section id="quiz-section" class="py-16 bg-slate-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10">
+                <span class="text-amber-400 font-extrabold text-sm uppercase tracking-wider">Exam Prep Hub</span>
+                <h2 class="text-3xl font-extrabold text-white mt-1">6. Interactive NCERT Practice & Quiz</h2>
+                <p class="mt-2 text-base text-slate-300 max-w-2xl mx-auto">
+                    Test your understanding with board exam standard multiple-choice questions with step-by-step solutions.
+                </p>
+            </div>
+
+            <div class="max-w-3xl mx-auto bg-slate-800/90 rounded-3xl p-6 sm:p-8 border border-slate-700 shadow-2xl">
+                
+                <!-- Quiz Header -->
+                <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+                    <div>
+                        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Question <span id="quiz-current-num">1</span> of 5</span>
+                        <h4 class="text-base sm:text-lg font-bold text-amber-300 mt-1" id="quiz-question-text">
+                            Loading quiz question...
+                        </h4>
+                    </div>
+                    <div class="bg-teal-900 text-teal-300 font-mono font-bold text-sm px-3 py-1 rounded-lg border border-teal-700">
+                        Score: <span id="quiz-score">0</span>
+                    </div>
+                </div>
+
+                <!-- Options Grid -->
+                <div class="space-y-3 mb-6" id="quiz-options-container">
+                    <!-- Dynamic choices -->
+                </div>
+
+                <!-- Explanation Box -->
+                <div id="quiz-explanation-box" class="hidden bg-slate-900/90 p-4 rounded-xl border border-slate-700 text-xs text-slate-200 mb-6 leading-relaxed">
+                    <!-- Dynamic solution -->
+                </div>
+
+                <!-- Quiz Navigation Controls -->
+                <div class="flex justify-between items-center">
+                    <button id="quiz-prev-btn" onclick="prevQuizQuestion()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-semibold px-4 py-2 rounded-xl text-xs transition-colors disabled:opacity-50">
                         ← Previous
                     </button>
-                    <button onclick="nextQuestion()" id="quiz-next-btn" class="bg-logo-orange hover:bg-amber-600 text-slate-950 font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
+                    <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-xs transition-colors">
                         Next Question →
                     </button>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Detailed Footer -->
-    <footer class="bg-gray-950 text-white py-16 border-t border-slate-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div>
-                <span class="text-logo-green font-black text-xl tracking-tight">Acids, Bases </span>
-                <span class="text-logo-orange font-black text-xl tracking-tight ml-1">and Salts</span>
-                <p class="text-xs text-slate-500 mt-4 leading-relaxed">
-                    A comprehensive educational application developed strictly adhering to the CBSE Class 10 NCERT, Educart, MTG, and Oswaal methodologies. Complete with virtual lab simulations and interactive pH diagnostics.
-                </p>
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-white py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center space-x-2 mb-4">
+                <span class="text-logo-green font-extrabold text-xl">Acids, Bases </span>
+                <span class="text-logo-orange font-extrabold text-xl">and Salts</span>
             </div>
-            <div>
-                <h4 class="text-sm font-bold tracking-wider uppercase mb-4 text-logo-orange">Quick Navigation</h4>
-                <ul class="text-xs text-slate-400 space-y-2.5">
-                    <li><a href="#core-concepts" class="hover:text-white transition-colors">Arrhenius Dissociation</a></li>
-                    <li><a href="#indicator-section" class="hover:text-white transition-colors">Indicators & Litmus Paper</a></li>
-                    <li><a href="#interactive-lab" class="hover:text-white transition-colors">Virtual Reaction Workbench</a></li>
-                    <li><a href="#ph-mastery" class="hover:text-white transition-colors">pH Scale Daily Significance</a></li>
-                    <li><a href="#salt-masterclass" class="hover:text-white transition-colors">Chlor-Alkali and POP Masterclass</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-sm font-bold tracking-wider uppercase mb-4 text-logo-orange">Board Exam Preparation</h4>
-                <p class="text-xs text-slate-400 leading-relaxed mb-4">
-                    Educator's cheat sheet compiled directly using CBSE curriculum guides. Use the virtual workbench to demonstrate reactions dynamically in class!
-                </p>
-                <div class="text-[10px] text-slate-500 font-mono">
-                    Updated: June 2026 | Environment: Class 10 Board Companion
-                </div>
-            </div>
+            <p class="text-slate-400 text-sm max-w-xl mx-auto">
+                Class 10 Chemistry Interactive Study Material & Virtual Lab standard aligned with NCERT / CBSE curriculum patterns.
+            </p>
+            <p class="text-slate-500 text-xs mt-4">
+                Built for students, teachers, and science enthusiasts. Designed for seamless mobile & desktop learning.
+            </p>
         </div>
     </footer>
 
-    <!-- Complete Interactive Logic -->
+    <!-- INTERACTIVE JAVASCRIPT LOGIC ENGINE -->
     <script>
-        /************************************************************************
-         * VIRTUAL LABORATORY COMPANION LOGIC
-         ************************************************************************/
-        const pathwayData = {
-            'metal_acid': {
-                reactants: [
-                    { id: 'zn_hcl', label: 'Zinc granules ($Zn$) + Dilute hydrochloric acid ($HCl$)' },
-                    { id: 'fe_h2so4', label: 'Iron filings ($Fe$) + Dilute sulphuric acid ($H_2SO_4$)' },
-                    { id: 'cu_hcl', label: 'Copper turnings ($Cu$) + Dilute hydrochloric acid ($HCl$)' }
-                ],
-                outcomes: {
-                    'zn_hcl': {
-                        equation: '\\text{Zn(s)} + 2\\text{HCl(aq)} \\rightarrow \\text{ZnCl}_2\\text{(aq)} + \\text{H}_2\\text{(g)}\\uparrow',
-                        observation: 'Vigorous rapid bubbling of a colorless, odorless gas. Test tube feels warm (exothermic). The evolving gas when tested with a burning matchstick burns with a characteristic "POP" sound confirming Hydrogen.',
-                        concept: 'Active metals lying above Hydrogen in the reactivity series displace Hydrogen from dilute acids to form salt and Hydrogen gas. Highly crucial test in board practicals!',
-                        beakerColor: '#cbd5e1', // Zinc color fluid
-                        hasBubbles: true,
-                        isPrecipitate: false,
-                        cloudText: 'H₂ Gas Released!'
-                    },
-                    'fe_h2so4': {
-                        equation: '\\text{Fe(s)} + \\text{H}_2\\text{SO}_4\\text{(aq)} \\rightarrow \\text{FeSO}_4\\text{(aq)} + \\text{H}_2\\text{(g)}\\uparrow',
-                        observation: 'Slow bubbling of gas. Solution gradually turns a light green color due to the formation of Ferrous Sulphate (FeSO₄).',
-                        concept: 'Iron is moderately active. It reacts slowly with dilute sulphuric acid releasing Hydrogen gas. Light green crystals are also formed upon slow evaporation.',
-                        beakerColor: '#dcfce7', // light green
-                        hasBubbles: true,
-                        isPrecipitate: false,
-                        cloudText: 'H₂ Gas Released!'
-                    },
-                    'cu_hcl': {
-                        equation: '\\text{Cu(s)} + \\text{HCl(aq)} \\rightarrow \\text{No Reaction}',
-                        observation: 'Absolutely no changes visible. No bubble evolution, solution remains clear, copper metal remains at the bottom.',
-                        concept: 'Copper lies below Hydrogen in the chemical reactivity series, meaning it cannot displace Hydrogen from dilute hydrochloric or sulfuric acids. Exceptionally popular Board MCQ!',
-                        beakerColor: 'rgba(255,255,255,0.1)',
-                        hasBubbles: false,
-                        isPrecipitate: false,
-                        cloudText: 'No Reaction!'
-                    }
-                }
-            },
-            'metal_base': {
-                reactants: [
-                    { id: 'zn_naoh', label: 'Zinc Metal ($Zn$) + Concentrated Sodium Hydroxide ($NaOH$)' }
-                ],
-                outcomes: {
-                    'zn_naoh': {
-                        equation: '\\text{Zn(s)} + 2\\text{NaOH(aq)} \\xrightarrow{\\text{Heat}} \\text{Na}_2\\text{ZnO}_2\\text{(aq)} + \\text{H}_2\\text{(g)}\\uparrow',
-                        observation: 'Requires heating. Moderate bubble evolution of Hydrogen gas occurs and a colorless solution of Sodium Zincate is formed.',
-                        concept: 'Zinc is an amphoteric metal. It reacts with both strong acids and bases. The product is Sodium Zincate, a highly tested complex salt formula in board exams.',
-                        beakerColor: '#cbd5e1',
-                        hasBubbles: true,
-                        isPrecipitate: false,
-                        cloudText: 'H₂ Gas Evolving!'
-                    }
-                }
-            },
-            'carbonate_acid': {
-                reactants: [
-                    { id: 'na2co3_hcl', label: 'Sodium Carbonate ($Na_2CO_3$) + Hydrochloric Acid ($HCl$)' },
-                    { id: 'limewater_co2', label: 'Passing liberated $CO_2$ through Lime Water ($Ca(OH)_2$)' }
-                ],
-                outcomes: {
-                    'na2co3_hcl': {
-                        equation: '\\text{Na}_2\\text{CO}_3\\text{(s)} + 2\\text{HCl(aq)} \\rightarrow 2\\text{NaCl(aq)} + \\text{H}_2\\text{O(l)} + \\text{CO}_2\\text{(g)}\\uparrow',
-                        observation: 'Extremely rapid brisk effervescence is visible. A colorless gas is liberated which extinguishes a burning splinter.',
-                        concept: 'All metal carbonates/bicarbonates react with dilute acids to liberate Carbon Dioxide gas, salt, and water. Brisk effervescence is the characteristic indicator of CO₂.',
-                        beakerColor: 'rgba(255,255,255,0.15)',
-                        hasBubbles: true,
-                        isPrecipitate: false,
-                        cloudText: 'Brisk CO₂ Evolved!'
-                    },
-                    'limewater_co2': {
-                        equation: '\\text{Ca(OH)}_2\\text{(aq)} + \\text{CO}_2\\text{(g)} \\rightarrow \\text{CaCO}_3\\text{(s)}\\downarrow + \\text{H}_2\\text{O(l)} \\quad \\text{[Excess CO}_2: \\rightarrow \\text{Ca(HCO}_3)_2\\text{]}',
-                        observation: 'Lime water turns completely milky/cloudy. If we continue passing CO₂ for a longer duration, the milkiness vanishes entirely, leaving a clear solution.',
-                        concept: 'Carbon dioxide reacts with calcium hydroxide (lime water) to form insoluble Calcium Carbonate precipitate (milky). Excess carbon dioxide turns it into soluble Calcium Hydrogen Carbonate, making the solution clear.',
-                        beakerColor: '#ffffff', // Milky white beaker fluid
-                        hasBubbles: false,
-                        isPrecipitate: true,
-                        cloudText: 'Turns Milky!'
-                    }
-                }
-            },
-            'neutralization': {
-                reactants: [
-                    { id: 'naoh_hcl', label: 'Sodium Hydroxide ($NaOH$) + Hydrochloric Acid ($HCl$)' }
-                ],
-                outcomes: {
-                    'naoh_hcl': {
-                        equation: '\\text{NaOH(aq)} + \\text{HCl(aq)} \\rightarrow \\text{NaCl(aq)} + \\text{H}_2\\text{O(l)}',
-                        observation: 'No distinct physical color change, but the test tube temperature spikes significantly (extremely exothermic neutralization).',
-                        concept: 'Neutralization involves combining acidic $\\text{H}^+$ and basic $\\text{OH}^-$ ions to yield stable liquid water molecules, releasing hydration energy.',
-                        beakerColor: 'rgba(59, 130, 246, 0.2)',
-                        hasBubbles: false,
-                        isPrecipitate: false,
-                        cloudText: 'Heat Released!'
-                    }
-                }
-            },
-            'metal_oxide_acid': {
-                reactants: [
-                    { id: 'cuo_hcl', label: 'Copper Oxide ($CuO$ black powder) + Dilute Hydrochloric Acid ($HCl$)' }
-                ],
-                outcomes: {
-                    'cuo_hcl': {
-                        equation: '\\text{CuO(s)} + 2\\text{HCl(aq)} \\rightarrow \\text{CuCl}_2\\text{(aq)} + \\text{H}_2\\text{O(l)}',
-                        observation: 'The black color Copper Oxide powder gradually dissolves in HCl. The solution transforms into a gorgeous deep blue-green color.',
-                        concept: 'Metal oxides are chemically basic in nature. They react with acids to produce salt and water, similar to neutralization. The blue-green hue is due to the hydrated Copper Chloride ion.',
-                        beakerColor: '#0f766e', // Deep blue-green
-                        hasBubbles: false,
-                        isPrecipitate: false,
-                        cloudText: 'Color Change!'
-                    }
-                }
-            }
-        };
+        /* Mobile Menu Toggle */
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
 
-        // Initialize Virtual Lab
-        function onPathwayChange() {
-            const pathway = document.getElementById('sim-pathway').value;
-            const selectReactants = document.getElementById('sim-reactants');
-            selectReactants.innerHTML = '';
-
-            pathwayData[pathway].reactants.forEach(r => {
-                const opt = document.createElement('option');
-                opt.value = r.id;
-                opt.textContent = r.label.replace(/\$/g, ""); // strip math characters for dropdown read-ability
-                selectReactants.appendChild(opt);
-            });
-            // Hide display elements until run
-            document.getElementById('lab-content').classList.add('hidden');
-            document.getElementById('lab-empty-state').classList.remove('hidden');
-            resetBeaker();
-        }
-
-        function resetBeaker() {
-            document.getElementById('beaker-fluid').style.height = '50%';
-            document.getElementById('beaker-fluid').style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
-            document.getElementById('beaker-precipitate').style.height = '0px';
-            document.getElementById('bubble-group').classList.add('opacity-0');
-            document.getElementById('gas-cloud').classList.add('opacity-0');
-        }
-
-        function triggerSimulate() {
-            const pathway = document.getElementById('sim-pathway').value;
-            const reactId = document.getElementById('sim-reactants').value;
-            const outcome = pathwayData[pathway].outcomes[reactId];
-
-            if (!outcome) return;
-
-            // Display elements
-            document.getElementById('lab-empty-state').classList.add('hidden');
-            document.getElementById('lab-content').classList.remove('hidden');
-
-            // Render math equations dynamically inside the lab
-            const eqBox = document.getElementById('chemical-equation');
-            eqBox.innerHTML = `$$${outcome.equation}$$`;
-            MathJax.typesetPromise([eqBox]);
-
-            // Set observations and notes
-            document.getElementById('physical-observation').textContent = outcome.observation;
-            document.getElementById('board-concept-note').textContent = outcome.concept;
-
-            // Trigger beaker graphical updates
-            resetBeaker();
-            setTimeout(() => {
-                // Color fluid inside beaker
-                document.getElementById('beaker-fluid').style.backgroundColor = outcome.beakerColor;
-                
-                if (outcome.hasBubbles) {
-                    document.getElementById('bubble-group').classList.remove('opacity-0');
-                }
-                if (outcome.isPrecipitate) {
-                    document.getElementById('beaker-precipitate').style.height = '20px';
-                }
-                
-                // Show gas cloud
-                const cloud = document.getElementById('gas-cloud');
-                cloud.textContent = outcome.cloudText;
-                cloud.classList.remove('opacity-0');
-            }, 100);
-        }
-
-        /************************************************************************
-         * pH METER SCALING LOGIC
-         ************************************************************************/
-        const phMetrics = [
-            { nat: 'Strongly Acidic', ratio: '\\text{[H]}^+ \\gg \\text{[OH]}^-', color: '#EE2024', name: 'Battery Acid / Gastric Juice', desc: 'Concentrated hydrochloric acid secreted in stomach to digest food. Exteme caution: highly corrosive to soft biological tissues.' },
-            { nat: 'Strongly Acidic', ratio: '\\text{[H]}^+ \\gg \\text{[OH]}^-', color: '#F45D22', name: 'Gastric Juice / Lemon Juice', desc: 'Extremely acidic state. Citric and hydrochloric acids present.' },
-            { nat: 'Strongly Acidic', ratio: '\\text{[H]}^+ \\gg \\text{[OH]}^-', color: '#F78F1E', name: 'Lemon Juice / Vinegar', desc: 'Vinegar containing 5-8% acetic acid. Distinctively sour, corrodes carbonate rocks.' },
-            { nat: 'Moderately Acidic', ratio: '\\text{[H]}^+ > \\text{[OH]}^-', color: '#F9B222', name: 'Vinegar / Orange Juice', desc: 'Mild, organic acids that are safe to consume.' },
-            { nat: 'Moderately Acidic', ratio: '\\text{[H]}^+ > \\text{[OH]}^-', color: '#FDC815', name: 'Tomato Juice / Beer', desc: 'Contains oxalic acids, slightly corrosive over long durations.' },
-            { nat: 'Weakly Acidic', ratio: '\\text{[H]}^+ \\gt \\text{[OH]}^-', color: '#FCE315', name: 'Black Coffee / Rain Water', desc: 'Atmospheric carbon dioxide dissolves in rainwater, forming very weak carbonic acid ($\text{H}_2\text{CO}_3$).' },
-            { nat: 'Weakly Acidic', ratio: '\\text{[H]}^+ \\gt \\text{[OH]}^-', color: '#E2F324', name: 'Milk / Saliva (before eating)', desc: 'Lactic acid is present in milk. Saliva exhibits slight acidity when resting.' },
-            { nat: 'Pure Neutral', ratio: '\\text{[H]}^+ = \\text{[OH]}^-', color: '#8CC63F', name: 'Distilled Water / Saliva (neutralized)', desc: 'Perfect chemical equilibrium. Standard pure water dissociation yields exactly $10^{-7}\\text{ mol/L}$ hydronium ions.' },
-            { nat: 'Weakly Alkaline', ratio: '\\text{[OH]}^- \\gt \\text{[H]}^+', color: '#24A848', name: 'Human Blood / Egg White', desc: 'Biological processes require blood to hover between 7.35 and 7.45. Any deviations are fatal.' },
-            { nat: 'Weakly Alkaline', ratio: '\\text{[OH]}^- \\gt \\text{[H]}^+', color: '#009245', name: 'Baking Soda Solution', desc: 'Sodium bicarbonate dissolves in water to form a mild, non-corrosive basic solution. Ideal for acid neutralizing.' },
-            { nat: 'Moderately Alkaline', ratio: '\\text{[OH]}^- > \\text{[H]}^+', color: '#00703C', name: 'Milk of Magnesia (Antacid)', desc: 'Magnesium hydroxide ($\text{Mg(OH)}_2$) suspension is a safe chemical antidote used to neutralize excessive stomach acids.' },
-            { nat: 'Moderately Alkaline', ratio: '\\text{[OH]}^- > \\text{[H]}^+', color: '#005470', name: 'Ammonia Solution / Washing Detergent', desc: 'Ammonium hydroxide exhibits intermediate alkalinity, strong cleaning and grease removing property.' },
-            { nat: 'Strongly Basic / Alkaline', ratio: '\\text{[OH]}^- \\gg \\text{[H]}^+', color: '#1C355E', name: 'Soapy Water / Calcium Hydroxide', desc: 'High concentration of hydroxide ions. Slaked lime solutions fall in this range.' },
-            { nat: 'Strongly Basic / Alkaline', ratio: '\\text{[OH]}^- \\gg \\text{[H]}^+', color: '#2E2B5F', name: 'Household Bleach / Liquid Drain Cleaner', desc: 'Highly reactive basic solutions capable of breaking organic blockages.' },
-            { nat: 'Strongly Basic / Alkaline', ratio: '\\text{[OH]}^- \\gg \\text{[H]}^+', color: '#22194D', name: 'Concentrated Sodium Hydroxide (Lye)', desc: 'Industrial base completely dissociating into Sodium and Hydroxide ions. Highly caustic.' }
-        ];
-
-        function handlePhChange() {
-            const val = parseInt(document.getElementById('ph-range-slider').value);
-            const met = phMetrics[val];
-
-            // Update Color & Text
-            const strip = document.getElementById('ph-indicator-strip');
-            strip.style.backgroundColor = met.color;
-            strip.textContent = val;
-
-            const title = document.getElementById('ph-title-nature');
-            title.textContent = met.nat;
-            title.style.color = met.color;
-
-            // Ratio LaTeX formula rendering
-            const ratioBox = document.getElementById('ph-ratio-concentration');
-            ratioBox.innerHTML = `$$${met.ratio}$$`;
-            MathJax.typesetPromise([ratioBox]);
-
-            // Substance Info
-            document.getElementById('ph-substance-name').textContent = met.name;
-            document.getElementById('ph-substance-desc').innerHTML = met.desc;
-
-            // Update daily life contextual box
-            const significance = document.getElementById('ph-significance-text');
-            if (val < 5.5) {
-                significance.innerHTML = `<strong>Acidic range:</strong> Rapid dental decay risk. Soil at this level blocks plant nitrogen absorption. Calcium oxide or carbonate must be added to neutralize agriculture soil.`;
-            } else if (val >= 5.5 && val <= 8.5) {
-                significance.innerHTML = `<strong>Neutral biological range:</strong> Ideal homeostasis. Human enzyme activity is optimized at these ranges. Crop cultivation functions best in this zone.`;
-            } else {
-                significance.innerHTML = `<strong>Alkaline range:</strong> Soap-like surfactant properties. Solutions of high pH are excellent cleaning detergents and react chemically with fats to form soapy compounds.`;
-            }
-        }
-
-        /************************************************************************
-         * SALT ACADEMIC MASTERCLASS ARCHITECTURE
-         ************************************************************************/
-        const saltChemistryData = [
+        /* ==========================================================================
+           DATA MODULE 1: Chemical Reaction Rules Matrix
+           ========================================================================== */
+        const reactionRules = [
             {
-                name: "Sodium Hydroxide (NaOH)",
-                formula: "\\text{NaOH}",
-                commercial: "Caustic Soda",
-                prep: "Prepared by the <strong>Chlor-alkali process</strong>. Direct current is passed through aqueous brine (sodium chloride solution). <br><br>$$\\text{2NaCl(aq)} + \\text{2H}_2\\text{O(l)} \\xrightarrow{\\text{Electricity}} \\text{2NaOH(aq)} + \\text{Cl}_2\\text{(g)} + \\text{H}_2\\text{(g)}$$",
-                boardNote: "Why is it called the <strong>Chlor-alkali</strong> process? Because 'Chlor' refers to Chlorine gas produced, and 'Alkali' refers to Sodium Hydroxide base produced. Chlorine gas is liberated at the <strong>Anode (+)</strong> while Hydrogen gas is released at the <strong>Cathode (-)</strong>.",
-                uses: ["Soaps and cleaning detergents formulation", "Pulp and paper industrial processing", "Degreasing structural metals in refineries"]
+                id: 'metal_acid',
+                title: '1. Metal + Acid',
+                formula: 'Acid + Metal → Salt + Hydrogen Gas ↑',
+                desc: 'Metals displace hydrogen atoms from acids, forming metal salts and releasing combustible H₂ gas.',
+                eq: 'Zn(s) + H₂SO₄(aq) → ZnSO₄(aq) + H₂(g)↑',
+                example: 'Zinc granules reacting with dilute sulfuric acid.'
             },
             {
-                name: "Bleaching Powder (CaOCl₂)",
-                formula: "\\text{CaOCl}_2",
-                commercial: "Calcium Oxychloride",
-                prep: "Manufactured via dry chemical action of Chlorine gas (obtained from the Chlor-alkali anode) onto dry slaked lime ($\\text{Ca(OH)}_2$). <br><br>$$\\text{Ca(OH)}_2\\text{(s)} + \\text{Cl}_2\\text{(g)} \\rightarrow \\text{CaOCl}_2\\text{(s)} + \\text{H}_2\\text{O(l)}$$",
-                boardNote: "If Bleaching powder is exposed to open atmospheric air, it slowly reacts with atmospheric carbon dioxide, freeing chlorine gas. This is why it smells strongly of chlorine!",
-                uses: ["Bleaching cotton/linen in textile plants", "Disinfecting municipal drinking water reserves", "Acts as strong oxidizing agent in laboratories"]
+                id: 'metal_base',
+                title: '2. Metal + Base',
+                formula: 'Base + Metal → Salt + Hydrogen Gas ↑',
+                desc: 'Special amphoteric metals (like Zinc and Aluminium) react with strong bases to liberate H₂ gas.',
+                eq: '2NaOH(aq) + Zn(s) → Na₂ZnO₂ (Sodium Zincate) + H₂(g)↑',
+                example: 'Zinc metal reacting with heated Sodium Hydroxide.'
             },
             {
-                name: "Baking Soda (NaHCO₃)",
-                formula: "\\text{NaHCO}_3",
-                commercial: "Sodium Hydrogen Carbonate",
-                prep: "Prepared using the <strong>Solvay Process</strong>: reacting cold, concentrated brine with ammonia, carbon dioxide, and water. <br><br>$$\\text{NaCl} + \\text{H}_2\\text{O} + \\text{CO}_2 + \\text{NH}_3 \\rightarrow \\text{NH}_4\\text{Cl} + \\text{NaHCO}_3\\downarrow$$",
-                boardNote: "Baking powder is NOT pure baking soda! It is a safe mixture of Baking soda (Sodium Bicarbonate) and a mild, consumable organic acid like <strong>tartaric acid</strong>. When mixed in dough, tartaric acid prevents the baked goods from tasting bitter!",
-                uses: ["Used as rapid acting antacid formulation", "Used in soda-acid emergency fire extinguishers", "Added in doughs to release CO₂ bubbles making bread soft"]
+                id: 'carbonate_acid',
+                title: '3. Metal Carbonate + Acid',
+                formula: 'Metal Carbonate/Bicarbonate + Acid → Salt + H₂O + CO₂ ↑',
+                desc: 'Carbonates and Hydrogen Carbonates effervesce briskly with acids to liberate CO₂ gas.',
+                eq: 'Na₂CO₃(s) + 2HCl(aq) → 2NaCl(aq) + H₂O(l) + CO₂(g)↑',
+                example: 'Baking soda or marble chips reacting with Hydrochloric acid.'
             },
             {
-                name: "Washing Soda (Na₂CO₃·10H₂O)",
-                formula: "\\text{Na}_2\\text{CO}_3 \\cdot 10\\text{H}_2\\text{O}",
-                commercial: "Sodium Carbonate Decahydrate",
-                prep: "Synthesized in three major phases: Solvay process thermal decomposition of baking soda to produce anhydrous soda ash, followed by thermal recrystallization from water. <br><br>$$\\text{2NaHCO}_3 \\xrightarrow{\\text{Heat}} \\text{Na}_2\\text{CO}_3 + \\text{H}_2\\text{O} + \\text{CO}_2$$<br>$$\\text{Na}_2\\text{CO}_3 + 10\\text{H}_2\\text{O} \\rightarrow \\text{Na}_2\\text{CO}_3 \\cdot 10\\text{H}_2\\text{O}$$",
-                boardNote: "The 10 molecules of water represent <strong>Water of Crystallization</strong>. They do not make washing soda wet; instead, they give the salt crystal its physical geometric shape. If heated, it loses water of crystallization to form sodium carbonate (Soda Ash).",
-                uses: ["Glass, soap, and domestic paper mills", "Removing permanent chemical hardness from hard water", "Domestic cleaning agent"]
+                id: 'neutralization',
+                title: '4. Acid + Base (Neutralization)',
+                formula: 'Acid + Base → Salt + Water',
+                desc: 'H⁺ ions from acid combine with OH⁻ ions from base to produce neutral water molecules.',
+                eq: 'HCl(aq) + NaOH(aq) → NaCl(aq) + H₂O(l)',
+                example: 'Hydrochloric acid neutralising Sodium Hydroxide solution.'
             },
             {
-                name: "Plaster of Paris & Gypsum",
-                formula: "\\text{CaSO}_4 \\cdot \\frac{1}{2}\\text{H}_2\\text{O}",
-                commercial: "Calcium Sulphate Hemihydrate",
-                prep: "Obtained by heating Gypsum (Calcium Sulphate Dihydrate) in controlled kilns at exactly 373 K (100°C). <br><br>$$\\text{CaSO}_4 \\cdot 2\\text{H}_2\\text{O} \\xrightarrow{\\text{373 K}} \\text{CaSO}_4 \\cdot \\frac{1}{2}\\text{H}_2\\text{O} + 1\\frac{1}{2}\\text{H}_2\\text{O}$$",
-                boardNote: "<strong>Crucial Board Danger:</strong> If gypsum is heated above 373 K, all crystallization water is lost. This yields anhydrous Calcium Sulphate ($\\text{CaSO}_4$), commonly called <strong>Dead Burnt Plaster</strong>. It completely loses the ability to solidify when mixed with water!",
-                uses: ["Supporting fractured skeletal bones in hospitals", "Designing decorative false ceiling structures", "Creating fireproof, smooth construction casts"]
+                id: 'metal_oxide_acid',
+                title: '5. Metal Oxide + Acid',
+                formula: 'Metal Oxide + Acid → Salt + Water',
+                desc: 'Metallic oxides are BASIC in nature because they react with acids to form salt and water.',
+                eq: 'CuO(s) [Black] + 2HCl(aq) → CuCl₂(aq) [Blue-Green] + H₂O(l)',
+                example: 'Black Copper Oxide dissolving in dilute HCl.'
+            },
+            {
+                id: 'nonmetal_oxide_base',
+                title: '6. Non-Metal Oxide + Base',
+                formula: 'Non-Metal Oxide + Base → Salt + Water',
+                desc: 'Non-metallic oxides are ACIDIC in nature because they react with bases to yield salt and water.',
+                eq: 'Ca(OH)₂(aq) [Lime Water] + CO₂(g) → CaCO₃(s) [Milky Ppt] + H₂O(l)',
+                example: 'Carbon Dioxide reacting with Calcium Hydroxide.'
             }
         ];
 
-        function switchSalt(index) {
-            // Update active state class on navigation buttons
-            const navButtons = document.querySelectorAll('.salt-btn');
-            navButtons.forEach((btn, idx) => {
-                if (idx === index) {
-                    btn.className = "w-full text-left p-4 rounded-xl border-l-4 border-logo-orange bg-slate-100 font-bold text-sm text-gray-900 flex justify-between items-center transition-all salt-btn";
-                } else {
-                    btn.className = "w-full text-left p-4 rounded-xl border-l-4 border-transparent hover:bg-slate-50 font-bold text-sm text-gray-600 flex justify-between items-center transition-all salt-btn";
-                }
-            });
+        let activeRuleIndex = 0;
 
-            // Populate content
-            const s = saltChemistryData[index];
-            const contentBox = document.getElementById('salt-content-box');
-            
-            contentBox.innerHTML = `
-                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
-                    <div>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-logo-orange">Salt Masterclass</span>
-                        <h3 class="text-2xl font-extrabold text-gray-900 mt-1">${s.name}</h3>
-                        <p class="text-xs text-gray-400 mt-1">Commercial / Common Name: <strong>${s.commercial}</strong></p>
-                    </div>
-                    <div class="bg-teal-900/10 text-logo-green text-sm font-mono font-bold px-4 py-2 rounded-xl border border-teal-800/10" id="salt-math-formula">
-                        $$${s.formula}$$
-                    </div>
+        function renderRulesMatrix() {
+            const container = document.getElementById('rule-cards-container');
+            container.innerHTML = reactionRules.map((rule, idx) => `
+                <div onclick="selectRule(${idx})" class="p-4 rounded-xl cursor-pointer transition-all border ${activeRuleIndex === idx ? 'bg-teal-800 text-white border-teal-800 shadow-md scale-[1.02]' : 'bg-white text-slate-800 border-slate-200 hover:border-teal-600'}">
+                    <h4 class="font-bold text-sm mb-1">${rule.title}</h4>
+                    <p class="text-xs font-code opacity-90 ${activeRuleIndex === idx ? 'text-amber-300' : 'text-teal-700'}">${rule.formula}</p>
                 </div>
+            `).join('');
 
-                <div class="space-y-6">
-                    <div>
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Preparation and Reaction:</h4>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200/80 text-xs sm:text-sm text-slate-800 leading-relaxed font-normal overflow-x-auto" id="salt-prep-equation">
-                            ${s.prep}
+            const detailBox = document.getElementById('rule-detail-box');
+            const rule = reactionRules[activeRuleIndex];
+            detailBox.innerHTML = `
+                <div class="flex flex-col md:flex-row justify-between items-start gap-4">
+                    <div class="flex-1">
+                        <span class="text-xs font-bold text-teal-700 uppercase tracking-wider">Active Chemical Principle</span>
+                        <h3 class="text-2xl font-extrabold text-slate-900 mt-1">${rule.title}</h3>
+                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">${rule.desc}</p>
+                        <div class="mt-4 bg-slate-900 text-amber-300 font-code font-bold p-4 rounded-xl text-base shadow-inner border border-slate-800">
+                            ${rule.eq}
                         </div>
                     </div>
-
-                    <div class="bg-amber-50 border-l-4 border-logo-orange p-4 rounded-r-xl text-xs text-amber-900 leading-relaxed">
-                        <strong>Educart Exam Tip:</strong> ${s.boardNote}
-                    </div>
-
-                    <div>
-                        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Key Board Syllabus Uses:</h4>
-                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            ${s.uses.map(u => `
-                                <li class="flex items-center text-xs text-slate-600 bg-white p-3 rounded-lg border border-gray-150 shadow-sm">
-                                    <span class="w-1.5 h-1.5 bg-logo-orange rounded-full mr-2"></span>
-                                    <span>${u}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl md:w-72 flex-shrink-0">
+                        <span class="text-[11px] font-bold text-amber-900 uppercase block mb-1">NCERT Real-Life Example:</span>
+                        <p class="text-xs text-slate-700 leading-relaxed">${rule.example}</p>
                     </div>
                 </div>
             `;
-
-            // Run MathJax parsing inside the dynamic content
-            MathJax.typesetPromise([
-                document.getElementById('salt-math-formula'),
-                document.getElementById('salt-prep-equation')
-            ]);
         }
 
+        function selectRule(idx) {
+            activeRuleIndex = idx;
+            renderRulesMatrix();
+        }
 
-        /************************************************************************
-         * BOARD MOCK EXAM QUIZ ARCHITECTURE (Oswaal/Educart Pattern)
-         ************************************************************************/
-        const quizDatabase = [
+        /* ==========================================================================
+           DATA MODULE 2: Virtual Laboratory Experiments (8 NCERT Activities)
+           ========================================================================== */
+        const labActivities = [
             {
-                q: "A solution reacts with crushed egg-shells to give a gas that turns lime-water milky. The solution contains:",
+                id: 'act2_3',
+                num: 'Activity 2.3 & 2.4',
+                ncert: 'NCERT Page 19-20',
+                title: 'Metal + Acid & Pop Test',
+                desc: 'Observe zinc reacting with dilute H₂SO₄, passing gas through soap solution and bringing a burning candle to test H₂ pop sound.',
                 options: [
-                    { t: "NaCl", correct: false },
-                    { t: "HCl", correct: true },
-                    { t: "LiCl", correct: false },
-                    { t: "KCl", correct: false }
+                    { val: 'zn_h2so4', label: 'Zinc Granules + Dilute H₂SO₄' },
+                    { val: 'zn_naoh', label: 'Zinc Granules + Heated NaOH (Activity 2.4)' }
                 ],
-                exp: "Egg shells are made of Calcium Carbonate ($CaCO_3$). Acids react with metal carbonates to liberate Carbon Dioxide gas. Under these conditions, hydrochloric acid ($HCl$) is required to perform the displacement reaction liberating Milky Calcium Carbonate."
+                renderSVG: (step) => `
+                    <svg viewBox="0 0 400 240" class="w-full h-48 sm:h-64">
+                        <!-- Stand -->
+                        <rect x="40" y="200" width="100" height="12" fill="#475569"/>
+                        <rect x="85" y="40" width="8" height="160" fill="#64748b"/>
+
+                        <!-- Test Tube -->
+                        <rect x="120" y="60" width="30" height="110" rx="15" fill="rgba(255,255,255,0.2)" stroke="#94a3b8" stroke-width="3"/>
+                        <path d="M123 110 L147 110 L147 160 A 12 12 0 0 1 123 160 Z" fill="#93c5fd" opacity="0.7"/>
+                        <!-- Zinc Granules -->
+                        <circle cx="130" cy="155" r="4" fill="#cbd5e1"/>
+                        <circle cx="140" cy="158" r="5" fill="#94a3b8"/>
+
+                        <!-- Delivery Tube -->
+                        <path d="M 135 60 L 135 30 L 260 30 L 260 160" fill="none" stroke="#60a5fa" stroke-width="4"/>
+
+                        <!-- Soap Trough -->
+                        <rect x="230" y="150" width="100" height="40" rx="6" fill="#0284c7" opacity="0.5" stroke="#38bdf8" stroke-width="2"/>
+
+                        ${step >= 1 ? `
+                            <!-- Soap Bubbles Rising -->
+                            <circle cx="260" cy="130" r="12" fill="none" stroke="#ffffff" stroke-width="2" class="animate-bounce"/>
+                            <circle cx="270" cy="90" r="16" fill="none" stroke="#ffffff" stroke-width="2" class="animate-bounce" style="animation-delay: 0.2s"/>
+                        ` : ''}
+
+                        ${step >= 2 ? `
+                            <!-- Candle Flame near Bubble with POP explosion -->
+                            <rect x="290" y="70" width="10" height="35" fill="#fde047"/>
+                            <path d="M 295 60 Q 290 70 295 70 Q 300 70 295 60" fill="#f97316"/>
+                            <!-- POP Burst -->
+                            <g class="animate-pop">
+                                <circle cx="270" cy="70" r="25" fill="#ef4444" opacity="0.6"/>
+                                <text x="270" y="75" fill="#ffffff" font-size="14" font-weight="extrabold" text-anchor="middle">POP!</text>
+                            </g>
+                        ` : ''}
+                    </svg>
+                `,
+                stepsInferences: [
+                    {
+                        status: 'Apparatus Loaded',
+                        eq: 'Zn(s) + H₂SO₄(aq) → ZnSO₄(aq) + H₂(g)↑',
+                        inf: 'Zinc granules placed in test tube with dilute sulfuric acid.'
+                    },
+                    {
+                        status: 'Gas Evolving & Bubbling',
+                        eq: 'Zn(s) + H₂SO₄(aq) → ZnSO₄(aq) + H₂(g)↑',
+                        inf: 'Effervescence observed. Hydrogen gas passes through delivery tube and forms soap bubbles.'
+                    },
+                    {
+                        status: 'Candle POP Test Positive',
+                        eq: '2H₂(g) + O₂(g) → 2H₂O(l) + Energy (POP Sound!)',
+                        inf: 'Bringing a burning candle near hydrogen-filled soap bubbles burns the gas with a characteristic "POP" sound!'
+                    }
+                ]
             },
             {
-                q: "What happens when excess carbon dioxide gas is passed through lime water for a prolonged period?",
+                id: 'act2_1',
+                num: 'Activity 2.1 & 2.2',
+                ncert: 'NCERT Page 18-19',
+                title: 'Indicators & Olfactory Test',
+                desc: 'Test solutions with Litmus, Phenolphthalein, Methyl Orange, and Olfactory samples (Onion/Vanilla/Clove).',
                 options: [
-                    { t: "The milkiness persists permanently due to CaCO₃ stabilization.", correct: false },
-                    { t: "The solution turns yellow due to heavy thermal oxidation.", correct: false },
-                    { t: "The solution turns completely clear due to soluble Ca(HCO₃)₂ formulation.", correct: true },
-                    { t: "An explosive popping sound is produced from rapid hydrogen release.", correct: false }
+                    { val: 'acid_litmus', label: 'Dilute HCl + Blue Litmus' },
+                    { val: 'base_pheno', label: 'Dilute NaOH + Phenolphthalein' },
+                    { val: 'base_onion', label: 'Dilute NaOH + Onion Cloth Strip' }
                 ],
-                exp: "Initially, carbon dioxide forms insoluble Calcium Carbonate ($CaCO_3$) precipitate making the fluid milky. When CO₂ continues to run, it forms soluble Calcium Bicarbonate ($Ca(HCO_3)_2$) which dissolves easily in water, turning the solution clear."
+                renderSVG: (step) => `
+                    <svg viewBox="0 0 400 240" class="w-full h-48 sm:h-64">
+                        <!-- Beaker -->
+                        <rect x="140" y="70" width="120" height="120" rx="10" fill="rgba(255,255,255,0.15)" stroke="#94a3b8" stroke-width="3"/>
+                        <rect x="145" y="110" width="110" height="75" fill="${step >= 1 ? '#ec4899' : '#38bdf8'}" opacity="0.6" class="transition-colors duration-700"/>
+
+                        <!-- Dropper -->
+                        <rect x="195" y="20" width="10" height="50" fill="#cbd5e1"/>
+                        <path d="M 190 10 L 210 10 L 200 20 Z" fill="#ef4444"/>
+                        ${step >= 1 ? '<circle cx="200" cy="85" r="4" fill="#f43f5e" class="animate-ping"/>' : ''}
+                    </svg>
+                `,
+                stepsInferences: [
+                    {
+                        status: 'Ready to Add Indicator',
+                        eq: 'Sample Solution + Indicator Molecule',
+                        inf: 'Select test mixture to observe color or odour transformation.'
+                    },
+                    {
+                        status: 'Color / Odour Changed!',
+                        eq: 'Base + Phenolphthalein → Deep Pink Solution',
+                        inf: 'Phenolphthalein turns deep pink in basic solution (NaOH). In basic media, onion strip loses its characteristic smell!'
+                    }
+                ]
             },
             {
-                q: "Which of the following describes the nature of anhydrous Sodium Carbonate (Soda Ash)?",
+                id: 'act2_5',
+                num: 'Activity 2.5',
+                ncert: 'NCERT Page 20',
+                title: 'Carbonate + Acid & Lime Water',
+                desc: 'React Sodium Carbonate with HCl and pass evolved CO₂ through Lime Water [Ca(OH)₂].',
                 options: [
-                    { t: "An acidic salt that yields low pH solutions", correct: false },
-                    { t: "A neutral salt derived from strong hydrochloric acid", correct: false },
-                    { t: "A basic salt because it is synthesized from a strong base (NaOH) and a weak acid (H₂CO₃)", correct: true },
-                    { t: "An amphoteric salt reacting with itself", correct: false }
+                    { val: 'naco3_hcl', label: 'Na₂CO₃ + Dilute HCl' }
                 ],
-                exp: "Sodium Carbonate ($Na_2CO_3$) is a basic salt. The hydrolysis of basic salts yields basic solutions because the strong parent base ($NaOH$) easily overpowers the weak parent carbonic acid ($H_2CO_3$)."
+                renderSVG: (step) => `
+                    <svg viewBox="0 0 400 240" class="w-full h-48 sm:h-64">
+                        <!-- Primary Flask -->
+                        <rect x="80" y="80" width="70" height="100" rx="8" fill="rgba(255,255,255,0.1)" stroke="#94a3b8" stroke-width="3"/>
+                        
+                        <!-- Delivery Tube -->
+                        <path d="M 115 80 L 115 40 L 270 40 L 270 110" fill="none" stroke="#60a5fa" stroke-width="4"/>
+
+                        <!-- Lime Water Tube -->
+                        <rect x="245" y="90" width="50" height="90" rx="8" fill="rgba(255,255,255,0.1)" stroke="#94a3b8" stroke-width="3"/>
+                        <rect x="248" y="130" width="44" height="46" fill="${step === 0 ? '#93c5fd' : step === 1 ? '#ffffff' : '#93c5fd'}" opacity="${step === 1 ? '0.9' : '0.4'}" class="transition-colors duration-700"/>
+
+                        ${step >= 1 ? '<text x="270" y="160" fill="#0f172a" font-size="10" font-weight="bold" text-anchor="middle">MILKY</text>' : ''}
+                    </svg>
+                `,
+                stepsInferences: [
+                    {
+                        status: 'Reaction Setup',
+                        eq: 'Na₂CO₃(s) + 2HCl(aq) → 2NaCl + H₂O + CO₂(g)↑',
+                        inf: 'Sodium carbonate reacts with hydrochloric acid releasing brisk CO₂ gas.'
+                    },
+                    {
+                        status: 'CO₂ Passed (Milky Precipitate)',
+                        eq: 'Ca(OH)₂(aq) + CO₂(g) → CaCO₃(s)↓ (White Ppt) + H₂O',
+                        inf: 'Gas turns clear lime water milky due to formation of insoluble Calcium Carbonate.'
+                    },
+                    {
+                        status: 'Excess CO₂ Passed (Clear Solution)',
+                        eq: 'CaCO₃(s) + H₂O(l) + CO₂(g) → Ca(HCO₃)₂(aq) (Soluble)',
+                        inf: 'On passing excess CO₂, milkiness disappears because soluble Calcium Hydrogen Carbonate is formed!'
+                    }
+                ]
             },
             {
-                q: "Why is Plaster of Paris strictly stored in moisture-proof container environments?",
+                id: 'act2_8',
+                num: 'Activity 2.8',
+                ncert: 'NCERT Page 22',
+                title: 'Electric Conductivity of Ions',
+                desc: 'Connect nails in beaker to 6V battery & bulb. Test HCl / NaOH vs Glucose / Alcohol.',
                 options: [
-                    { t: "Because moisture reacts with it to produce dead burnt plaster.", correct: false },
-                    { t: "Because moisture hydrolyzes it into Ca(OH)₂ releasing caustic fumes.", correct: false },
-                    { t: "Because on absorbing moisture, POP sets into a rock hard mass of Gypsum.", correct: true },
-                    { t: "Because dry atmospheric conditions are highly explosive for POP.", correct: false }
+                    { val: 'hcl_acid', label: 'Dilute HCl Solution (Ions Present)' },
+                    { val: 'glucose_sol', label: 'Glucose Solution (No Ions)' }
                 ],
-                exp: "Plaster of Paris ($CaSO_4 \\cdot \\frac{1}{2}H_2O$) immediately absorbs any ambient water molecules to form solid, hydrated Gypsum crystals ($CaSO_4 \\cdot 2H_2O$), which ruins its structural molding powder properties."
+                renderSVG: (step) => `
+                    <svg viewBox="0 0 400 240" class="w-full h-48 sm:h-64">
+                        <!-- Beaker -->
+                        <rect x="120" y="90" width="160" height="110" rx="8" fill="rgba(255,255,255,0.1)" stroke="#94a3b8" stroke-width="3"/>
+                        <rect x="125" y="120" width="150" height="75" fill="#38bdf8" opacity="0.4"/>
+
+                        <!-- Rubber Cork & Nails -->
+                        <rect x="160" y="170" width="80" height="20" fill="#78350f"/>
+                        <rect x="180" y="130" width="6" height="45" fill="#cbd5e1"/>
+                        <rect x="214" y="130" width="6" height="45" fill="#cbd5e1"/>
+
+                        <!-- Circuit Wire & Bulb -->
+                        <path d="M 183 130 L 183 50 L 200 50" fill="none" stroke="#f59e0b" stroke-width="3"/>
+                        <path d="M 217 130 L 217 50 L 240 50" fill="none" stroke="#f59e0b" stroke-width="3"/>
+
+                        <!-- Bulb -->
+                        <circle cx="200" cy="40" r="14" fill="${step === 1 ? '#fef08a' : '#475569'}" stroke="#f59e0b" stroke-width="2"/>
+                        ${step === 1 ? '<circle cx="200" cy="40" r="22" fill="#fef08a" opacity="0.3" class="animate-pulse"/>' : ''}
+                    </svg>
+                `,
+                stepsInferences: [
+                    {
+                        status: 'Circuit Open',
+                        eq: 'Acid Solutions → Release H⁺ (aq) Cations',
+                        inf: 'Ready to test electrical conductivity of selected liquid.'
+                    },
+                    {
+                        status: step => step === 'hcl_acid' ? 'Bulb Glows Brightly!' : 'Bulb Does NOT Glow',
+                        eq: 'HCl(aq) → H⁺(aq) + Cl⁻(aq) | Glucose → No Ions',
+                        inf: 'Acidic/Basic solutions conduct electricity due to free movement of H⁺/OH⁻ ions. Glucose and Alcohol do NOT produce ions, so the bulb does NOT glow!'
+                    }
+                ]
             },
             {
-                q: "During chlor-alkali electrolysis, which product is liberated specifically at the positive electrode (Anode)?",
+                id: 'act2_9',
+                num: 'Activity 2.9',
+                ncert: 'NCERT Page 23',
+                title: 'Dry vs Moist HCl Gas Litmus Test',
+                desc: 'Prepare HCl gas (NaCl + conc H₂SO₄) and test with dry vs moist blue litmus paper.',
                 options: [
-                    { t: "Hydrogen Gas ($H_2$)", correct: false },
-                    { t: "Chlorine Gas ($Cl_2$)", correct: true },
-                    { t: "Oxygen Gas ($O_2$)", correct: false },
-                    { t: "Sodium Hydroxide crystals", correct: false }
+                    { val: 'dry_litmus', label: 'Dry Blue Litmus Paper' },
+                    { val: 'moist_litmus', label: 'Moist Blue Litmus Paper' }
                 ],
-                exp: "Chlorine ions ($Cl^-$) are negatively charged anions and are attracted to the positive electrode (Anode), where they lose electrons (oxidation) and form gaseous chlorine ($Cl_2$). Hydrogen cations ($H^+$) are attracted to the negative electrode (Cathode)."
+                renderSVG: (step) => `
+                    <svg viewBox="0 0 400 240" class="w-full h-48 sm:h-64">
+                        <rect x="150" y="60" width="40" height="130" rx="10" fill="rgba(255,255,255,0.15)" stroke="#94a3b8" stroke-width="3"/>
+                        <path d="M 170 60 L 170 20 L 250 20 L 250 80" fill="none" stroke="#60a5fa" stroke-width="4"/>
+                        <!-- Litmus Strip -->
+                        <rect x="240" y="80" width="30" height="10" fill="${step === 1 ? '#ef4444' : '#3b82f6'}"/>
+                    </svg>
+                `,
+                stepsInferences: [
+                    {
+                        status: 'HCl Gas Generating',
+                        eq: 'NaCl(s) + H₂SO₄(conc) → NaHSO₄ + HCl(g)↑',
+                        inf: 'Dry HCl gas is liberated from the delivery tube.'
+                    },
+                    {
+                        status: 'Litmus Result',
+                        eq: 'HCl + H₂O → H₃O⁺ + Cl⁻ (H⁺ requires H₂O!)',
+                        inf: 'Dry HCl gas does NOT change dry blue litmus! It turns MOIST blue litmus red because hydrogen ions H⁺ (aq) can only be produced in the presence of water!'
+                    }
+                ]
+            },
+            {
+                id: 'act2_10',
+                num: 'Activity 2.10',
+                ncert: 'NCERT Page 24',
+                title: 'Exothermic Dilution & Safety Caution',
+                desc: 'Observe temperature rise during acid dilution and understand mandatory caution rules.',
+                options: [
+                    { val: 'acid_to_water', label: 'Acid Added Slowly to Water (CORRECT)' }
+                ],
+                renderSVG: (step) => `
+                    <svg viewBox="0 0 400 240" class="w-full h-48 sm:h-64">
+                        <rect x="140" y="80" width="120" height="110" rx="10" fill="rgba(255,255,255,0.15)" stroke="#94a3b8" stroke-width="3"/>
+                        <!-- Thermometer -->
+                        <rect x="195" y="30" width="10" height="140" fill="#cbd5e1" rx="5"/>
+                        <rect x="198" y="${step === 1 ? '60' : '120'}" width="4" height="${step === 1 ? '100' : '40'}" fill="#ef4444" class="transition-all duration-1000"/>
+                        ${step === 1 ? '<text x="220" y="70" fill="#ef4444" font-size="12" font-weight="bold">TEMP RISES! 🔥</text>' : ''}
+                    </svg>
+                `,
+                stepsInferences: [
+                    {
+                        status: 'Initial Temp',
+                        eq: 'Acid + Water → Exothermic Mixing',
+                        inf: 'Dissolving concentrated acid or base in water is highly exothermic.'
+                    },
+                    {
+                        status: 'Exothermic Heat Released',
+                        eq: 'Conc. H₂SO₄ + H₂O → Diluted H₂SO₄ + Heat Energy',
+                        inf: 'ALWAYS add acid slowly to water with constant stirring! NEVER add water to concentrated acid, as extreme local heat will cause dangerous splashing!'
+                    }
+                ]
+            },
+            {
+                id: 'act2_15',
+                num: 'Activity 2.15',
+                ncert: 'NCERT Page 32',
+                title: 'Water of Crystallization in CuSO₄',
+                desc: 'Heat blue CuSO₄·5H₂O to obtain white anhydrous CuSO₄, then re-add water drops.',
+                options: [
+                    { val: 'heat_cuso4', label: 'Heat Blue CuSO₄ Crystals' },
+                    { val: 'rehydrate', label: 'Add 2-3 Drops Water to Heated White CuSO₄' }
+                ],
+                renderSVG: (step) => `
+                    <svg viewBox="0 0 400 240" class="w-full h-48 sm:h-64">
+                        <!-- Boiling Tube -->
+                        <rect x="120" y="110" width="150" height="30" rx="10" fill="rgba(255,255,255,0.15)" stroke="#94a3b8" stroke-width="3" transform="rotate(-15 120 110)"/>
+                        
+                        <!-- Crystals -->
+                        <circle cx="230" cy="80" r="10" fill="${step === 0 ? '#2563eb' : step === 1 ? '#f8fafc' : '#2563eb'}" class="transition-colors duration-700"/>
+
+                        <!-- Burner Flame -->
+                        ${step === 1 ? '<path d="M 230 140 Q 225 110 230 110 Q 235 110 230 140" fill="#f97316" class="animate-bounce"/>' : ''}
+                    </svg>
+                `,
+                stepsInferences: [
+                    {
+                        status: 'Hydrated Blue Crystals',
+                        eq: 'CuSO₄·5H₂O (Blue Hydrated Salt)',
+                        inf: 'Copper sulphate crystals contain 5 molecules of water of crystallization per formula unit.'
+                    },
+                    {
+                        status: 'Water Removed (Anhydrous White)',
+                        eq: 'CuSO₄·5H₂O --Heat--> CuSO₄ (White) + 5H₂O↑',
+                        inf: 'Upon heating, water of crystallization evaporates leaving white anhydrous CuSO₄.'
+                    },
+                    {
+                        status: 'Blue Color Restored!',
+                        eq: 'CuSO₄ (White) + 5H₂O → CuSO₄·5H₂O (Blue)',
+                        inf: 'Moistening the white salt with water restores its original vibrant blue color!'
+                    }
+                ]
+            },
+            {
+                id: 'act_group',
+                num: 'Group Activity II',
+                ncert: 'NCERT Page 36',
+                title: 'DIY Soda-Acid Fire Extinguisher',
+                desc: 'Mix NaHCO₃ and dil. H₂SO₄ to spray CO₂ discharge jet onto a candle flame.',
+                options: [
+                    { val: 'fire_ext', label: 'Trigger Soda-Acid Fire Extinguisher' }
+                ],
+                renderSVG: (step) => `
+                    <svg viewBox="0 0 400 240" class="w-full h-48 sm:h-64">
+                        <!-- Wash Bottle -->
+                        <rect x="100" y="80" width="80" height="110" rx="10" fill="rgba(255,255,255,0.15)" stroke="#94a3b8" stroke-width="3"/>
+                        <!-- Nozzle Jet -->
+                        <path d="M 140 80 L 140 50 L 250 50" fill="none" stroke="#cbd5e1" stroke-width="4"/>
+                        ${step === 1 ? '<path d="M 250 50 L 310 50" stroke="#f8fafc" stroke-width="8" stroke-dasharray="4 4" class="animate-pulse"/>' : ''}
+                        
+                        <!-- Candle Flame -->
+                        <rect x="310" y="110" width="12" height="40" fill="#fef08a"/>
+                        ${step === 0 ? '<path d="M 316 95 Q 310 110 316 110 Q 322 110 316 95" fill="#f97316"/>' : ''}
+                    </svg>
+                `,
+                stepsInferences: [
+                    {
+                        status: 'Prepared Extinguisher',
+                        eq: '2NaHCO₃ + H₂SO₄ → Na₂SO₄ + 2H₂O + 2CO₂↑',
+                        inf: 'Wash bottle filled with NaHCO₃ solution and suspended dil H₂SO₄ ignition tube.'
+                    },
+                    {
+                        status: 'CO₂ Discharge Extinguishes Fire!',
+                        eq: 'CO₂ Gas Displaces Oxygen → Flame Extinguished',
+                        inf: 'Tilting bottle mixes acid and sodium bicarbonate, blasting a dense stream of CO₂ gas that smothers the candle flame!'
+                    }
+                ]
             }
         ];
 
-        let currentQuestionIdx = 0;
-        let score = 0;
-        let hasAnswered = false;
+        let currentLabIndex = 0;
+        let currentLabStep = 0;
 
-        function loadQuestion() {
-            hasAnswered = false;
-            const q = quizDatabase[currentQuestionIdx];
+        function renderLabTabs() {
+            const container = document.getElementById('lab-tabs-container');
+            container.innerHTML = labActivities.map((lab, idx) => `
+                <button onclick="switchLab(${idx})" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex-shrink-0 border ${currentLabIndex === idx ? 'bg-teal-800 text-white border-teal-800' : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'}">
+                    ${lab.num}
+                </button>
+            `).join('');
+        }
+
+        function switchLab(idx) {
+            currentLabIndex = idx;
+            currentLabStep = 0;
+            renderLabTabs();
+            loadLabUI();
+        }
+
+        function loadLabUI() {
+            const lab = labActivities[currentLabIndex];
+            document.getElementById('lab-activity-num').textContent = lab.num;
+            document.getElementById('lab-ncert-ref').textContent = lab.ncert;
+            document.getElementById('lab-title').textContent = lab.title;
+            document.getElementById('lab-desc').textContent = lab.desc;
+
+            // Render controls
+            const ctrlContainer = document.getElementById('lab-controls');
+            ctrlContainer.innerHTML = `
+                <label class="block text-xs font-bold text-slate-300 mb-1">Select Reactants / Parameters:</label>
+                <select id="lab-opt-select" class="w-full bg-slate-700 border border-slate-600 text-white text-xs rounded-lg p-2.5 font-semibold focus:ring-teal-500">
+                    ${lab.options.map(o => `<option value="${o.val}">${o.label}</option>`).join('')}
+                </select>
+            `;
+
+            updateLabStage();
+        }
+
+        function updateLabStage() {
+            const lab = labActivities[currentLabIndex];
+            const svgStage = document.getElementById('lab-svg-stage');
+            svgStage.innerHTML = lab.renderSVG(currentLabStep);
+
+            const stepInfo = lab.stepsInferences[Math.min(currentLabStep, lab.stepsInferences.length - 1)];
+            const statusText = typeof stepInfo.status === 'function' ? stepInfo.status(document.getElementById('lab-opt-select')?.value) : stepInfo.status;
             
-            // Progress
-            document.getElementById('quiz-progress').textContent = `Question ${currentQuestionIdx + 1} of ${quizDatabase.length}`;
-            document.getElementById('quiz-score-badge').textContent = `Score: ${score}`;
-
-            // Question Text
-            const questionText = document.getElementById('quiz-question-text');
-            questionText.innerHTML = q.q;
-
-            // Options container
-            const container = document.getElementById('quiz-options-container');
-            container.innerHTML = '';
-
-            // Explanation box (hide)
-            document.getElementById('quiz-explanation-box').classList.add('hidden');
-
-            q.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left bg-slate-900 border border-slate-800 hover:bg-slate-850 p-4 rounded-2xl transition-all text-xs sm:text-sm font-semibold flex justify-between items-center";
-                btn.innerHTML = `
-                    <span>${opt.t}</span>
-                    <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-xs"></span>
-                `;
-                btn.onclick = () => selectOption(idx);
-                container.appendChild(btn);
-            });
-
-            // Handle prev button states
-            document.getElementById('quiz-prev-btn').disabled = currentQuestionIdx === 0;
-
-            // Re-render math in the questions if any exist
-            MathJax.typesetPromise([questionText, container]);
+            document.getElementById('lab-status-badge').textContent = statusText;
+            document.getElementById('lab-equation-display').textContent = stepInfo.eq;
+            document.getElementById('lab-inference-display').textContent = stepInfo.inf;
         }
 
-        function selectOption(optIndex) {
-            if (hasAnswered) return; // Prevent multiple selection clicks
+        function runCurrentLabStep() {
+            const lab = labActivities[currentLabIndex];
+            if (currentLabStep < lab.stepsInferences.length - 1) {
+                currentLabStep++;
+            } else {
+                currentLabStep = 1; // loop active reaction state
+            }
+            
+            // Audio-Visual Synthesizer Feedback for Pop test or reactions
+            if (lab.id === 'act2_3' && currentLabStep === 2) {
+                playPopSoundEffect();
+            }
 
-            hasAnswered = true;
-            const q = quizDatabase[currentQuestionIdx];
-            const chosen = q.options[optIndex];
-            const container = document.getElementById('quiz-options-container');
-            const buttons = container.querySelectorAll('button');
+            updateLabStage();
+        }
 
-            buttons.forEach((btn, idx) => {
-                btn.disabled = true;
-                const circle = btn.querySelector('div, span:last-child');
+        function resetCurrentLab() {
+            currentLabStep = 0;
+            updateLabStage();
+        }
+
+        /* Web Audio API Pop Sound Generator (No external file needed!) */
+        function playPopSoundEffect() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.15);
+
+                gain.gain.setValueAtTime(0.8, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch(e) {
+                console.log('Audio Context muted or unsupported');
+            }
+        }
+
+        /* ==========================================================================
+           DATA MODULE 3: pH Scale Simulator
+           ========================================================================== */
+        const phData = [
+            { val: 0, color: '#EE2024', nat: 'VERY STRONGLY ACIDIC', sub: 'Concentrated HCl / Battery Acid', desc: 'Maximum hydronium ion [H₃O⁺] concentration.' },
+            { val: 1, color: '#F45D22', nat: 'STRONGLY ACIDIC', sub: 'Gastric Juice (Stomach Acid ~1.2)', desc: 'Produced in human stomach for food digestion.' },
+            { val: 2, color: '#F78F1E', nat: 'STRONGLY ACIDIC', sub: 'Lemon Juice / Vinegar', desc: 'Contains citric and acetic acids.' },
+            { val: 3, color: '#F9B222', nat: 'MODERATELY ACIDIC', sub: 'Aerated Cola / Tomato Juice', desc: 'Contains carbonic and oxalic acids.' },
+            { val: 4, color: '#FDC815', nat: 'MODERATELY ACIDIC', sub: 'Acid Rain (< 5.6) / Coffee', desc: 'Acid rain lowers river water pH, threatening fish.' },
+            { val: 5, color: '#FCE315', nat: 'WEAKLY ACIDIC', sub: 'Tooth Decay Threshold (< 5.5)', desc: 'Enamel corrodes when oral pH stays below 5.5.' },
+            { val: 6, color: '#E2F324', nat: 'WEAKLY ACIDIC', sub: 'Fresh Milk / Urine', desc: 'Milk turns into curd as lactic acid forms.' },
+            { val: 7, color: '#8CC63F', nat: 'NEUTRAL', sub: 'Pure Water / Human Blood (7.4)', desc: '[H⁺] ions exactly equal [OH⁻] ions.' },
+            { val: 8, color: '#24A848', nat: 'WEAKLY ALKALINE', sub: 'Sea Water / Baking Soda Solution', desc: 'Mild non-corrosive basic salt solution.' },
+            { val: 9, color: '#009245', nat: 'WEAKLY ALKALINE', sub: 'Toothpaste', desc: 'Basic nature neutralizes acidic bacterial decay.' },
+            { val: 10, color: '#00703C', nat: 'MODERATELY ALKALINE', sub: 'Milk of Magnesia [Mg(OH)₂]', desc: 'Mild antacid used to neutralize indigestion acidity.' },
+            { val: 11, color: '#005470', nat: 'MODERATELY ALKALINE', sub: 'Household Ammonia Solution', desc: 'Contains ammonium hydroxide.' },
+            { val: 12, color: '#1C355E', nat: 'STRONGLY ALKALINE', sub: 'Washing Soda Solution / Soapy Water', desc: 'High concentration of hydroxide ions [OH⁻].' },
+            { val: 13, color: '#2E2B5F', nat: 'STRONGLY ALKALINE', sub: 'Bleach Solution', desc: 'Strongly corrosive basic liquid.' },
+            { val: 14, color: '#22194D', nat: 'VERY STRONGLY ALKALINE', sub: 'Concentrated NaOH (Lye)', desc: 'Maximum hydroxide ion concentration.' }
+        ];
+
+        function updatePHInteractive() {
+            const val = parseFloat(document.getElementById('ph-range-slider').value);
+            const idx = Math.min(Math.floor(val), 14);
+            const data = phData[idx];
+
+            document.getElementById('ph-slider-val-text').textContent = `pH = ${val.toFixed(1)}`;
+            
+            const colorBox = document.getElementById('ph-color-indicator');
+            colorBox.style.backgroundColor = data.color;
+            colorBox.querySelector('span:first-child').textContent = val.toFixed(1);
+            document.getElementById('ph-indicator-label').textContent = data.nat;
+
+            // Bar math
+            const hPercent = Math.max(0, Math.min(100, Math.round(((14 - val) / 14) * 100)));
+            const ohPercent = 100 - hPercent;
+
+            document.getElementById('h-ion-percent').textContent = `${hPercent}%`;
+            document.getElementById('h-ion-bar').style.width = `${hPercent}%`;
+            document.getElementById('oh-ion-percent').textContent = `${ohPercent}%`;
+            document.getElementById('oh-ion-bar').style.width = `${ohPercent}%`;
+
+            document.getElementById('ph-substance-title').textContent = data.sub;
+            document.getElementById('ph-substance-desc').textContent = data.desc;
+        }
+
+        /* ==========================================================================
+           DATA MODULE 4: NCERT Self-Assessment Practice Quiz
+           ========================================================================== */
+        const quizQuestions = [
+            {
+                q: 'What happens when excess Carbon Dioxide (CO₂) gas is passed through Lime Water [Ca(OH)₂]?',
+                options: [
+                    'The solution remains intensely milky forever',
+                    'Milkiness disappears due to soluble Calcium Hydrogen Carbonate formation',
+                    'It turns deep pink like phenolphthalein',
+                    'It explodes with a pop sound'
+                ],
+                correct: 1,
+                explanation: 'Initial CO₂ turns lime water milky due to insoluble CaCO₃ precipitate. Excess CO₂ forms Ca(HCO₃)₂ which is water soluble, making the solution clear again!'
+            },
+            {
+                q: 'Why does dry HCl gas NOT change the color of dry blue litmus paper?',
+                options: [
+                    'Dry litmus paper is chemically inert',
+                    'HCl gas is basic in dry form',
+                    'Hydrogen ions H⁺ (aq) can only be produced in the presence of water',
+                    'Litmus requires heating to react'
+                ],
+                correct: 2,
+                explanation: 'Acidic properties are due to H⁺ / H₃O⁺ ions. Separation of H⁺ ions from HCl molecules cannot occur in the absolute absence of water!'
+            },
+            {
+                q: 'At what temperature must Gypsum be heated to obtain Plaster of Paris (CaSO₄·½H₂O)?',
+                options: ['273 K', '373 K (100°C)', '473 K', '573 K'],
+                correct: 1,
+                explanation: 'Gypsum (CaSO₄·2H₂O) must be heated at exactly 373 K. Heating above 373 K produces anhydrous CaSO₄ (dead burnt plaster) which loses setting ability!'
+            },
+            {
+                q: 'Which products are liberated at the ANODE and CATHODE during the Chlor-Alkali process?',
+                options: [
+                    'Anode: Hydrogen gas, Cathode: Chlorine gas',
+                    'Anode: Chlorine gas, Cathode: Hydrogen gas',
+                    'Anode: Oxygen gas, Cathode: Sodium metal',
+                    'Anode: Carbon dioxide, Cathode: Nitrogen'
+                ],
+                correct: 1,
+                explanation: 'During electrolysis of brine (NaCl Solution): Chlorine gas (Cl₂) is liberated at the Anode (+), and Hydrogen gas (H₂) at the Cathode (-).'
+            },
+            {
+                q: 'Which mild base is commonly applied to neutralize a painful Nettle leaf or Honeybee sting?',
+                options: ['Concentrated H₂SO₄', 'Baking Soda (NaHCO₃) or Dock plant leaf', 'Vinegar', 'Lemon juice'],
+                correct: 1,
+                explanation: 'Nettle stinging hair injects Methanoic Acid (HCOOH). Applying mild bases like Baking Soda or rubbing basic Dock plant leaves neutralizes the acid pain!'
+            }
+        ];
+
+        let quizCurrentIdx = 0;
+        let quizScore = 0;
+        let quizAnswersState = Array(quizQuestions.length).fill(null);
+
+        function renderQuizQuestion() {
+            const q = quizQuestions[quizCurrentIdx];
+            document.getElementById('quiz-current-num').textContent = quizCurrentIdx + 1;
+            document.getElementById('quiz-question-text').textContent = q.q;
+            document.getElementById('quiz-score').textContent = quizScore;
+
+            const optsContainer = document.getElementById('quiz-options-container');
+            optsContainer.innerHTML = q.options.map((opt, i) => {
+                const userChoice = quizAnswersState[quizCurrentIdx];
+                let btnStyle = 'bg-slate-700/60 hover:bg-slate-700 text-slate-100 border-slate-600';
                 
-                // Visual indicators for answer checking
-                if (q.options[idx].correct) {
-                    btn.className = "w-full text-left bg-emerald-950/40 border border-emerald-500 text-emerald-200 p-4 rounded-2xl transition-all text-xs sm:text-sm font-semibold flex justify-between items-center";
-                    circle.className = "w-5 h-5 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-black";
-                    circle.innerHTML = "✓";
-                } else if (idx === optIndex && !chosen.correct) {
-                    btn.className = "w-full text-left bg-red-950/40 border border-red-500 text-red-200 p-4 rounded-2xl transition-all text-xs sm:text-sm font-semibold flex justify-between items-center";
-                    circle.className = "w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-black";
-                    circle.innerHTML = "✗";
-                } else {
-                    btn.className = "w-full text-left bg-slate-950 border border-slate-900 text-slate-600 p-4 rounded-2xl transition-all text-xs sm:text-sm font-semibold flex justify-between items-center opacity-40";
+                if (userChoice !== null) {
+                    if (i === q.correct) btnStyle = 'bg-emerald-800/80 text-emerald-200 border-emerald-500 font-bold';
+                    else if (i === userChoice) btnStyle = 'bg-red-900/80 text-red-200 border-red-500 font-bold';
                 }
-            });
 
-            // Update Score
-            if (chosen.correct) {
-                score++;
-                document.getElementById('quiz-score-badge').textContent = `Score: ${score}`;
-                document.getElementById('explanation-title').textContent = "Correct Answer!";
-                document.getElementById('explanation-title').className = "text-xs font-black uppercase tracking-widest text-emerald-400";
-            } else {
-                document.getElementById('explanation-title').textContent = "Incorrect";
-                document.getElementById('explanation-title').className = "text-xs font-black uppercase tracking-widest text-red-400";
-            }
-
-            // Display Explanation Box
-            const explanationBox = document.getElementById('quiz-explanation-box');
-            explanationBox.classList.remove('hidden');
-            const explanationText = document.getElementById('explanation-text');
-            explanationText.innerHTML = q.exp;
-
-            // Re-render math equations in explanation text
-            MathJax.typesetPromise([explanationText]);
-        }
-
-        function nextQuestion() {
-            if (currentQuestionIdx < quizDatabase.length - 1) {
-                currentQuestionIdx++;
-                loadQuestion();
-            } else {
-                // End of quiz state display
-                const quizBox = document.getElementById('quiz-options-container').parentElement;
-                quizBox.innerHTML = `
-                    <div class="text-center py-10">
-                        <svg class="w-16 h-16 text-logo-orange mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
-                        <h3 class="text-2xl font-bold mb-2">Quiz Completed!</h3>
-                        <p class="text-sm text-slate-400 mb-6">Your overall understanding of Acids, Bases and Salts:</p>
-                        <div class="text-5xl font-black text-logo-orange mb-4">${score} / ${quizDatabase.length}</div>
-                        <button onclick="restartQuiz()" class="bg-logo-orange hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-xl transition-all text-xs">Restart Assessment</button>
-                    </div>
+                return `
+                    <button onclick="selectQuizOption(${i})" ${userChoice !== null ? 'disabled' : ''} class="w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-all ${btnStyle}">
+                        <span class="font-mono font-bold mr-2">${String.fromCharCode(65 + i)}.</span> ${opt}
+                    </button>
                 `;
-                document.getElementById('quiz-next-btn').classList.add('hidden');
-                document.getElementById('quiz-prev-btn').classList.add('hidden');
+            }).join('');
+
+            const expBox = document.getElementById('quiz-explanation-box');
+            if (quizAnswersState[quizCurrentIdx] !== null) {
+                expBox.classList.remove('hidden');
+                expBox.innerHTML = `<strong>💡 NCERT Solution Insight:</strong> ${q.explanation}`;
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            document.getElementById('quiz-prev-btn').disabled = quizCurrentIdx === 0;
+        }
+
+        function selectQuizOption(optIdx) {
+            if (quizAnswersState[quizCurrentIdx] !== null) return;
+            quizAnswersState[quizCurrentIdx] = optIdx;
+            
+            if (optIdx === quizQuestions[quizCurrentIdx].correct) {
+                quizScore += 10;
+            }
+            renderQuizQuestion();
+        }
+
+        function nextQuizQuestion() {
+            if (quizCurrentIdx < quizQuestions.length - 1) {
+                quizCurrentIdx++;
+                renderQuizQuestion();
+            } else {
+                alert(`🎉 Quiz Completed! Final Score: ${quizScore} / ${quizQuestions.length * 10}`);
             }
         }
 
-        function prevQuestion() {
-            if (currentQuestionIdx > 0) {
-                currentQuestionIdx--;
-                loadQuestion();
+        function prevQuizQuestion() {
+            if (quizCurrentIdx > 0) {
+                quizCurrentIdx--;
+                renderQuizQuestion();
             }
         }
 
-        function restartQuiz() {
-            location.reload();
-        }
-
-        /************************************************************************
-         * LIFECYCLE WINDOW INITIALIZATIONS
-         ************************************************************************/
-        window.onload = function() {
-            onPathwayChange(); // Initialize Reactant Selector
-            handlePhChange();  // Initialize default pH 7 State
-            switchSalt(0);     // Initialize NaOH Salt Page
-            loadQuestion();    // Load initial Board Question
-        }
+        /* Initializer on Window Load */
+        window.onload = () => {
+            renderRulesMatrix();
+            renderLabTabs();
+            loadLabUI();
+            updatePHInteractive();
+            renderQuizQuestion();
+        };
     </script>
 </body>
 </html>
