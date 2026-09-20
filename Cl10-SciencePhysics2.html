@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electricity & Circuits | Class 10 Interactive</title>
+    <title>Electricity | Class 10 Interactive (NCERT Ch-11)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="logo-small.png">
-	<link rel="shortcut icon" href="logo-small.png">
-	<link rel="apple-touch-icon" href="logo-small.png">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -20,7 +17,7 @@
                         mono: ['Space Mono', 'monospace'],
                     },
                     colors: {
-                        'brand-green': '#147a6b', 
+                        'brand-green': '#147a6b',
                         'brand-dark': '#0f5e52',
                         'brand-orange': '#f59e0b',
                         'brand-orange-light': '#fef3c7',
@@ -31,8 +28,7 @@
     </script>
     <style>
         body { background-color: #f8fafc; color: #1e293b; }
-        
-        /* Custom styles for range sliders to match theme */
+
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -57,66 +53,175 @@
         }
         input[type=range]:focus { outline: none; }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #147a6b; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #0f5e52; }
+
+        /* Bulb glow animation for circuit lab */
+        @keyframes pulseGlow { 0%,100% { opacity: 0.85; } 50% { opacity: 1; } }
+        .bulb-on { animation: pulseGlow 1.2s ease-in-out infinite; }
+
+        /* MCQ option states */
+        .opt-correct { border-color: #147a6b !important; background-color: #d1fae5 !important; }
+        .opt-wrong { border-color: #ef4444 !important; background-color: #fee2e2 !important; }
+        .opt-selected { border-color: #f59e0b !important; background-color: #fef3c7 !important; }
+
+        /* Solution drawer */
+        .sol-drawer { max-height: 0; overflow: hidden; opacity: 0; transition: all .35s ease; }
+        .sol-open { max-height: 3000px; opacity: 1; }
+
+        /* ====== Dynamic Island navigation ====== */
+#siteNav {
+    position: fixed;
+    top: 0.9rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 60;
+    border-radius: 9999px;
+    background: rgba(8, 12, 24, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 10px 34px rgba(2, 6, 23, 0.45);
+    transition: box-shadow .35s ease;
+}
+#siteNav:hover, #siteNav.island-open {
+    box-shadow: 0 14px 46px rgba(2, 6, 23, 0.58), 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+/* Links are display:none below lg (hamburger takes over),
+   and truly collapsed (0 width, invisible, non-interactive) at lg+. */
+#navLinks { display: none; }
+
+@media (min-width: 1024px) {
+    #navLinks {
+        display: flex;
+        align-items: center;
+        gap: 0.125rem;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        white-space: nowrap;
+        transition: max-width .55s cubic-bezier(.34, 1.35, .4, 1), opacity .18s ease;
+    }
+    #siteNav:hover #navLinks,
+    #siteNav.island-open #navLinks,
+    #siteNav:focus-within #navLinks {
+        max-width: 52rem;
+        opacity: 1;
+        pointer-events: auto;
+        transition: max-width .55s cubic-bezier(.34, 1.35, .4, 1), opacity .22s ease .22s;
+    }
+    .nav-hint { transition: opacity .25s ease; }
+    #siteNav:hover .nav-hint,
+    #siteNav.island-open .nav-hint,
+    #siteNav:focus-within .nav-hint { opacity: 0; }
+}
+@keyframes hintNudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-3px); } }
+.nav-hint { animation: hintNudge 1.4s ease-in-out infinite; }
+
+/* Island link styles (self-contained, no Tailwind dependency) */
+.island-link {
+    display: inline-block;
+    padding: 0.45rem 0.8rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color .15s ease, background .15s ease;
+}
+.island-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.09); }
+.island-cta {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.45rem 0.95rem;
+    border-radius: 9999px;
+    color: #ffffff;
+    text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.island-cta:hover { transform: translateY(-1px); }
+.island-cta-green  { background: #147a6b; box-shadow: 0 2px 10px rgba(20, 122, 107, 0.5); }
+.island-cta-green:hover  { background: #0f5e52; }
+.island-cta-orange { background: #f59e0b; box-shadow: 0 2px 10px rgba(245, 158, 11, 0.45); }
+.island-cta-orange:hover { background: #d97706; }
+.island-divider { width: 1px; height: 1.1rem; background: rgba(255, 255, 255, 0.18); margin: 0 0.3rem; flex-shrink: 0; }
     </style>
 </head>
 <body class="antialiased font-sans flex flex-col min-h-screen">
 
-    <!-- Navigation Header -->
-    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <!-- Branding -->
-                <div class="flex-shrink-0 flex items-center gap-2">
-                    <i class="fa-solid fa-bolt text-brand-orange text-2xl"></i>
-                    <span class="text-2xl font-black tracking-tight">
-                        <span class="text-brand-green">Electric</span><span class="text-brand-orange">ity</span>
-                    </span>
-                </div>
-                
-                <!-- Desktop Navigation Buttons: Perfectly Aligned with Uniform Padding & Margins -->
-                <div class="hidden md:flex items-center gap-2">
-                    <a href="#intro" class="px-4 py-2 text-sm text-gray-600 hover:text-brand-green hover:bg-emerald-50/50 font-semibold rounded-lg transition-all duration-200">Current & Potential</a>
-                    <a href="#ohmslaw" class="px-4 py-2 text-sm text-gray-600 hover:text-brand-green hover:bg-emerald-50/50 font-semibold rounded-lg transition-all duration-200">Ohm's Law</a>
-                    <a href="#resistance" class="px-4 py-2 text-sm text-gray-600 hover:text-brand-green hover:bg-emerald-50/50 font-semibold rounded-lg transition-all duration-200">Resistance</a>
-                    <a href="#power" class="px-4 py-2 text-sm text-gray-600 hover:text-brand-green hover:bg-emerald-50/50 font-semibold rounded-lg transition-all duration-200">Heating</a>
-                    <a href="#questions" class="px-4 py-2 text-sm text-white bg-brand-orange hover:bg-amber-600 font-bold rounded-lg transition-all duration-200 shadow-sm ml-2">Exam Vault</a>
-                </div>
+    <!-- Dynamic Island Navigation: black pill that morphs open on hover/focus/touch -->
+    <nav id="siteNav" aria-label="Main navigation">
+        <div class="flex items-center gap-1.5 h-12 lg:h-[3.4rem] pl-5 pr-2.5">
+            <!-- Branding (always visible in the island) -->
+            <a href="#top" id="navBrand" class="flex-shrink-0 flex items-center gap-2 pr-1" aria-label="Electricity - back to top">
+                <i class="fa-solid fa-bolt text-brand-orange text-lg lg:text-xl"></i>
+                <span class="text-lg font-black tracking-tight whitespace-nowrap">
+                    <span class="text-emerald-400">Electric</span><span class="text-brand-orange">ity</span>
+                </span>
+            </a>
 
-                <!-- Mobile Navigation Toggle Button -->
-                <div class="md:hidden flex items-center">
-                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg text-gray-600 hover:text-brand-green hover:bg-gray-100 focus:outline-none">
-                        <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
-                    </button>
-                </div>
+            <!-- Expandable island content: links + quick actions, hidden while collapsed -->
+            <div id="navLinks">
+                <span class="island-divider"></span>
+                <a class="island-link" href="#intro">Basics</a>
+                <a class="island-link" href="#symbols">Circuits</a>
+                <a class="island-link" href="#ohmslaw">Ohm's Law</a>
+                <a class="island-link" href="#resistance">Resistance</a>
+                <a class="island-link" href="#combinations">Series & Parallel</a>
+                <a class="island-link" href="#power">Heating</a>
+                <a class="island-link" href="#examples">Solved</a>
+                <span class="island-divider"></span>
+                <a class="island-cta island-cta-green" href="#mcqtest">MCQ Test</a>
+                <a class="island-cta island-cta-orange" href="#questions">Exam Vault</a>
             </div>
+
+            <!-- Hover hint (desktop only) -->
+            <i class="fa-solid fa-angles-left nav-hint hidden lg:block text-[10px] text-white/35 pl-2" title="Hover to expand" aria-hidden="true"></i>
+
+            <!-- Mobile toggle -->
+            <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 focus:outline-none" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars text-base" id="menuIcon"></i>
+            </button>
         </div>
 
-        <!-- Mobile Dropdown Navigation Menu -->
-        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 bg-white px-4 py-4 space-y-2 shadow-inner">
-            <a href="#intro" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-gray-600 hover:text-brand-green hover:bg-emerald-50 rounded-lg font-semibold transition">Current & Potential</a>
-            <a href="#ohmslaw" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-gray-600 hover:text-brand-green hover:bg-emerald-50 rounded-lg font-semibold transition">Ohm's Law</a>
-            <a href="#resistance" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-gray-600 hover:text-brand-green hover:bg-emerald-50 rounded-lg font-semibold transition">Resistance</a>
-            <a href="#power" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-gray-600 hover:text-brand-green hover:bg-emerald-50 rounded-lg font-semibold transition">Heating</a>
-            <a href="#questions" onclick="toggleMobileMenu()" class="block px-4 py-3 text-base text-white bg-brand-orange hover:bg-amber-600 font-bold rounded-lg transition text-center shadow-sm">Exam Vault</a>
+        <!-- Mobile dropdown (dark, below the island) -->
+        <div id="mobileMenu" class="hidden lg:hidden absolute left-1/2 -translate-x-1/2 top-full mt-2 w-80 max-w-[92vw] border border-white/10 bg-slate-900/95 backdrop-blur px-3 py-3 space-y-1 shadow-2xl rounded-3xl">
+            <a href="#intro" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition">Basics: Current & Potential</a>
+            <a href="#symbols" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition">Circuit Diagrams & Symbols</a>
+            <a href="#ohmslaw" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition">Ohm's Law</a>
+            <a href="#resistance" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition">Resistance & Resistivity</a>
+            <a href="#combinations" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition">Series & Parallel</a>
+            <a href="#power" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition">Heating Effect & Power</a>
+            <a href="#examples" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/10 rounded-xl font-semibold transition">Solved Examples & Numericals</a>
+            <a href="#mcqtest" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-white bg-brand-green hover:bg-brand-dark font-bold rounded-xl transition text-center shadow-sm">MCQ Test</a>
+            <a href="#questions" onclick="toggleMobileMenu()" class="block px-4 py-2.5 text-sm text-white bg-brand-orange hover:bg-amber-600 font-bold rounded-xl transition text-center shadow-sm">Exam Vault</a>
         </div>
     </nav>
+
+    <span id="top"></span>
 
     <!-- Hero Section -->
     <div class="bg-brand-green text-white py-20 relative overflow-hidden">
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
         <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
             <div class="inline-block px-4 py-1 rounded-full bg-brand-dark border border-emerald-500 text-sm font-mono text-brand-orange-light mb-6 shadow-lg">
-               CBSE Class 10th Physics | NCERT Chapter 12
+                👨‍🏫 Prof's Note: NCERT Chapter 11 (Reprint 2026-27)
             </div>
             <h1 class="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">Master the Flow of Electrons</h1>
             <p class="text-xl text-emerald-50 max-w-2xl mx-auto leading-relaxed">
-                Interactive modules, strictly NCERT concepts, and high-yield board questions from Various Trusted Refrence Books. Let's make Physics visual!
+                Every NCERT topic, 13 solved NCERT examples, board numericals, an MCQ test and interactive circuit labs — strictly NCERT Class 10 Science, with high-yield questions from Educart, MTG & Oswal.
             </p>
+            <div class="flex flex-wrap justify-center gap-3 mt-8 text-sm font-semibold">
+                <span class="px-4 py-1.5 rounded-full bg-white/10 border border-emerald-400/40"><i class="fa-solid fa-diagram-project mr-1 text-brand-orange"></i> 11 Circuit Symbols</span>
+                <span class="px-4 py-1.5 rounded-full bg-white/10 border border-emerald-400/40"><i class="fa-solid fa-flask mr-1 text-brand-orange"></i> 8 Interactive Modules</span>
+                <span class="px-4 py-1.5 rounded-full bg-white/10 border border-emerald-400/40"><i class="fa-solid fa-list-check mr-1 text-brand-orange"></i> 40+ Solved Q&A</span>
+                <span class="px-4 py-1.5 rounded-full bg-white/10 border border-emerald-400/40"><i class="fa-solid fa-clipboard-question mr-1 text-brand-orange"></i> 20-MCQ Test</span>
+            </div>
         </div>
     </div>
 
@@ -127,64 +232,62 @@
         <section id="intro" class="scroll-mt-24">
             <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
                 <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-brand-green text-2xl font-bold border border-emerald-200 shadow-sm">1</div>
-                <h3 class="text-3xl font-bold text-gray-800">Charge, Electric Current & Potential</h3>
+                <h3 class="text-3xl font-bold text-gray-800">Electric Current, Circuit & Potential</h3>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <!-- Theory Cards -->
                 <div class="space-y-6">
-					<div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg relative overflow-hidden group">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-brand-green opacity-5 rounded-bl-full transition-transform group-hover:scale-110"></div>
-                        <h4 class="text-xl font-bold text-brand-red mb-3"><i class="fa-solid fa-water mr-2"></i>The Base (Charge)</h4>
-                        <p class="text-gray-600 mb-4 text-sm">Charge is stated by the "deficiency" or excess of electrons in a Body.</p>
-						<p class="text-gray-590 mb-4 text-sm">If a body has deficiency of electrons it is said to be "Positively Charged"</p>
-						<p class="text-gray-590 mb-4 text-sm">If a body has excess of electrons it is said to be "Negatively Charged"</p>
-						<p class="text-gray-590 mb-4 text-sm">Its is denoted by Q</p>
-                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono text-center">
-						<ul>
-                            <li class="text-brand-red font-bold text-xl><span>Q = n x e</span></li>
-							<li><span class="text-brand-red font-bold text-xl">or</span></li>
-							<li class="text-brand-red font-bold text-xl><span>Q = n x 1.6 x 10^-19</span></li>
-						</ul>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-400 opacity-10 rounded-bl-full transition-transform group-hover:scale-110"></div>
+                        <h4 class="text-xl font-bold text-indigo-700 mb-3"><i class="fa-solid fa-atom mr-2"></i>The Stuff (Electric Charge)</h4>
+                        <p class="text-gray-600 mb-4 text-sm">Just as flowing water constitutes a water current, flowing <strong>electric charge</strong> constitutes an electric current. In metallic wires, the charge carriers are <strong>electrons</strong>. Charge is a fundamental property of matter — it comes in two kinds, positive (+) and negative (–), and like charges repel while unlike charges attract.</p>
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono text-center space-y-1">
+                            <span class="text-indigo-700 font-bold text-xl">Q = I × t</span>
+                            <p class="text-xs text-gray-500">(also, total charge Q = n × e for n electrons)</p>
                         </div>
-						<p class="text-gray-590 mb-4 text-sm">n = Number of electrons, e = clarge of an electron</p>
                         <ul class="mt-4 space-y-2 text-sm text-gray-500">
-                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>SI Unit: coulomb (C)</li>
-							<li><i class="fa-solid fa-check text-brand-orange mr-2"></i>Minimum charge of a body = Charge of 1 electron = 1.6 x 10^-19 C</li>
+                            <li><i class="fa-solid fa-check text-indigo-500 mr-2"></i>SI Unit: <strong>Coulomb (C)</strong> — charge flowing in 1 second when I = 1 A</li>
+                            <li><i class="fa-solid fa-check text-indigo-500 mr-2"></i>Charge of one electron: e = –1.6 × 10<sup>–19</sup> C</li>
+                            <li><i class="fa-solid fa-check text-indigo-500 mr-2"></i>1 C = charge of ≈ 6 × 10<sup>18</sup> electrons</li>
                         </ul>
                     </div>
-					
+
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg relative overflow-hidden group">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-brand-green opacity-5 rounded-bl-full transition-transform group-hover:scale-110"></div>
                         <h4 class="text-xl font-bold text-brand-green mb-3"><i class="fa-solid fa-water mr-2"></i>The Flow (Current)</h4>
-                        <p class="text-gray-600 mb-4 text-sm">Electric current is expressed by the amount of charge flowing through a particular area in unit time. It is the rate of flow of electric charges.</p>
+                        <p class="text-gray-600 mb-3 text-sm">Electric current is the rate of flow of electric charge through a conductor. A continuous and closed path of electric current is called an <strong>electric circuit</strong> — if the circuit breaks anywhere, current stops flowing.</p>
+                        <p class="text-gray-600 mb-4 text-sm bg-orange-50 border-l-4 border-brand-orange p-3 rounded-r-lg"><i class="fa-solid fa-circle-info text-brand-orange mr-1"></i> <strong>Convention check:</strong> in metallic wires, <em>electrons</em> carry the charge, but the direction of electric current is taken <strong>opposite</strong> to the flow of electrons (i.e., along the direction positive charges would move).</p>
                         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono text-center">
                             <span class="text-brand-green font-bold text-xl">I = Q / t</span>
                         </div>
                         <ul class="mt-4 space-y-2 text-sm text-gray-500">
-                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>SI Unit: Ampere (A)</li>
-                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>Measured by: Ammeter (connected in series)</li>
+                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>SI Unit: Ampere (A); &nbsp;1 A = 1 C / 1 s</li>
+                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>Small currents: 1 mA = 10<sup>–3</sup> A, 1 µA = 10<sup>–6</sup> A</li>
+                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>1 coulomb ≈ charge of 6 × 10<sup>18</sup> electrons (electron charge = 1.6 × 10<sup>–19</sup> C)</li>
+                            <li><i class="fa-solid fa-check text-brand-orange mr-2"></i>Measured by: Ammeter (always connected in <strong>series</strong>)</li>
                         </ul>
                     </div>
 
                     <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg relative overflow-hidden group">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-brand-orange opacity-5 rounded-bl-full transition-transform group-hover:scale-110"></div>
                         <h4 class="text-xl font-bold text-brand-orange mb-3"><i class="fa-solid fa-battery-full mr-2"></i>The Push (Potential)</h4>
+                        <p class="text-gray-600 mb-3 text-sm"><strong>Analogy:</strong> water flows in a tube only when there is a pressure difference between its two ends. Similarly, charges flow in a wire only when there is an electric pressure difference — the <strong>potential difference</strong> — produced by a cell or battery (chemical action inside the cell generates it).</p>
                         <p class="text-gray-600 mb-4 text-sm">Electric potential difference between two points is the work done to move a unit charge from one point to the other.</p>
                         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono text-center">
                             <span class="text-brand-orange font-bold text-xl">V = W / Q</span>
                         </div>
                         <ul class="mt-4 space-y-2 text-sm text-gray-500">
-                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i>SI Unit: Volt (V)</li>
-                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Measured by: Voltmeter (connected in parallel)</li>
+                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i>SI Unit: Volt (V); &nbsp;1 V = 1 J / 1 C</li>
+                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Measured by: Voltmeter (always connected in <strong>parallel</strong>)</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Interactive Calculator & Symbols -->
+                <!-- Interactive Calculator & Electrons -->
                 <div class="space-y-6">
                     <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fa-solid fa-calculator text-brand-green mr-2"></i>Interactive Calculator</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4"><i class="fa-solid fa-calculator text-brand-green mr-2"></i>Current & Potential Calculator</h3>
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">Charge (Q) in Coulombs</label>
@@ -210,58 +313,229 @@
                                     <p class="text-xl font-black text-orange-800" id="resV">5.00 V</p>
                                 </div>
                             </div>
+                            <div class="bg-indigo-50 rounded-lg p-3 text-center border border-indigo-100">
+                                <p class="text-xs text-indigo-600 font-bold uppercase mb-1">Electrons in Q <i class="fa-solid fa-atom ml-1"></i></p>
+                                <p class="text-xl font-black text-indigo-900" id="resE">6.25 × 10<sup>19</sup></p>
+                                <p class="text-[11px] text-indigo-400 mt-1 font-mono">n = Q / (1.6 × 10<sup>–19</sup> C)</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Circuit Symbols Grid -->
+                    <!-- Interactive Circuit Lab (Fig 11.1) -->
                     <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4 text-center">NCERT Circuit Symbols</h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-gray-50 p-3 rounded-xl shadow-sm border flex flex-col items-center justify-center hover:shadow-md transition">
-                                <svg width="60" height="40" viewBox="0 0 60 40">
-                                    <line x1="0" y1="20" x2="25" y2="20" stroke="black" stroke-width="2"/>
-                                    <line x1="25" y1="5" x2="25" y2="35" stroke="black" stroke-width="2"/>
-                                    <line x1="35" y1="12" x2="35" y2="28" stroke="black" stroke-width="4"/>
-                                    <line x1="35" y1="20" x2="60" y2="20" stroke="black" stroke-width="2"/>
-                                    <text x="20" y="10" font-size="10" fill="black">+</text>
-                                    <text x="38" y="10" font-size="10" fill="black">-</text>
-                                </svg>
-                                <span class="text-xs font-medium mt-2 text-gray-600">Electric Cell</span>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1"><i class="fa-solid fa-lightbulb text-brand-orange mr-2"></i>Interactive Circuit Lab</h3>
+                        <p class="text-xs text-gray-500 mb-4">NCERT Fig 11.1 — cell, plug key, bulb & ammeter. Add cells like <em>Activity 11.1</em> and watch the electrons!</p>
+
+                        <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                            <svg id="circuitSVG" viewBox="0 0 480 300" class="w-full h-auto select-none" aria-label="Interactive electric circuit">
+                                <!-- wires -->
+                                <line x1="70" y1="60" x2="410" y2="60" stroke="#334155" stroke-width="3"/>
+                                <line x1="410" y1="60" x2="410" y2="250" stroke="#334155" stroke-width="3"/>
+                                <line x1="70" y1="250" x2="215" y2="250" stroke="#334155" stroke-width="3"/>
+                                <line x1="265" y1="250" x2="410" y2="250" stroke="#334155" stroke-width="3"/>
+                                <line x1="70" y1="60" x2="70" y2="105" stroke="#334155" stroke-width="3"/>
+                                <line x1="70" y1="205" x2="70" y2="250" stroke="#334155" stroke-width="3"/>
+                                <!-- wire gaps hidden behind components; battery group (left, vertical) -->
+                                <rect x="48" y="100" width="44" height="110" fill="#f8fafc"/>
+                                <g id="batteryCells"></g>
+                                <text x="28" y="158" font-size="12" fill="#0f5e52" font-weight="bold" font-family="Space Mono, monospace">+</text>
+                                <text x="28" y="196" font-size="14" fill="#b45309" font-weight="bold" font-family="Space Mono, monospace">–</text>
+                                <!-- bulb (top) -->
+                                <circle id="bulbGlow" cx="240" cy="60" r="26" fill="#fde68a" opacity="0"/>
+                                <circle cx="240" cy="60" r="22" fill="#f8fafc" stroke="#334155" stroke-width="3"/>
+                                <line x1="225" y1="45" x2="255" y2="75" stroke="#334155" stroke-width="2"/>
+                                <line x1="255" y1="45" x2="225" y2="75" stroke="#334155" stroke-width="2"/>
+                                <g id="bulbRays" opacity="0">
+                                    <line x1="240" y1="22" x2="240" y2="10" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="212" y1="32" x2="203" y2="23" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+                                    <line x1="268" y1="32" x2="277" y2="23" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+                                </g>
+                                <text x="240" y="103" font-size="11" fill="#64748b" text-anchor="middle" font-family="Space Mono, monospace">Bulb (R = 6 Ω)</text>
+                                <!-- ammeter (right) -->
+                                <circle cx="410" cy="155" r="24" fill="#ecfdf5" stroke="#147a6b" stroke-width="3"/>
+                                <text x="410" y="151" font-size="16" fill="#147a6b" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">A</text>
+                                <text id="ammeterRead" x="410" y="167" font-size="9" fill="#0f5e52" text-anchor="middle" font-family="Space Mono, monospace">0.00 A</text>
+                                <!-- plug key (bottom) -->
+                                <circle cx="215" cy="250" r="4" fill="#334155"/>
+                                <circle cx="265" cy="250" r="4" fill="#334155"/>
+                                <line id="keyLever" x1="215" y1="250" x2="265" y2="250" stroke="#b45309" stroke-width="4" stroke-linecap="round" transform="rotate(-30 215 250)"/>
+                                <text x="240" y="285" font-size="11" fill="#64748b" text-anchor="middle" font-family="Space Mono, monospace">Plug Key</text>
+                                <!-- conventional current arrow (top wire) -->
+                                <polygon points="180,52 200,60 180,68" fill="#147a6b"/>
+                                <text x="190" y="40" font-size="11" fill="#147a6b" font-weight="bold" font-family="Space Mono, monospace">I (conventional)</text>
+                                <!-- electron label (bottom wire) -->
+                                <polygon points="300,242 280,250 300,258" fill="#2563eb"/>
+                                <text x="290" y="278" font-size="11" fill="#2563eb" font-weight="bold" font-family="Space Mono, monospace">e⁻ (actual flow)</text>
+                                <!-- electrons -->
+                                <g id="electronLayer"></g>
+                            </svg>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Number of cells (1.5 V each)</p>
+                                <div class="flex gap-2" id="cellButtons">
+                                    <button onclick="setCells(1)" class="cell-btn flex-1 py-2 rounded-lg border-2 border-gray-200 font-bold text-sm text-gray-500">1</button>
+                                    <button onclick="setCells(2)" class="cell-btn flex-1 py-2 rounded-lg border-2 border-gray-200 font-bold text-sm text-gray-500">2</button>
+                                    <button onclick="setCells(3)" class="cell-btn flex-1 py-2 rounded-lg border-2 border-gray-200 font-bold text-sm text-gray-500">3</button>
+                                    <button onclick="setCells(4)" class="cell-btn flex-1 py-2 rounded-lg border-2 border-gray-200 font-bold text-sm text-gray-500">4</button>
+                                </div>
                             </div>
-                            <div class="bg-gray-50 p-3 rounded-xl shadow-sm border flex flex-col items-center justify-center hover:shadow-md transition">
-                                <svg width="60" height="40" viewBox="0 0 60 40">
-                                    <polyline points="0,20 10,20 15,10 25,30 35,10 45,30 50,20 60,20" stroke="black" fill="none" stroke-width="2"/>
-                                </svg>
-                                <span class="text-xs font-medium mt-2 text-gray-600">Resistor</span>
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Plug key</p>
+                                <button id="keyBtn" onclick="toggleKey()" class="w-full py-2 rounded-lg bg-brand-green text-white font-bold text-sm shadow hover:bg-brand-dark transition">
+                                    <i class="fa-solid fa-toggle-on mr-1"></i> Close Key
+                                </button>
                             </div>
                         </div>
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <div class="bg-emerald-50 rounded-lg p-3 text-center border border-emerald-100">
+                                <p class="text-xs text-brand-green font-bold uppercase mb-1">EMF (V)</p>
+                                <p class="text-xl font-black text-brand-dark"><span id="labV">1.5</span> V</p>
+                            </div>
+                            <div class="bg-orange-50 rounded-lg p-3 text-center border border-orange-100">
+                                <p class="text-xs text-brand-orange font-bold uppercase mb-1">Ammeter Reading (I = V/R)</p>
+                                <p class="text-xl font-black text-orange-800"><span id="labI">0.00</span> A</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3"><i class="fa-solid fa-lightbulb text-brand-orange mr-1"></i>Watch closely: electrons drift from the – terminal to the + terminal, while conventional current I is shown opposite. More cells → more potential difference → larger current (Activity 11.1).</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 2. Ohm's Law Simulator -->
-        <section id="ohmslaw" class="scroll-mt-24">
+        <!-- 2. Circuit Diagrams & Symbols -->
+        <section id="symbols" class="scroll-mt-24">
             <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
                 <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-brand-orange text-2xl font-bold border border-orange-200 shadow-sm">2</div>
+                <h3 class="text-3xl font-bold text-gray-800">Circuit Diagrams & Symbols</h3>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 mb-8">
+                <p class="text-sm text-gray-600 mb-6">A <strong>schematic diagram</strong> represents circuit components by convenient standard symbols (NCERT Table 11.1). Tap a card to flip it and see what the component does.</p>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="symbolGrid"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-compass-drafting text-brand-green mr-2"></i>Circuit to verify Ohm's law (NCERT Fig 11.2)</h4>
+                    <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                        <svg viewBox="0 0 480 320" class="w-full h-auto">
+                            <!-- main loop wires -->
+                            <line x1="60" y1="40" x2="124" y2="40" stroke="#334155" stroke-width="3"/>
+                            <line x1="176" y1="40" x2="420" y2="40" stroke="#334155" stroke-width="3"/>
+                            <line x1="420" y1="40" x2="420" y2="98" stroke="#334155" stroke-width="3"/>
+                            <line x1="420" y1="142" x2="420" y2="200" stroke="#334155" stroke-width="3"/>
+                            <line x1="60" y1="200" x2="200" y2="200" stroke="#334155" stroke-width="3"/>
+                            <line x1="300" y1="200" x2="420" y2="200" stroke="#334155" stroke-width="3"/>
+                            <line x1="60" y1="40" x2="60" y2="100" stroke="#334155" stroke-width="3"/>
+                            <line x1="60" y1="148" x2="60" y2="200" stroke="#334155" stroke-width="3"/>
+                            <!-- battery (2 cells) on left -->
+                            <rect x="42" y="100" width="36" height="48" fill="#f8fafc"/>
+                            <line x1="44" y1="106" x2="76" y2="106" stroke="#334155" stroke-width="4"/>
+                            <line x1="52" y1="118" x2="68" y2="118" stroke="#334155" stroke-width="2.5"/>
+                            <line x1="44" y1="130" x2="76" y2="130" stroke="#334155" stroke-width="4"/>
+                            <line x1="52" y1="142" x2="68" y2="142" stroke="#334155" stroke-width="2.5"/>
+                            <text x="22" y="110" font-size="12" fill="#0f5e52" font-weight="bold">+</text>
+                            <text x="22" y="146" font-size="14" fill="#b45309" font-weight="bold">–</text>
+                            <!-- rheostat on top (break between 118 and 182) -->
+                            <rect x="118" y="28" width="64" height="24" fill="#f8fafc" stroke="#334155" stroke-width="2.5"/>
+                            <line x1="135" y1="8" x2="163" y2="48" stroke="#b45309" stroke-width="2.5"/>
+                            <polygon points="163,48 154,43 160,37" fill="#b45309"/>
+                            <text x="204" y="20" font-size="11" fill="#64748b" font-family="Space Mono, monospace">Rheostat</text>
+                            <!-- ammeter in series (right) -->
+                            <circle cx="420" cy="120" r="22" fill="#ecfdf5" stroke="#147a6b" stroke-width="3"/>
+                            <text x="420" y="126" font-size="15" fill="#147a6b" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">A</text>
+                            <!-- plug key on bottom left -->
+                            <circle cx="110" cy="200" r="4" fill="#334155"/>
+                            <circle cx="146" cy="200" r="4" fill="#334155"/>
+                            <line x1="110" y1="200" x2="146" y2="200" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
+                            <text x="128" y="224" font-size="10" fill="#64748b" text-anchor="middle" font-family="Space Mono, monospace">Key (closed)</text>
+                            <!-- nichrome wire XY on bottom (between X=200 and Y=300) -->
+                            <circle cx="200" cy="200" r="3" fill="#334155"/>
+                            <circle cx="300" cy="200" r="3" fill="#334155"/>
+                            <polyline points="200,200 210,188 222,212 234,188 246,212 258,188 270,212 282,188 294,212 300,200" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="190" y="222" font-size="12" fill="#64748b" font-family="Space Mono, monospace">X</text>
+                            <text x="305" y="222" font-size="12" fill="#64748b" font-family="Space Mono, monospace">Y</text>
+                            <text x="250" y="240" font-size="10" fill="#64748b" text-anchor="middle" font-family="Space Mono, monospace">Nichrome wire</text>
+                            <!-- voltmeter in parallel across XY -->
+                            <line x1="200" y1="200" x2="200" y2="238" stroke="#b45309" stroke-width="2.5"/>
+                            <line x1="300" y1="200" x2="300" y2="238" stroke="#b45309" stroke-width="2.5"/>
+                            <line x1="200" y1="238" x2="231" y2="258" stroke="#b45309" stroke-width="2.5"/>
+                            <line x1="300" y1="238" x2="269" y2="258" stroke="#b45309" stroke-width="2.5"/>
+                            <circle cx="250" cy="274" r="20" fill="#fff7ed" stroke="#b45309" stroke-width="3"/>
+                            <text x="250" y="280" font-size="14" fill="#b45309" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">V</text>
+                            <!-- current direction arrow -->
+                            <polygon points="86,32 102,40 86,48" fill="#147a6b"/>
+                            <text x="90" y="24" font-size="11" fill="#147a6b" font-weight="bold" font-family="Space Mono, monospace">I</text>
+                        </svg>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">Four 1.5 V cells drive current through a nichrome wire XY; the rheostat varies the current, the ammeter reads it, and the voltmeter measures the PD across XY. The ratio V/I stays constant — that constant is R.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h4 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-arrows-left-right text-brand-orange mr-2"></i>How the ammeter & voltmeter sit in a circuit</h4>
+                    <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                        <svg viewBox="0 0 480 240" class="w-full h-auto">
+                            <rect x="60" y="40" width="360" height="160" fill="none" stroke="#334155" stroke-width="3"/>
+                            <!-- cell -->
+                            <rect x="45" y="95" width="30" height="50" fill="#f8fafc"/>
+                            <line x1="45" y1="110" x2="75" y2="110" stroke="#334155" stroke-width="4"/>
+                            <line x1="52" y1="122" x2="68" y2="122" stroke="#334155" stroke-width="2"/>
+                            <text x="20" y="115" font-size="12" fill="#0f5e52" font-weight="bold">+</text>
+                            <text x="20" y="145" font-size="14" fill="#b45309" font-weight="bold">–</text>
+                            <!-- resistor R on top -->
+                            <polyline points="190,40 200,30 210,50 220,30 230,50 240,30 250,50 260,30 270,40" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="230" y="18" font-size="12" fill="#64748b" text-anchor="middle" font-family="Space Mono, monospace">R</text>
+                            <!-- ammeter in series (right side) -->
+                            <circle cx="420" cy="120" r="22" fill="#ecfdf5" stroke="#147a6b" stroke-width="3"/>
+                            <text x="420" y="126" font-size="15" fill="#147a6b" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">A</text>
+                            <text x="470" y="86" font-size="10" fill="#147a6b" text-anchor="end" font-family="Space Mono, monospace">series</text>
+                            <!-- voltmeter in parallel across R -->
+                            <circle cx="190" cy="40" r="3.5" fill="#334155"/>
+                            <circle cx="270" cy="40" r="3.5" fill="#334155"/>
+                            <line x1="190" y1="40" x2="190" y2="78" stroke="#b45309" stroke-width="2.5"/>
+                            <line x1="270" y1="40" x2="270" y2="78" stroke="#b45309" stroke-width="2.5"/>
+                            <line x1="190" y1="78" x2="213" y2="94" stroke="#b45309" stroke-width="2.5"/>
+                            <line x1="270" y1="78" x2="247" y2="94" stroke="#b45309" stroke-width="2.5"/>
+                            <circle cx="230" cy="110" r="20" fill="#fff7ed" stroke="#b45309" stroke-width="3"/>
+                            <text x="230" y="116" font-size="14" fill="#b45309" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">V</text>
+                            <text x="230" y="150" font-size="10" fill="#b45309" text-anchor="middle" font-family="Space Mono, monospace">parallel across R</text>
+                        </svg>
+                    </div>
+                    <ul class="mt-4 space-y-2 text-sm text-gray-600">
+                        <li><i class="fa-solid fa-circle-check text-brand-green mr-2"></i><strong>Ammeter:</strong> connected in <strong>series</strong> — the whole circuit current passes through it.</li>
+                        <li><i class="fa-solid fa-circle-check text-brand-green mr-2"></i><strong>Voltmeter:</strong> connected in <strong>parallel</strong> across the component whose PD is to be measured.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Ohm's Law Simulator -->
+        <section id="ohmslaw" class="scroll-mt-24">
+            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
+                <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-brand-green text-2xl font-bold border border-emerald-200 shadow-sm">3</div>
                 <h3 class="text-3xl font-bold text-gray-800">Ohm's Law Simulator</h3>
             </div>
 
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
                 <div class="grid grid-cols-1 lg:grid-cols-2">
                     <div class="p-10 bg-brand-green text-white flex flex-col justify-center">
-                        <h4 class="text-3xl font-bold mb-4">V $\propto$ I</h4>
+                        <h4 class="text-3xl font-bold mb-4">V ∝ I</h4>
                         <p class="text-emerald-100 mb-6 text-lg leading-relaxed">
-                            The potential difference, V, across the ends of a given metallic wire in an electric circuit is directly proportional to the current flowing through it, provided its temperature remains the same.
+                            The potential difference, V, across the ends of a given metallic wire in an electric circuit is directly proportional to the current flowing through it, provided its temperature remains the same. Found by Georg Simon Ohm (1827).
                         </p>
                         <div class="bg-brand-dark p-6 rounded-xl border border-emerald-500 mb-6 text-center shadow-inner">
                             <h5 class="text-5xl font-mono font-black text-brand-orange mb-2">V = I &times; R</h5>
                             <p class="text-sm text-emerald-200 font-medium">R is a constant called Resistance.</p>
                         </div>
-                        <p class="text-sm bg-emerald-800/50 p-3 rounded-lg border border-emerald-600"><i class="fa-solid fa-star text-brand-orange mr-2"></i><strong>High Yield:</strong> The V-I graph for Ohmic conductors is always a straight line passing through the origin.</p>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="bg-emerald-800/50 p-3 rounded-lg border border-emerald-600"><strong>R = V / I</strong><br><span class="text-emerald-200 text-xs">1 Ω = 1 V / 1 A</span></div>
+                            <div class="bg-emerald-800/50 p-3 rounded-lg border border-emerald-600"><strong>I = V / R</strong><br><span class="text-emerald-200 text-xs">double R → half the current</span></div>
+                        </div>
+                        <p class="text-sm bg-emerald-800/50 p-3 rounded-lg border border-emerald-600 mt-4"><i class="fa-solid fa-star text-brand-orange mr-2"></i><strong>High Yield:</strong> The V-I graph for Ohmic conductors is always a straight line passing through the origin; its slope (V/I) equals R. A <strong>rheostat</strong> is a variable resistance used to change current without changing the voltage source.</p>
                     </div>
 
-                    <!-- Simulator UI & Graph -->
                     <div class="p-10 flex flex-col justify-center bg-gray-50">
                         <div class="space-y-6">
                             <div>
@@ -271,7 +545,7 @@
                                 </div>
                                 <input type="range" id="ohmVolt" min="0" max="24" step="1" value="10" oninput="updateOhmsLaw()">
                             </div>
-                            
+
                             <div>
                                 <div class="flex justify-between mb-2">
                                     <label class="font-bold text-gray-700 text-sm uppercase tracking-wider">Resistance (R)</label>
@@ -284,8 +558,7 @@
                                 <span class="text-gray-500 font-bold uppercase text-sm">Resulting Current (I)</span>
                                 <div class="text-4xl font-black text-brand-green tracking-tighter" id="ohmValI">2.00 <span class="text-xl text-gray-400">A</span></div>
                             </div>
-                            
-                            <!-- Graph representation -->
+
                             <div class="mt-6 relative h-40 bg-white border-l-2 border-b-2 border-gray-400 p-2 shadow-inner rounded-tr-lg">
                                 <span class="absolute -left-8 top-0 text-xs font-bold text-gray-500">I (A)</span>
                                 <span class="absolute bottom-[-24px] right-0 text-xs font-bold text-gray-500">V (Volts)</span>
@@ -297,67 +570,257 @@
             </div>
         </section>
 
-        <!-- 3. Resistance Factors & Systems -->
+        <!-- 4. Resistance, Factors & Resistivity -->
         <section id="resistance" class="scroll-mt-24">
             <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
-                <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-brand-green text-2xl font-bold border border-emerald-200 shadow-sm">3</div>
-                <h3 class="text-3xl font-bold text-gray-800">Resistance & Systems</h3>
+                <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-brand-orange text-2xl font-bold border border-orange-200 shadow-sm">4</div>
+                <h3 class="text-3xl font-bold text-gray-800">Resistance, Factors & Resistivity</h3>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Factors Affecting Resistance -->
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
+                <!-- Interactive wire lab -->
                 <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 font-sans">
-                    <div class="flex justify-between items-start mb-6">
+                    <div class="flex justify-between items-start mb-2">
                         <div>
                             <h3 class="text-xl font-bold text-gray-800 mb-1">Factors affecting Resistance</h3>
-                            <p class="text-sm text-gray-500">Length (l), Area (A), and Material (ρ)</p>
+                            <p class="text-sm text-gray-500">Length (l), Area (A) and Material (ρ) — NCERT Activity 11.3</p>
                         </div>
                         <div class="bg-brand-orange-light text-brand-orange px-3 py-1 rounded font-bold font-mono">R = ρ(l/A)</div>
                     </div>
-                    
-                    <div class="space-y-6">
+
+                    <div class="space-y-5 mt-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Material of the wire (resistivity ρ at 20 °C)</label>
+                            <select id="wireMat" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-green outline-none font-mono text-sm" onchange="updateWire()">
+                                <option value="1.62e-8" selected>Copper — 1.62 × 10⁻⁸ Ω m</option>
+                                <option value="2.63e-8">Aluminium — 2.63 × 10⁻⁸ Ω m</option>
+                                <option value="5.2e-8">Tungsten — 5.2 × 10⁻⁸ Ω m</option>
+                                <option value="1.0e-7">Iron — 10.0 × 10⁻⁸ Ω m</option>
+                                <option value="4.4e-5">Manganin (alloy) — 44 × 10⁻⁶ Ω m</option>
+                                <option value="4.9e-5">Constantan (alloy) — 49 × 10⁻⁶ Ω m</option>
+                                <option value="1.0e-4">Nichrome (alloy) — 100 × 10⁻⁶ Ω m</option>
+                            </select>
+                        </div>
+
                         <div>
                             <div class="flex justify-between mb-1">
                                 <label class="text-sm font-semibold text-gray-700">Length (l)</label>
-                                <span id="wireLenVal" class="text-sm font-bold text-brand-green">5 m</span>
+                                <span id="wireLenVal" class="text-sm font-bold text-brand-green">1 m</span>
                             </div>
-                            <input type="range" id="wireLen" min="1" max="10" value="5" oninput="updateWire()">
+                            <input type="range" id="wireLen" min="0.5" max="10" step="0.5" value="1" oninput="updateWire()">
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
-                                <label class="text-sm font-semibold text-gray-700">Area of Cross-section (A)</label>
-                                <span id="wireAreaVal" class="text-sm font-bold text-brand-green">2 mm²</span>
+                                <label class="text-sm font-semibold text-gray-700">Diameter (d) — area A = πd²/4</label>
+                                <span id="wireDiaVal" class="text-sm font-bold text-brand-green">0.5 mm</span>
                             </div>
-                            <input type="range" id="wireArea" min="1" max="10" value="2" oninput="updateWire()">
+                            <input type="range" id="wireDia" min="0.1" max="2" step="0.1" value="0.5" oninput="updateWire()">
                         </div>
 
                         <!-- Visual representation of wire -->
                         <div class="h-24 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center p-4 overflow-hidden relative shadow-inner">
-                            <div class="absolute inset-0 flex items-center justify-center opacity-5">
-                                <i class="fa-solid fa-plug text-6xl text-brand-dark"></i>
-                            </div>
-                            <!-- The Wire -->
-                            <div id="visualWire" class="bg-gradient-to-r from-orange-400 to-brand-orange rounded-sm shadow-sm transition-all duration-300" style="width: 50%; height: 20%;"></div>
+                            <div id="visualWire" class="bg-gradient-to-r from-orange-400 to-brand-orange rounded-sm shadow-sm transition-all duration-300" style="width: 15%; height: 30%;"></div>
+                            <span class="absolute right-3 bottom-1 text-[10px] font-mono text-gray-400" id="wireAreaVal">A = 0.196 mm²</span>
                         </div>
 
                         <div class="bg-emerald-50 rounded-lg p-4 text-center border border-emerald-100">
-                            <p class="text-xs font-bold uppercase tracking-wider text-brand-green">Calculated Resistance (Relative)</p>
-                            <p class="text-3xl font-black text-brand-dark mt-1" id="wireResVal">2.50 Ω</p>
+                            <p class="text-xs font-bold uppercase tracking-wider text-brand-green">Real Resistance of this wire (R = ρl/A)</p>
+                            <p class="text-3xl font-black text-brand-dark mt-1" id="wireResVal">0.08 Ω</p>
+                            <p class="text-[11px] text-gray-500 mt-1 font-mono" id="wireResNote">ρ = 1.62 × 10⁻⁸ Ω m, l = 1 m, A = 0.196 mm²</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- System of Resistors -->
+                <!-- Concept cards -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-7">
+                        <h4 class="text-lg font-bold text-brand-green mb-3"><i class="fa-solid fa-ruler-horizontal mr-2"></i>What decides R?</h4>
+                        <p class="text-sm text-gray-600 mb-3">Resistance arises because moving electrons are restrained by the attraction of atoms among which they move. Precise measurements show:</p>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li class="flex gap-2"><i class="fa-solid fa-arrow-right-long text-brand-orange mt-1"></i><span><strong>R ∝ l</strong> — longer wire, more resistance (ammeter reading halves when length doubles).</span></li>
+                            <li class="flex gap-2"><i class="fa-solid fa-arrow-right-long text-brand-orange mt-1"></i><span><strong>R ∝ 1/A</strong> — thicker wire, less resistance (current increases with a thicker wire).</span></li>
+                            <li class="flex gap-2"><i class="fa-solid fa-arrow-right-long text-brand-orange mt-1"></i><span><strong>Material:</strong> a copper wire of the same size conducts better than nichrome — captured by ρ.</span></li>
+                        </ul>
+                        <div class="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-center text-lg font-bold text-brand-dark">
+                            R = ρ l / A &nbsp;&nbsp;⇒&nbsp;&nbsp; ρ = R A / l
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3">ρ (rho) = <strong>electrical resistivity</strong>, SI unit <strong>Ω m</strong>. It is a characteristic property of the material, and varies with temperature.</p>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-7">
+                        <h4 class="text-lg font-bold text-brand-orange mb-3"><i class="fa-solid fa-fire-flame-curved mr-2"></i>Why alloys? (High-yield reasoning)</h4>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Resistivity of an alloy is generally <strong>higher</strong> than that of its constituent metals.</li>
+                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Alloys <strong>do not oxidise (burn) readily</strong> at high temperature → used in electric irons, toasters, heating devices (nichrome).</li>
+                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i><strong>Tungsten</strong> (MP 3380 °C) is used almost exclusively for bulb filaments.</li>
+                            <li><i class="fa-solid fa-check text-brand-green mr-2"></i><strong>Copper & aluminium</strong> (very low resistivity) are used for electrical transmission lines.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Resistivity table -->
+                    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-7 overflow-hidden">
+                        <h4 class="text-lg font-bold text-gray-800 mb-1"><i class="fa-solid fa-table mr-2 text-brand-green"></i>Table 11.2 — Resistivity at 20 °C</h4>
+                        <p class="text-xs text-gray-500 mb-4">No need to memorise — use these values for numericals. (Values in Ω m)</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-base md:text-lg border-collapse">
+                                <thead>
+                                    <tr class="bg-brand-green text-white text-left">
+                                        <th class="px-4 py-3 rounded-tl-lg font-semibold">Category</th>
+                                        <th class="px-4 py-3 font-semibold">Material</th>
+                                        <th class="px-4 py-3 rounded-tr-lg font-semibold text-right">Resistivity</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resistivityTable" class="font-mono text-base md:text-lg"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Series & Parallel Combinations -->
+        <section id="combinations" class="scroll-mt-24">
+            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
+                <div class="w-12 h-12 rounded-lg bg-emerald-100 flex items-center justify-center text-brand-green text-2xl font-bold border border-emerald-200 shadow-sm">5</div>
+                <h3 class="text-3xl font-bold text-gray-800">Resistance of a System of Resistors</h3>
+            </div>
+
+            <!-- Circuit diagrams -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                    <h4 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-link text-brand-green mr-2"></i>Resistors in Series (NCERT Fig 11.6)</h4>
+                    <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                        <svg viewBox="0 0 480 220" class="w-full h-auto">
+                            <rect x="60" y="30" width="360" height="140" fill="none" stroke="#334155" stroke-width="3"/>
+                            <!-- battery left -->
+                            <rect x="45" y="75" width="30" height="50" fill="#f8fafc"/>
+                            <line x1="45" y1="90" x2="75" y2="90" stroke="#334155" stroke-width="4"/>
+                            <line x1="52" y1="102" x2="68" y2="102" stroke="#334155" stroke-width="2"/>
+                            <text x="20" y="95" font-size="12" fill="#0f5e52" font-weight="bold">+</text>
+                            <text x="20" y="120" font-size="14" fill="#b45309" font-weight="bold">–</text>
+                            <!-- three resistors on top -->
+                            <polyline points="120,30 130,20 140,40 150,20 160,40 170,20 180,30" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="150" y="60" font-size="13" fill="#0f5e52" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">R₁</text>
+                            <polyline points="220,30 230,20 240,40 250,20 260,40 270,20 280,30" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="250" y="60" font-size="13" fill="#0f5e52" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">R₂</text>
+                            <polyline points="320,30 330,20 340,40 350,20 360,40 370,20 380,30" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="350" y="60" font-size="13" fill="#0f5e52" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">R₃</text>
+                            <!-- ammeter right -->
+                            <circle cx="420" cy="100" r="20" fill="#ecfdf5" stroke="#147a6b" stroke-width="3"/>
+                            <text x="420" y="106" font-size="14" fill="#147a6b" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">A</text>
+                            <!-- current arrows -->
+                            <polygon points="100,102 116,110 100,118" fill="#147a6b"/>
+                            <text x="108" y="92" font-size="11" fill="#147a6b" font-weight="bold" font-family="Space Mono, monospace">I</text>
+                            <polygon points="220,132 236,140 220,148" fill="#147a6b"/>
+                            <text x="228" y="122" font-size="11" fill="#147a6b" font-weight="bold" font-family="Space Mono, monospace">same I everywhere</text>
+                        </svg>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3"><strong>Same current</strong> flows through every resistor; total PD V = V₁ + V₂ + V₃ (Activity 11.5).</p>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                    <h4 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-arrows-split-up-and-left text-brand-orange mr-2"></i>Resistors in Parallel (NCERT Fig 11.7)</h4>
+                    <div class="bg-gray-50 rounded-xl border border-gray-200 p-3">
+                        <svg viewBox="0 0 480 220" class="w-full h-auto">
+                            <!-- rails -->
+                            <line x1="40" y1="40" x2="400" y2="40" stroke="#334155" stroke-width="3"/>
+                            <line x1="40" y1="180" x2="400" y2="180" stroke="#334155" stroke-width="3"/>
+                            <!-- battery left -->
+                            <rect x="25" y="85" width="30" height="50" fill="#f8fafc"/>
+                            <line x1="25" y1="100" x2="55" y2="100" stroke="#334155" stroke-width="4"/>
+                            <line x1="32" y1="112" x2="48" y2="112" stroke="#334155" stroke-width="2"/>
+                            <text x="2" y="105" font-size="12" fill="#0f5e52" font-weight="bold">+</text>
+                            <text x="2" y="130" font-size="14" fill="#b45309" font-weight="bold">–</text>
+                            <line x1="40" y1="40" x2="40" y2="95" stroke="#334155" stroke-width="3"/>
+                            <line x1="40" y1="125" x2="40" y2="180" stroke="#334155" stroke-width="3"/>
+                            <!-- X Y labels -->
+                            <text x="52" y="32" font-size="12" fill="#64748b" font-family="Space Mono, monospace">X</text>
+                            <text x="52" y="207" font-size="12" fill="#64748b" font-family="Space Mono, monospace">Y</text>
+                            <!-- branch 1: vertical resistor zigzag -->
+                            <line x1="150" y1="40" x2="150" y2="72" stroke="#334155" stroke-width="3"/>
+                            <line x1="150" y1="148" x2="150" y2="180" stroke="#334155" stroke-width="3"/>
+                            <polyline points="150,72 161,82 139,92 161,102 139,112 161,122 139,132 161,142 150,148" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="175" y="115" font-size="13" fill="#0f5e52" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">R₁</text>
+                            <text x="118" y="115" font-size="10" fill="#147a6b" font-family="Space Mono, monospace" id="svgI1">I₁</text>
+                            <!-- branch 2 -->
+                            <line x1="240" y1="40" x2="240" y2="72" stroke="#334155" stroke-width="3"/>
+                            <line x1="240" y1="148" x2="240" y2="180" stroke="#334155" stroke-width="3"/>
+                            <polyline points="240,72 251,82 229,92 251,102 229,112 251,122 229,132 251,142 240,148" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="265" y="115" font-size="13" fill="#0f5e52" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">R₂</text>
+                            <text x="208" y="115" font-size="10" fill="#147a6b" font-family="Space Mono, monospace" id="svgI2">I₂</text>
+                            <!-- branch 3 -->
+                            <line x1="330" y1="40" x2="330" y2="72" stroke="#334155" stroke-width="3"/>
+                            <line x1="330" y1="148" x2="330" y2="180" stroke="#334155" stroke-width="3"/>
+                            <polyline points="330,72 341,82 319,92 341,102 319,112 341,122 319,132 341,142 330,148" fill="none" stroke="#334155" stroke-width="2"/>
+                            <text x="355" y="115" font-size="13" fill="#0f5e52" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">R₃</text>
+                            <text x="298" y="115" font-size="10" fill="#147a6b" font-family="Space Mono, monospace" id="svgI3">I₃</text>
+                            <!-- total current arrows -->
+                            <polygon points="90,32 106,40 90,48" fill="#147a6b"/>
+                            <text x="98" y="24" font-size="11" fill="#147a6b" font-weight="bold" font-family="Space Mono, monospace">I = I₁+I₂+I₃</text>
+                            <!-- V across each branch -->
+                            <line x1="392" y1="52" x2="392" y2="168" stroke="#b45309" stroke-width="1.5"/>
+                            <polygon points="392,44 387,56 397,56" fill="#b45309"/>
+                            <polygon points="392,176 387,164 397,164" fill="#b45309"/>
+                            <text x="392" y="34" font-size="10" fill="#b45309" text-anchor="middle" font-weight="bold" font-family="Space Mono, monospace">same V</text>
+                        </svg>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3"><strong>Same PD (V)</strong> across every branch; total current I = I₁ + I₂ + I₃ (Activity 11.6). Enter values in the calculator below to watch the branch currents update live (12 V battery).</p>
+                </div>
+            </div>
+
+            <!-- Derivations with show/hide -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-7">
+                    <div class="flex items-start justify-between gap-3 mb-2">
+                        <h4 class="text-lg font-bold text-brand-green"><i class="fa-solid fa-square-root-variable mr-2"></i>Derivation: Series (5-mark favourite)</h4>
+                        <span class="text-xs font-black uppercase tracking-wider bg-orange-100 text-orange-800 border border-orange-200 px-2 py-1 rounded-full whitespace-nowrap">5 marks</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Show that Rs = R₁ + R₂ + R₃ for three resistors in series.</p>
+                    <button onclick="toggleSol('derSeries')" class="px-5 py-2.5 bg-brand-green text-white font-bold rounded-xl shadow hover:bg-brand-dark transition text-sm" id="derSeriesBtn"><i class="fa-solid fa-eye mr-1"></i> Show Derivation</button>
+                    <div id="derSeries" class="sol-drawer">
+                        <ol class="text-sm text-gray-700 space-y-2 list-decimal list-inside bg-emerald-50 border border-emerald-100 rounded-xl p-5 mt-4 font-mono leading-relaxed">
+                            <li>Same current I flows through R₁, R₂, R₃ (Activity 11.4).</li>
+                            <li>PDs across each: V₁ = IR₁, V₂ = IR₂, V₃ = IR₃</li>
+                            <li>Total PD: V = V₁ + V₂ + V₃ &nbsp;(Activity 11.5)</li>
+                            <li>⇒ IR = IR₁ + IR₂ + IR₃</li>
+                            <li>Dividing by I: <strong>R = R₁ + R₂ + R₃</strong></li>
+                        </ol>
+                        <p class="text-xs text-gray-500 mt-2">Rs is greater than any individual resistance.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-7">
+                    <div class="flex items-start justify-between gap-3 mb-2">
+                        <h4 class="text-lg font-bold text-brand-orange"><i class="fa-solid fa-square-root-variable mr-2"></i>Derivation: Parallel (5-mark favourite)</h4>
+                        <span class="text-xs font-black uppercase tracking-wider bg-orange-100 text-orange-800 border border-orange-200 px-2 py-1 rounded-full whitespace-nowrap">5 marks</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-4">Show that 1/Rp = 1/R₁ + 1/R₂ + 1/R₃ for three resistors in parallel.</p>
+                    <button onclick="toggleSol('derParallel')" class="px-5 py-2.5 bg-brand-orange text-white font-bold rounded-xl shadow hover:bg-amber-600 transition text-sm" id="derParallelBtn"><i class="fa-solid fa-eye mr-1"></i> Show Derivation</button>
+                    <div id="derParallel" class="sol-drawer">
+                        <ol class="text-sm text-gray-700 space-y-2 list-decimal list-inside bg-orange-50 border border-orange-100 rounded-xl p-5 mt-4 font-mono leading-relaxed">
+                            <li>Same PD V across each resistor (Activity 11.6).</li>
+                            <li>Branch currents: I₁ = V/R₁, I₂ = V/R₂, I₃ = V/R₃</li>
+                            <li>Total current: I = I₁ + I₂ + I₃</li>
+                            <li>⇒ V/Rp = V/R₁ + V/R₂ + V/R₃</li>
+                            <li>Dividing by V: <strong>1/Rp = 1/R₁ + 1/R₂ + 1/R₃</strong></li>
+                        </ol>
+                        <p class="text-xs text-gray-500 mt-2">Rp is smaller than the smallest individual resistance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculator + live branch currents -->
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
                 <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 flex flex-col justify-between">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-4 font-sans">System of Resistors</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 font-sans">System of Resistors — Calculator</h3>
                         <p class="text-sm text-gray-600 mb-6">Calculate equivalent resistance for Series and Parallel combinations.</p>
-                        
+
                         <div class="flex bg-gray-100 rounded-lg p-1 mb-6 border border-gray-200">
                             <button id="btnSeries" class="flex-1 bg-white shadow text-brand-green rounded-md py-2 text-sm font-bold transition" onclick="setResistorMode('series')">Series</button>
                             <button id="btnParallel" class="flex-1 text-gray-500 py-2 text-sm font-bold transition hover:text-gray-800" onclick="setResistorMode('parallel')">Parallel</button>
                         </div>
-                        
+
                         <div class="flex space-x-3 mb-6">
                             <div class="w-1/3">
                                 <label class="block text-xs text-gray-500 font-semibold mb-1 text-center">R1 (Ω)</label>
@@ -372,7 +835,7 @@
                                 <input type="number" id="r3" value="0" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-brand-green outline-none" oninput="calcSystem()">
                             </div>
                         </div>
-                        
+
                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 text-center">
                             <p id="systemFormula" class="text-sm font-mono text-gray-600 mb-2">Rs = R1 + R2 + R3</p>
                             <div class="flex justify-center items-end gap-3">
@@ -381,43 +844,129 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mt-6 bg-orange-50 p-3 rounded-lg border border-orange-100 text-xs text-gray-700">
                         <i class="fa-solid fa-lightbulb text-brand-orange mr-1"></i> In parallel, voltage is constant & overall resistance decreases (used in homes). In series, current is constant.
+                    </div>
+                </div>
+
+                <div class="bg-brand-dark p-8 rounded-2xl border border-brand-green shadow-xl text-white flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold mb-2 text-brand-orange-light"><i class="fa-solid fa-tachograph-digital mr-2"></i>Live Circuit Readings <span class="text-xs font-normal text-emerald-300">(12 V battery)</span></h3>
+                        <p class="text-xs text-emerald-200 mb-6">Uses your R₁, R₂, R₃ values — like Example 11.8 and Activity 11.6.</p>
+                        <div class="space-y-3" id="liveReadings"></div>
+                    </div>
+                    <div class="mt-6 pt-5 border-t border-emerald-700/50 text-xs text-emerald-200 space-y-2">
+                        <p><i class="fa-solid fa-circle-check text-brand-orange mr-1"></i><strong>Series circuit problems:</strong> if one component fails, the circuit breaks and nothing works (remember 'fairy lights'!). A bulb and a heater need very different currents, so series is impractical.</p>
+                        <p><i class="fa-solid fa-circle-check text-brand-orange mr-1"></i><strong>Parallel at home:</strong> each appliance gets the full 220 V, works independently, and the total resistance stays low.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 4. Heating Effect & Power -->
+        <!-- 6. Heating Effect & Power -->
         <section id="power" class="scroll-mt-24">
             <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
-                <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-brand-orange text-2xl font-bold border border-orange-200 shadow-sm">4</div>
-                <h3 class="text-3xl font-bold text-gray-800">Heating Effect & Power</h3>
+                <div class="w-12 h-12 rounded-lg bg-orange-100 flex items-center justify-center text-brand-orange text-2xl font-bold border border-orange-200 shadow-sm">6</div>
+                <h3 class="text-3xl font-bold text-gray-800">Heating Effect & Electric Power</h3>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <!-- Joule's Law -->
                 <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-lg relative overflow-hidden">
                     <div class="absolute -right-6 -top-6 text-9xl text-brand-orange/10"><i class="fa-solid fa-fire"></i></div>
                     <h4 class="text-2xl font-bold text-brand-orange mb-3 relative z-10 font-sans">Joule's Law of Heating</h4>
-                    <p class="text-gray-600 mb-6 relative z-10">Heat produced in a resistor is directly proportional to the square of current (I²), resistance (R), and time (t).</p>
-                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 font-mono text-center relative z-10 mb-6">
+                    <p class="text-gray-600 mb-4 relative z-10 text-sm">In a purely resistive circuit the source energy is dissipated entirely as heat. For a steady current I through resistance R for time t:</p>
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 font-mono text-center relative z-10 mb-4">
                         <span class="text-brand-dark font-black text-4xl">H = I<sup>2</sup>Rt</span>
+                        <p class="text-xs text-gray-500 mt-2">(also H = VIt, since V = IR)</p>
                     </div>
-                    
-                    <h4 class="font-bold text-gray-800 mt-4 mb-2"><i class="fa-solid fa-plug text-brand-green mr-2"></i>Electric Power</h4>
-                    <p class="text-sm text-gray-600 mb-3">Rate at which electric energy is dissipated in a circuit.</p>
-                    <div class="flex gap-2 font-mono text-sm bg-emerald-50 p-3 rounded border border-emerald-100 text-brand-green font-bold justify-center">
-                        <span>P = VI</span> | <span>P = I²R</span> | <span>P = V²/R</span>
+                    <ul class="text-sm text-gray-600 relative z-10 space-y-1.5">
+                        <li><i class="fa-solid fa-fire text-brand-orange mr-2"></i>H ∝ I² (for a given R) — double the current, <strong>4×</strong> the heat!</li>
+                        <li><i class="fa-solid fa-fire text-brand-orange mr-2"></i>H ∝ R (for a given I)</li>
+                        <li><i class="fa-solid fa-fire text-brand-orange mr-2"></i>H ∝ t (time of flow)</li>
+                    </ul>
+                    <div class="mt-4 bg-emerald-50 border-l-4 border-brand-green p-3 rounded-r-lg text-xs text-gray-700 relative z-10">
+                        <i class="fa-solid fa-plug text-brand-green mr-1"></i> <strong>Electric power</strong> — the rate of dissipation of energy: P = VI = I²R = V²/R. SI unit <strong>watt</strong> (1 W = 1 V × 1 A); practical unit kilowatt (1 kW = 1000 W).
+                    </div>
+                </div>
+
+                <!-- Joule Heat Calculator -->
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-lg">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-1"><i class="fa-solid fa-temperature-full text-red-500 mr-2"></i>Joule Heating Calculator</h4>
+                    <p class="text-xs text-gray-500 mb-6">Compute heat produced: H = I²Rt (try Example 11.11's cousin!)</p>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-500 font-semibold mb-1 text-center">Current (A)</label>
+                                <input type="number" id="heatI" value="5" min="0" step="0.5" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-brand-green outline-none" oninput="calcHeat()">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-semibold mb-1 text-center">Resistance (Ω)</label>
+                                <input type="number" id="heatR" value="20" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-brand-green outline-none" oninput="calcHeat()">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 font-semibold mb-1 text-center">Time (s)</label>
+                                <input type="number" id="heatT" value="30" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-center font-mono focus:ring-2 focus:ring-brand-green outline-none" oninput="calcHeat()">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <p class="text-xs font-bold uppercase tracking-wider text-red-500">Heat produced</p>
+                                <p class="text-xs text-gray-400 font-mono">P = I²R = <span id="heatP">500</span> W</p>
+                            </div>
+                            <div class="h-5 bg-gray-100 rounded-full border border-gray-200 overflow-hidden">
+                                <div id="heatBar" class="h-full bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 rounded-full transition-all duration-300" style="width: 30%;"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mt-4">
+                                <div class="bg-red-50 rounded-lg p-3 text-center border border-red-100">
+                                    <p class="text-xs text-red-500 font-bold uppercase mb-1">Heat (Joules)</p>
+                                    <p class="text-2xl font-black text-red-700" id="heatJ">15,000 J</p>
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-3 text-center border border-orange-100">
+                                    <p class="text-xs text-brand-orange font-bold uppercase mb-1">In kWh</p>
+                                    <p class="text-2xl font-black text-orange-800" id="heatkWh">0.0042</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                    <div class="w-11 h-11 rounded-xl bg-orange-100 border border-orange-200 flex items-center justify-center mb-4"><i class="fa-solid fa-lightbulb text-brand-orange text-xl"></i></div>
+                    <h5 class="font-bold text-gray-800 mb-2">The Electric Bulb</h5>
+                    <p class="text-sm text-gray-600">Filament must retain heat to glow — so it uses <strong>tungsten</strong> (melting point 3380 °C, does not oxidise). Filament is thermally isolated, and bulbs are filled with <strong>nitrogen & argon</strong> to prolong filament life. Most power appears as heat; a small part as light.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                    <div class="w-11 h-11 rounded-xl bg-orange-100 border border-orange-200 flex items-center justify-center mb-4"><i class="fa-solid fa-shield-halved text-brand-orange text-xl"></i></div>
+                    <h5 class="font-bold text-gray-800 mb-2">The Electric Fuse</h5>
+                    <p class="text-sm text-gray-600">Placed <strong>in series</strong> with the device. If a current larger than the rated value (1, 2, 3, 5, 10 A...) flows, the fuse wire heats up and <strong>melts, breaking the circuit</strong> — protecting appliances. An electric iron (1 kW at 220 V) draws 4.54 A, so a <strong>5 A fuse</strong> is used.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                    <div class="w-11 h-11 rounded-xl bg-orange-100 border border-orange-200 flex items-center justify-center mb-4"><i class="fa-solid fa-blender text-brand-orange text-xl"></i></div>
+                    <h5 class="font-bold text-gray-800 mb-2">Heating Appliances</h5>
+                    <p class="text-sm text-gray-600">Electric laundry iron, toaster, oven, kettle, heater — all based on Joule's heating, using <strong>high-resistivity alloys</strong> (nichrome) that don't oxidise at high temperature.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- More to Know -->
+                <div class="bg-emerald-50 border-2 border-dashed border-brand-green/40 rounded-2xl p-7">
+                    <h4 class="text-lg font-bold text-brand-green mb-3"><i class="fa-solid fa-brain mr-2"></i>More to Know (NCERT box)</h4>
+                    <p class="text-sm text-gray-700 leading-relaxed">Many people think electrons are <em>consumed</em> in an electric circuit. This is wrong! We pay the electricity board to provide <strong>energy to move electrons</strong> through our gadgets — we pay for the <strong>energy</strong> used, not for electrons.</p>
+                    <div class="mt-4 bg-white/70 rounded-xl p-4 border border-emerald-200 font-mono text-sm text-brand-dark text-center">
+                        1 kWh (1 unit) = 1000 W × 3600 s = <strong>3.6 × 10<sup>6</sup> J</strong>
                     </div>
                 </div>
 
                 <!-- Electricity Bill Calculator -->
                 <div class="bg-brand-dark p-8 rounded-2xl border border-brand-green shadow-xl text-white">
                     <h3 class="text-2xl font-bold mb-6 text-brand-orange-light"><i class="fa-solid fa-file-invoice-dollar mr-2"></i>Electricity Bill Calculator</h3>
-                    <p class="text-emerald-100 text-sm mb-6 font-sans">Calculate the monthly cost based on the commercial unit (kWh).<br>1 kWh = 3.6 &times; 10<sup>6</sup> Joules.</p>
-                    
+                    <p class="text-emerald-100 text-sm mb-6 font-sans">Calculate the monthly cost based on the commercial unit (kWh).<br>1 kWh = 3.6 &times; 10<sup>6</sup> Joules. (Example 11.13 pattern)</p>
+
                     <div class="space-y-5">
                         <div>
                             <label class="block text-sm font-semibold text-emerald-200 mb-1">Appliance Power (Watts)</label>
@@ -433,7 +982,7 @@
                                 <input type="number" id="pwrC" value="8" class="w-full px-4 py-2 bg-emerald-900 border border-emerald-700 rounded-lg text-white focus:ring-2 focus:ring-brand-orange outline-none font-mono" oninput="calcBill()">
                             </div>
                         </div>
-                        
+
                         <div class="mt-6 pt-6 border-t border-emerald-700/50 flex justify-between items-end">
                             <div>
                                 <p class="text-sm font-semibold text-emerald-200 uppercase tracking-wider">Monthly Cost (30 days)</p>
@@ -449,59 +998,105 @@
             </div>
         </section>
 
-        <!-- 5. Exam Vault: Board Questions -->
-        <section id="questions" class="scroll-mt-24 pb-12">
+        <!-- 7. Solved Examples & Numericals -->
+        <section id="examples" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <span class="bg-emerald-100 text-brand-dark px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block border border-emerald-200">Step-by-Step</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">NCERT Solved Examples & Board Numericals</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    All 13 NCERT Examples (11.1 – 11.13) plus NCERT-exercise and board-pattern numericals, each pre-solved. Try it yourself first, then reveal the full solution.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-3 mb-8" id="exampleFilters">
+                <button data-filter="all" onclick="loadExamples('all')" class="ex-btn active px-5 py-2 rounded-full font-bold text-sm bg-brand-green text-white shadow transition hover:bg-brand-dark">All</button>
+                <button data-filter="ncert" onclick="loadExamples('ncert')" class="ex-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">NCERT Examples</button>
+                <button data-filter="exercise" onclick="loadExamples('exercise')" class="ex-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">NCERT Exercise</button>
+                <button data-filter="board" onclick="loadExamples('board')" class="ex-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">Board Pattern</button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="exampleGrid"></div>
+        </section>
+
+        <!-- 8. MCQ Test -->
+        <section id="mcqtest" class="scroll-mt-24">
+            <div class="text-center mb-10">
+                <span class="bg-indigo-100 text-indigo-800 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block border border-indigo-200">Self-Assessment</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">MCQ Test — 20 Questions</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Timed exam drill covering the whole chapter, including the four official NCERT exercise MCQs. Pick an option for each, hit <strong>Submit Test</strong> for your score, and review the explanation of every answer.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <!-- Score panel -->
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-5 mb-6 flex flex-wrap items-center justify-between gap-4 sticky top-24 z-30">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center font-black text-indigo-700"><i class="fa-solid fa-clipboard-question"></i></div>
+                        <div>
+                            <p class="font-bold text-gray-800" id="mcqStatus">Attempt all questions, then submit</p>
+                            <p class="text-xs text-gray-500">Answered: <span id="mcqAnsweredCount">0</span> / 20</p>
+                        </div>
+                    </div>
+                    <div id="mcqScoreBox" class="hidden items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-2">
+                        <span class="text-2xl font-black text-brand-green" id="mcqScore">0/20</span>
+                        <span class="text-xs text-gray-600" id="mcqPct"></span>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="submitMcq()" class="px-6 py-2.5 bg-brand-green hover:bg-brand-dark text-white font-bold rounded-xl shadow transition text-sm"><i class="fa-solid fa-paper-plane mr-1"></i> Submit Test</button>
+                        <button onclick="resetMcq()" class="px-6 py-2.5 bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 font-bold rounded-xl shadow-sm transition text-sm"><i class="fa-solid fa-rotate-left mr-1"></i> Retry</button>
+                    </div>
+                </div>
+
+                <div class="space-y-5" id="mcqList"></div>
+            </div>
+        </section>
+
+        <!-- 9. Exam Vault: Board Questions -->
+        <section id="questions" class="scroll-mt-24">
             <div class="text-center mb-10">
                 <span class="bg-orange-100 text-orange-800 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4 inline-block border border-orange-200">Exam Vault</span>
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Board Impact Questions</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Curated strictly from NCERT, MTG, Educart, and Oswal. Use the panel below to test your knowledge and reveal the professor's answers.
+                    Curated from NCERT in-text questions, exercises and CBSE board patterns (Educart, MTG, Oswal). Filter by marks, attempt in your head, then reveal the model answer.
                 </p>
             </div>
 
             <!-- Quiz Filter Controls -->
             <div class="flex flex-wrap justify-center gap-3 mb-8">
-                <button onclick="loadQuiz('all')" class="quiz-btn active px-5 py-2 rounded-full font-bold text-sm bg-brand-green text-white shadow transition hover:bg-brand-dark">All Topics</button>
-                <button onclick="loadQuiz('conceptual')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">Conceptual</button>
-                <button onclick="loadQuiz('numerical')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">Numerical</button>
-                <button onclick="loadQuiz('reasoning')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">Reasoning</button>
+                <button data-filter="all" onclick="loadQuiz('all')" class="quiz-btn active px-5 py-2 rounded-full font-bold text-sm bg-brand-green text-white shadow transition hover:bg-brand-dark">All</button>
+                <button data-filter="1 mark" onclick="loadQuiz('1 mark')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">1 Mark (VSA)</button>
+                <button data-filter="2 marks" onclick="loadQuiz('2 marks')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">2 Marks (SA-I)</button>
+                <button data-filter="3 marks" onclick="loadQuiz('3 marks')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">3 Marks (SA-II)</button>
+                <button data-filter="5 marks" onclick="loadQuiz('5 marks')" class="quiz-btn px-5 py-2 rounded-full font-bold text-sm bg-white border border-gray-300 text-gray-600 shadow-sm transition hover:bg-gray-50">5 Marks (LA)</button>
             </div>
 
             <div class="max-w-3xl mx-auto">
-                <!-- Clean, Sliding Question & Answer Panel -->
                 <div class="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 flex flex-col items-center justify-between min-h-[350px]">
                     <div class="w-full relative">
-                        <span id="qType" class="text-xs font-bold uppercase tracking-widest text-brand-orange bg-orange-50 border border-orange-100 px-3 py-1 rounded-full inline-block mb-6">Reasoning</span>
-                        
-                        <!-- Question Text -->
+                        <span id="qType" class="text-xs font-bold uppercase tracking-widest text-brand-orange bg-orange-50 border border-orange-100 px-3 py-1 rounded-full inline-block mb-6">2 Marks</span>
                         <h3 id="qText" class="text-xl md:text-2xl font-bold text-gray-800 leading-snug text-center mt-2 px-2">
-                            Why is tungsten used almost exclusively for filament of electric lamps?
+                            Loading question…
                         </h3>
                     </div>
 
-                    <!-- Answer Section (Expanding Drawer) -->
                     <div id="answerDrawer" class="w-full mt-6 bg-emerald-50 rounded-2xl border border-emerald-100 transition-all duration-300 max-h-0 overflow-hidden opacity-0">
                         <div class="p-6">
                             <span class="text-xs font-bold uppercase tracking-widest text-brand-green bg-emerald-100 border border-emerald-200 px-3 py-1 rounded-full inline-block mb-3">Model Answer</span>
-                            <p id="aText" class="text-gray-700 font-medium text-lg leading-relaxed">
-                                Tungsten has a very high melting point (3380°C) and does not oxidize (burn) at high temperatures, allowing it to emit light when heated.
-                            </p>
+                            <p id="aText" class="text-gray-700 font-medium text-lg leading-relaxed"></p>
                         </div>
                     </div>
 
-                    <!-- Action Controls -->
                     <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-100">
                         <p class="font-bold text-gray-400 bg-gray-50 px-4 py-2 rounded-full border border-gray-200 text-sm">
-                            Question <span id="qCount" class="text-brand-orange">1</span> of <span id="qTotal">12</span>
+                            Question <span id="qCount" class="text-brand-orange">1</span> of <span id="qTotal">25</span>
                         </p>
 
-                        <!-- Reveal Toggle Button -->
                         <button id="revealBtn" onclick="toggleAnswer()" class="px-6 py-3 bg-brand-orange hover:bg-amber-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2">
                             <span>Show Model Answer</span>
                             <i id="revealIcon" class="fa-solid fa-eye"></i>
                         </button>
 
-                        <!-- Navigation Controls -->
                         <div class="flex items-center gap-3">
                             <button onclick="prevQuestion()" class="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-200 text-gray-600 hover:text-brand-green hover:border-brand-green hover:bg-emerald-50/20 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-left"></i></button>
                             <button onclick="nextQuestion()" class="w-12 h-12 rounded-xl bg-white shadow-sm border border-gray-200 text-gray-600 hover:text-brand-green hover:border-brand-green hover:bg-emerald-50/20 transition-all flex items-center justify-center focus:outline-none"><i class="fa-solid fa-arrow-right"></i></button>
@@ -511,25 +1106,59 @@
             </div>
         </section>
 
+        <!-- 10. Quick Revision -->
+        <section id="revision" class="scroll-mt-24 pb-12">
+            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-8">
+                <div class="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600 text-2xl border border-indigo-200 shadow-sm"><i class="fa-solid fa-bolt"></i></div>
+                <h3 class="text-3xl font-bold text-gray-800">Quick Revision — Formula Sheet</h3>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-10" id="formulaGrid"></div>
+
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                <h4 class="text-xl font-bold text-gray-800 mb-4"><i class="fa-solid fa-graduation-cap text-brand-green mr-2"></i>What you have learnt (NCERT summary)</h4>
+                <button onclick="toggleSol('summaryDrawer')" class="px-5 py-2.5 bg-brand-green text-white font-bold rounded-xl shadow hover:bg-brand-dark transition text-sm" id="summaryBtn"><i class="fa-solid fa-eye mr-1"></i> Show Summary</button>
+                <div id="summaryDrawer" class="sol-drawer">
+                    <ul class="text-sm text-gray-600 space-y-2 mt-4 bg-emerald-50/60 border border-emerald-100 rounded-xl p-5 list-none">
+                        <li><i class="fa-solid fa-check text-brand-green mr-2"></i>A stream of electrons moving through a conductor constitutes an electric current; conventionally, current direction is opposite to electron flow. SI unit: ampere.</li>
+                        <li><i class="fa-solid fa-check text-brand-green mr-2"></i>A cell/battery generates the potential difference (volts) that sets electrons in motion. Voltmeter in parallel, ammeter in series.</li>
+                        <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Ohm's law: V ∝ I at constant temperature; V = IR. R (ohm) is resistance — it controls current magnitude.</li>
+                        <li><i class="fa-solid fa-check text-brand-green mr-2"></i>R depends directly on length l, inversely on area A, and on the material: R = ρl/A; ρ (resistivity, Ω m) is a material property.</li>
+                        <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Series: Rs = R₁ + R₂ + R₃ + … &nbsp;|&nbsp; Parallel: 1/Rp = 1/R₁ + 1/R₂ + 1/R₃ + …</li>
+                        <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Energy dissipated: W = VIt; Joule's law of heating H = I²Rt; power P = VI = I²R = V²/R (watt).</li>
+                        <li><i class="fa-solid fa-check text-brand-green mr-2"></i>Commercial unit of energy: kilowatt hour (kWh); 1 kWh = 3.6 × 10⁶ J.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 py-8 text-center text-gray-500 text-sm mt-auto">
         <div class="max-w-7xl mx-auto px-4">
-            <p class="font-bold text-gray-700 mb-1"><span class="text-brand-green">Electric</span><span class="text-brand-orange">ity</span> | Class10th Interactive Syllabus</p>
-            <p>Developed with <i class="fa-solid fa-bolt text-brand-orange mx-1">Class 10th Interactive Syllabus</i></p>
-            <p class="mt-2 text-xs">Content curated strictly from NCERT Class 10 Science, supported by Well - known Refrence Books.</p>
+            <p class="font-bold text-gray-700 mb-1"><span class="text-brand-green">Electric</span><span class="text-brand-orange">ity</span> | Class 10 Interactive</p>
+            <p>Developed with <i class="fa-solid fa-bolt text-brand-orange mx-1"></i> by your AI Professor.</p>
+            <p class="mt-2 text-xs">Content curated strictly from NCERT Class 10 Science Chapter 11 (Electricity), supported by MTG, Educart & Oswal standards.</p>
         </div>
     </footer>
 
+    <style>
+        .sym-card { perspective: 1000px; cursor: pointer; }
+        .sym-inner { position: relative; transition: transform .5s; transform-style: preserve-3d; height: 130px; }
+        .sym-card.flipped .sym-inner { transform: rotateY(180deg); }
+        .sym-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 0.75rem; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.75rem; }
+        .sym-front { background: #f8fafc; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+        .sym-back { background: #147a6b; color: white; transform: rotateY(180deg); font-size: 11px; text-align: center; line-height: 1.4; }
+    </style>
+
     <!-- Interactive Scripts -->
     <script>
-        // Toggle mobile navigation menu
+        // ============ Mobile nav ============
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             const icon = document.getElementById('menuIcon');
             const isHidden = menu.classList.contains('hidden');
-            
             if (isHidden) {
                 menu.classList.remove('hidden');
                 icon.classList.remove('fa-bars');
@@ -541,41 +1170,239 @@
             }
         }
 
-        // Section 1: Basics Calculator
+        // ============ Dynamic Island nav ============
+        (function setupIslandNav() {
+            const siteNav = document.getElementById('siteNav');
+            if (!siteNav) return;
+            const brand = document.getElementById('navBrand');
+            const canHover = (typeof window.matchMedia === 'function')
+                ? window.matchMedia('(hover: hover) and (pointer: fine)')
+                : { matches: true };
+
+            function openIsland() { siteNav.classList.add('island-open'); }
+            function closeIsland() { siteNav.classList.remove('island-open'); }
+
+            siteNav.addEventListener('mouseenter', openIsland);
+            siteNav.addEventListener('mouseleave', closeIsland);
+            siteNav.addEventListener('focusin', openIsland);
+            siteNav.addEventListener('focusout', function(e) {
+                if (!siteNav.contains(e.relatedTarget)) closeIsland();
+            });
+
+            // Touch devices (no hover): tapping the brand toggles the island
+            if (brand) {
+                brand.addEventListener('click', function(e) {
+                    if (!canHover.matches) {
+                        e.preventDefault();
+                        if (siteNav.classList.contains('island-open')) { closeIsland(); }
+                        else { openIsland(); }
+                    }
+                });
+            }
+
+            // Clicking anywhere outside the island collapses it
+            document.addEventListener('click', function(e) {
+                if (!siteNav.contains(e.target)) closeIsland();
+            });
+
+            // Escape key collapses it
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeIsland();
+            });
+        })();
+
+        // ============ Section 1: Basics Calculator ============
+        function sci(x) {
+            const e = x.toExponential(2); // e.g. "6.25e+19"
+            const parts = e.split('e');
+            const exp = parseInt(parts[1], 10);
+            return parts[0] + ' × 10<sup>' + exp + '</sup>';
+        }
         function calculateBasics() {
             const Q = parseFloat(document.getElementById('calcQ').value) || 0;
-            const t = parseFloat(document.getElementById('calcT').value) || 1; // Prevent div 0
+            const t = parseFloat(document.getElementById('calcT').value) || 1;
             const W = parseFloat(document.getElementById('calcW').value) || 0;
-            
             const I = Q / t;
-            const V = Q !== 0 ? W / Q : 0; 
-            
-            document.getElementById('resI').innerText = I.toFixed(2) + ' A';
-            document.getElementById('resV').innerText = V.toFixed(2) + ' V';
+            const V = Q !== 0 ? W / Q : 0;
+            document.getElementById('resI').textContent = I.toFixed(2) + ' A';
+            document.getElementById('resV').textContent = V.toFixed(2) + ' V';
+            document.getElementById('resE').innerHTML = (Q / 1.6e-19) > 0 ? sci(Q / 1.6e-19) : '0';
         }
 
-        // Section 2: Ohm's Law Graph & Calc
+        // ============ Section 1: Interactive Circuit Lab ============
+        let labCells = 1, labKeyClosed = false;
+        const BULB_R = 6;
+
+        function drawBattery(n) {
+            const g = document.getElementById('batteryCells');
+            let html = '';
+            const startY = 155 - (n * 12);
+            for (let i = 0; i < n; i++) {
+                const yL = startY + i * 24;
+                html += '<line x1="56" y1="' + yL + '" x2="84" y2="' + yL + '" stroke="#334155" stroke-width="4"/>';
+                html += '<line x1="62" y1="' + (yL + 9) + '" x2="78" y2="' + (yL + 9) + '" stroke="#334155" stroke-width="2.5"/>';
+            }
+            g.innerHTML = html;
+        }
+
+        function setCells(n) {
+            labCells = n;
+            document.querySelectorAll('.cell-btn').forEach(function(b) {
+                const on = parseInt(b.textContent, 10) === n;
+                b.className = 'cell-btn flex-1 py-2 rounded-lg border-2 font-bold text-sm ' +
+                    (on ? 'border-brand-green bg-emerald-50 text-brand-green' : 'border-gray-200 text-gray-500 hover:border-gray-300');
+            });
+            updateCircuit();
+        }
+
+        function toggleKey() {
+            labKeyClosed = !labKeyClosed;
+            const btn = document.getElementById('keyBtn');
+            const lever = document.getElementById('keyLever');
+            if (labKeyClosed) {
+                btn.innerHTML = '<i class="fa-solid fa-toggle-on mr-1"></i> Open Key';
+                btn.className = 'w-full py-2 rounded-lg bg-red-500 text-white font-bold text-sm shadow hover:bg-red-600 transition';
+                lever.setAttribute('transform', 'rotate(0 215 250)');
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-toggle-off mr-1"></i> Close Key';
+                btn.className = 'w-full py-2 rounded-lg bg-brand-green text-white font-bold text-sm shadow hover:bg-brand-dark transition';
+                lever.setAttribute('transform', 'rotate(-30 215 250)');
+            }
+            updateCircuit();
+        }
+
+        function updateCircuit() {
+            drawBattery(labCells);
+            const V = labCells * 1.5;
+            const I = labKeyClosed ? V / BULB_R : 0;
+            document.getElementById('labV').textContent = V.toFixed(1);
+            document.getElementById('labI').textContent = I.toFixed(2);
+            document.getElementById('ammeterRead').textContent = I.toFixed(2) + ' A';
+            document.getElementById('bulbGlow').setAttribute('opacity', labKeyClosed ? '1' : '0');
+            document.getElementById('bulbGlow').classList.toggle('bulb-on', labKeyClosed);
+            document.getElementById('bulbRays').setAttribute('opacity', labKeyClosed ? '1' : '0');
+        }
+
+        // Electron animation along the loop (direction: – terminal → bottom → right → top → + terminal)
+        const LOOP_SEGS = [
+            { x1: 70,  y1: 250, x2: 410, y2: 250 }, // bottom, left→right
+            { x1: 410, y1: 250, x2: 410, y2: 60  }, // right side, up
+            { x1: 410, y1: 60,  x2: 70,  y2: 60  }, // top, right→left
+            { x1: 70,  y1: 60,  x2: 70,  y2: 250 }  // left side, down
+        ];
+        const LOOP_P = LOOP_SEGS.reduce(function(s, sg) { return s + Math.hypot(sg.x2 - sg.x1, sg.y2 - sg.y1); }, 0);
+
+        function loopPos(s) {
+            let d = ((s % LOOP_P) + LOOP_P) % LOOP_P;
+            for (let i = 0; i < LOOP_SEGS.length; i++) {
+                const sg = LOOP_SEGS[i];
+                const len = Math.hypot(sg.x2 - sg.x1, sg.y2 - sg.y1);
+                if (d <= len) {
+                    const f = d / len;
+                    return { x: sg.x1 + (sg.x2 - sg.x1) * f, y: sg.y1 + (sg.y2 - sg.y1) * f };
+                }
+                d -= len;
+            }
+            return { x: LOOP_SEGS[0].x1, y: LOOP_SEGS[0].y1 };
+        }
+
+        const N_E = 14;
+        let electrons = [];
+        let lastT = null;
+
+        function initElectrons() {
+            const layer = document.getElementById('electronLayer');
+            let html = '';
+            electrons = [];
+            for (let i = 0; i < N_E; i++) {
+                html += '<circle id="el' + i + '" r="4" fill="#2563eb" stroke="#dbeafe" stroke-width="1"/>';
+                electrons.push(i * LOOP_P / N_E);
+            }
+            layer.innerHTML = html;
+            requestAnimationFrame(animateElectrons);
+        }
+
+        function animateElectrons(ts) {
+            if (lastT === null) lastT = ts;
+            const dt = Math.min((ts - lastT) / 1000, 0.05);
+            lastT = ts;
+            const V = labCells * 1.5;
+            const I = labKeyClosed ? V / BULB_R : 0;
+            const speed = 70 * I; // px per second
+            for (let i = 0; i < N_E; i++) {
+                electrons[i] = (electrons[i] + speed * dt) % LOOP_P;
+                const p = loopPos(electrons[i]);
+                const c = document.getElementById('el' + i);
+                if (c) { c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); }
+            }
+            requestAnimationFrame(animateElectrons);
+        }
+
+        // ============ Section 2: Circuit symbols (flip cards) ============
+        const SYMBOLS = [
+            { name: 'Electric cell', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="22" x2="27" y2="22" stroke="#1e293b" stroke-width="2"/><line x1="27" y1="6" x2="27" y2="38" stroke="#1e293b" stroke-width="2.5"/><line x1="37" y1="13" x2="37" y2="31" stroke="#1e293b" stroke-width="4"/><line x1="37" y1="22" x2="70" y2="22" stroke="#1e293b" stroke-width="2"/><text x="21" y="10" font-size="10" fill="#1e293b">+</text><text x="40" y="10" font-size="10" fill="#1e293b">–</text></svg>', desc: 'Source of EMF. The long line is the + terminal, the short thick line is –. Chemical action inside maintains the potential difference.' },
+            { name: 'Battery', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="22" x2="12" y2="22" stroke="#1e293b" stroke-width="2"/><line x1="12" y1="6" x2="12" y2="38" stroke="#1e293b" stroke-width="2.5"/><line x1="20" y1="13" x2="20" y2="31" stroke="#1e293b" stroke-width="4"/><line x1="28" y1="6" x2="28" y2="38" stroke="#1e293b" stroke-width="2.5"/><line x1="36" y1="13" x2="36" y2="31" stroke="#1e293b" stroke-width="4"/><line x1="36" y1="22" x2="70" y2="22" stroke="#1e293b" stroke-width="2"/></svg>', desc: 'A combination of cells — the PD of each cell adds up. A 4-cell 1.5 V battery gives 6 V.' },
+            { name: 'Plug key (open)', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="30" x2="22" y2="30" stroke="#1e293b" stroke-width="2"/><line x1="48" y1="30" x2="70" y2="30" stroke="#1e293b" stroke-width="2"/><circle cx="24" cy="30" r="3.5" fill="#1e293b"/><circle cx="46" cy="30" r="3.5" fill="#1e293b"/><line x1="24" y1="30" x2="46" y2="14" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"/></svg>', desc: 'An open switch breaks the circuit — no current flows and the bulb does not glow.' },
+            { name: 'Plug key (closed)', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="24" x2="22" y2="24" stroke="#1e293b" stroke-width="2"/><line x1="48" y1="24" x2="70" y2="24" stroke="#1e293b" stroke-width="2"/><circle cx="24" cy="24" r="3.5" fill="#1e293b"/><circle cx="46" cy="24" r="3.5" fill="#1e293b"/><line x1="24" y1="24" x2="46" y2="24" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/></svg>', desc: 'A closed switch makes a conducting link — the circuit is complete and current flows.' },
+            { name: 'A wire joint', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="22" x2="70" y2="22" stroke="#1e293b" stroke-width="2"/><line x1="35" y1="22" x2="35" y2="44" stroke="#1e293b" stroke-width="2"/><circle cx="35" cy="22" r="4" fill="#1e293b"/></svg>', desc: 'The dot shows wires that are joined — current can split or combine at this node.' },
+            { name: 'Wires crossing (no join)', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="8" x2="70" y2="36" stroke="#1e293b" stroke-width="2"/><line x1="0" y1="36" x2="70" y2="8" stroke="#1e293b" stroke-width="2"/></svg>', desc: 'Wires that cross WITHOUT a dot are not connected — no current passes between them.' },
+            { name: 'Electric bulb', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="22" x2="24" y2="22" stroke="#1e293b" stroke-width="2"/><line x1="46" y1="22" x2="70" y2="22" stroke="#1e293b" stroke-width="2"/><circle cx="35" cy="22" r="12" fill="none" stroke="#1e293b" stroke-width="2.5"/><line x1="27" y1="14" x2="43" y2="30" stroke="#1e293b" stroke-width="2"/><line x1="43" y1="14" x2="27" y2="30" stroke="#1e293b" stroke-width="2"/></svg>', desc: 'Converts electricity to light via a glowing tungsten filament (heating effect of current).' },
+            { name: 'Resistor (R)', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="22" x2="12" y2="22" stroke="#1e293b" stroke-width="2"/><polyline points="12,22 17,12 27,32 37,12 47,32 52,22" fill="none" stroke="#1e293b" stroke-width="2"/><line x1="58" y1="22" x2="70" y2="22" stroke="#1e293b" stroke-width="2"/></svg>', desc: 'A conductor with appreciable resistance — resists the flow of charges, controls the current.' },
+            { name: 'Variable resistance (rheostat)', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="26" x2="12" y2="26" stroke="#1e293b" stroke-width="2"/><polyline points="12,26 17,16 27,36 37,16 47,36 52,26" fill="none" stroke="#1e293b" stroke-width="2"/><line x1="58" y1="26" x2="70" y2="26" stroke="#1e293b" stroke-width="2"/><line x1="18" y1="4" x2="50" y2="4" stroke="#1e293b" stroke-width="2"/><polygon points="46,8 38,4 46,0" fill="#b45309"/><line x1="32" y1="4" x2="32" y2="16" stroke="#b45309" stroke-width="1.5" stroke-dasharray="2 2"/></svg>', desc: 'Used to change/regulate current in the circuit without changing the voltage source.' },
+            { name: 'Ammeter', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="22" x2="22" y2="22" stroke="#1e293b" stroke-width="2"/><line x1="48" y1="22" x2="70" y2="22" stroke="#1e293b" stroke-width="2"/><circle cx="35" cy="22" r="13" fill="#ecfdf5" stroke="#147a6b" stroke-width="2.5"/><text x="35" y="27" font-size="13" fill="#147a6b" text-anchor="middle" font-weight="bold" font-family="monospace">A</text></svg>', desc: 'Measures electric current. ALWAYS connected in series — the whole circuit current passes through it.' },
+            { name: 'Voltmeter', svg: '<svg width="70" height="44" viewBox="0 0 70 44"><line x1="0" y1="22" x2="22" y2="22" stroke="#1e293b" stroke-width="2"/><line x1="48" y1="22" x2="70" y2="22" stroke="#1e293b" stroke-width="2"/><circle cx="35" cy="22" r="13" fill="#fff7ed" stroke="#b45309" stroke-width="2.5"/><text x="35" y="27" font-size="13" fill="#b45309" text-anchor="middle" font-weight="bold" font-family="monospace">V</text></svg>', desc: 'Measures potential difference. ALWAYS connected in parallel across the two points being measured.' }
+        ];
+
+        function renderSymbols() {
+            const grid = document.getElementById('symbolGrid');
+            let html = '';
+            SYMBOLS.forEach(function(s, i) {
+                html += '<div class="sym-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden" onclick="this.classList.toggle(\'flipped\')">' +
+                    '<div class="sym-inner">' +
+                    '<div class="sym-face sym-front"><div class="flex-1 flex items-center">' + s.svg + '</div><span class="text-xs font-semibold text-gray-600 text-center leading-tight">' + s.name + '</span><span class="text-[9px] text-gray-400 mt-1"><i class="fa-solid fa-hand-pointer"></i> tap to flip</span></div>' +
+                    '<div class="sym-face sym-back"><i class="fa-solid fa-bolt text-brand-orange mb-1"></i><span>' + s.desc + '</span></div>' +
+                    '</div></div>';
+            });
+            grid.innerHTML = html;
+        }
+
+        // ============ Section 4: Resistivity table ============
+        const RES_TABLE = [
+            { cat: 'Conductors', color: 'bg-emerald-50 text-emerald-800', rows: [['Silver', '1.60 × 10⁻⁸'], ['Copper', '1.62 × 10⁻⁸'], ['Aluminium', '2.63 × 10⁻⁸'], ['Tungsten', '5.20 × 10⁻⁸'], ['Nickel', '6.84 × 10⁻⁸'], ['Iron', '10.0 × 10⁻⁸'], ['Chromium', '12.9 × 10⁻⁸'], ['Mercury', '94.0 × 10⁻⁸'], ['Manganese', '1.84 × 10⁻⁶']] },
+            { cat: 'Alloys', color: 'bg-orange-50 text-orange-800', rows: [['Constantan (Cu+Ni)', '49 × 10⁻⁶'], ['Manganin (Cu+Mn+Ni)', '44 × 10⁻⁶'], ['Nichrome (Ni+Cr+Mn+Fe)', '100 × 10⁻⁶']] },
+            { cat: 'Insulators', color: 'bg-slate-100 text-slate-700', rows: [['Glass', '10¹⁰ – 10¹⁴'], ['Paper (dry)', '10¹²'], ['Diamond', '10¹² – 10¹³'], ['Hard rubber', '10¹³ – 10¹⁶'], ['Ebonite', '10¹⁵ – 10¹⁷']] }
+        ];
+
+        function renderResTable() {
+            const tbody = document.getElementById('resistivityTable');
+            let html = '';
+            RES_TABLE.forEach(function(grp) {
+                grp.rows.forEach(function(r, i) {
+                    html += '<tr class="border-t border-gray-100 hover:bg-gray-50/70 transition">' +
+                        (i === 0 ? '<td rowspan="' + grp.rows.length + '" class="px-4 py-3 font-sans font-bold ' + grp.color + ' align-top">' + grp.cat + '</td>' : '') +
+                        '<td class="px-4 py-2.5 font-sans text-gray-800">' + r[0] + '</td>' +
+                        '<td class="px-4 py-2.5 text-right text-gray-900">' + r[1] + '</td></tr>';
+                });
+            });
+            tbody.innerHTML = html;
+        }
+
+        // ============ Section 2: Ohm's Law Graph & Calc ============
         const canvas = document.getElementById('ohmCanvas');
         const ctx = canvas ? canvas.getContext('2d') : null;
-        
+
         function drawOhmsGraph(V, R, I) {
-            if(!ctx) return;
+            if (!ctx) return;
             const w = canvas.width = canvas.offsetWidth;
             const h = canvas.height = canvas.offsetHeight;
-            
             ctx.clearRect(0, 0, w, h);
-            
-            // Background grid
             ctx.strokeStyle = '#f1f5f9';
             ctx.lineWidth = 1;
-            for(let i=0; i<w; i+=20) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,h); ctx.stroke(); }
-            for(let i=0; i<h; i+=20) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(w,i); ctx.stroke(); }
+            for (let i = 0; i < w; i += 20) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke(); }
+            for (let i = 0; i < h; i += 20) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(w, i); ctx.stroke(); }
 
-            const maxV = 24; 
-            const maxI = 24; // To allow 24V/1Ω
-
-            // Draw theoretical line (V = IR)
-            ctx.strokeStyle = '#147a6b'; // brand-green
+            const maxV = 24, maxI = 24;
+            ctx.strokeStyle = '#147a6b';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(0, h);
@@ -585,26 +1412,22 @@
             ctx.lineTo(x, y);
             ctx.stroke();
 
-            // Draw specific Plot Point based on user slider V
             const plotX = (V / maxV) * w;
             const plotY = h - ((I / maxI) * h);
-            
-            ctx.fillStyle = '#f59e0b'; // brand-orange
+            ctx.fillStyle = '#f59e0b';
             ctx.beginPath();
             ctx.arc(plotX, plotY, 7, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = '#fff';
             ctx.lineWidth = 2;
             ctx.stroke();
-
-            // Dashed lines to axis
             ctx.setLineDash([4, 4]);
             ctx.strokeStyle = '#94a3b8';
             ctx.beginPath();
             ctx.moveTo(plotX, plotY);
-            ctx.lineTo(plotX, h); // drop down to V axis
+            ctx.lineTo(plotX, h);
             ctx.moveTo(plotX, plotY);
-            ctx.lineTo(0, plotY); // go left to I axis
+            ctx.lineTo(0, plotY);
             ctx.stroke();
             ctx.setLineDash([]);
         }
@@ -613,116 +1436,367 @@
             const V = parseFloat(document.getElementById('ohmVolt').value);
             const R = parseFloat(document.getElementById('ohmRes').value);
             const I = V / R;
-            
-            document.getElementById('ohmValV').innerText = V + ' V';
-            document.getElementById('ohmValR').innerText = R + ' Ω';
+            document.getElementById('ohmValV').textContent = V + ' V';
+            document.getElementById('ohmValR').textContent = R + ' Ω';
             document.getElementById('ohmValI').innerHTML = I.toFixed(2) + ' <span class="text-xl text-gray-400">A</span>';
-            
-            // Only draw if canvas exists and is visible
-            if(canvas && canvas.offsetWidth > 0) {
-                drawOhmsGraph(V, R, I);
-            }
+            if (canvas && canvas.offsetWidth > 0) { drawOhmsGraph(V, R, I); }
         }
 
-        // Section 3: Wire Resistance Factors
+        // ============ Section 4: Wire Resistance Factors (material-aware) ============
+        function fmtR(R) {
+            if (R >= 100) return R.toFixed(0) + ' Ω';
+            if (R >= 1) return R.toFixed(2) + ' Ω';
+            if (R >= 0.01) return R.toFixed(3) + ' Ω';
+            return R.toExponential(2).replace('e-', ' × 10⁻').replace('e+', ' × 10') + ' Ω';
+        }
         function updateWire() {
             const l = parseFloat(document.getElementById('wireLen').value);
-            const A = parseFloat(document.getElementById('wireArea').value);
-            
-            document.getElementById('wireLenVal').innerText = l + ' m';
-            document.getElementById('wireAreaVal').innerText = A + ' mm²';
-            
-            // Fake resistivity rho=1 for visual relative calc
-            const R = 1.0 * (l / A);
-            document.getElementById('wireResVal').innerText = R.toFixed(2) + ' Ω';
+            const d = parseFloat(document.getElementById('wireDia').value);
+            const rho = parseFloat(document.getElementById('wireMat').value);
+            const A_mm2 = Math.PI * (d / 2) * (d / 2);
+            const A_m2 = A_mm2 * 1e-6;
+            const R = rho * l / A_m2;
 
-            // Visual update
+            document.getElementById('wireLenVal').textContent = l + ' m';
+            document.getElementById('wireDiaVal').textContent = d + ' mm';
+            document.getElementById('wireAreaVal').textContent = 'A = ' + A_mm2.toFixed(3) + ' mm²';
+            document.getElementById('wireResVal').textContent = fmtR(R);
+            const matLabel = document.getElementById('wireMat').selectedOptions[0].text.split(' — ')[0];
+            document.getElementById('wireResNote').textContent = 'ρ(' + matLabel + ') = ' + rho.toExponential(2) + ' Ω m, l = ' + l + ' m, A = ' + A_mm2.toFixed(3) + ' mm²';
+
             const visual = document.getElementById('visualWire');
-            visual.style.width = (l * 10) + '%';
-            visual.style.height = (A * 10) + '%';
+            visual.style.width = (l * 9) + '%';
+            visual.style.height = (20 + d * 35) + '%';
         }
 
-        // System of Resistors
+        // ============ Section 5: System of Resistors + live readings ============
         let resistorMode = 'series';
         function setResistorMode(mode) {
             resistorMode = mode;
             const btnS = document.getElementById('btnSeries');
             const btnP = document.getElementById('btnParallel');
             const formulaText = document.getElementById('systemFormula');
-            
-            if(mode === 'series') {
+            if (mode === 'series') {
                 btnS.className = 'flex-1 bg-white shadow text-brand-green rounded-md py-2 text-sm font-bold transition';
                 btnP.className = 'flex-1 text-gray-500 py-2 text-sm font-bold transition hover:text-gray-800';
-                formulaText.innerText = "Rs = R1 + R2 + R3";
+                formulaText.textContent = 'Rs = R1 + R2 + R3';
             } else {
                 btnP.className = 'flex-1 bg-white shadow text-brand-green rounded-md py-2 text-sm font-bold transition';
                 btnS.className = 'flex-1 text-gray-500 py-2 text-sm font-bold transition hover:text-gray-800';
-                formulaText.innerText = "1/Rp = 1/R1 + 1/R2 + 1/R3";
+                formulaText.textContent = '1/Rp = 1/R1 + 1/R2 + 1/R3';
             }
             calcSystem();
         }
 
-        function calcSystem() {
+        function getResistors() {
             const r1 = parseFloat(document.getElementById('r1').value) || 0;
             const r2 = parseFloat(document.getElementById('r2').value) || 0;
             const r3 = parseFloat(document.getElementById('r3').value) || 0;
-            
-            let R = 0;
-            if(resistorMode === 'series') {
-                R = r1 + r2 + r3;
-            } else {
-                let inv = 0;
-                if(r1 > 0) inv += 1/r1;
-                if(r2 > 0) inv += 1/r2;
-                if(r3 > 0) inv += 1/r3;
-                R = inv > 0 ? 1/inv : 0;
-            }
-            document.getElementById('sysResVal').innerText = R.toFixed(2) + ' Ω';
+            return { r1: r1, r2: r2, r3: r3, list: [r1, r2, r3].filter(function(r) { return r > 0; }) };
         }
 
-        // Section 4: Heating/Power Calc
+        function calcSystem() {
+            const rs = getResistors();
+            let R = 0;
+            if (resistorMode === 'series') {
+                R = rs.r1 + rs.r2 + rs.r3;
+            } else {
+                let inv = 0;
+                rs.list.forEach(function(r) { inv += 1 / r; });
+                R = inv > 0 ? 1 / inv : 0;
+            }
+            document.getElementById('sysResVal').textContent = R.toFixed(2) + ' Ω';
+            updateLiveReadings();
+        }
+
+        function updateLiveReadings() {
+            const rs = getResistors();
+            const V = 12;
+            const box = document.getElementById('liveReadings');
+            let html = '';
+            if (resistorMode === 'series') {
+                const Rt = rs.r1 + rs.r2 + rs.r3;
+                const I = Rt > 0 ? V / Rt : 0;
+                html += '<div class="bg-emerald-900/60 rounded-lg p-3 border border-emerald-700 flex justify-between items-center"><span class="text-sm text-emerald-100">Total resistance (Rs)</span><span class="font-mono font-bold text-white">' + Rt.toFixed(2) + ' Ω</span></div>';
+                html += '<div class="bg-emerald-900/60 rounded-lg p-3 border border-emerald-700 flex justify-between items-center"><span class="text-sm text-emerald-100">Current I = V/Rs (same everywhere)</span><span class="font-mono font-bold text-brand-orange">' + I.toFixed(2) + ' A</span></div>';
+                [['V₁ = IR₁', rs.r1], ['V₂ = IR₂', rs.r2], ['V₃ = IR₃', rs.r3]].forEach(function(p) {
+                    if (p[1] > 0) html += '<div class="bg-emerald-900/40 rounded-lg p-2.5 border border-emerald-800 flex justify-between items-center"><span class="text-xs text-emerald-200 font-mono">' + p[0] + ' (' + p[1] + ' Ω)</span><span class="font-mono text-sm text-white">' + (I * p[1]).toFixed(1) + ' V</span></div>';
+                });
+                html += '<p class="text-[11px] text-emerald-300 font-mono">Check: V₁+V₂+V₃ = ' + (I * (rs.r1 + rs.r2 + rs.r3)).toFixed(1) + ' V ✓</p>';
+                setBranchLabels([rs.r1, rs.r2, rs.r3], 'series', I);
+            } else {
+                let inv = 0; rs.list.forEach(function(r) { inv += 1 / r; });
+                const Rp = inv > 0 ? 1 / inv : 0;
+                const I = Rp > 0 ? V / Rp : 0;
+                html += '<div class="bg-emerald-900/60 rounded-lg p-3 border border-emerald-700 flex justify-between items-center"><span class="text-sm text-emerald-100">Total resistance (Rp)</span><span class="font-mono font-bold text-white">' + Rp.toFixed(2) + ' Ω</span></div>';
+                html += '<div class="bg-emerald-900/60 rounded-lg p-3 border border-emerald-700 flex justify-between items-center"><span class="text-sm text-emerald-100">Total current I = V/Rp</span><span class="font-mono font-bold text-brand-orange">' + I.toFixed(2) + ' A</span></div>';
+                [['I₁ = V/R₁', rs.r1], ['I₂ = V/R₂', rs.r2], ['I₃ = V/R₃', rs.r3]].forEach(function(p) {
+                    if (p[1] > 0) html += '<div class="bg-emerald-900/40 rounded-lg p-2.5 border border-emerald-800 flex justify-between items-center"><span class="text-xs text-emerald-200 font-mono">' + p[0] + ' (' + p[1] + ' Ω)</span><span class="font-mono text-sm text-white">' + (V / p[1]).toFixed(2) + ' A</span></div>';
+                });
+                html += '<p class="text-[11px] text-emerald-300 font-mono">Check: I₁+I₂+I₃ = ' + I.toFixed(2) + ' A ✓ (each branch gets full 12 V)</p>';
+                setBranchLabels([rs.r1, rs.r2, rs.r3], 'parallel', V);
+            }
+            box.innerHTML = html;
+        }
+
+        function setBranchLabels(vals, mode, x) {
+            for (let i = 0; i < 3; i++) {
+                const el = document.getElementById('svgI' + (i + 1));
+                if (!el) continue;
+                if (vals[i] > 0) {
+                    el.textContent = mode === 'parallel' ? 'I' + (i + 1) + '=' + (x / vals[i]).toFixed(1) + 'A' : 'V' + (i + 1) + '=' + (x * vals[i]).toFixed(1) + 'V';
+                } else {
+                    el.textContent = '–';
+                }
+            }
+        }
+
+        // ============ Section 6: Joule heating calculator ============
+        function calcHeat() {
+            const I = parseFloat(document.getElementById('heatI').value) || 0;
+            const R = parseFloat(document.getElementById('heatR').value) || 0;
+            const t = parseFloat(document.getElementById('heatT').value) || 0;
+            const P = I * I * R;
+            const H = P * t;
+            document.getElementById('heatP').textContent = P.toFixed(0);
+            document.getElementById('heatJ').textContent = H.toLocaleString('en-IN', { maximumFractionDigits: 0 }) + ' J';
+            document.getElementById('heatkWh').textContent = (H / 3.6e6).toFixed(4);
+            const pct = Math.min(100, Math.sqrt(H / 100000) * 100);
+            document.getElementById('heatBar').style.width = pct + '%';
+        }
+
+        // ============ Section 6: Electricity bill ============
         function calcBill() {
             const W = parseFloat(document.getElementById('pwrW').value) || 0;
             const h = parseFloat(document.getElementById('pwrH').value) || 0;
             const c = parseFloat(document.getElementById('pwrC').value) || 0;
-            
             const kW = W / 1000;
-            const unitsPerDay = kW * h;
-            const monthlyUnits = unitsPerDay * 30;
+            const monthlyUnits = kW * h * 30;
             const cost = monthlyUnits * c;
-            
-            document.getElementById('unitRes').innerText = monthlyUnits.toFixed(1);
-            document.getElementById('billRes').innerText = cost.toFixed(0);
+            document.getElementById('unitRes').textContent = monthlyUnits.toFixed(1);
+            document.getElementById('billRes').textContent = cost.toFixed(0);
         }
 
-        // Section 5: Quiz Logic (12 Comprehensive High-Yield Questions)
-        const allQuestions = [
-            { type: "Conceptual", q: "Define 1 Ampere of current. (NCERT)", a: "One ampere is constituted by the flow of one coulomb of charge per second. (1 A = 1 C / 1 s)." },
-            { type: "Conceptual", q: "Name a device that helps to maintain a potential difference across a conductor. (NCERT)", a: "A cell or a battery." },
-            { type: "Numerical", q: "How much work is done in moving a charge of 2 C across two points having a potential difference 12 V?", a: "W = V × Q. Work done = 12 V × 2 C = 24 Joules." },
-            { type: "Conceptual", q: "What is the shape of the V-I graph for an ohmic conductor? (MTG)", a: "A straight line passing through the origin, signifying V is directly proportional to I." },
-            { type: "Conceptual", q: "State Ohm's Law. (CBSE Prev Year)", a: "Ohm's law states that the potential difference across the ends of a given metallic wire is directly proportional to the current flowing through it, provided its temperature remains constant." },
-            { type: "Reasoning", q: "Will current flow more easily through a thick wire or a thin wire of the same material? Why?", a: "Current will flow more easily through a thick wire. Resistance is inversely proportional to the area of cross-section (R ∝ 1/A). A thicker wire has less resistance." },
-            { type: "Reasoning", q: "Why is an arrangement of resistors in parallel highly recommended for domestic circuits?", a: "1. If one appliance fails, others keep working. 2. Each appliance gets full voltage (220V). 3. Total resistance decreases, ensuring necessary current flow." },
-            { type: "Numerical", q: "How can three resistors of 2 Ω, 3 Ω, and 6 Ω be connected to give a total resistance of 4 Ω?", a: "Connect 3 Ω and 6 Ω in parallel (yields 2 Ω), then connect them in series with the 2 Ω resistor. (2 + 2 = 4 Ω)." },
-            { type: "Reasoning", q: "Why is tungsten used almost exclusively for filament of electric lamps?", a: "Tungsten has a very high melting point (3380°C) and a high resistivity. It does not oxidize (burn) readily at high temperatures." },
-            { type: "Reasoning", q: "Why does the cord of an electric heater not glow while the heating element does?", a: "The cord has very low resistance (copper). The element has high resistance (alloy). Heat produced (H=I²Rt) is much higher in the element, making it hot enough to glow." },
-            { type: "Numerical", q: "An electric bulb is rated 220 V and 100 W. When operated on 110 V, what is the power consumed?", a: "Resistance R = V²/P = (220)²/100 = 484 Ω. If V = 110V, Power = V²/R = (110)²/484 = 25 W." },
-            { type: "Conceptual", q: "What is the commercial unit of electrical energy? Convert it into Joules.", a: "The commercial unit is kilowatt-hour (kWh). 1 kWh = 1000 W × 3600 s = 3.6 × 10⁶ Joules." }
+        // ============ Generic show/hide for solutions ============
+        function toggleSol(id) {
+            const el = document.getElementById(id);
+            const btn = document.getElementById(id + 'Btn');
+            const isOpen = el.classList.contains('sol-open');
+            el.classList.toggle('sol-open', !isOpen);
+            if (btn) {
+                btn.innerHTML = isOpen ? '<i class="fa-solid fa-eye mr-1"></i> Show Solution' : '<i class="fa-solid fa-eye-slash mr-1"></i> Hide Solution';
+            }
+        }
+    </script>
+
+    <!-- Question Banks & Engines -->
+    <script>
+        // ============ NCERT SOLVED EXAMPLES + BOARD NUMERICALS ============
+        const EXAMPLES = [
+            { cat: "ncert", tag: "NCERT Example 11.1", topic: "Electric Current", q: "A current of 0.5 A is drawn by the filament of an electric bulb for 10 minutes. Find the amount of electric charge that flows through the circuit.", steps: ["Given: I = 0.5 A; t = 10 min = 600 s.", "I = Q/t ⇒ Q = I × t", "Q = 0.5 A × 600 s = 300 C"] },
+            { cat: "ncert", tag: "NCERT Example 11.2", topic: "Potential Difference", q: "How much work is done in moving a charge of 2 C across two points having a potential difference of 12 V?", steps: ["Given: Q = 2 C, V = 12 V.", "V = W/Q ⇒ W = V × Q", "W = 12 V × 2 C = 24 J"] },
+            { cat: "ncert", tag: "NCERT Example 11.3", topic: "Ohm's Law", q: "(a) How much current will an electric bulb draw from a 220 V source, if the resistance of the bulb filament is 1200 Ω? (b) How much current will an electric heater coil draw from a 220 V source, if the resistance of the heater coil is 100 Ω?", steps: ["(a) I = V/R = 220 V / 1200 Ω = 0.18 A", "(b) I = V/R = 220 V / 100 Ω = 2.2 A", "Note the difference! The same 220 V source drives very different currents through a bulb and a heater."] },
+            { cat: "ncert", tag: "NCERT Example 11.4", topic: "Ohm's Law", q: "The potential difference between the terminals of an electric heater is 60 V when it draws a current of 4 A from the source. What current will the heater draw if the potential difference is increased to 120 V?", steps: ["First find R: R = V/I = 60 V / 4 A = 15 Ω (R stays the same).", "New current: I = V/R = 120 V / 15 Ω", "I = 8 A — the current through the heater becomes 8 A."] },
+            { cat: "ncert", tag: "NCERT Example 11.5", topic: "Resistivity", q: "Resistance of a metal wire of length 1 m is 26 Ω at 20 °C. If the diameter of the wire is 0.3 mm, what will be the resistivity of the metal at that temperature? Using Table 11.2, predict the material of the wire.", steps: ["Given: R = 26 Ω, d = 0.3 mm = 3 × 10⁻⁴ m, l = 1 m.", "ρ = RA/l = Rπd²/4l", "ρ = 26 × π × (3 × 10⁻⁴)² / (4 × 1) = 1.84 × 10⁻⁶ Ω m", "From Table 11.2, this matches manganese."] },
+            { cat: "ncert", tag: "NCERT Example 11.6", topic: "Resistance Factors", q: "A wire of given material having length l and area of cross-section A has a resistance of 4 Ω. What would be the resistance of another wire of the same material having length l/2 and area of cross-section 2A?", steps: ["First wire: R₁ = ρl/A = 4 Ω", "Second wire: R₂ = ρ(l/2)/(2A) = (1/4) × ρl/A = R₁/4", "R₂ = 4/4 = 1 Ω"] },
+            { cat: "ncert", tag: "NCERT Example 11.7", topic: "Series Combination", q: "An electric lamp whose resistance is 20 Ω, and a conductor of 4 Ω resistance, are connected in series to a 6 V battery. Calculate (a) the total resistance of the circuit, (b) the current through the circuit, and (c) the potential difference across the lamp and the conductor.", steps: ["(a) Rs = R₁ + R₂ = 20 Ω + 4 Ω = 24 Ω", "(b) I = V/Rs = 6 V / 24 Ω = 0.25 A", "(c) V₁ = IR₁ = 0.25 × 20 = 5 V; V₂ = IR₂ = 0.25 × 4 = 1 V", "Check: V₁ + V₂ = 5 + 1 = 6 V ✓"] },
+            { cat: "ncert", tag: "NCERT Example 11.8", topic: "Parallel Combination", q: "In Fig 11.10, resistors R₁ = 5 Ω, R₂ = 10 Ω and R₃ = 30 Ω are connected in parallel to a 12 V battery. Calculate (a) the current through each resistor, (b) the total current, and (c) the total circuit resistance.", steps: ["(a) Each resistor gets the full 12 V: I₁ = 12/5 = 2.4 A; I₂ = 12/10 = 1.2 A; I₃ = 12/30 = 0.4 A", "(b) I = I₁ + I₂ + I₃ = 2.4 + 1.2 + 0.4 = 4 A", "(c) 1/Rp = 1/5 + 1/10 + 1/30 = 6/30 + 3/30 + 1/30 = 10/30 ⇒ Rp = 3 Ω"] },
+            { cat: "ncert", tag: "NCERT Example 11.9", topic: "Mixed Combination", q: "In Fig 11.12, R₁ = 10 Ω and R₂ = 40 Ω are in parallel; R₃ = 30 Ω, R₄ = 20 Ω, R₅ = 60 Ω are in parallel; the two groups are in series across a 12 V battery. Calculate (a) the total resistance and (b) the total current.", steps: ["First parallel group: 1/R′ = 1/10 + 1/40 = 5/40 ⇒ R′ = 8 Ω", "Second parallel group: 1/R″ = 1/30 + 1/20 + 1/60 = 6/60 ⇒ R″ = 10 Ω", "(a) R = R′ + R″ = 8 + 10 = 18 Ω", "(b) I = V/R = 12 V / 18 Ω = 0.67 A"] },
+            { cat: "ncert", tag: "NCERT Example 11.10", topic: "Electric Power", q: "An electric iron consumes energy at a rate of 840 W when heating is at the maximum rate and 360 W when the heating is at the minimum. The voltage is 220 V. What are the current and the resistance in each case?", steps: ["P = VI ⇒ I = P/V", "(a) Maximum: I = 840/220 = 3.82 A; R = V/I = 220/3.82 = 57.60 Ω", "(b) Minimum: I = 360/220 = 1.64 A; R = 220/1.64 = 134.15 Ω"] },
+            { cat: "ncert", tag: "NCERT Example 11.11", topic: "Joule's Law", q: "100 J of heat is produced each second in a 4 Ω resistance. Find the potential difference across the resistor.", steps: ["Given: H = 100 J, t = 1 s, R = 4 Ω.", "H = I²Rt ⇒ I = √(H/Rt) = √(100/4) = 5 A", "V = IR = 5 A × 4 Ω = 20 V"] },
+            { cat: "ncert", tag: "NCERT Example 11.12", topic: "Electric Power", q: "An electric bulb is connected to a 220 V generator. The current is 0.50 A. What is the power of the bulb?", steps: ["P = VI", "P = 220 V × 0.50 A = 110 J/s", "P = 110 W"] },
+            { cat: "ncert", tag: "NCERT Example 11.13", topic: "Energy & Cost", q: "An electric refrigerator rated 400 W operates 8 hours/day. What is the cost of the energy to operate it for 30 days at ₹ 3.00 per kWh?", steps: ["Energy = 400 W × 8 h/day × 30 days = 96,000 Wh = 96 kWh", "Cost = 96 kWh × ₹ 3.00/kWh", "Cost = ₹ 288.00"] },
+            { cat: "exercise", tag: "NCERT Exercise Q6", topic: "Resistivity", q: "A copper wire has diameter 0.5 mm and resistivity 1.6 × 10⁻⁸ Ω m. What will be the length of this wire to make its resistance 10 Ω? How much does the resistance change if the diameter is doubled?", steps: ["A = πd²/4 = π × (0.5 × 10⁻³)² / 4 = 1.96 × 10⁻⁷ m²", "l = RA/ρ = 10 × 1.96 × 10⁻⁷ / 1.6 × 10⁻⁸ ≈ 122.7 m", "If d is doubled, A becomes 4A ⇒ R becomes R/4", "New resistance = 10/4 = 2.5 Ω"] },
+            { cat: "exercise", tag: "NCERT Exercise Q8", topic: "Ohm's Law", q: "When a 12 V battery is connected across an unknown resistor, there is a current of 2.5 mA in the circuit. Find the value of the resistance of the resistor.", steps: ["I = 2.5 mA = 2.5 × 10⁻³ A, V = 12 V", "R = V/I = 12 / (2.5 × 10⁻³)", "R = 4800 Ω = 4.8 kΩ"] },
+            { cat: "exercise", tag: "NCERT Exercise Q9", topic: "Series Combination", q: "A battery of 9 V is connected in series with resistors of 0.2 Ω, 0.3 Ω, 0.4 Ω, 0.5 Ω and 12 Ω. How much current would flow through the 12 Ω resistor?", steps: ["Rs = 0.2 + 0.3 + 0.4 + 0.5 + 12 = 13.4 Ω", "In series, the same current flows through every resistor.", "I = V/Rs = 9/13.4 = 0.67 A"] },
+            { cat: "exercise", tag: "NCERT Exercise Q10", topic: "Parallel Combination", q: "How many 176 Ω resistors (in parallel) are required to carry 5 A on a 220 V line?", steps: ["Required Rp = V/I = 220/5 = 44 Ω", "n equal resistors in parallel: Rp = R/n", "n = 176/44 = 4 resistors"] },
+            { cat: "exercise", tag: "NCERT Exercise Q11", topic: "Combinations", q: "Show how you would connect three resistors, each of resistance 6 Ω, so that the combination has a resistance of (i) 9 Ω, (ii) 4 Ω.", steps: ["(i) 9 Ω: connect two 6 Ω resistors in parallel (6×6/12 = 3 Ω), in series with the third → 3 + 6 = 9 Ω", "(ii) 4 Ω: connect two 6 Ω resistors in series (12 Ω), in parallel with the third → (12 × 6)/(12 + 6) = 72/18 = 4 Ω"] },
+            { cat: "exercise", tag: "NCERT Exercise Q12", topic: "Parallel Combination", q: "Several 220 V, 10 W bulbs are connected in parallel across a 220 V line. How many lamps can be connected if the maximum allowable current is 5 A?", steps: ["Current per lamp: I = P/V = 10/220 A", "n = Imax / I = 5 ÷ (10/220) = 5 × 22", "n = 110 lamps"] },
+            { cat: "exercise", tag: "NCERT Exercise Q13", topic: "Combinations", q: "A hot plate of an electric oven connected to a 220 V line has two resistance coils A and B, each of 24 Ω, which may be used separately, in series, or in parallel. What are the currents in the three cases?", steps: ["Separately: I = 220/24 = 9.17 A", "Series: I = 220/48 = 4.58 A", "Parallel: I = 220/12 = 18.33 A"] },
+            { cat: "exercise", tag: "NCERT Exercise Q14", topic: "Electric Power", q: "Compare the power used in the 2 Ω resistor in each of the following circuits: (i) a 6 V battery in series with 1 Ω and 2 Ω resistors; (ii) a 4 V battery in parallel with 12 Ω and 2 Ω resistors.", steps: ["(i) Series: I = 6/(1+2) = 2 A ⇒ P = I²R = 2² × 2 = 8 W", "(ii) Parallel: full 4 V across the 2 Ω ⇒ P = V²/R = 16/2 = 8 W", "Ratio of power: 8 W : 8 W = 1 : 1"] },
+            { cat: "exercise", tag: "NCERT Exercise Q15", topic: "Electric Power", q: "Two lamps, one rated 100 W at 220 V and the other 60 W at 220 V, are connected in parallel to electric mains supply at 220 V. What current is drawn from the line?", steps: ["Each lamp gets the full 220 V (parallel).", "I₁ = 100/220 = 0.4545 A; I₂ = 60/220 = 0.2727 A", "Total: I = I₁ + I₂ = 160/220 = 0.73 A (approx.)"] },
+            { cat: "exercise", tag: "NCERT Exercise Q16", topic: "Electrical Energy", q: "Which uses more energy — a 250 W TV set in 1 hour, or a 1200 W toaster in 10 minutes?", steps: ["TV: 250 W × 1 h = 250 Wh", "Toaster: 1200 W × (10/60) h = 200 Wh", "The TV set uses more energy (250 Wh > 200 Wh)."] },
+            { cat: "exercise", tag: "NCERT Exercise Q17", topic: "Joule's Law", q: "An electric heater of resistance 44 Ω draws 5 A from the service mains for 2 hours. Calculate the rate at which heat is developed in the heater.", steps: ["Rate of heat = power: P = I²R", "P = 5² × 44 = 25 × 44", "P = 1100 W = 1.1 kW"] },
+            { cat: "board", tag: "Board Pattern — In-text Q", topic: "Electric Current", q: "Calculate the number of electrons constituting one coulomb of charge.", steps: ["Charge of one electron e = 1.6 × 10⁻¹⁹ C", "n = Q/e = 1 / (1.6 × 10⁻¹⁹)", "n = 6.25 × 10¹⁸ electrons"] },
+            { cat: "board", tag: "Board Pattern — In-text Q", topic: "Potential Difference", q: "How much energy is given to each coulomb of charge passing through a 6 V battery?", steps: ["Energy per coulomb = potential difference (since V = W/Q).", "W = VQ = 6 V × 1 C", "W = 6 J"] },
+            { cat: "board", tag: "Board Pattern — Heating Effect", q: "Compute the heat generated while transferring 96,000 coulombs of charge in one hour through a potential difference of 50 V.", steps: ["I = Q/t = 96000/3600 = 26.67 A", "H = VIt = 50 × 26.67 × 3600", "H = 4.8 × 10⁶ J (shortcut: H = VQ = 50 × 96000)"] },
+            { cat: "board", tag: "Board Pattern — Heating Effect", q: "An electric iron of resistance 20 Ω takes a current of 5 A. Calculate the heat developed in 30 s.", steps: ["H = I²Rt", "H = 5² × 20 × 30 = 25 × 20 × 30", "H = 15,000 J = 1.5 × 10⁴ J"] },
+            { cat: "board", tag: "Board Pattern — Power", q: "An electric motor takes 5 A from a 220 V line. Determine the power of the motor and the energy consumed in 2 h.", steps: ["P = VI = 220 × 5 = 1100 W = 1.1 kW", "Energy = P × t = 1.1 kW × 2 h", "E = 2.2 kWh (= 2.2 × 3.6 × 10⁶ = 7.92 × 10⁶ J)"] },
+            { cat: "board", tag: "Board Pattern — V/I Data", q: "The values of current I in a given resistor for corresponding values of V are: (0.5 A, 1.6 V), (1.0 A, 3.4 V), (2.0 A, 6.7 V), (3.0 A, 10.2 V), (4.0 A, 13.2 V). Plot V-I and calculate the resistance.", steps: ["The V-I graph is a straight line through the origin (Ohmic conductor).", "R = V/I for each pair: 3.2, 3.4, 3.35, 3.4, 3.3 Ω — nearly constant.", "R ≈ 3.3 Ω (slope of the graph)"] },
+            { cat: "board", tag: "CBSE PYQ — Bulb on reduced voltage", q: "An electric bulb is rated 220 V and 100 W. When operated on 110 V, what is the power consumed?", steps: ["Resistance of the filament: R = V²/P = 220²/100 = 484 Ω (unchanged).", "At 110 V: P = V²/R = 110²/484", "P = 25 W"] },
+            { cat: "board", tag: "CBSE PYQ — Combinations", q: "What is (a) the highest, (b) the lowest total resistance that can be secured by combinations of four coils of resistance 4 Ω, 8 Ω, 12 Ω, 24 Ω?", steps: ["(a) Highest: all in series ⇒ Rs = 4 + 8 + 12 + 24 = 48 Ω", "(b) Lowest: all in parallel ⇒ 1/Rp = 1/4 + 1/8 + 1/12 + 1/24 = 12/24 ⇒ Rp = 2 Ω"] }
+        ];
+
+        function loadExamples(filter) {
+            document.querySelectorAll('.ex-btn').forEach(function(btn) {
+                const on = btn.getAttribute('data-filter') === filter;
+                btn.classList.toggle('bg-brand-green', on);
+                btn.classList.toggle('text-white', on);
+                btn.classList.toggle('shadow', on);
+                btn.classList.toggle('bg-white', !on);
+                btn.classList.toggle('text-gray-600', !on);
+                btn.classList.toggle('shadow-sm', !on);
+                btn.classList.toggle('border', !on);
+                btn.classList.toggle('border-gray-300', !on);
+            });
+            const grid = document.getElementById('exampleGrid');
+            const list = filter === 'all' ? EXAMPLES : EXAMPLES.filter(function(e) { return e.cat === filter; });
+            let html = '';
+            list.forEach(function(e, i) {
+                const uid = 'ex' + filter + i;
+                const accent = e.cat === 'ncert' ? 'border-brand-green' : (e.cat === 'exercise' ? 'border-blue-400' : 'border-brand-orange');
+                const badge = e.cat === 'ncert' ? 'bg-emerald-100 text-brand-dark border-emerald-200' : (e.cat === 'exercise' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-orange-100 text-orange-800 border-orange-200');
+                html += '<div class="bg-white rounded-2xl shadow-md border-l-4 ' + accent + ' border border-gray-100 p-6">' +
+                    '<div class="flex flex-wrap items-center justify-between gap-2 mb-3">' +
+                    '<span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full border ' + badge + '">' + e.tag + '</span>' +
+                    '<span class="text-[11px] text-gray-400 font-mono">' + e.topic + '</span>' +
+                    '</div>' +
+                    '<p class="text-gray-800 font-semibold leading-relaxed mb-4">' + e.q + '</p>' +
+                    '<button id="' + uid + 'Btn" onclick="toggleSol(\'' + uid + '\')" class="px-5 py-2 bg-brand-green text-white font-bold rounded-xl shadow hover:bg-brand-dark transition text-sm"><i class="fa-solid fa-eye mr-1"></i> Show Solution</button>' +
+                    '<div id="' + uid + '" class="sol-drawer">' +
+                    '<ol class="text-sm text-gray-700 space-y-2 list-decimal list-inside bg-emerald-50 border border-emerald-100 rounded-xl p-5 mt-4 font-mono leading-relaxed">' + e.steps.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ol></div></div>';
+            });
+            grid.innerHTML = html;
+        }
+
+        // ============ MCQ TEST ENGINE ============
+        const MCQS = [
+            { q: "A piece of wire of resistance R is cut into five equal parts. These parts are then connected in parallel. If the equivalent resistance of this combination is R′, then the ratio R/R′ is:", o: ["(a) 1/25", "(b) 1/5", "(c) 5", "(d) 25"], a: 3, e: "Each part has resistance R/5. Five such parts in parallel give R′ = (R/5)/5 = R/25. So R/R′ = 25." },
+            { q: "Which of the following terms does not represent electrical power in a circuit?", o: ["(a) I²R", "(b) IR²", "(c) VI", "(d) V²/R"], a: 1, e: "Power P = VI = I²R = V²/R. IR² is not a valid expression for power." },
+            { q: "An electric bulb is rated 220 V and 100 W. When it is operated on 110 V, the power consumed will be:", o: ["(a) 100 W", "(b) 75 W", "(c) 50 W", "(d) 25 W"], a: 3, e: "R = V²/P = 220²/100 = 484 Ω. At 110 V: P = V²/R = 110²/484 = 25 W." },
+            { q: "Two conducting wires of the same material, equal lengths and equal diameters are first connected in series and then in parallel across the same potential difference. The ratio of heat produced in series and parallel is:", o: ["(a) 1:2", "(b) 2:1", "(c) 1:4", "(d) 4:1"], a: 2, e: "Rs = 2R and Rp = R/2. Since H = V²t/R, H ∝ 1/R at the same V. Hs/Hp = Rp/Rs = (R/2)/(2R) = 1/4." },
+            { q: "The SI unit of electric charge is:", o: ["(a) ampere", "(b) volt", "(c) coulomb", "(d) ohm"], a: 2, e: "Charge is measured in coulomb (C); 1 C ≈ 6.25 × 10¹⁸ electrons." },
+            { q: "The number of electrons constituting one coulomb of charge is approximately:", o: ["(a) 6.25 × 10¹⁸", "(b) 1.6 × 10¹⁹", "(c) 6.25 × 10¹⁹", "(d) 1.6 × 10¹⁸"], a: 0, e: "n = Q/e = 1/(1.6 × 10⁻¹⁹) ≈ 6.25 × 10¹⁸ electrons." },
+            { q: "An ammeter is always connected in a circuit in:", o: ["(a) parallel", "(b) series", "(c) either series or parallel", "(d) none of these"], a: 1, e: "The ammeter measures the circuit current, so the entire current must pass through it — series connection." },
+            { q: "A voltmeter is connected in a circuit to measure potential difference:", o: ["(a) in series", "(b) in parallel across the points", "(c) in series with a cell", "(d) anywhere"], a: 1, e: "A voltmeter is always connected in parallel across the two points between which PD is measured." },
+            { q: "The V-I graph of an ohmic conductor (at constant temperature) is:", o: ["(a) a circle", "(b) a parabola", "(c) a straight line through the origin", "(d) a straight line cutting the V-axis"], a: 2, e: "V ∝ I (Ohm's law), so the graph is a straight line passing through the origin; its slope gives R." },
+            { q: "The slope of the V-I graph of a conductor gives:", o: ["(a) current", "(b) resistivity", "(c) resistance", "(d) power"], a: 2, e: "R = V/I, so the slope of the V-I graph equals the resistance R." },
+            { q: "The SI unit of electrical resistivity is:", o: ["(a) Ω", "(b) Ω m⁻¹", "(c) Ω m", "(d) Ω m²"], a: 2, e: "From ρ = RA/l, the unit is Ω × m²/m = Ω m. It is a characteristic property of the material." },
+            { q: "Among silver, copper, iron and nichrome, the best conductor of electricity is:", o: ["(a) nichrome", "(b) iron", "(c) copper", "(d) silver"], a: 3, e: "Silver has the lowest resistivity (1.60 × 10⁻⁸ Ω m) in Table 11.2, hence it is the best conductor." },
+            { q: "Coils of electric toasters and irons are made of alloys rather than pure metals because alloys have:", o: ["(a) lower resistivity and do not oxidise", "(b) high resistivity and do not oxidise at high temperature", "(c) high melting point only", "(d) low cost"], a: 1, e: "Resistivity of an alloy is generally higher than its constituent metals, and alloys do not oxidise (burn) readily at high temperature — ideal for heating devices." },
+            { q: "A fuse wire melts and breaks the circuit when the current:", o: ["(a) falls below the rated value", "(b) exceeds the rated value", "(c) equals the rated value", "(d) alternates"], a: 1, e: "The fuse (in series with the appliance) protects the circuit by melting when current exceeds the specified rating." },
+            { q: "The commercial unit of electrical energy is kilowatt hour (kWh). 1 kWh equals:", o: ["(a) 3.6 × 10⁶ J", "(b) 3.6 × 10³ J", "(c) 1000 J", "(d) 6.0 × 10¹⁸ J"], a: 0, e: "1 kWh = 1000 W × 3600 s = 3.6 × 10⁶ J." },
+            { q: "kilowatt hour (kWh) is the unit of:", o: ["(a) power", "(b) energy", "(c) current", "(d) potential difference"], a: 1, e: "kWh = power × time, which is energy — the commercial 'unit' of electricity. Watt is the unit of power." },
+            { q: "A component used to regulate current without changing the voltage source is called:", o: ["(a) voltmeter", "(b) ammeter", "(c) variable resistance (rheostat)", "(d) fuse"], a: 2, e: "A rheostat (variable resistance) changes the resistance, and hence the current, without changing the voltage source." },
+            { q: "How many 176 Ω resistors connected in parallel are required to carry 5 A on a 220 V line?", o: ["(a) 2", "(b) 3", "(c) 4", "(d) 8"], a: 2, e: "Rp needed = V/I = 220/5 = 44 Ω. For n equal resistors in parallel Rp = R/n ⇒ n = 176/44 = 4." },
+            { q: "Two lamps rated 100 W and 60 W at 220 V are connected in parallel to 220 V mains. The current drawn from the line is about:", o: ["(a) 0.73 A", "(b) 0.45 A", "(c) 1.6 A", "(d) 0.27 A"], a: 0, e: "I = (100 + 60)/220 = 160/220 ≈ 0.73 A, since each lamp gets the full 220 V." },
+            { q: "A 12 V battery is connected in series with resistors of 0.2, 0.3, 0.4, 0.5 and 12 Ω. The current through the 12 Ω resistor is approximately:", o: ["(a) 1.0 A", "(b) 0.90 A", "(c) 0.67 A", "(d) 1.5 A"], a: 1, e: "Rs = 0.2 + 0.3 + 0.4 + 0.5 + 12 = 13.4 Ω; I = V/Rs = 12/13.4 ≈ 0.90 A. The same current flows through every resistor in series." }
+        ];
+
+        let mcqSelections = {};
+        let mcqSubmitted = false;
+
+        function renderMcq() {
+            const list = document.getElementById('mcqList');
+            let html = '';
+            MCQS.forEach(function(m, qi) {
+                html += '<div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6" id="mcqBox' + qi + '">' +
+                    '<div class="flex items-start gap-3 mb-4">' +
+                    '<div class="w-8 h-8 rounded-lg bg-indigo-100 border border-indigo-200 flex-shrink-0 flex items-center justify-center font-black text-indigo-700 text-sm">' + (qi + 1) + '</div>' +
+                    '<p class="font-semibold text-gray-800 leading-relaxed">' + m.q + '</p></div>' +
+                    '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">' +
+                    m.o.map(function(opt, oi) {
+                        return '<button class="mcq-opt w-full text-left px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-white text-sm font-medium text-gray-700 hover:border-brand-orange transition" onclick="pickMcq(' + qi + ',' + oi + ')">' + opt + '</button>';
+                    }).join('') +
+                    '</div>' +
+                    '<div class="mcq-exp hidden mt-4 bg-indigo-50 border-l-4 border-indigo-400 rounded-r-lg p-4 text-sm text-gray-700"><strong><i class="fa-solid fa-circle-info text-indigo-500 mr-1"></i>Explanation:</strong> ' + m.e + '</div>' +
+                    '</div>';
+            });
+            list.innerHTML = html;
+        }
+
+        function pickMcq(qi, oi) {
+            if (mcqSubmitted) return;
+            mcqSelections[qi] = oi;
+            const box = document.getElementById('mcqBox' + qi);
+            box.querySelectorAll('.mcq-opt').forEach(function(b, idx) {
+                b.classList.remove('opt-selected');
+                if (idx === oi) b.classList.add('opt-selected');
+            });
+            document.getElementById('mcqAnsweredCount').textContent = Object.keys(mcqSelections).length;
+        }
+
+        function submitMcq() {
+            const n = Object.keys(mcqSelections).length;
+            if (n < MCQS.length && !mcqSubmitted) {
+                if (!confirm('You have answered ' + n + ' of ' + MCQS.length + ' questions. Submit anyway?')) return;
+            }
+            mcqSubmitted = true;
+            let score = 0;
+            MCQS.forEach(function(m, qi) {
+                const box = document.getElementById('mcqBox' + qi);
+                const opts = box.querySelectorAll('.mcq-opt');
+                opts.forEach(function(b, idx) {
+                    b.classList.remove('opt-selected');
+                    b.disabled = true;
+                    if (idx === m.a) b.classList.add('opt-correct');
+                    if (mcqSelections[qi] === idx && idx !== m.a) b.classList.add('opt-wrong');
+                });
+                box.querySelector('.mcq-exp').classList.remove('hidden');
+                if (mcqSelections[qi] === m.a) { score++; box.classList.add('ring-2', 'ring-emerald-300'); }
+                else if (mcqSelections[qi] !== undefined) { box.classList.add('ring-2', 'ring-red-200'); }
+            });
+            document.getElementById('mcqScoreBox').classList.remove('hidden');
+            document.getElementById('mcqScoreBox').classList.add('flex');
+            document.getElementById('mcqScore').textContent = score + '/' + MCQS.length;
+            const pct = Math.round(score / MCQS.length * 100);
+            document.getElementById('mcqPct').textContent = pct + '% — ' + (pct >= 80 ? 'Excellent! Board-ready 🏆' : (pct >= 50 ? 'Good, revise the marked topics!' : 'Revisit the chapter and retry.'));
+            document.getElementById('mcqStatus').textContent = 'Test submitted — review explanations below';
+            document.getElementById('mcqStatus').classList.add('text-brand-green');
+        }
+
+        function resetMcq() {
+            mcqSelections = {};
+            mcqSubmitted = false;
+            renderMcq();
+            document.getElementById('mcqAnsweredCount').textContent = '0';
+            document.getElementById('mcqScoreBox').classList.add('hidden');
+            document.getElementById('mcqScoreBox').classList.remove('flex');
+            document.getElementById('mcqStatus').textContent = 'Attempt all questions, then submit';
+            document.getElementById('mcqStatus').classList.remove('text-brand-green');
+            document.getElementById('mcqList').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ============ EXAM VAULT (Q&A carousel) ============
+        const VAULT = [
+            { t: "1 mark", q: "Define 1 ampere of current.", a: "One ampere is constituted by the flow of one coulomb of charge per second: 1 A = 1 C / 1 s." },
+            { t: "1 mark", q: "Name a device that helps to maintain a potential difference across a conductor.", a: "A cell or a battery — the chemical action inside it generates the potential difference across its terminals." },
+            { t: "1 mark", q: "What does an electric circuit mean?", a: "A continuous and closed path of an electric current is called an electric circuit. If the circuit breaks anywhere, current stops flowing." },
+            { t: "1 mark", q: "Write the SI unit of (i) resistivity and (ii) electric power.", a: "(i) Resistivity: ohm metre (Ω m). (ii) Electric power: watt (W); 1 W = 1 V × 1 A." },
+            { t: "1 mark", q: "What is the commercial unit of electrical energy? Write its value in joules.", a: "The commercial unit is the kilowatt hour (kWh), commonly called a 'unit'. 1 kWh = 3.6 × 10⁶ J." },
+            { t: "2 marks", q: "What is meant by saying that the potential difference between two points is 1 V?", a: "It means 1 joule of work is done in moving a charge of 1 coulomb from one point to the other. 1 V = 1 J / 1 C." },
+            { t: "2 marks", q: "Will current flow more easily through a thick wire or a thin wire of the same material, when connected to the same source? Why?", a: "Current flows more easily through a thick wire. Resistance is inversely proportional to the area of cross-section (R ∝ 1/A), so a thicker wire offers lower resistance to the current." },
+            { t: "2 marks", q: "Let the resistance of an electrical component remain constant while the potential difference across its ends decreases to half. What change occurs in the current through it?", a: "By Ohm's law (I = V/R), if V is halved and R is constant, the current is also halved." },
+            { t: "2 marks", q: "Why is tungsten used almost exclusively for the filament of electric lamps?", a: "Tungsten has a very high melting point (3380 °C) and high resistivity, and it does not oxidise (burn) readily at high temperatures — so it can get hot enough to glow and emit light for a long time." },
+            { t: "2 marks", q: "Why are the conductors of electric heating devices, such as bread-toasters and electric irons, made of an alloy rather than a pure metal?", a: "Alloys have much higher resistivity than their constituent metals (more heat for the same current, H = I²Rt), and they do not oxidise (burn) readily at high temperatures." },
+            { t: "2 marks", q: "Why are copper and aluminium wires usually employed for electricity transmission?", a: "Copper and aluminium have very low resistivity (1.62 × 10⁻⁸ and 2.63 × 10⁻⁸ Ω m), so they offer very little resistance to current flow — ideal for transmission lines." },
+            { t: "2 marks", q: "Why is the series arrangement not used for domestic circuits?", a: "(1) In series, the same current flows through all appliances — but different appliances need different currents to operate properly. (2) If one component fails, the circuit breaks and all appliances stop working." },
+            { t: "2 marks", q: "Why does the cord of an electric heater not glow while the heating element does?", a: "The cord is made of copper with very low resistance, while the element is an alloy of high resistance. Heat produced H = I²Rt is much larger in the element (same current flows through both), making it red hot while the cord stays cool." },
+            { t: "2 marks", q: "What determines the rate at which energy is delivered by a current?", a: "The electric power, P = VI = I²R = V²/R. The rate of energy delivery equals the power of the appliance." },
+            { t: "2 marks", q: "How does the resistance of a wire vary with its area of cross-section?", a: "Resistance is inversely proportional to the area of cross-section: R ∝ 1/A. If the area is doubled, resistance is halved." },
+            { t: "3 marks", q: "How can three resistors of resistances 2 Ω, 3 Ω and 6 Ω be connected to give a total resistance of (a) 4 Ω and (b) 1 Ω?", a: "(a) 4 Ω: connect 3 Ω and 6 Ω in parallel (3×6/9 = 2 Ω) and this combination in series with the 2 Ω resistor: 2 + 2 = 4 Ω. (b) 1 Ω: connect all three in parallel: 1/R = 1/2 + 1/3 + 1/6 = 1 ⇒ R = 1 Ω." },
+            { t: "3 marks", q: "Compute the heat generated while transferring 96,000 C of charge in one hour through a potential difference of 50 V.", a: "I = Q/t = 96000/3600 = 26.67 A. H = VIt = 50 × 26.67 × 3600 = 4.8 × 10⁶ J. (Directly: H = VQ = 50 × 96000 = 4.8 × 10⁶ J.)" },
+            { t: "3 marks", q: "An electric iron of resistance 20 Ω takes a current of 5 A. Calculate the heat developed in 30 s.", a: "H = I²Rt = (5)² × 20 × 30 = 25 × 20 × 30 = 15,000 J = 1.5 × 10⁴ J." },
+            { t: "3 marks", q: "What are the advantages of connecting electrical devices in parallel with the battery instead of connecting them in series?", a: "(1) Each appliance gets the full supply voltage and can draw its own required current. (2) Every appliance has its own switch — one failing does not affect the others. (3) The overall resistance of the circuit is reduced, so appliances operate at their rated power." },
+            { t: "3 marks", q: "An electric bulb is rated 220 V and 100 W. When operated on 110 V, what is the power consumed?", a: "R = V²/P = (220)²/100 = 484 Ω (unchanged). At 110 V: P = V²/R = (110)²/484 = 25 W." },
+            { t: "3 marks", q: "Draw a schematic diagram of a circuit consisting of a battery of three cells of 2 V each, a 5 Ω resistor, an 8 Ω resistor and a 12 Ω resistor, and a plug key, all in series. (Describe the readings with an ammeter and voltmeter across the 12 Ω resistor.)", a: "Battery EMF = 6 V; Rs = 5 + 8 + 12 = 25 Ω. Ammeter (in series): I = 6/25 = 0.24 A. Voltmeter (parallel across 12 Ω): V = IR = 0.24 × 12 = 2.88 V." },
+            { t: "5 marks", q: "State Ohm's law. How can it be verified experimentally (Activity 11.1)? Draw the nature of the V-I graph.", a: "Ohm's law: the PD across the ends of a metallic wire is directly proportional to the current through it, temperature remaining constant (V = IR). Verification: connect a nichrome wire XY with an ammeter, voltmeter, plug key and a battery of 1–4 cells. Note V and I for 1, 2, 3, 4 cells; V/I is the same each time. The V-I graph is a straight line passing through the origin; its slope = R." },
+            { t: "5 marks", q: "What is Joule's law of heating? Explain its practical applications — the electric bulb and the electric fuse.", a: "H = I²Rt: heat is proportional to I² (given R), to R (given I), and to t. Bulb: filament of tungsten (MP 3380 °C) retains heat and glows; bulb filled with inert nitrogen & argon to prolong life. Fuse: wire of low melting point placed in series; when current exceeds the rated value, the fuse wire heats and melts, breaking the circuit and protecting appliances." },
+            { t: "5 marks", q: "List the factors on which the resistance of a conductor depends. Describe an activity (11.3) to study them.", a: "R depends on (i) length l (R ∝ l), (ii) area of cross-section A (R ∝ 1/A), (iii) material (resistivity ρ): R = ρl/A. Activity: circuit with a cell, ammeter, plug key and a nichrome wire; replacing the wire with one of double length halves the current; a thicker wire of the same length increases the current; a copper wire of the same size gives a different current — showing dependence on l, A and material respectively." },
+            { t: "5 marks", q: "Why is the parallel arrangement used in domestic electric circuits instead of series? Justify with three reasons and the relevant formula.", a: "In parallel: 1/Rp = 1/R₁ + 1/R₂ + …, so total resistance decreases and each branch draws the current it needs. (1) Each appliance receives the full mains voltage (220 V) and operates at its rated power. (2) Appliances work independently — one failing or switching off does not break the circuit for others (unlike series, where one 'dead' bulb stops all fairy lights). (3) Lower equivalent resistance allows the required current for each appliance without affecting the others." }
         ];
 
         let currentFilter = 'all';
-        let filteredQuestions = [...allQuestions];
+        let filteredQuestions = [];
         let qIndex = 0;
         let isAnswerVisible = false;
 
         function loadQuiz(filter) {
             currentFilter = filter;
             collapseAnswer();
-            
-            // Update active button styles
-            document.querySelectorAll('.quiz-btn').forEach(btn => {
-                if(btn.innerText.toLowerCase() === filter || (filter === 'all' && btn.innerText === 'All Topics')) {
+            document.querySelectorAll('.quiz-btn').forEach(function(btn) {
+                const on = btn.getAttribute('data-filter') === filter;
+                if (on) {
                     btn.classList.add('bg-brand-green', 'text-white', 'shadow');
                     btn.classList.remove('bg-white', 'text-gray-600', 'shadow-sm', 'border', 'border-gray-300');
                 } else {
@@ -730,31 +1804,21 @@
                     btn.classList.add('bg-white', 'text-gray-600', 'shadow-sm', 'border', 'border-gray-300');
                 }
             });
-
-            if(filter === 'all') {
-                filteredQuestions = [...allQuestions];
-            } else {
-                filteredQuestions = allQuestions.filter(q => q.type.toLowerCase() === filter);
-            }
-            
+            filteredQuestions = filter === 'all' ? VAULT.slice() : VAULT.filter(function(q) { return q.t === filter; });
             qIndex = 0;
             renderQuestion();
         }
 
         function renderQuestion() {
-            if(filteredQuestions.length === 0) return;
+            if (filteredQuestions.length === 0) return;
             const q = filteredQuestions[qIndex];
-            
             collapseAnswer();
-            
-            // Wait slightly for transition collapse before updating content text
-            setTimeout(() => {
-                document.getElementById('qType').innerText = q.type;
-                document.getElementById('qText').innerText = q.q;
-                document.getElementById('aText').innerText = q.a;
-                
-                document.getElementById('qCount').innerText = qIndex + 1;
-                document.getElementById('qTotal').innerText = filteredQuestions.length;
+            setTimeout(function() {
+                document.getElementById('qType').textContent = q.t.toUpperCase();
+                document.getElementById('qText').textContent = q.q;
+                document.getElementById('aText').textContent = q.a;
+                document.getElementById('qCount').textContent = qIndex + 1;
+                document.getElementById('qTotal').textContent = filteredQuestions.length;
             }, 150);
         }
 
@@ -762,14 +1826,12 @@
             const drawer = document.getElementById('answerDrawer');
             const btnText = document.querySelector('#revealBtn span');
             const btnIcon = document.getElementById('revealIcon');
-            
             if (isAnswerVisible) {
                 collapseAnswer();
             } else {
-                // Show answer
                 drawer.classList.remove('max-h-0', 'opacity-0');
-                drawer.classList.add('max-h-[500px]', 'opacity-100');
-                btnText.innerText = "Hide Model Answer";
+                drawer.classList.add('max-h-[800px]', 'opacity-100');
+                btnText.textContent = "Hide Model Answer";
                 btnIcon.className = "fa-solid fa-eye-slash";
                 isAnswerVisible = true;
             }
@@ -779,38 +1841,56 @@
             const drawer = document.getElementById('answerDrawer');
             const btnText = document.querySelector('#revealBtn span');
             const btnIcon = document.getElementById('revealIcon');
-            
-            if(drawer) {
+            if (drawer) {
                 drawer.classList.add('max-h-0', 'opacity-0');
-                drawer.classList.remove('max-h-[500px]', 'opacity-100');
+                drawer.classList.remove('max-h-[800px]', 'opacity-100');
             }
-            if(btnText) btnText.innerText = "Show Model Answer";
-            if(btnIcon) btnIcon.className = "fa-solid fa-eye";
+            if (btnText) btnText.textContent = "Show Model Answer";
+            if (btnIcon) btnIcon.className = "fa-solid fa-eye";
             isAnswerVisible = false;
         }
 
-        function nextQuestion() {
-            qIndex = (qIndex + 1) % filteredQuestions.length;
-            renderQuestion();
+        function nextQuestion() { qIndex = (qIndex + 1) % filteredQuestions.length; renderQuestion(); }
+        function prevQuestion() { qIndex = (qIndex - 1 + filteredQuestions.length) % filteredQuestions.length; renderQuestion(); }
+
+        // ============ Formula sheet ============
+        const FORMULAS = [
+            ["I = Q / t", "Current (A)"], ["V = W / Q", "Potential diff. (V)"],
+            ["V = I R", "Ohm's law"], ["I = V / R", "Current"],
+            ["R = V / I", "1 Ω = 1 V/A"], ["R = ρ l / A", "ρ = resistivity (Ω m)"],
+            ["Rs = R₁+R₂+R₃", "Series"], ["1/Rp = 1/R₁+1/R₂+1/R₃", "Parallel"],
+            ["H = I²Rt = VIt", "Joule's law"], ["P = VI = I²R = V²/R", "Power (W)"],
+            ["W = P t", "Energy"], ["1 kWh = 3.6 × 10⁶ J", "Commercial unit"]
+        ];
+
+        function renderFormulas() {
+            const grid = document.getElementById('formulaGrid');
+            let html = '';
+            FORMULAS.forEach(function(f) {
+                html += '<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center hover:shadow-md transition hover:-translate-y-0.5">' +
+                    '<p class="font-mono font-bold text-brand-dark">' + f[0] + '</p>' +
+                    '<p class="text-[10px] uppercase tracking-wider text-gray-400 mt-1 font-bold">' + f[1] + '</p></div>';
+            });
+            grid.innerHTML = html;
         }
 
-        function prevQuestion() {
-            qIndex = (qIndex - 1 + filteredQuestions.length) % filteredQuestions.length;
-            renderQuestion();
-        }
-
-        // Initialize all functions on load
-        window.onload = () => {
+        // ============ Initialize ============
+        window.onload = function() {
             calculateBasics();
             calcSystem();
             updateWire();
+            calcHeat();
             calcBill();
+            renderSymbols();
+            renderResTable();
+            renderMcq();
             loadQuiz('all');
-            
-            // Slight delay for canvas to ensure layout is done
+            loadExamples('all');
+            renderFormulas();
+            setCells(1);
+            updateCircuit();
+            initElectrons();
             setTimeout(updateOhmsLaw, 100);
-            
-            // Redraw canvas on window resize to maintain responsiveness
             window.addEventListener('resize', updateOhmsLaw);
         };
     </script>
