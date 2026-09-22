@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circles — Class 10 (Tangents, Interactive) | Chapter 9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef4fa; --surface:#fbfdff; --surface2:#e7eef6; --surface3:#dbe6f1;
+  --border:rgba(23,50,78,.14); --border-strong:rgba(23,50,78,.27);
+  --ink:#17324e; --dim:#54708c; --faint:#8399ad;
+  --blue:#0f62a8; --blue-deep:#0b4c85; --blue-dim:rgba(15,98,168,.09);
+  --teal:#0d7285; --teal-deep:#0a5a6a; --teal-dim:rgba(13,114,133,.1);
+  --gold:#a2731d; --gold-deep:#7c5a1a; --gold-dim:rgba(162,115,29,.13);
+  --danger:#b3402a; --danger-dim:rgba(179,64,42,.09);
+  --ok:#2e7d4f; --ok-deep:#23603d; --ok-dim:rgba(46,125,79,.1);
+  --shadow:0 1px 2px rgba(23,50,78,.05),0 8px 24px -12px rgba(23,50,78,.16);
+  --radius:14px;
+  --font-body:'IBM Plex Sans',Georgia,serif;
+  --font-mono:'IBM Plex Mono','Courier New',monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0c1929; --surface:#122637; --surface2:#18304a; --surface3:#1f3d5c;
+    --border:rgba(220,232,244,.11); --border-strong:rgba(220,232,244,.24);
+    --ink:#dce8f4; --dim:#9fb4c9; --faint:#6d84a0;
+    --blue:#5aa9e6; --blue-deep:#8cc2ef; --blue-dim:rgba(90,169,230,.12);
+    --teal:#5cc4d4; --teal-deep:#82d3e0; --teal-dim:rgba(92,196,212,.11);
+    --gold:#d9ab5c; --gold-deep:#e5c084; --gold-dim:rgba(217,171,92,.13);
+    --danger:#e07856; --danger-dim:rgba(224,120,86,.11);
+    --ok:#6dbf8a; --ok-deep:#8fd4a5; --ok-dim:rgba(109,191,138,.11);
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px -12px rgba(0,0,0,.55);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:86px}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--ink);
+  line-height:1.62;font-size:15.5px;
+  background-image:
+    linear-gradient(rgba(23,50,78,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(23,50,78,.05) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+@media (prefers-color-scheme:dark){
+  body{background-image:
+    linear-gradient(rgba(220,232,244,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(220,232,244,.035) 1px,transparent 1px)}
+}
+.shell{max-width:1280px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:238px minmax(0,1fr);gap:36px}
+@media (max-width:960px){.shell{grid-template-columns:1fr;gap:0}}
+.sidebar{position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;padding:28px 0 40px;scrollbar-width:thin}
+@media (max-width:960px){
+  .sidebar{position:sticky;top:0;z-index:60;background:var(--bg);max-height:none;padding:10px 0 6px;border-bottom:1px solid var(--border)}
+  .sidebar .side-brand{display:none}
+  .sidebar nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+  .sidebar nav a{white-space:nowrap;border:1px solid var(--border)}
+  .sidebar nav a.sub{display:none}
+}
+.side-brand{margin:4px 10px 18px}
+.side-brand .b-title{font-weight:700;font-size:17px;letter-spacing:-.02em;line-height:1.25}
+.side-brand .b-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--dim);margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+.sidebar nav{display:flex;flex-direction:column;gap:4px}
+.sidebar nav a{
+  display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;
+  color:var(--dim);text-decoration:none;font-size:13.5px;font-weight:600;
+  border:1px solid transparent;transition:all .18s;
+}
+.sidebar nav a:hover{color:var(--ink);background:var(--surface2)}
+.sidebar nav a .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.sidebar nav a.sub{padding-left:30px;font-size:12.5px;font-weight:500}
+.side-note{margin:22px 10px 0;padding:12px;border:1px dashed var(--border-strong);border-radius:10px;font-size:12px;color:var(--dim)}
+@media (max-width:960px){.side-note{display:none}}
+main{min-width:0;padding-bottom:90px}
+section.sec{padding:44px 0 10px;border-top:1px solid var(--border);margin-top:28px}
+section.sec:first-of-type{border-top:none;margin-top:0;padding-top:34px}
+.sec-label{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.sec-label::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--blue);flex:none}
+.sec-label.gold::before{background:var(--gold)}
+.sec-label.teal::before{background:var(--teal)}
+.sec-label.red::before{background:var(--danger)}
+h2.sec-title{font-size:clamp(24px,3.4vw,34px);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:6px}
+.sec-sub{color:var(--dim);font-size:15px;max-width:660px;margin-bottom:22px}
+h3.h3{font-size:19px;font-weight:700;letter-spacing:-.015em;margin:34px 0 10px;display:flex;align-items:baseline;gap:10px}
+h3.h3 .n{font-family:var(--font-mono);font-size:12px;color:var(--blue);font-weight:600}
+h4.h4{font-size:15.5px;font-weight:700;margin:20px 0 8px}
+.hero{padding:52px 34px 44px;border-radius:20px;background:
+  radial-gradient(900px 340px at 12% -8%,var(--blue-dim),transparent 60%),
+  radial-gradient(700px 300px at 95% 110%,var(--gold-dim),transparent 60%),
+  var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);margin-top:26px}
+.hero .kicker{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-deep);margin-bottom:12px}
+.hero h1{font-size:clamp(30px,4.6vw,46px);font-weight:700;letter-spacing:-.035em;line-height:1.08;max-width:16ch}
+.hero p.lede{margin-top:14px;max-width:580px;color:var(--dim);font-size:16.5px}
+.hero .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.hero .cta{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:11px;font-weight:700;font-size:14px;text-decoration:none;border:1px solid transparent;transition:transform .15s}
+.hero .cta:active{transform:scale(.97)}
+.cta.primary{background:var(--blue);color:#fff}
+.cta.ghost{border-color:var(--border-strong);color:var(--ink);background:var(--surface)}
+.hero .meta-row{display:flex;flex-wrap:wrap;gap:26px;margin-top:30px}
+.hero .meta .k{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.hero .meta .v{font-weight:700;font-size:19px;letter-spacing:-.02em;margin-top:2px}
+.hero .meta .v small{font-weight:600;font-size:12px;color:var(--dim)}
+.ve-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
+.ve-card.recessed{background:var(--surface2);box-shadow:none}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:14px}
+.callout{border-left:3px solid var(--blue);background:var(--blue-dim);border-radius:0 12px 12px 0;padding:14px 18px;margin:18px 0;font-size:14.5px}
+.callout.teal{border-color:var(--teal);background:var(--teal-dim)}
+.callout.gold{border-color:var(--gold);background:var(--gold-dim)}
+.callout.red{border-color:var(--danger);background:var(--danger-dim)}
+.callout b{font-weight:700}
+.callout .t{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.mth{font-family:var(--font-mono);white-space:nowrap}
+.eq{display:block;margin:10px 0;padding:12px 16px;background:var(--surface2);border-radius:10px;font-family:var(--font-mono);font-size:14.5px;overflow-x:auto;overflow-wrap:break-word}
+.tbl-wrap{overflow-x:auto;margin:14px 0;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+table.tbl th{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border-strong);background:var(--surface2)}
+table.tbl td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+table.tbl tr:last-child td{border-bottom:none}
+table.tbl tr:nth-child(even) td{background:var(--surface2)}
+.num-c{text-align:center !important}
+.mod{background:var(--surface);border:1px solid var(--border-strong);border-radius:16px;overflow:hidden;margin:20px 0;box-shadow:var(--shadow)}
+.mod-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 20px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.mod-head .m-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:99px;background:var(--blue);color:#fff;font-weight:600}
+.mod-head .m-tag.teal{background:var(--teal)}
+.mod-head .m-tag.gold{background:var(--gold)}
+.mod-head .m-title{font-weight:700;font-size:15.5px;letter-spacing:-.01em}
+.mod-head .m-hint{font-size:12.5px;color:var(--dim);margin-left:auto}
+.mod-body{padding:18px 20px 22px}
+.mod-controls{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;margin-bottom:14px;padding:12px 16px;background:var(--surface2);border-radius:11px}
+.ctrl{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--dim)}
+.ctrl .val{font-family:var(--font-mono);color:var(--ink);font-size:13.5px;min-width:52px;text-align:center;padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:7px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:170px;height:5px;border-radius:99px;background:var(--surface3);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:grab}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--blue);border:3px solid var(--surface);cursor:grab}
+.seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:9px;overflow:hidden}
+.seg button{padding:7px 14px;border:none;background:var(--surface);font-family:var(--font-body);font-weight:600;font-size:12.5px;color:var(--dim);cursor:pointer;border-right:1px solid var(--border)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--blue);color:#fff}
+.mod svg{display:block;width:100%;height:auto;max-width:640px;margin:0 auto}
+.readout{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.readout .chip{font-family:var(--font-mono);font-size:12.5px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px}
+.readout .chip b{color:var(--blue-deep);font-weight:600}
+details.sol{margin-top:12px;border:1px solid var(--border);border-radius:11px;background:var(--surface2);overflow:hidden}
+details.sol summary{cursor:pointer;padding:11px 16px;font-weight:700;font-size:13.5px;color:var(--blue-deep);list-style:none;display:flex;align-items:center;gap:9px;user-select:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"+";font-family:var(--font-mono);width:20px;height:20px;border-radius:6px;background:var(--surface);border:1px solid var(--border-strong);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none;color:var(--ink)}
+details.sol[open] summary::before{content:"−"}
+details.sol .sol-body{padding:4px 18px 16px;font-size:14.5px;border-top:1px solid var(--border)}
+.sol-body p{margin:8px 0}
+.sol-body ol,.sol-body ul{margin:8px 0 8px 22px}
+.sol-body li{margin:5px 0}
+.sol-body .ans{display:inline-block;margin-top:6px;padding:6px 14px;background:var(--ok-dim);border:1px solid var(--ok);border-radius:8px;font-weight:700;font-size:14px}
+.qcard{border:1px solid var(--border);border-radius:13px;background:var(--surface);padding:18px 20px;margin:14px 0;box-shadow:var(--shadow)}
+.qcard .q-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.badge{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3.5px 9px;border-radius:99px;font-weight:600;border:1px solid transparent}
+.badge.chC{background:var(--blue-dim);color:var(--blue-deep)}
+.badge.marks{background:var(--ok-dim);color:var(--ok-deep)}
+.badge.year{background:var(--gold-dim);color:var(--gold-deep)}
+.badge.type{background:var(--surface2);color:var(--dim);border-color:var(--border)}
+.qcard .q-text{font-size:15px;font-weight:500}
+.qcard .q-text .mth{font-size:13.5px}
+.qcard.ncert{border-left:3px solid var(--blue)}
+.qcard.pyq{border-left:3px solid var(--gold)}
+.qcard.extra{border-left:3px solid var(--teal)}
+.steps{counter-reset:st;margin:10px 0 4px}
+.steps li{list-style:none;counter-increment:st;position:relative;padding:6px 0 6px 42px;margin:2px 0}
+.steps li::before{content:counter(st);position:absolute;left:0;top:8px;width:26px;height:26px;border-radius:8px;background:var(--blue-dim);color:var(--blue-deep);font-family:var(--font-mono);font-weight:600;font-size:12.5px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(15,98,168,.25)}
+.steps.teal li::before{background:var(--teal-dim);color:var(--teal-deep);border-color:rgba(13,114,133,.25)}
+.formula-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px;margin:16px 0}
+.f-strip{padding:16px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--blue);box-shadow:var(--shadow)}
+.f-strip.teal{border-top-color:var(--teal)}
+.f-strip.gold{border-top-color:var(--gold)}
+.f-strip .f-t{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.f-strip .f-eqs{display:flex;flex-direction:column;gap:6px}
+.f-strip .f-eqs .mth{font-size:14px}
+.test-shell{border:1px solid var(--border-strong);border-radius:18px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+.test-start{padding:44px 34px;text-align:center;background:radial-gradient(600px 240px at 50% -10%,var(--ok-dim),transparent 70%),var(--surface)}
+.test-start h3{font-size:24px;font-weight:700;letter-spacing:-.02em}
+.test-start p{color:var(--dim);max-width:540px;margin:10px auto 22px;font-size:14.5px}
+.btn{font-family:var(--font-body);font-weight:700;font-size:14px;padding:11px 22px;border-radius:11px;border:1px solid transparent;cursor:pointer;transition:transform .15s,opacity .15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.green{background:var(--ok);color:#fff}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--border-strong)}
+.btn.small{padding:7px 14px;font-size:12.5px;border-radius:9px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.test-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:13px 20px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.test-bar .t-name{font-weight:700;font-size:14.5px}
+.test-bar .t-stats{font-family:var(--font-mono);font-size:12px;color:var(--dim)}
+.test-bar .spacer{flex:1}
+.palette{display:flex;flex-wrap:wrap;gap:6px}
+.pal-q{width:34px;height:34px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface);font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--dim);cursor:pointer}
+.pal-q.cur{outline:2.5px solid var(--blue);outline-offset:1px;color:var(--ink)}
+.pal-q.done{background:var(--ok-dim);border-color:var(--ok);color:var(--ok-deep)}
+.pal-q.ot{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-deep)}
+.pal-q.skipped{background:var(--danger-dim);border-color:var(--danger);color:var(--danger)}
+.test-main{padding:26px 28px 30px;max-width:820px;margin:0 auto}
+.timer-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.timer-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:14px;font-weight:600;padding:8px 16px;border-radius:99px;background:var(--surface2);border:1px solid var(--border-strong)}
+.timer-pill .t-num{font-size:16px;min-width:58px;text-align:center}
+.timer-pill.warn{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-deep)}
+.timer-pill.over{background:var(--danger-dim);border-color:var(--danger);color:var(--danger)}
+.timer-track{flex:1;height:8px;border-radius:99px;background:var(--surface3);overflow:hidden}
+.timer-fill{height:100%;background:var(--ok);border-radius:99px;transition:width .95s linear}
+.timer-fill.warn{background:var(--gold)}
+.timer-fill.over{background:var(--danger)}
+.q-body{font-size:16px;font-weight:600;line-height:1.6}
+.q-body .mth{font-size:14px;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border:1.5px solid var(--border);border-radius:11px;cursor:pointer;background:var(--surface);font-size:14.5px;transition:all .15s}
+.opt:hover{border-color:var(--border-strong);background:var(--surface2)}
+.opt input{margin-top:3px;accent-color:var(--blue)}
+.opt.sel{border-color:var(--blue);background:var(--blue-dim)}
+.opt.correct{border-color:var(--ok);background:var(--ok-dim)}
+.opt.wrong{border-color:var(--danger);background:var(--danger-dim)}
+.opt .ol{font-family:var(--font-mono);font-size:12px;color:var(--dim);font-weight:600}
+.num-wrap{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+.num-wrap input[type=text]{font-family:var(--font-mono);font-size:16px;padding:11px 15px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--ink);width:220px;outline:none}
+.num-wrap input[type=text]:focus{border-color:var(--blue)}
+.tf-row{display:flex;gap:10px;margin-top:16px}
+.test-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)}
+.timeup{margin-top:16px;padding:16px 18px;border:1.5px dashed var(--danger);border-radius:12px;background:var(--danger-dim)}
+.timeup .tu-t{font-weight:700;color:var(--danger);font-size:14.5px;margin-bottom:6px}
+.timeup .tu-row{display:flex;flex-wrap:wrap;gap:9px}
+.explain-box{margin-top:18px;border:1px solid var(--ok);border-radius:12px;background:var(--ok-dim);padding:16px 18px}
+.explain-box .ex-t{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ok-deep);margin-bottom:8px;font-weight:600}
+.explain-box p{margin:7px 0;font-size:14.5px}
+.verdict{display:inline-block;padding:5px 13px;border-radius:99px;font-size:12.5px;font-weight:700;margin-bottom:10px}
+.verdict.ok{background:var(--ok-dim);color:var(--ok-deep)}
+.verdict.no{background:var(--danger-dim);color:var(--danger)}
+.results-wrap{padding:30px 26px 36px;max-width:860px;margin:0 auto}
+.score-hero{text-align:center;padding:28px 20px;border-radius:14px;background:var(--surface2);border:1px solid var(--border);margin-bottom:22px}
+.score-hero .sc{font-size:52px;font-weight:700;letter-spacing:-.04em;font-family:var(--font-mono)}
+.score-hero .sc small{font-size:20px;color:var(--dim);font-weight:600}
+.rev-card{border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:10px 0;background:var(--surface)}
+.rev-card .rv-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+footer{border-top:1px solid var(--border);margin-top:56px;padding:26px 0;color:var(--faint);font-size:12.5px;font-family:var(--font-mono)}
+.pill-note{font-size:12px;color:var(--faint);margin-top:6px}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <div class="side-brand">
+    <div class="b-title">Circles<span style="color:var(--blue)">.</span>Class&nbsp;10</div>
+    <div class="b-sub">CBSE · NCERT Maths</div>
+  </div>
+  <nav>
+    <a href="#chc"><span class="dot" style="background:var(--blue)"></span>The chapter</a>
+    <a class="sub" href="#c1-anchor">Secant ↔ tangent</a>
+    <a class="sub" href="#c2-anchor">Tangent ⊥ radius</a>
+    <a class="sub" href="#c3-anchor">Equal tangents</a>
+    <a class="sub" href="#c4-anchor">Tangent length</a>
+    <a href="#impq"><span class="dot" style="background:var(--teal)"></span>Important questions</a>
+    <a href="#pyq"><span class="dot" style="background:var(--gold)"></span>CBSE PYQs</a>
+    <a href="#test"><span class="dot" style="background:var(--danger)"></span>Timed test</a>
+  </nav>
+  <div class="side-note">Two theorems — tangent ⊥ radius, and equal tangents from an external point — power every single question in this chapter. Master them and the chapter is done.</div>
+</aside>
+<main>
+
+<section class="sec" id="top" style="border-top:none">
+  <div class="hero">
+    <div class="kicker">CBSE Class 10 · Mathematics · Circles (Chapter 9 in some editions, Chapter 10 in the current NCERT — same content)</div>
+    <h1>Circles: the geometry of touching lines.</h1>
+    <p class="lede">One circle, one line, and two theorems. Drag secants until they become tangents, watch the 90° never break, measure tangents from a moving point — then solve every important NCERT question, revise from board PYQs, and take an auto-timed test where every question has its own clock and full explanation.</p>
+    <div class="cta-row">
+      <a class="cta primary" href="#chc">Start the chapter</a>
+      <a class="cta ghost" href="#test">Jump to the test</a>
+    </div>
+    <div class="meta-row">
+      <div class="meta"><div class="k">Interactive modules</div><div class="v">4</div></div>
+      <div class="meta"><div class="k">Solved questions</div><div class="v">15<small>+</small></div></div>
+      <div class="meta"><div class="k">CBSE PYQs</div><div class="v">11</div></div>
+      <div class="meta"><div class="k">Timed test</div><div class="v">16<small>&nbsp;Q</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER CONTENT ==================== -->
+<section class="sec" id="chc">
+  <div class="sec-label">The chapter · theory with live diagrams</div>
+  <h2 class="sec-title">Circles — tangents, and nothing else</h2>
+  <p class="sec-sub">In Class 10, "Circles" means one thing: <b>the tangent</b> — the line that touches a circle at exactly one point. Everything in this chapter (both theorems, every exam question) follows from the two facts you will see in the interactive modules below.</p>
+
+  <h3 class="h3"><span class="n">9.1</span> Vocabulary first: secant, tangent, point of contact</h3>
+  <div class="grid2">
+    <div class="ve-card">
+      <div class="sec-label" style="margin-bottom:8px">crosses twice</div>
+      <b>Secant</b> — a line that intersects the circle at <b>two</b> points. It slices through the circle, cutting off a chord.
+    </div>
+    <div class="ve-card">
+      <div class="sec-label teal" style="margin-bottom:8px">touches once</div>
+      <b>Tangent</b> — a line that meets the circle at <b>exactly one</b> point. That single common point is the <b>point of contact</b>. A tangent is what a secant becomes as the two intersection points slide together.
+    </div>
+  </div>
+  <p style="margin-top:14px">How many tangents can a circle have? <b>Infinitely many</b> — one at every point of the circle. But from any single <i>external</i> point, exactly <b>two</b> tangents can be drawn. The count depends on where the point stands:</p>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>position of point P</th><th class="num-c">tangents from P</th><th>why</th></tr></thead>
+      <tbody>
+        <tr><td>inside the circle (d < r)</td><td class="num-c">0</td><td>any line through P is a secant — it must cross the circle to escape</td></tr>
+        <tr><td>on the circle (d = r)</td><td class="num-c">1</td><td>exactly one tangent, at P itself, ⊥ to the radius OP</td></tr>
+        <tr><td>outside the circle (d > r)</td><td class="num-c">2</td><td>symmetric tangents on either side of the line OP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mod" id="c1-anchor">
+    <div class="mod-head">
+      <span class="m-tag">Module 1</span>
+      <span class="m-title">Secant ↔ tangent morpher</span>
+      <span class="m-hint">drag the distance slider — or snap straight to the tangent</span>
+    </div>
+    <div class="mod-body">
+      <div class="mod-controls">
+        <div class="ctrl">line distance d <input type="range" id="c1-d" min="10" max="220" value="60" step="1"><span class="val" id="c1-d-val">60 px</span></div>
+        <div class="ctrl">radius r <input type="range" id="c1-r" min="60" max="140" value="100" step="1"><span class="val" id="c1-r-val">100 px</span></div>
+        <button class="btn small ghost" id="c1-snap">Snap to tangent (d = r)</button>
+      </div>
+      <svg id="c1-svg" viewBox="0 0 640 440" role="img" aria-label="A line at adjustable distance from a circle, showing secant, tangent and non-intersecting states"></svg>
+      <div class="readout">
+        <span class="chip">state: <b id="c1-state">—</b></span>
+        <span class="chip">common points: <b id="c1-pts">—</b></span>
+        <span class="chip">chord length: <b id="c1-chord">—</b></span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h3"><span class="n">9.2</span> Theorem 1 — the tangent is perpendicular to the radius</h3>
+  <div class="ve-card recessed">
+    <p><b>Theorem:</b> the tangent at any point of a circle is perpendicular to the radius through the point of contact.</p>
+    <p><b>Proof (the "shortest distance" argument):</b> Let the tangent at P have centre O. Take any other point Q on the tangent. Since the tangent meets the circle only at P, Q lies <b>outside</b> the circle, so <span class="mth">OQ > r</span> while <span class="mth">OP = r</span>. So P is the point on the tangent <i>closest</i> to O — and the shortest distance from a point to a line is always the perpendicular one. Hence <span class="mth">OP ⊥ tangent</span>. ∎</p>
+    <p class="pill-note">Converse (also asked in exams): the line drawn through the point of contact, perpendicular to the tangent, must pass through the centre.</p>
+  </div>
+
+  <div class="mod" id="c2-anchor">
+    <div class="mod-head">
+      <span class="m-tag teal">Module 2</span>
+      <span class="m-title">The 90° that never breaks</span>
+      <span class="m-hint">drag the contact point around the circle · toggle the proof idea</span>
+    </div>
+    <div class="mod-body">
+      <div class="mod-controls">
+        <div class="ctrl">contact point angle <input type="range" id="c2-a" min="0" max="360" value="55" step="1"><span class="val" id="c2-a-val">55°</span></div>
+        <button class="btn small ghost" id="c2-proof">Show why (any other point Q on the tangent is farther)</button>
+      </div>
+      <svg id="c2-svg" viewBox="0 0 640 420" role="img" aria-label="A circle with a tangent and radius meeting at right angles at a draggable contact point"></svg>
+      <div class="readout">
+        <span class="chip">∠ between radius and tangent: <b id="c2-ang">90°</b></span>
+        <span class="chip" id="c2-oq" style="display:none">OQ = <b>—</b> > OP = <b>—</b> (hypotenuse is longest)</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h3"><span class="n">9.3</span> Theorem 2 — equal tangents from an external point</h3>
+  <div class="ve-card recessed">
+    <p><b>Theorem:</b> the lengths of tangents drawn from an external point to a circle are equal.</p>
+    <p><b>Proof (RHS congruence):</b> PA and PB are tangents from P, touching at A and B. Join OP, OA, OB. By Theorem 1, <span class="mth">∠OAP = ∠OBP = 90°</span>. Now <span class="mth">OP</span> is common, and <span class="mth">OA = OB</span> (radii). So ΔOAP ≅ ΔOBP (RHS rule) → <span class="mth">PA = PB</span>. ∎</p>
+  </div>
+  <div class="formula-strip">
+    <div class="f-strip"><div class="f-t">immediate consequences</div><div class="f-eqs">
+      <span class="mth">PA = PB (the theorem itself)</span>
+      <span class="mth">OP bisects ∠APB and ∠AOB</span>
+    </div></div>
+    <div class="f-strip teal"><div class="f-t">angle relations</div><div class="f-eqs">
+      <span class="mth">∠AOB + ∠APB = 180°</span>
+      <span class="mth">∠OAP + ∠OBP = 180° → OAPB is cyclic</span>
+    </div></div>
+    <div class="f-strip gold"><div class="f-t">the workhorse formula</div><div class="f-eqs">
+      <span class="mth">tangent length = √(d² − r²)</span>
+      <span class="mth">(d = OP, distance of P from centre)</span>
+    </div></div>
+  </div>
+
+  <div class="mod" id="c3-anchor">
+    <div class="mod-head">
+      <span class="m-tag gold">Module 3</span>
+      <span class="m-title">Two tangents from a moving external point</span>
+      <span class="m-hint">drag P — watch PA and PB stay equal, angles stay supplementary</span>
+    </div>
+    <div class="mod-body">
+      <div class="mod-controls">
+        <div class="ctrl">distance OP <input type="range" id="c3-d" min="160" max="380" value="260" step="1"><span class="val" id="c3-d-val">260 px</span></div>
+        <div class="ctrl">radius r <input type="range" id="c3-r" min="60" max="130" value="110" step="1"><span class="val" id="c3-r-val">110 px</span></div>
+      </div>
+      <svg id="c3-svg" viewBox="0 0 640 420" role="img" aria-label="Two tangents drawn from an external point to a circle, with equal lengths highlighted"></svg>
+      <div class="readout">
+        <span class="chip">PA = <b id="c3-pa">—</b></span>
+        <span class="chip">PB = <b id="c3-pb">—</b></span>
+        <span class="chip">∠APB = <b id="c3-apb">—</b></span>
+        <span class="chip">∠AOB = <b id="c3-aob">—</b></span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h3"><span class="n">9.4</span> The tangent-length right triangle — where numbers come from</h3>
+  <p>Every numerical question in this chapter is the same right triangle in disguise: right-angled at the point of contact <span class="mth">T</span>, with legs <span class="mth">r</span> (radius) and <span class="mth">√(d² − r²)</span> (tangent), and hypotenuse <span class="mth">d</span> (distance of the external point from the centre). Drag the machine below — it is also the "how many tangents?" position checker.</p>
+
+  <div class="mod" id="c4-anchor">
+    <div class="mod-head">
+      <span class="m-tag">Module 4</span>
+      <span class="m-title">Tangent length calculator — √(d² − r²)</span>
+      <span class="m-hint">set r and d in cm · position check included</span>
+    </div>
+    <div class="mod-body">
+      <div class="mod-controls">
+        <div class="ctrl">radius r <input type="range" id="c4-r" min="2" max="12" value="5" step="1"><span class="val" id="c4-r-val">5 cm</span></div>
+        <div class="ctrl">distance d = OP <input type="range" id="c4-d" min="2" max="25" value="13" step="1"><span class="val" id="c4-d-val">13 cm</span></div>
+      </div>
+      <svg id="c4-svg" viewBox="0 0 640 340" role="img" aria-label="Right triangle formed by centre, external point and point of contact, showing tangent length"></svg>
+      <div class="readout">
+        <span class="chip">position of P: <b id="c4-pos">—</b></span>
+        <span class="chip">tangents from P: <b id="c4-count">—</b></span>
+        <span class="chip">PT = √(d² − r²) = <b id="c4-len">—</b></span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h3"><span class="n">9.5</span> Exam patterns to recognise on sight</h3>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>when the question says…</th><th>the hidden fact</th><th>typical numbers</th></tr></thead>
+      <tbody>
+        <tr><td>"tangent of length 24, point 25 from centre — find r"</td><td class="num-c"><span class="mth">r = √(d² − t²)</span></td><td class="num-c"><span class="mth">√(625−576) = 7</span></td></tr>
+        <tr><td>"chord of larger circle touches smaller (concentric)"</td><td class="num-c"><span class="mth">chord = 2√(R² − r²)</span>, bisected at contact</td><td class="num-c"><span class="mth">2√(25−9) = 8</span></td></tr>
+        <tr><td>"quadrilateral circumscribes a circle"</td><td class="num-c"><span class="mth">AB + CD = AD + BC</span></td><td class="num-c">find the 4th side from three</td></tr>
+        <tr><td>"parallelogram circumscribes a circle"</td><td class="num-c">it must be a <b>rhombus</b></td><td class="num-c">2AB = 2AD → AB = AD</td></tr>
+        <tr><td>"tangents inclined at angle θ"</td><td class="num-c"><span class="mth">∠AOB = 180° − θ</span>, OP bisects θ</td><td class="num-c"><span class="mth">θ = 80° → ∠POA = 50°</span></td></tr>
+        <tr><td>"tangents at the ends of a diameter"</td><td class="num-c">they are <b>parallel</b></td><td class="num-c">both ⊥ the same diameter</td></tr>
+        <tr><td>"two parallel tangents + a third between them"</td><td class="num-c"><span class="mth">∠AOB = 90°</span> (O = centre, A,B on the outer tangents)</td><td class="num-c">a board favourite</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== IMPORTANT QUESTIONS ==================== -->
+<section class="sec" id="impq">
+  <div class="sec-label teal">Question bank 1</div>
+  <h2 class="sec-title">Important questions — NCERT & beyond, fully solved</h2>
+  <p class="sec-sub">Attempt each on paper first; open a solution only when stuck (or to check). The order roughly follows the NCERT exercises of this chapter.</p>
+
+  <h3 class="h3"><span class="n" style="color:var(--blue)">A</span> NCERT solved</h3>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">1 mark</span></div>
+    <div class="q-text">How many tangents can a circle have?</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>A tangent exists at <b>every</b> point of the circle, and there are infinitely many points on a circle — so a circle has <b>infinitely many tangents</b>.</p>
+      <p class="pill-note">But note the examiner's twist: from a single <i>external</i> point, exactly <b>two</b> tangents can be drawn; from a point <i>on</i> the circle, exactly <b>one</b>.</p>
+      <p class="ans">Infinitely many — one at each point of the circle</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">1 mark each</span></div>
+    <div class="q-text">Fill in the blanks: (i) A tangent to a circle intersects it in ___ point(s). (ii) A line intersecting a circle in two points is called a ___. (iii) A circle can have ___ parallel tangents at the most to a given line. (iv) The common point of a tangent and the circle is called the ___.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>(i) exactly <b>one</b> &nbsp; (ii) <b>secant</b> &nbsp; (iii) <b>two</b> (one on each side of the circle, both perpendicular to the diameter) &nbsp; (iv) <b>point of contact</b>.</p>
+      <p class="ans">one · secant · two · point of contact</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">A tangent PQ at a point P of a circle of radius 5 cm meets a line through the centre O at a point Q so that OQ = 12 cm. Find the length of PQ.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>By Theorem 1, <span class="mth">∠OPQ = 90°</span> — so ΔOPQ is right-angled at P.</p>
+      <span class="eq">PQ = √(OQ² − OP²) = √(12² − 5²) = √(144 − 25) = √119 ≈ 10.91 cm</span>
+      <p class="ans">PQ = √119 cm ≈ 10.91 cm</p>
+      <p class="pill-note">5-12-13 triple "broken": the 13 here is OQ, not PQ. Watch which side the hypotenuse is on.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">From a point Q, the length of the tangent to a circle is 24 cm and the distance of Q from the centre is 25 cm. Find the radius of the circle.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Right triangle with hypotenuse OQ = 25 (distance from centre) and one leg = 24 (tangent):</p>
+      <span class="eq">r = √(25² − 24²) = √(625 − 576) = √49 = 7 cm</span>
+      <p class="ans">Radius = 7 cm</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">Two tangents PA and PB are drawn from an external point P to a circle with centre O, inclined to each other at an angle of 80°. Find ∠POA.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>By Theorem 2, OP bisects ∠APB: <span class="mth">∠OPA = 80°/2 = 40°</span>. By Theorem 1, <span class="mth">∠OAP = 90°</span>.</p>
+      <p>So <span class="mth">∠POA = 180° − 90° − 40° = 50°</span>.</p>
+      <p class="ans">∠POA = 50°</p>
+      <p class="pill-note">Companion facts: ∠AOB = 2 × 50° = 100° = 180° − 80°, and ∠OAP + ∠OBP = 180°, so OAPB is cyclic.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">Prove that the tangents drawn at the ends of a diameter of a circle are parallel.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let PQ be a diameter with tangents l at P and m at Q.</p>
+      <p>By Theorem 1: <span class="mth">l ⊥ OP</span> and <span class="mth">m ⊥ OQ</span>.</p>
+      <p>Since P, O, Q are collinear, OP and OQ are the <b>same line</b> — so l and m are both perpendicular to the same straight line.</p>
+      <p class="ans">Two lines perpendicular to the same line are parallel → l ∥ m ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">Prove that the perpendicular at the point of contact to the tangent to a circle passes through the centre.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let the tangent at P be l, and let n be the line through P perpendicular to l. Suppose n does <b>not</b> pass through the centre O; then the radius OP is some other line through P.</p>
+      <p>But OP ⊥ l (Theorem 1), and n ⊥ l — through the same point P there would be <b>two</b> distinct perpendiculars to l, which is impossible.</p>
+      <p class="ans">Hence n coincides with OP and passes through O ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">Two concentric circles are of radii 5 cm and 3 cm. Find the length of the chord of the larger circle which touches the smaller circle.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let the chord AB of the larger circle touch the smaller circle at P. Then <span class="mth">OP ⊥ AB</span> (Theorem 1), so OP is the perpendicular from the centre to the chord — which <b>bisects</b> it.</p>
+      <span class="eq">AB = 2·AP = 2√(OA² − OP²) = 2√(25 − 9) = 2×4 = 8 cm</span>
+      <p class="ans">Chord = 8 cm</p>
+      <p class="pill-note">Bonus fact worth writing in the exam: P is the midpoint of AB — the chord is <b>bisected at the point of contact</b>.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">A quadrilateral ABCD is drawn to circumscribe a circle. Prove that AB + CD = AD + BC.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let the circle touch AB, BC, CD, DA at P, Q, R, S respectively.</p>
+      <p>Equal tangents from each vertex (Theorem 2): <span class="mth">AP = AS</span>, <span class="mth">BP = BQ</span>, <span class="mth">CR = CQ</span>, <span class="mth">DR = DS</span>.</p>
+      <p>Add: <span class="mth">AB + CD = (AP+PB) + (CR+RD)</span> and <span class="mth">AD + BC = (AS+DS) + (BQ+CQ)</span>. Substituting the equal pairs term by term makes the two sides identical.</p>
+      <p class="ans">AB + CD = AD + BC ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove that the parallelogram circumscribing a circle is a rhombus.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let parallelogram ABCD circumscribe a circle. By the previous result: <span class="mth">AB + CD = AD + BC</span>.</p>
+      <p>In a parallelogram opposite sides are equal: <span class="mth">AB = CD</span> and <span class="mth">AD = BC</span>.</p>
+      <p>So <span class="mth">2AB = 2AD → AB = AD</span> — and a parallelogram with adjacent sides equal has <b>all four sides equal</b>.</p>
+      <p class="ans">ABCD is a rhombus ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">4 marks</span></div>
+    <div class="q-text">A triangle ABC is drawn to circumscribe a circle of radius 4 cm, such that the segments BD and DC, into which BC is divided by the point of contact, are of lengths 8 cm and 6 cm respectively. Find the sides AB and AC.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let the circle touch BC at D, AB at F, AC at E. Equal tangents: <span class="mth">BD = BF = 8</span>, <span class="mth">CD = CE = 6</span>, <span class="mth">AF = AE = x</span>.</p>
+      <p>Sides: <span class="mth">a = BC = 14</span>, <span class="mth">b = CA = x + 6</span>, <span class="mth">c = AB = x + 8</span>, so <span class="mth">s = x + 14</span>.</p>
+      <p>Area two ways — <span class="mth">rs</span> (r = 4) and Heron's formula:</p>
+      <span class="eq">4(x+14) = √[(x+14) · x · 8 · 6] → 16(x+14)² = 48x(x+14) → 3x = x + 14 → x = 7</span>
+      <p class="ans">AB = x + 8 = 15 cm · AC = x + 6 = 13 cm</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove that the angle between the two tangents drawn from an external point to a circle is supplementary to the angle subtended by the line segment joining the points of contact at the centre.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Tangents PA and PB from P touch at A and B. In quadrilateral OAPB:</p>
+      <p><span class="mth">∠OAP = ∠OBP = 90°</span> (Theorem 1) → <span class="mth">∠OAP + ∠OBP = 180°</span>.</p>
+      <p>Angles of a quadrilateral sum to 360°: <span class="mth">∠AOB + ∠APB = 360° − 180° = 180°</span>.</p>
+      <p class="ans">∠AOB + ∠APB = 180° ∎ &nbsp;(this also proves OAPB is cyclic)</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">Ex Q</span><span class="badge marks">4 marks</span></div>
+    <div class="q-text">XY and X′Y′ are two parallel tangents to a circle with centre O, and a third tangent AB, with point of contact C, intersects XY at A and X′Y′ at B. Prove that ∠AOB = 90°.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let XY touch the circle at P and X′Y′ at Q — so <span class="mth">OP ⊥ XY</span>, <span class="mth">OQ ⊥ X′Y′</span>, and P, O, Q are collinear (a diameter).</p>
+      <p>From A there are two tangents (AP and AC): by Theorem 2, <b>OA bisects</b> the angle between them → <span class="mth">∠OAC = ∠OAP</span>. Similarly from B: <span class="mth">∠OBC = ∠OBQ</span>.</p>
+      <p>In right ΔOAP: <span class="mth">∠OAP = 90° − ∠AOP</span>. In right ΔOBQ: <span class="mth">∠OBQ = 90° − ∠BOQ</span>.</p>
+      <p>In ΔAOB: <span class="mth">∠AOB = 180° − (∠OAC + ∠OBC) = (∠AOP + ∠BOQ)</span>.</p>
+      <p>But along the diameter PQ: <span class="mth">∠AOP + ∠AOB + ∠BOQ = 180°</span>. Substituting: <span class="mth">∠AOB + ∠AOB = 180°</span>.</p>
+      <p class="ans">∠AOB = 90° ∎</p>
+    </div></details>
+  </div>
+
+  <h3 class="h3"><span class="n" style="color:var(--teal)">B</span> Other important solved</h3>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">practice</span><span class="badge marks">1 mark</span></div>
+    <div class="q-text">TP and TQ are two tangents to a circle with centre O so that ∠POQ = 110°. Find ∠PTQ.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>In quadrilateral OPTQ: <span class="mth">∠OPT = ∠OQT = 90°</span> (Theorem 1).</p>
+      <p><span class="mth">∠PTQ = 360° − 90° − 90° − 110° = 70°</span>.</p>
+      <p class="ans">∠PTQ = 70°</p>
+      <p class="pill-note">Same 3-second pattern for any data: ∠PTQ = 180° − ∠POQ. This exact question has appeared as a board MCQ.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">practice</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">From a point 13 cm away from the centre of a circle of radius 5 cm, find the length of the tangent from that point.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <span class="eq">tangent = √(13² − 5²) = √(169 − 25) = √144 = 12 cm</span>
+      <p class="ans">12 cm</p>
+    </div></details>
+  </div>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">practice</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">The angle between two tangents from an external point to a circle of radius r is 60°. Find the length of each tangent. If instead each tangent has length 5 cm, find r.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>OP bisects the 60° angle: <span class="mth">∠OPA = 30°</span>, with the right angle at A.</p>
+      <p><span class="mth">tan 30° = r / PA → PA = r√3</span>.</p>
+      <p>Conversely, if PA = 5: <span class="mth">r = PA/√3 = 5/√3 ≈ 2.89 cm</span>.</p>
+      <p class="ans">Each tangent = r√3 · and r = 5/√3 ≈ 2.89 cm</p>
+    </div></details>
+  </div>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge type">practice</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">A quadrilateral ABCD circumscribes a circle, with AB = 6 cm, BC = 7 cm and CD = 8 cm. Find AD.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">AB + CD = AD + BC</span> → <span class="mth">6 + 8 = AD + 7</span>.</p>
+      <p class="ans">AD = 7 cm</p>
+    </div></details>
+  </div>
+</section>
+
+<!-- ==================== PYQs ==================== -->
+<section class="sec" id="pyq">
+  <div class="sec-label gold">Question bank 2</div>
+  <h2 class="sec-title">Previous-year CBSE board questions</h2>
+  <p class="sec-sub">Recurring board favourites, solved. Year tags follow widely-circulated question-bank attributions — the same question often repeats across years, so treat a tag as "recently asked" rather than exact. <b>Attempt each before opening the solution.</b></p>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2020</span><span class="badge marks">1 mark</span><span class="badge type">MCQ</span></div>
+    <div class="q-text">TP and TQ are two tangents to a circle with centre O so that ∠POQ = 110°. Then ∠PTQ is equal to: (a) 60° (b) 70° (c) 80° (d) 90°</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Quadrilateral OPTQ: <span class="mth">90° + 90° + 110° + ∠PTQ = 360°</span>.</p>
+      <p class="ans">(b) 70°</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2019</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove that the tangent at any point of a circle is perpendicular to the radius through the point of contact.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let l be the tangent at P, O the centre. Take any point Q ≠ P on l.</p>
+      <p>Since l meets the circle only at P, Q lies outside the circle → <span class="mth">OQ > OP = r</span>. So P is the point of l nearest to O.</p>
+      <p>The shortest segment from a point to a line is the perpendicular one → <span class="mth">OP ⊥ l</span> ∎</p>
+      <p class="pill-note">This is Theorem 1 verbatim — memorise the "every other point of the tangent lies outside the circle" phrasing; it earns the marks.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2019</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove that the lengths of the tangents drawn from an external point to a circle are equal.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Tangents PA and PB from P. Join OP, OA, OB.</p>
+      <p><span class="mth">∠OAP = ∠OBP = 90°</span> (Theorem 1); <span class="mth">OA = OB</span> (radii); OP common.</p>
+      <p>ΔOAP ≅ ΔOBP (RHS) → <span class="mth">PA = PB</span> ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2020</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove that opposite sides of a quadrilateral circumscribing a circle subtend supplementary angles at the centre of the circle.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let ABCD circumscribe the circle, touching at P, Q, R, S. From each vertex, the two tangents are equal, so the line from the vertex to O <b>bisects</b> the angle there: e.g. <span class="mth">∠OAB = ∠OAD = ½∠A</span>.</p>
+      <p>In ΔAOB: <span class="mth">∠AOB = 180° − (∠OAB + ∠OBA) = 180° − ½(∠A + ∠B)</span>.</p>
+      <p>In ΔCOD: <span class="mth">∠COD = 180° − ½(∠C + ∠D)</span>.</p>
+      <p>Adding: <span class="mth">∠AOB + ∠COD = 360° − ½(∠A+∠B+∠C+∠D) = 360° − ½(360°) = 180°</span> ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2016</span><span class="badge marks">4 marks</span></div>
+    <div class="q-text">Prove that the parallelogram circumscribing a circle is a rhombus.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>As proved in the NCERT section: tangent segments give <span class="mth">AB + CD = AD + BC</span>; the parallelogram gives <span class="mth">AB = CD</span>, <span class="mth">AD = BC</span>.</p>
+      <p>So <span class="mth">2AB = 2AD → AB = AD</span> → all sides equal.</p>
+      <p class="ans">Hence ABCD is a rhombus ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2019</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">Two concentric circles are of radii 5 cm and 3 cm. Find the length of the chord of the larger circle which touches the smaller circle.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>The chord touching the smaller circle is perpendicular to the radius at the contact point, and hence bisected by it:</p>
+      <span class="eq">chord = 2√(5² − 3²) = 2√16 = 8 cm</span>
+      <p class="ans">8 cm</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2017</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">TP and TQ are tangents to a circle with centre O and radius 5 cm, and ∠POQ = 120°. Find the length of OT.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">∠PTQ = 180° − 120° = 60°</span>, and OT bisects it: <span class="mth">∠OTP = 30°</span>.</p>
+      <p>Right angle at P (Theorem 1): <span class="mth">sin 30° = OP/OT → ½ = 5/OT</span>.</p>
+      <p class="ans">OT = 10 cm</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2018</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">From an external point P, two tangents PA and PB are drawn to a circle with centre O. Prove that the quadrilateral OAPB is a cyclic quadrilateral.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">∠OAP = 90°</span> and <span class="mth">∠OBP = 90°</span> (Theorem 1).</p>
+      <p>Opposite angles: <span class="mth">∠OAP + ∠OBP = 180°</span> — a quadrilateral with a pair of opposite angles supplementary is cyclic.</p>
+      <p class="ans">OAPB is cyclic ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2020 (Standard)</span><span class="badge marks">1 mark</span><span class="badge type">MCQ</span></div>
+    <div class="q-text">If the angle between two tangents drawn from an external point P to a circle of centre O and radius r is 60°, then the length of each tangent is: (a) r√3 (b) r/√3 (c) r/2 (d) 2r</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">∠OPA = 30°</span> (OP bisects), right angle at the contact point A.</p>
+      <p><span class="mth">tan 30° = r/PA → PA = r/tan 30° = r√3</span>.</p>
+      <p class="ans">(a) r√3</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2018</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove that in two concentric circles, the chord of the larger circle which touches the smaller circle is bisected at the point of contact.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let chord AB of the larger circle (centre O) touch the smaller circle at P. Then <span class="mth">OP ⊥ AB</span> (Theorem 1).</p>
+      <p>A perpendicular from the centre to a chord bisects the chord → <span class="mth">AP = PB</span>.</p>
+      <p class="ans">The chord is bisected at the point of contact ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge chC">Circles</span><span class="badge year">CBSE 2017</span><span class="badge marks">1 mark</span><span class="badge type">MCQ</span></div>
+    <div class="q-text">Two tangents PA and PB are drawn from an external point P to a circle with centre O. If ∠APB = 60°, then ∠OAB equals: (a) 15° (b) 30° (c) 45° (d) 60°</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>OP bisects ∠APB → <span class="mth">∠OPA = 30°</span>; in right ΔOAP (right at A): <span class="mth">∠POA = 60°</span>.</p>
+      <p>OA = OB and PA = PB → ΔOAP ≅ ΔOBP → <span class="mth">∠AOB = 2×60° = 120°</span>. In isosceles ΔOAB: <span class="mth">∠OAB = (180° − 120°)/2 = 30°</span>.</p>
+      <p class="ans">(b) 30°</p>
+    </div></details>
+  </div>
+</section>
+
+<!-- ==================== TEST ==================== -->
+<section class="sec" id="test">
+  <div class="sec-label red">Assessment · 16 questions</div>
+  <h2 class="sec-title">The timed test</h2>
+  <p class="sec-sub">Every question has its own countdown — MCQs and true/false get short clocks, numericals longer, the two proofs longest. When time runs out you may <b>exceed the limit (+30 s, tracked)</b>, skip, or give up and read the full explanation. Every question carries a step-by-step explanation you can open any time — before or after answering.</p>
+
+  <div class="test-shell">
+    <div class="test-start" id="test-start">
+      <h3>Circles — Chapter Test</h3>
+      <p>A full-syllabus test for this chapter: 7 one-markers (MCQ / true-false), 7 numericals and 2 proofs (self-checked against model solutions). Total marks: 26.</p>
+      <div style="margin:18px auto 4px;max-width:460px">
+        <p style="font-size:13.5px;font-weight:700;margin-bottom:9px">Decimal precision for numerical answers</p>
+        <div class="seg" id="t-dp">
+          <button data-dp="2" class="on">2 dp</button><button data-dp="3">3 dp</button><button data-dp="4">4 dp</button>
+        </div>
+        <p style="font-size:12.5px;color:var(--dim);margin-top:9px">Pick how many decimal places you want to work with — your answer just has to be the true value rounded to this precision. Exact forms like <span class="mth">√119</span> or fractions like <span class="mth">7/5</span> are always accepted too.</p>
+      </div>
+      <button class="btn green" id="test-begin">Begin test</button>
+    </div>
+    <div id="test-live" style="display:none">
+      <div class="test-bar">
+        <span class="t-name">Circles test</span>
+        <span class="t-stats" id="t-stats">—</span>
+        <span class="spacer"></span>
+        <div class="palette" id="t-palette"></div>
+        <button class="btn small ghost" id="t-quit">End test</button>
+      </div>
+      <div class="test-main">
+        <div class="timer-row">
+          <div class="timer-pill" id="t-pill"><span>timer</span><span class="t-num" id="t-time">0:00</span></div>
+          <div class="timer-track"><div class="timer-fill" id="t-fill" style="width:100%"></div></div>
+        </div>
+        <div id="t-qwrap"></div>
+        <div class="test-actions">
+          <button class="btn ghost" id="t-prev">← Previous</button>
+          <button class="btn ghost" id="t-clear">Clear choice</button>
+          <button class="btn primary" id="t-next">Next →</button>
+          <button class="btn ghost" id="t-reveal" style="border-color:var(--ok);color:var(--ok-deep)">I don't understand — explain</button>
+        </div>
+      </div>
+    </div>
+    <div id="test-results" style="display:none"></div>
+  </div>
+</section>
+
+<footer>
+  <p>Made for CBSE Class 10 · Circles (Chapter 9 in some editions / Chapter 10 in the current NCERT) · All computations run in your browser — no data leaves this page. √3 ≈ 1.732 · √2 ≈ 1.414</p>
+</footer>
+
+</main>
+</div>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const fmt = (v,d=4) => { if(!isFinite(v)) return 'undefined'; return v.toFixed(d); };
+
+/* ============ MODULE 1 : secant <-> tangent morpher ============ */
+(function(){
+  const svg=$('c1-svg'); const NS='http://www.w3.org/2000/svg';
+  const mk=(t,at)=>{const e=document.createElementNS(NS,t);for(const k in at){const v=at[k];if(typeof v==='string'&&v.indexOf('var(')===0){e.style[k.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())]=v;}else e.setAttribute(k,v);}return e;};
+  const g=mk('g',{}); svg.appendChild(g);
+  const OX=240, OY=250;
+  function txt(x,y,s,fill,size,w){const t=mk('text',{x:x,y:y,'font-size':(size||13)+'px','font-family':'var(--font-mono)',fill:fill||'var(--ink)','font-weight':w||'600'});t.textContent=s;g.appendChild(t);return t;}
+  function draw(){
+    while(g.firstChild) g.removeChild(g.firstChild);
+    const r=+$('c1-r').value, d=+$('c1-d').value;
+    g.appendChild(mk('circle',{cx:OX,cy:OY,r:r,fill:'var(--blue-dim)',stroke:'var(--blue)','stroke-width':3}));
+    g.appendChild(mk('line',{x1:OX-14,y1:OY,x2:OX+14,y2:OY,stroke:'var(--ink)','stroke-width':2}));
+    g.appendChild(mk('line',{x1:OX,y1:OY-14,x2:OX,y2:OY+14,stroke:'var(--ink)','stroke-width':2}));
+    txt(OX+18,OY+22,'O','var(--ink)',14);
+    const ly = OY-d;
+    g.appendChild(mk('line',{x1:30,y1:ly,x2:610,y2:ly,stroke:'var(--gold)','stroke-width':3.5}));
+    txt(34,ly-12,'the line','var(--gold-deep)',12);
+    g.appendChild(mk('line',{x1:OX,y1:OY,x2:OX,y2:ly,stroke:'var(--faint)','stroke-width':1.5,'stroke-dasharray':'5 4'}));
+    txt(OX+8,(OY+ly)/2,'d','var(--dim)',13);
+    txt(OX+r*0.7,OY-r*0.75,'r','var(--blue-deep)',13);
+    let state, pts, chord;
+    if(Math.abs(d-r)<0.5){
+      state='tangent — the line touches at exactly one point'; pts='1';
+      g.appendChild(mk('circle',{cx:OX,cy:ly,r:7,fill:'var(--gold)'}));
+      g.appendChild(mk('line',{x1:OX,y1:OY,x2:OX,y2:ly,stroke:'var(--gold)','stroke-width':3.5}));
+      const S=14; g.appendChild(mk('path',{d:'M'+(OX-16)+','+ly+' L'+(OX-16)+','+(ly-16)+' L'+OX+','+(ly-16),fill:'none',stroke:'var(--gold-deep)','stroke-width':2}));
+      chord='— (the point of contact)';
+    } else if(d<r){
+      const half=Math.sqrt(r*r-d*d);
+      state='secant — the line cuts the circle'; pts='2';
+      g.appendChild(mk('line',{x1:OX-half,y1:ly,x2:OX+half,y2:ly,stroke:'var(--danger)','stroke-width':5,'stroke-linecap':'round'}));
+      g.appendChild(mk('circle',{cx:OX-half,cy:ly,r:6,fill:'var(--danger)'}));
+      g.appendChild(mk('circle',{cx:OX+half,cy:ly,r:6,fill:'var(--danger)'}));
+      txt(OX-half-24,ly-8,'P₁','var(--danger)',12);
+      txt(OX+half+12,ly-8,'P₂','var(--danger)',12);
+      chord=(2*half).toFixed(0)+' px = 2√(r² − d²)';
+    } else {
+      state='the line misses the circle completely'; pts='0';
+      chord='—';
+    }
+    $('c1-state').textContent=state;
+    $('c1-pts').textContent=pts;
+    $('c1-chord').textContent=chord;
+    $('c1-d-val').textContent=d+' px';
+    $('c1-r-val').textContent=r+' px';
+  }
+  ['c1-d','c1-r'].forEach(id=>$(id).addEventListener('input',draw));
+  $('c1-snap').addEventListener('click',()=>{ $('c1-d').value=$('c1-r').value; draw(); });
+  draw();
+})();
+
+/* ============ MODULE 2 : tangent perpendicular to radius ============ */
+(function(){
+  const svg=$('c2-svg'); const NS='http://www.w3.org/2000/svg';
+  const mk=(t,at)=>{const e=document.createElementNS(NS,t);for(const k in at){const v=at[k];if(typeof v==='string'&&v.indexOf('var(')===0){e.style[k.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())]=v;}else e.setAttribute(k,v);}return e;};
+  const g=mk('g',{}); svg.appendChild(g);
+  const CX=320, CY=210, R=140;
+  let showProof=false;
+  function txt(x,y,s,fill,size){const t=mk('text',{x:x,y:y,'font-size':(size||13)+'px','font-family':'var(--font-mono)',fill:fill||'var(--ink)','font-weight':'600'});t.textContent=s;g.appendChild(t);return t;}
+  function draw(){
+    while(g.firstChild) g.removeChild(g.firstChild);
+    const a=+$('c2-a').value*Math.PI/180;
+    const px=CX+R*Math.cos(a), py=CY-R*Math.sin(a);
+    g.appendChild(mk('circle',{cx:CX,cy:CY,r:R,fill:'var(--blue-dim)',stroke:'var(--blue)','stroke-width':3}));
+    g.appendChild(mk('line',{x1:CX-12,y1:CY,x2:CX+12,y2:CY,stroke:'var(--ink)','stroke-width':2}));
+    g.appendChild(mk('line',{x1:CX,y1:CY-12,x2:CX,y2:CY+12,stroke:'var(--ink)','stroke-width':2}));
+    txt(CX+16,CY+24,'O','var(--ink)',14);
+    // radius
+    g.appendChild(mk('line',{x1:CX,y1:CY,x2:px,y2:py,stroke:'var(--blue)','stroke-width':4}));
+    txt((CX+px)/2-30,(CY+py)/2-8,'radius OP','var(--blue-deep)',12);
+    // tangent at P: perpendicular to OP
+    const tx=-Math.sin(a), ty=-Math.cos(a);
+    g.appendChild(mk('line',{x1:px-tx*300,y1:py-ty*300,x2:px+tx*300,y2:py+ty*300,stroke:'var(--gold)','stroke-width':4}));
+    txt(px+tx*150-40,py+ty*150,'tangent','var(--gold-deep)',12);
+    // contact point
+    g.appendChild(mk('circle',{cx:px,cy:py,r:7,fill:'var(--gold)',stroke:'var(--ink)','stroke-width':1.5}));
+    txt(px+10,py+20,'P','var(--ink)',14);
+    // right angle marker at P between radius and tangent
+    const u=[(CX-px)/R,(CY-py)/R]; // unit from P to O
+    const v=[tx,ty];
+    const S=16;
+    const p1=[px+u[0]*S,py+u[1]*S], p2=[px+(u[0]+v[0])*S,py+(u[1]+v[1])*S], p3=[px+v[0]*S,py+v[1]*S];
+    g.appendChild(mk('path',{d:'M'+p1[0]+','+p1[1]+' L'+p2[0]+','+p2[1]+' L'+p3[0]+','+p3[1],fill:'none',stroke:'var(--teal)','stroke-width':2.5}));
+    txt(px+v[0]*34+u[0]*40,py+v[1]*34+u[1]*40,'90°','var(--teal-deep)',13);
+    if(showProof){
+      const q=[px+tx*110,py+ty*110];
+      g.appendChild(mk('circle',{cx:q[0],cy:q[1],r:7,fill:'var(--teal)'}));
+      txt(q[0]+12,q[1]-8,'Q','var(--teal-deep)',14);
+      g.appendChild(mk('line',{x1:CX,y1:CY,x2:q[0],y2:q[1],stroke:'var(--teal)','stroke-width':2,'stroke-dasharray':'6 4'}));
+      const oq=Math.hypot(q[0]-CX,q[1]-CY);
+      txt((CX+q[0])/2+10,(CY+q[1])/2,'OQ = '+oq.toFixed(0),'var(--teal-deep)',12);
+      txt((CX+px)/2-46,(CY+py)/2+18,'OP = '+R,'var(--blue-deep)',12);
+      $('c2-oq').style.display='';
+      $('c2-oq').innerHTML='OQ = <b>'+oq.toFixed(0)+'</b> > OP = <b>'+R+'</b> (hypotenuse is longest)';
+    } else { $('c2-oq').style.display='none'; }
+    $('c2-a-val').textContent=$('c2-a').value+'°';
+    $('c2-ang').textContent='90°';
+  }
+  $('c2-a').addEventListener('input',draw);
+  $('c2-proof').addEventListener('click',()=>{ showProof=!showProof; $('c2-proof').textContent = showProof? 'Hide the why' : 'Show why (any other point Q on the tangent is farther)'; draw(); });
+  draw();
+})();
+
+/* ============ MODULE 3 : two equal tangents ============ */
+(function(){
+  const svg=$('c3-svg'); const NS='http://www.w3.org/2000/svg';
+  const mk=(t,at)=>{const e=document.createElementNS(NS,t);for(const k in at){const v=at[k];if(typeof v==='string'&&v.indexOf('var(')===0){e.style[k.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())]=v;}else e.setAttribute(k,v);}return e;};
+  const g=mk('g',{}); svg.appendChild(g);
+  const CX=190, CY=210;
+  function txt(x,y,s,fill,size){const t=mk('text',{x:x,y:y,'font-size':(size||13)+'px','font-family':'var(--font-mono)',fill:fill||'var(--ink)','font-weight':'600'});t.textContent=s;g.appendChild(t);return t;}
+  function draw(){
+    while(g.firstChild) g.removeChild(g.firstChild);
+    const r=+$('c3-r').value, d=+$('c3-d').value;
+    const al=Math.acos(r/d);
+    const ax=CX+r*Math.cos(al), ay=CY-r*Math.sin(al), bx=CX+r*Math.cos(al), by=CY+r*Math.sin(al);
+    const px=CX+d;
+    g.appendChild(mk('circle',{cx:CX,cy:CY,r:r,fill:'var(--blue-dim)',stroke:'var(--blue)','stroke-width':3}));
+    g.appendChild(mk('line',{x1:CX-12,y1:CY,x2:CX+12,y2:CY,stroke:'var(--ink)','stroke-width':2}));
+    g.appendChild(mk('line',{x1:CX,y1:CY-12,x2:CX,y2:CY+12,stroke:'var(--ink)','stroke-width':2}));
+    txt(CX-28,CY+24,'O','var(--ink)',14);
+    // OP dashed
+    g.appendChild(mk('line',{x1:CX,y1:CY,x2:px,y2:CY,stroke:'var(--teal)','stroke-width':2.5,'stroke-dasharray':'7 5'}));
+    txt((CX+px)/2-14,CY-12,'OP = d','var(--teal-deep)',12);
+    // radii
+    g.appendChild(mk('line',{x1:CX,y1:CY,x2:ax,y2:ay,stroke:'var(--blue)','stroke-width':2.5}));
+    g.appendChild(mk('line',{x1:CX,y1:CY,x2:bx,y2:by,stroke:'var(--blue)','stroke-width':2.5}));
+    // tangents
+    g.appendChild(mk('line',{x1:ax,y1:ay,x2:px,y2:CY,stroke:'var(--gold)','stroke-width':4}));
+    g.appendChild(mk('line',{x1:bx,y1:by,x2:px,y2:CY,stroke:'var(--gold)','stroke-width':4}));
+    g.appendChild(mk('circle',{cx:ax,cy:ay,r:6,fill:'var(--gold)',stroke:'var(--ink)','stroke-width':1.5}));
+    g.appendChild(mk('circle',{cx:bx,cy:by,r:6,fill:'var(--gold)',stroke:'var(--ink)','stroke-width':1.5}));
+    g.appendChild(mk('circle',{cx:px,cy:CY,r:7,fill:'var(--gold)'}));
+    txt(ax-40,ay-10,'A','var(--ink)',14);
+    txt(bx-40,by+20,'B','var(--ink)',14);
+    txt(px+12,CY+5,'P','var(--ink)',14);
+    // right angle markers at A and B
+    const S=13;
+    [[ax,ay,-1],[bx,by,1]].forEach(pt=>{
+      const ux=(CX-pt[0]), uy=(CY-pt[1]); const ul=Math.hypot(ux,uy);
+      const vx=(px-pt[0]), vy=(CY-pt[1]); const vl=Math.hypot(vx,vy);
+      const p1=[pt[0]+ux/ul*S,pt[1]+uy/ul*S];
+      const p2=[pt[0]+(ux/ul+vx/vl)*S,pt[1]+(uy/ul+vy/vl)*S];
+      const p3=[pt[0]+vx/vl*S,pt[1]+vy/vl*S];
+      g.appendChild(mk('path',{d:'M'+p1[0]+','+p1[1]+' L'+p2[0]+','+p2[1]+' L'+p3[0]+','+p3[1],fill:'none',stroke:'var(--teal)','stroke-width':2}));
+    });
+    const PA=Math.sqrt(d*d-r*r);
+    const apb=2*Math.asin(r/d)*180/Math.PI;
+    $('c3-pa').textContent=PA.toFixed(1)+' px';
+    $('c3-pb').textContent=PA.toFixed(1)+' px';
+    $('c3-apb').textContent=apb.toFixed(1)+'°';
+    $('c3-aob').textContent=(180-apb).toFixed(1)+'°';
+    $('c3-d-val').textContent=d+' px';
+    $('c3-r-val').textContent=r+' px';
+    txt(ax+20,(ay+CY-40)/2,'PA = '+PA.toFixed(0),'var(--gold-deep)',12);
+    txt(bx+20,(by+CY+30)/2,'PB = '+PA.toFixed(0),'var(--gold-deep)',12);
+    txt(CX+r*0.78,CY-10,'r','var(--blue-deep)',12);
+  }
+  ['c3-d','c3-r'].forEach(id=>$(id).addEventListener('input',draw));
+  draw();
+})();
+
+/* ============ MODULE 4 : tangent length calculator ============ */
+(function(){
+  const svg=$('c4-svg'); const NS='http://www.w3.org/2000/svg';
+  const mk=(t,at)=>{const e=document.createElementNS(NS,t);for(const k in at){const v=at[k];if(typeof v==='string'&&v.indexOf('var(')===0){e.style[k.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())]=v;}else e.setAttribute(k,v);}return e;};
+  const g=mk('g',{}); svg.appendChild(g);
+  const OX=150, OY=210, PXCM=18;
+  function txt(x,y,s,fill,size){const t=mk('text',{x:x,y:y,'font-size':(size||13)+'px','font-family':'var(--font-mono)',fill:fill||'var(--ink)','font-weight':'600'});t.textContent=s;g.appendChild(t);return t;}
+  function draw(){
+    while(g.firstChild) g.removeChild(g.firstChild);
+    const r=+$('c4-r').value, d=+$('c4-d').value;
+    // ground
+    g.appendChild(mk('line',{x1:20,y1:OY,x2:620,y2:OY,stroke:'var(--border-strong)','stroke-width':1.5,'stroke-dasharray':'2 5'}));
+    g.appendChild(mk('circle',{cx:OX,cy:OY,r:r*PXCM,fill:'var(--blue-dim)',stroke:'var(--blue)','stroke-width':3}));
+    g.appendChild(mk('line',{x1:OX-12,y1:OY,x2:OX+12,y2:OY,stroke:'var(--ink)','stroke-width':2}));
+    g.appendChild(mk('line',{x1:OX,y1:OY-12,x2:OX,y2:OY+12,stroke:'var(--ink)','stroke-width':2}));
+    txt(OX+16,OY+24,'O','var(--ink)',14);
+    const px=OX+Math.min(d,25)*PXCM;
+    g.appendChild(mk('circle',{cx:px,cy:OY,r:7,fill:'var(--gold)'}));
+    txt(px+12,OY+5,'P','var(--ink)',14);
+    let pos, count, len;
+    if(d>r){
+      pos='outside'; count='2';
+      len=Math.sqrt(d*d-r*r);
+      const al=Math.acos(r/d);
+      const tx=OX+r*PXCM*Math.cos(al), ty=OY-r*PXCM*Math.sin(al);
+      g.appendChild(mk('line',{x1:tx,y1:ty,x2:px,y2:OY,stroke:'var(--gold)','stroke-width':4}));
+      g.appendChild(mk('line',{x1:OX,y1:OY,x2:tx,y2:ty,stroke:'var(--blue)','stroke-width':4}));
+      g.appendChild(mk('line',{x1:OX,y1:OY,x2:px,y2:OY,stroke:'var(--teal)','stroke-width':2.5,'stroke-dasharray':'7 5'}));
+      g.appendChild(mk('circle',{cx:tx,cy:ty,r:6,fill:'var(--gold)',stroke:'var(--ink)','stroke-width':1.5}));
+      txt(tx-24,ty-10,'T','var(--ink)',14);
+      const S=14, ux=(OX-tx),uy=(OY-ty),ul=Math.hypot(ux,uy), vx=(px-tx),vy=(OY-ty),vl=Math.hypot(vx,vy);
+      g.appendChild(mk('path',{d:'M'+(tx+ux/ul*S)+','+(ty+uy/ul*S)+' L'+(tx+(ux/ul+vx/vl)*S)+','+(ty+(uy/ul+vy/vl)*S)+' L'+(tx+vx/vl*S)+','+(ty+vy/vl*S),fill:'none',stroke:'var(--teal)','stroke-width':2.5}));
+      txt((OX+px)/2-8,OY+24,'d = '+d+' cm','var(--teal-deep)',12);
+      txt(OX+18,(OY+ty)/2+6,'r = '+r,'var(--blue-deep)',12);
+      txt((tx+px)/2+8,(ty+OY)/2+18,'PT = '+len.toFixed(2)+' cm','var(--gold-deep)',12);
+    } else if(Math.abs(d-r)<0.05){
+      pos='on the circle'; count='1'; len=0;
+      g.appendChild(mk('line',{x1:OX,y1:OY,x2:OX,y2:OY-r*PXCM,stroke:'var(--gold)','stroke-width':4}));
+      g.appendChild(mk('circle',{cx:OX,cy:OY-r*PXCM,r:6,fill:'var(--gold)'}));
+      txt(OX+14,OY-r*PXCM-14,'P on the circle','var(--ink)',12);
+    } else {
+      pos='inside'; count='0'; len=null;
+      txt(OX+90,OY-r*PXCM-16,'P is inside — no tangent possible','var(--danger)',13);
+    }
+    $('c4-pos').textContent=pos;
+    $('c4-count').textContent=count;
+    $('c4-len').textContent = len===null? '— (no tangent exists)' : (len===0? '0 (P is the point of contact)' : len.toFixed(2)+' cm  (exact: √('+d+'² − '+r+'²))');
+    $('c4-r-val').textContent=r+' cm';
+    $('c4-d-val').textContent=d+' cm';
+  }
+  ['c4-r','c4-d'].forEach(id=>$(id).addEventListener('input',draw));
+  draw();
+})();
+
+/* ================= TEST ENGINE ================= */
+const QUESTIONS=[
+ {type:'mcq',ch:'C',marks:1,limit:60,q:'A tangent to a circle intersects it in:',
+  opts:['one point only','two points','three points','no point'],ans:0,
+  exp:'By definition, a tangent touches the circle at exactly one point — the point of contact. Two points would make it a secant.'},
+ {type:'mcq',ch:'C',marks:1,limit:60,q:'TP and TQ are two tangents to a circle with centre O so that ∠POQ = 110°. Then ∠PTQ equals:',
+  opts:['60°','70°','80°','90°'],ans:1,
+  exp:'In quadrilateral OPTQ, ∠OPT = ∠OQT = 90° (tangent ⊥ radius). So ∠PTQ = 360° − 90° − 90° − 110° = 70°. Shortcut: ∠PTQ = 180° − ∠POQ.'},
+ {type:'mcq',ch:'C',marks:1,limit:60,q:'A circle can have at most how many parallel tangents to a given line?',
+  opts:['1','2','3','infinitely many'],ans:1,
+  exp:'Exactly two — one on each side of the circle, both perpendicular to the diameter parallel to the given line.'},
+ {type:'tf',ch:'C',marks:1,limit:30,q:'True or False: from a point inside a circle, two tangents can be drawn to the circle.',
+  ans:'false',
+  exp:'From an inside point, every line through the point cuts the circle in two points (a secant) — no tangent is possible. Tangents exist only from points on (1) or outside (2) the circle.'},
+ {type:'mcq',ch:'C',marks:1,limit:60,q:'If the angle between two tangents drawn from an external point P to a circle of centre O and radius r is 60°, the length of each tangent is:',
+  opts:['r√3','r/√3','r/2','2r'],ans:0,
+  exp:'OP bisects the angle, so ∠OPA = 30° with the right angle at the contact point A. tan 30° = r/PA → PA = r/tan 30° = r√3.'},
+ {type:'tf',ch:'C',marks:1,limit:30,q:'True or False: the tangent at any point of a circle is perpendicular to the radius through the point of contact.',
+  ans:'true',
+  exp:'That is Theorem 1 exactly — every other point of the tangent lies outside the circle, so the contact point is closest to the centre, and the shortest segment is the perpendicular one.'},
+ {type:'num',ch:'C',marks:1,limit:90,q:'From a point Q, the length of the tangent to a circle is 24 cm and the distance of Q from the centre is 25 cm. Find the radius of the circle. (Enter in cm.)',
+  ans:7,unit:' cm',dpn:0,
+  exp:'Right triangle: hypotenuse OQ = 25, tangent = 24. r = √(25² − 24²) = √(625 − 576) = √49 = 7 cm.'},
+ {type:'num',ch:'C',marks:1,limit:90,q:'Two concentric circles are of radii 5 cm and 3 cm. Find the length (in cm) of the chord of the larger circle which touches the smaller circle.',
+  ans:8,unit:' cm',dpn:0,
+  exp:'The chord is perpendicular to the radius of the smaller circle at the contact point, and the perpendicular from a centre bisects a chord: chord = 2√(5² − 3²) = 2√16 = 8 cm.'},
+ {type:'num',ch:'C',marks:2,limit:120,q:'Two tangents PA and PB from an external point P to a circle with centre O are inclined at ∠APB = 80°. Find ∠AOB in degrees.',
+  ans:100,unit:'°',dpn:0,
+  exp:'In quadrilateral OAPB: ∠OAP = ∠OBP = 90°. So ∠AOB = 360° − 90° − 90° − 80° = 100°. (Check: ∠AOB + ∠APB = 180°.)'},
+ {type:'num',ch:'C',marks:2,limit:120,q:'A tangent PQ at a point P of a circle of radius 5 cm meets a line through the centre O at Q, with OQ = 12 cm. Find the length of PQ in cm. (Enter a decimal at your selected precision, or an exact form like √119.)',
+  ans:Math.sqrt(119),unit:' cm',dpn:2,frac:'√119',
+  exp:'∠OPQ = 90° (Theorem 1), so PQ = √(OQ² − OP²) = √(144 − 25) = √119 ≈ 10.91 cm.'},
+ {type:'num',ch:'C',marks:2,limit:120,q:'A quadrilateral ABCD circumscribes a circle with AB = 6 cm, BC = 7 cm and CD = 8 cm. Find AD in cm.',
+  ans:7,unit:' cm',dpn:0,
+  exp:'Equal tangent segments from each vertex give AB + CD = AD + BC: 6 + 8 = AD + 7 → AD = 7 cm.'},
+ {type:'num',ch:'C',marks:3,limit:180,q:'A triangle ABC circumscribes a circle of radius 4 cm. The point of contact divides BC into segments BD = 8 cm and DC = 6 cm. Find the length of side AB in cm.',
+  ans:15,unit:' cm',dpn:0,
+  exp:'Let AF = AE = x. Then sides are a = 14, b = x+6, c = x+8, s = x+14. Equating rs with Heron: 4(x+14) = √[(x+14)·x·8·6] → 3x = x + 14 → x = 7. AB = x + 8 = 15 cm (and AC = 13 cm).'},
+ {type:'num',ch:'C',marks:2,limit:120,q:'A point P is 13 cm from the centre of a circle of radius 5 cm. Find the length of the tangent from P, in cm.',
+  ans:12,unit:' cm',dpn:0,
+  exp:'tangent = √(OP² − r²) = √(169 − 25) = √144 = 12 cm.'},
+ {type:'prove',ch:'C',marks:3,limit:240,q:'Prove that the lengths of the tangents drawn from an external point to a circle are equal.<br><br>Write your proof on paper, then reveal the model solution and grade yourself honestly.',
+  exp:'Let PA and PB be tangents from P touching at A and B. Join OP, OA, OB. ∠OAP = ∠OBP = 90° (Theorem 1). OA = OB (radii), OP is common. ΔOAP ≅ ΔOBP by the RHS rule → PA = PB. ∎'},
+ {type:'prove',ch:'C',marks:3,limit:240,q:'Prove that the parallelogram circumscribing a circle is a rhombus.<br><br>Write your proof on paper, then reveal the model solution and grade yourself honestly.',
+  exp:'Let parallelogram ABCD circumscribe the circle, touching sides at P, Q, R, S. Equal tangents from each vertex give AP = AS, BP = BQ, CQ = CR, DR = DS, hence AB + CD = AD + BC. In a parallelogram AB = CD and AD = BC, so 2AB = 2AD → AB = AD — a parallelogram with adjacent sides equal has all sides equal → rhombus. ∎'},
+ {type:'mcq',ch:'C',marks:1,limit:60,q:'The common point of a tangent to a circle and the circle is called the:',
+  opts:['point of contact','centre of the circle','pole of the tangent','midpoint of the tangent'],ans:0,
+  exp:'By definition, the single common point of the tangent and the circle is the point of contact (also simply "the point of tangency").'}
+];
+(function(){
+  let idx=0, running=false, remain=0, overtime=false, tick=null, state=[];
+  let DP=2;
+  const tnum = s => { const m=Math.floor(Math.abs(s)/60), r=Math.abs(s)%60; return (s<0?'−':'')+m+':'+String(r).padStart(2,'0'); };
+  function parseAns(raw){
+    raw=raw.trim().replace(',','.');
+    let m=raw.match(/^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)$/);
+    if(m && parseFloat(m[2])!==0) return parseFloat(m[1])/parseFloat(m[2]);
+    m=raw.match(/^(?:√|sqrt)\s*\(?\s*(\d+(?:\.\d+)?)\s*\)?$/i);
+    if(m) return Math.sqrt(parseFloat(m[1]));
+    const p=parseFloat(raw);
+    return isNaN(p)?null:p;
+  }
+  function numOk(u,q){
+    if(typeof u!=='number'||isNaN(u)) return false;
+    const dp=Math.min(DP,(q.dpn!==undefined?q.dpn:DP));
+    return Math.abs(u-q.ans)<=0.5*Math.pow(10,-dp)+1e-9;
+  }
+  function init(){ state=QUESTIONS.map(q=>({ans:null,raw:null,done:false,skipped:false,over:false,spent:0,self:null})); }
+  function start(){
+    init(); running=true; idx=0;
+    $('test-start').style.display='none'; $('test-results').style.display='none'; $('test-live').style.display='';
+    buildPalette(); render(); $('t-quit').onclick=confirmEnd;
+  }
+  function buildPalette(){
+    const p=$('t-palette'); p.innerHTML='';
+    QUESTIONS.forEach((q,i)=>{ const b=document.createElement('button'); b.className='pal-q'; b.textContent=i+1;
+      b.onclick=()=>{ go(i); }; p.appendChild(b); });
+  }
+  function stopTick(){ if(tick){ clearInterval(tick); tick=null; } }
+  function render(){
+    stopTick();
+    const q=QUESTIONS[idx], st=state[idx];
+    remain = (st.savedRemain!==undefined)? st.savedRemain : q.limit;
+    overtime = st.over;
+    document.querySelectorAll('.pal-q').forEach((b,i)=>{ b.className='pal-q'+(i===idx?' cur':'')+(state[i].done?' done':'')+(state[i].skipped?' skipped':'')+(state[i].over?' ot':''); });
+    $('t-stats').textContent='Q '+(idx+1)+' / '+QUESTIONS.length+' · answered: '+state.filter(s=>s.done).length;
+    const w=$('t-qwrap'); w.innerHTML='';
+    const badges='<div class="q-top"><span class="badge chC">Circles</span><span class="badge type">'+({mcq:'MCQ',tf:'true / false',num:'numerical',prove:'proof — self-checked'}[q.type])+'</span><span class="badge marks">'+q.marks+' mark'+(q.marks>1?'s':'')+(st.over?' · time exceeded':'')+'</span></div>';
+    let body='';
+    if(q.type==='mcq'){
+      body='<div class="opts">'+q.opts.map((o,i)=>'<label class="opt'+(st.ans===i?' sel':'')+'"><input type="radio" name="tq" '+(st.ans===i?'checked':'')+'><span class="ol">'+String.fromCharCode(65+i)+'</span><span>'+o+'</span></label>').join('')+'</div>';
+    } else if(q.type==='tf'){
+      body='<div class="tf-row"><button class="btn ghost" data-tf="true">True</button><button class="btn ghost" data-tf="false">False</button></div>'+(st.ans!==null?'<p style="margin-top:12px;font-weight:700">Your answer: <span class="mth">'+(st.ans==='true'?'True':'False')+'</span></p>':'');
+    } else if(q.type==='num'){
+      body='<div class="num-wrap"><input type="text" id="t-num-in" inputmode="decimal" placeholder="e.g. 7 · 10.91 · √119 · 7/5" value="'+(st.raw!==undefined&&st.raw!==null? st.raw : (st.ans!==null? st.ans:''))+'" '+(st.done?'disabled':'')+'>'+(q.unit? '<span style="color:var(--dim)">'+q.unit+'</span>':'')+'<button class="btn small primary" id="t-num-go" '+(st.done?'disabled':'')+'>Submit answer</button></div>'+(st.done?'<p style="margin-top:10px;font-weight:700">Submitted: <span class="mth">'+(+st.ans.toFixed(4))+'</span>'+(st.raw&&st.raw.indexOf('/')>-1?' (from '+st.raw+')':'')+'</p>':'');
+    } else {
+      body='<textarea id="t-prove-in" rows="5" placeholder="Optional: type your rough steps here (or work on paper)…" style="width:100%;margin-top:14px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--ink);font-family:var(--font-body);font-size:14px;resize:vertical"></textarea>'
+        +(st.self!==null?'<p style="margin-top:10px;font-weight:700">Self-assessment recorded: '+(st.self?'Got it right':'Not quite')+' ('+q.marks+' / '+q.marks+' or 0 marks)</p>':'');
+    }
+    w.innerHTML=badges+'<div class="q-body">'+q.q+'</div>'+body;
+    if(q.type==='mcq'){
+      w.querySelectorAll('.opt').forEach(o=>o.addEventListener('click',()=>{
+        if(state[idx].done) return;
+        const i=[...w.querySelectorAll('.opt')].indexOf(o);
+        state[idx].ans=i; state[idx].done=true; render();
+      }));
+    }
+    if(q.type==='tf'){
+      w.querySelectorAll('[data-tf]').forEach(b=>b.addEventListener('click',()=>{
+        if(state[idx].done) return;
+        state[idx].ans=b.dataset.tf; state[idx].done=true; render();
+      }));
+    }
+    if(q.type==='num'){
+      const go2=()=>{ const raw=w.querySelector('#t-num-in').value;
+        const v=parseAns(raw);
+        if(v===null){ w.querySelector('#t-num-in').style.borderColor='var(--danger)'; return; }
+        state[idx].ans=v; state[idx].raw=raw.trim().replace(',','.'); state[idx].done=true; render(); };
+      const gb=w.querySelector('#t-num-go'); if(gb) gb.onclick=go2;
+      const inp=w.querySelector('#t-num-in'); if(inp){ inp.onkeydown=e=>{ if(e.key==='Enter') go2(); }; }
+    }
+    $('t-prev').disabled = idx===0;
+    $('t-next').textContent = idx===QUESTIONS.length-1 ? 'Submit test ▸' : 'Next →';
+    $('t-reveal').onclick = showExplain;
+    updateTimerUI();
+    startTick();
+  }
+  function startTick(){
+    const st=state[idx];
+    tick=setInterval(()=>{
+      if(state[idx].done){ return; }
+      st.spent++;
+      if(remain>0){ remain--;
+        if(remain===0){ timeUp(); }
+      }
+      updateTimerUI();
+    },1000);
+  }
+  function updateTimerUI(){
+    const q=QUESTIONS[idx], st=state[idx];
+    const pill=$('t-pill'), fill=$('t-fill');
+    if(st.done){ pill.className='timer-pill'; pill.querySelector('span').textContent='done · time used'; $('t-time').textContent=tnum(st.spent); fill.style.width='0%'; fill.className='timer-fill'; return; }
+    if(remain>0 && overtime){
+      pill.className='timer-pill warn'; pill.querySelector('span').textContent='extra time';
+      fill.className='timer-fill warn'; fill.style.width=Math.min(100,remain/30*100)+'%';
+      $('t-time').textContent=tnum(remain);
+    } else if(remain>0){
+      pill.className='timer-pill'+(remain<=10?' warn':''); pill.querySelector('span').textContent='time left';
+      fill.className='timer-fill'+(remain<=10?' warn':'');
+      fill.style.width=(remain/q.limit*100)+'%';
+      $('t-time').textContent=tnum(remain);
+    } else {
+      pill.className='timer-pill over'; pill.querySelector('span').textContent='over time';
+      fill.className='timer-fill over'; fill.style.width='100%';
+      $('t-time').textContent='+'+tnum(st.spent-q.limit);
+    }
+  }
+  function timeUp(){
+    overtime=true; state[idx].over=true; updateTimerUI();
+    const w=$('t-qwrap');
+    if(w.querySelector('.timeup')) return;
+    const d=document.createElement('div'); d.className='timeup';
+    d.innerHTML='<div class="tu-t">⏱ Time limit reached for this question.</div><div class="tu-row"><button class="btn small ghost" data-act="more">+30 s — keep working</button><button class="btn small ghost" data-act="skip">Skip question</button><button class="btn small ghost" data-act="giveup">Give up — show explanation</button></div>';
+    w.appendChild(d);
+    d.querySelector('[data-act=more]').onclick=()=>{ d.remove(); remain=30; };
+    d.querySelector('[data-act=skip]').onclick=()=>{ state[idx].skipped=true; state[idx].done=true; d.remove(); go(idx+1); };
+    d.querySelector('[data-act=giveup]').onclick=()=>{ state[idx].skipped=true; state[idx].done=true; d.remove(); showExplain(); };
+  }
+  function showExplain(){
+    const q=QUESTIONS[idx]; const w=$('t-qwrap');
+    let ex=w.querySelector('.explain-box');
+    if(ex){ ex.remove(); return; }
+    ex=document.createElement('div'); ex.className='explain-box';
+    const corr = q.type==='mcq' ? q.opts[q.ans] : (q.type==='tf' ? (q.ans==='true'?'True':'False') : (q.type==='num' ? ((q.frac? q.frac+' ≈ ':'')+(+q.ans.toFixed(4))+(q.unit||'')+' — accepted at 2, 3 or 4 dp') : 'see model solution'));
+    ex.innerHTML='<div class="ex-t">Explanation — question '+(idx+1)+'</div><p>'+q.exp+'</p><p style="margin-top:10px"><b>Correct answer: '+corr+'</b></p>'
+      +(q.type==='prove' && state[idx].self===null ? '<div style="margin-top:10px"><button class="btn small green" data-self="1">I got it right</button> <button class="btn small ghost" data-self="0">Not quite</button></div>':'');
+    w.appendChild(ex);
+    const b1=ex.querySelector('[data-self="1"]'); if(b1) b1.onclick=()=>{ state[idx].self=true; state[idx].done=true; render(); showExplain(); };
+    const b0=ex.querySelector('[data-self="0"]'); if(b0) b0.onclick=()=>{ state[idx].self=false; state[idx].done=true; render(); showExplain(); };
+  }
+  function go(i){
+    if(i<0||i>=QUESTIONS.length) return;
+    state[idx].savedRemain = state[idx].done? 0 : remain;
+    idx=i; render();
+  }
+  function confirmEnd(){
+    if(confirm('End the test and see your result? Unanswered questions score zero.')) end();
+  }
+  function grade(){
+    let auto=0, autoMax=0, self=0, selfMax=0;
+    const rows=QUESTIONS.map((q,i)=>{
+      const st=state[i]; let ok=null;
+      if(q.type==='prove'){ selfMax+=q.marks; if(st.self===true) self+=q.marks; }
+      else if(q.type==='mcq'){ autoMax+=q.marks; ok=(st.ans===q.ans); if(ok) auto+=q.marks; }
+      else if(q.type==='tf'){ autoMax+=q.marks; ok=(st.ans===q.ans); if(ok) auto+=q.marks; }
+      else { autoMax+=q.marks; ok=numOk(st.ans,q); if(ok) auto+=q.marks; }
+      return {q,st,ok};
+    });
+    return {rows,auto,autoMax,self,selfMax};
+  }
+  function end(){
+    stopTick(); running=false;
+    $('test-live').style.display='none';
+    const {rows,auto,autoMax,self,selfMax}=grade();
+    const totalMarks = QUESTIONS.reduce((a,q)=>a+q.marks,0);
+    const answered = state.filter(s=>s.done).length;
+    const overs = rows.filter(r=>r.st.over).length;
+    const proofsGot = rows.filter(r=>r.q.type==='prove'&&r.st.self===true).length;
+    const score = auto+self;
+    const pct = Math.round(score/totalMarks*100);
+    const R=$('test-results'); R.style.display='';
+    R.innerHTML='<div class="results-wrap">'
+      +'<div class="score-hero"><div class="sc">'+score+'<small> / '+totalMarks+'</small></div><div style="font-weight:700;font-size:17px">'+(pct>=80?'Excellent — board ready.':pct>=60?'Solid — polish the weak spots below.':'Keep practising — redo the modules, then retake.')+'</div><div class="pill-note">'+answered+' / '+QUESTIONS.length+' attempted · '+overs+' question'+(overs===1?'':'s')+' over time · proofs self-assessed: '+proofsGot+' / 2 got right</div></div>'
+      +'<div class="grid2" style="margin-bottom:8px"><div class="ve-card"><div class="sec-label" style="margin-bottom:6px">Auto-graded (MCQ / TF / numerical)</div><div class="mth" style="font-size:22px;font-weight:700">'+auto+' / '+autoMax+'</div></div><div class="ve-card"><div class="sec-label teal" style="margin-bottom:6px">Proofs (self-checked)</div><div class="mth" style="font-size:22px;font-weight:700">'+self+' / '+selfMax+'</div></div></div>'
+      +'<h4 class="h4">Question-by-question review</h4>'
+      +rows.map((r,i)=>{
+        let yours='—';
+        if(r.q.type==='mcq') yours = r.st.ans!==null? r.q.opts[r.st.ans] : (r.st.skipped?'skipped':'unanswered');
+        else if(r.q.type==='tf') yours = r.st.ans!==null? (r.st.ans==='true'?'True':'False') : (r.st.skipped?'skipped':'unanswered');
+        else if(r.q.type==='num') yours = r.st.ans!==null? ((+r.st.ans.toFixed(4))+(r.q.unit||'')+(r.st.raw&&r.st.raw.indexOf('/')>-1?' (from '+r.st.raw+')':'')) : (r.st.skipped?'skipped':'unanswered');
+        else yours = r.st.self===true?'self: correct':(r.st.self===false?'self: not yet':'unanswered');
+        const corr = r.q.type==='mcq'? r.q.opts[r.q.ans] : r.q.type==='tf'? (r.q.ans==='true'?'True':'False') : r.q.type==='num'? ((r.q.frac? r.q.frac+' ≈ ':'')+(+r.q.ans.toFixed(4))+(r.q.unit||'')) : 'see solution';
+        const vd = r.q.type==='prove' ? '<span class="verdict '+(r.st.self===true?'ok':'no')+'">'+(r.st.self===true?'self-assessed ✓':'check model solution')+'</span>'
+          : (r.ok===true?'<span class="verdict ok">correct</span>':(r.st.ans===null?'<span class="verdict no">no attempt</span>':'<span class="verdict no">incorrect</span>'));
+        return '<div class="rev-card"><div class="rv-head">'+vd+'<span class="badge chC">Circles</span>'+(r.st.over?'<span class="badge year">over time</span>':'')+'</div>'
+          +'<div class="q-text" style="font-weight:600;font-size:14px">'+(i+1)+'. '+r.q.q+'</div>'
+          +'<p style="margin-top:8px;font-size:13.5px">Your answer: <b>'+yours+'</b> · Correct: <b>'+corr+'</b> · Time used: <span class="mth">'+tnum(r.st.spent)+'</span></p>'
+          +'<details class="sol" style="margin-top:8px"><summary>Show explanation</summary><div class="sol-body"><p>'+r.q.exp+'</p></div></details></div>';
+      }).join('')
+      +'<div style="text-align:center;margin-top:24px"><button class="btn primary" id="t-again">Retake test</button></div></div>';
+    $('t-again').onclick=()=>{ R.style.display='none'; $('test-start').style.display=''; window.scrollTo({top:document.getElementById('test').offsetTop-70,behavior:'smooth'}); };
+  }
+  $('t-prev').onclick=()=>go(idx-1);
+  $('t-next').onclick=()=>{ if(idx===QUESTIONS.length-1){ confirmEnd(); } else go(idx+1); };
+  $('t-clear').onclick=()=>{ const st=state[idx]; st.ans=null; st.raw=null; st.done=false; st.skipped=false; st.self=null; render(); };
+  $('t-dp').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+    document.querySelectorAll('#t-dp button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); DP=+b.dataset.dp; });
+  $('test-begin').onclick=start;
+})();
+</script>
+</body>
+</html>

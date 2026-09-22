@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trigonometry Class 10 — Introduction & Applications (Interactive)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Azeret+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f5; --surface:#fffdfc; --surface2:#f4efe9; --surface3:#efe8df;
+  --border:rgba(45,42,38,.13); --border-strong:rgba(45,42,38,.22);
+  --ink:#2d2a26; --dim:#6f6862; --faint:#9a938b;
+  --terra:#c2410c; --terra-deep:#9a3412; --terra-dim:rgba(194,65,12,.09);
+  --sage:#5f8a1e; --sage-deep:#44631a; --sage-dim:rgba(95,138,30,.11);
+  --blue:#1e4f73; --blue-deep:#173a56; --blue-dim:rgba(30,79,115,.09);
+  --gold:#a16207; --gold-dim:rgba(161,98,7,.1);
+  --danger:#b91c1c; --danger-dim:rgba(185,28,28,.08);
+  --shadow:0 1px 2px rgba(45,42,38,.05),0 8px 24px -12px rgba(45,42,38,.14);
+  --radius:14px;
+  --font-body:'Plus Jakarta Sans',Georgia,serif;
+  --font-mono:'Azeret Mono','Courier New',monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#1b1916; --surface:#232019; --surface2:#2b2721; --surface3:#332e26;
+    --border:rgba(236,231,224,.11); --border-strong:rgba(236,231,224,.22);
+    --ink:#ece7e0; --dim:#a89f95; --faint:#7c746b;
+    --terra:#e8825a; --terra-deep:#f09b78; --terra-dim:rgba(232,130,90,.12);
+    --sage:#a3c264; --sage-deep:#b5d07e; --sage-dim:rgba(163,194,100,.11);
+    --blue:#7ab1d4; --blue-deep:#96c3e0; --blue-dim:rgba(122,177,212,.1);
+    --gold:#d3a450; --gold-dim:rgba(211,164,80,.12);
+    --danger:#e58080; --danger-dim:rgba(229,128,128,.1);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px -12px rgba(0,0,0,.5);
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:86px}
+body{
+  font-family:var(--font-body);background:var(--bg);color:var(--ink);
+  line-height:1.62;font-size:15.5px;
+  background-image:radial-gradient(rgba(45,42,38,.035) 1px,transparent 1px);
+  background-size:22px 22px;
+}
+@media (prefers-color-scheme:dark){body{background-image:radial-gradient(rgba(236,231,224,.03) 1px,transparent 1px)}}
+
+/* ---------- layout shell ---------- */
+.shell{max-width:1280px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:238px minmax(0,1fr);gap:36px}
+@media (max-width:960px){.shell{grid-template-columns:1fr;gap:0}}
+.sidebar{position:sticky;top:0;align-self:start;max-height:100vh;overflow-y:auto;padding:28px 0 40px;scrollbar-width:thin}
+@media (max-width:960px){
+  .sidebar{position:sticky;top:0;z-index:60;background:var(--bg);max-height:none;padding:10px 0 6px;border-bottom:1px solid var(--border)}
+  .sidebar .side-brand{display:none}
+  .sidebar nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+  .sidebar nav a{white-space:nowrap;border:1px solid var(--border)}
+}
+.side-brand{margin:4px 10px 18px}
+.side-brand .b-title{font-weight:800;font-size:17px;letter-spacing:-.02em;line-height:1.25}
+.side-brand .b-sub{font-family:var(--font-mono);font-size:10.5px;color:var(--dim);margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+.sidebar nav{display:flex;flex-direction:column;gap:4px}
+.sidebar nav a{
+  display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;
+  color:var(--dim);text-decoration:none;font-size:13.5px;font-weight:600;
+  border:1px solid transparent;transition:all .18s;
+}
+.sidebar nav a:hover{color:var(--ink);background:var(--surface2)}
+.sidebar nav a .dot{width:8px;height:8px;border-radius:50%;flex:none}
+.sidebar nav a.sub{padding-left:30px;font-size:12.5px;font-weight:500}
+@media (max-width:960px){.sidebar nav a.sub{display:none}}
+.side-note{margin:22px 10px 0;padding:12px;border:1px dashed var(--border-strong);border-radius:10px;font-size:12px;color:var(--dim)}
+@media (max-width:960px){.side-note{display:none}}
+
+main{min-width:0;padding-bottom:90px}
+section.sec{padding:44px 0 10px;border-top:1px solid var(--border);margin-top:28px}
+section.sec:first-of-type{border-top:none;margin-top:0;padding-top:34px}
+
+/* ---------- section labels & headings ---------- */
+.sec-label{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.sec-label::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--terra);flex:none}
+.sec-label.blue::before{background:var(--blue)}
+.sec-label.sage::before{background:var(--sage)}
+.sec-label.gold::before{background:var(--gold)}
+h2.sec-title{font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:6px}
+.sec-sub{color:var(--dim);font-size:15px;max-width:640px;margin-bottom:22px}
+h3.h3{font-size:19px;font-weight:700;letter-spacing:-.015em;margin:34px 0 10px;display:flex;align-items:baseline;gap:10px}
+h3.h3 .n{font-family:var(--font-mono);font-size:12px;color:var(--terra);font-weight:600}
+h4.h4{font-size:15.5px;font-weight:700;margin:20px 0 8px}
+
+/* ---------- hero ---------- */
+.hero{padding:52px 34px 44px;border-radius:20px;background:
+  radial-gradient(900px 340px at 12% -8%,var(--terra-dim),transparent 60%),
+  radial-gradient(700px 300px at 95% 110%,var(--blue-dim),transparent 60%),
+  var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);margin-top:26px}
+.hero .kicker{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:12px}
+.hero h1{font-size:clamp(30px,4.6vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.08;max-width:15ch}
+.hero p.lede{margin-top:14px;max-width:560px;color:var(--dim);font-size:16.5px}
+.hero .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.hero .cta{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:11px;font-weight:700;font-size:14px;text-decoration:none;border:1px solid transparent;transition:transform .15s}
+.hero .cta:active{transform:scale(.97)}
+.cta.primary{background:var(--terra);color:#fff}
+.cta.ghost{border-color:var(--border-strong);color:var(--ink);background:var(--surface)}
+.hero .meta-row{display:flex;flex-wrap:wrap;gap:26px;margin-top:30px}
+.hero .meta .k{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.hero .meta .v{font-weight:800;font-size:19px;letter-spacing:-.02em;margin-top:2px}
+.hero .meta .v small{font-weight:600;font-size:12px;color:var(--dim)}
+
+/* ---------- cards ---------- */
+.ve-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
+.ve-card.recessed{background:var(--surface2);box-shadow:none}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px}
+.callout{border-left:3px solid var(--terra);background:var(--terra-dim);border-radius:0 12px 12px 0;padding:14px 18px;margin:18px 0;font-size:14.5px}
+.callout.sage{border-color:var(--sage);background:var(--sage-dim)}
+.callout.blue{border-color:var(--blue);background:var(--blue-dim)}
+.callout.gold{border-color:var(--gold);background:var(--gold-dim)}
+.callout b{font-weight:700}
+.callout .t{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+
+/* ---------- math ---------- */
+.mth{font-family:var(--font-mono);white-space:nowrap}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.86em;line-height:1.35;margin:0 2px}
+.fr>span:first-child{border-bottom:1.3px solid currentColor;padding:0 5px}
+.fr>span:last-child{padding:0 5px}
+.eq{display:block;margin:10px 0;padding:12px 16px;background:var(--surface2);border-radius:10px;font-family:var(--font-mono);font-size:14.5px;overflow-x:auto;overflow-wrap:break-word}
+sub,sup{line-height:0}
+
+/* ---------- tables ---------- */
+.tbl-wrap{overflow-x:auto;margin:14px 0;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+table.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+table.tbl th{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border-strong);background:var(--surface2);position:sticky;top:0}
+table.tbl td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+table.tbl tr:last-child td{border-bottom:none}
+table.tbl tr:nth-child(even) td{background:var(--surface2)}
+.num-c{text-align:center !important}
+.num-c .mth{font-size:13.5px}
+table.tbl td.hl,table.tbl th.hl{background:var(--terra-dim) !important}
+
+/* ---------- interactive modules ---------- */
+.mod{background:var(--surface);border:1px solid var(--border-strong);border-radius:16px;overflow:hidden;margin:20px 0;box-shadow:var(--shadow)}
+.mod-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 20px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.mod-head .m-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:99px;background:var(--terra);color:#fff;font-weight:600}
+.mod-head .m-tag.blue{background:var(--blue)}
+.mod-head .m-title{font-weight:800;font-size:15.5px;letter-spacing:-.01em}
+.mod-head .m-hint{font-size:12.5px;color:var(--dim);margin-left:auto}
+.mod-body{padding:18px 20px 22px}
+.mod-controls{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;margin-bottom:14px;padding:12px 16px;background:var(--surface2);border-radius:11px}
+.ctrl{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--dim)}
+.ctrl .val{font-family:var(--font-mono);color:var(--ink);font-size:13.5px;min-width:52px;text-align:center;padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:7px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:170px;height:5px;border-radius:99px;background:var(--surface3);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--terra);border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:grab}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--terra);border:3px solid var(--surface);cursor:grab}
+.seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:9px;overflow:hidden}
+.seg button{padding:7px 14px;border:none;background:var(--surface);font-family:var(--font-body);font-weight:600;font-size:12.5px;color:var(--dim);cursor:pointer;border-right:1px solid var(--border)}
+.seg button:last-child{border-right:none}
+.seg button.on{background:var(--terra);color:#fff}
+.mod svg{display:block;width:100%;height:auto;max-width:640px;margin:0 auto}
+.ratio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:9px;margin-top:16px}
+.ratio-card{border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--surface);cursor:pointer;transition:all .15s;border-left:3px solid var(--faint)}
+.ratio-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.ratio-card .r-name{font-family:var(--font-mono);font-size:12px;color:var(--ink)}
+.ratio-card .r-val{font-family:var(--font-mono);font-size:16px;font-weight:600;margin-top:3px}
+.ratio-card .r-def{font-size:10.5px;color:var(--faint);margin-top:2px}
+.ratio-card.opp{border-left-color:var(--terra)}
+.ratio-card.adj{border-left-color:var(--sage)}
+.ratio-card.hyp{border-left-color:var(--blue)}
+.ratio-card.lit{background:var(--terra-dim)}
+.readout{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.readout .chip{font-family:var(--font-mono);font-size:12.5px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px}
+.readout .chip b{color:var(--terra);font-weight:600}
+
+/* ---------- question cards / details ---------- */
+details.sol{margin-top:12px;border:1px solid var(--border);border-radius:11px;background:var(--surface2);overflow:hidden}
+details.sol summary{cursor:pointer;padding:11px 16px;font-weight:700;font-size:13.5px;color:var(--terra-deep);list-style:none;display:flex;align-items:center;gap:9px;user-select:none}
+details.sol summary::-webkit-details-marker{display:none}
+details.sol summary::before{content:"+";font-family:var(--font-mono);width:20px;height:20px;border-radius:6px;background:var(--surface);border:1px solid var(--border-strong);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none;color:var(--ink)}
+details.sol[open] summary::before{content:"−"}
+details.sol .sol-body{padding:4px 18px 16px;font-size:14.5px;border-top:1px solid var(--border)}
+.sol-body p{margin:8px 0}
+.sol-body ol,.sol-body ul{margin:8px 0 8px 22px}
+.sol-body li{margin:5px 0}
+.sol-body .ans{display:inline-block;margin-top:6px;padding:6px 14px;background:var(--sage-dim);border:1px solid var(--sage);border-radius:8px;font-weight:700;font-size:14px}
+
+.qcard{border:1px solid var(--border);border-radius:13px;background:var(--surface);padding:18px 20px;margin:14px 0;box-shadow:var(--shadow)}
+.qcard .q-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.badge{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3.5px 9px;border-radius:99px;font-weight:600;border:1px solid transparent}
+.badge.ch8{background:var(--terra-dim);color:var(--terra-deep)}
+.badge.ch9{background:var(--blue-dim);color:var(--blue-deep)}
+.badge.marks{background:var(--sage-dim);color:var(--sage-deep)}
+.badge.year{background:var(--gold-dim);color:var(--gold)}
+.badge.type{background:var(--surface2);color:var(--dim);border-color:var(--border)}
+.qcard .q-text{font-size:15px;font-weight:500}
+.qcard .q-text .mth{font-size:13.5px}
+.qcard.ncert{border-left:3px solid var(--terra)}
+.qcard.pyq{border-left:3px solid var(--gold)}
+.qcard.extra{border-left:3px solid var(--sage)}
+
+/* ---------- step list ---------- */
+.steps{counter-reset:st;margin:10px 0 4px}
+.steps li{list-style:none;counter-increment:st;position:relative;padding:6px 0 6px 42px;margin:2px 0}
+.steps li::before{content:counter(st);position:absolute;left:0;top:8px;width:26px;height:26px;border-radius:8px;background:var(--terra-dim);color:var(--terra-deep);font-family:var(--font-mono);font-weight:600;font-size:12.5px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(194,65,12,.25)}
+.steps.blue li::before{background:var(--blue-dim);color:var(--blue-deep);border-color:rgba(30,79,115,.25)}
+
+/* ---------- formula strip ---------- */
+.formula-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px;margin:16px 0}
+.f-strip{padding:16px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--terra);box-shadow:var(--shadow)}
+.f-strip.blue{border-top-color:var(--blue)}
+.f-strip.sage{border-top-color:var(--sage)}
+.f-strip .f-t{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.f-strip .f-eqs{display:flex;flex-direction:column;gap:6px}
+.f-strip .f-eqs .mth{font-size:14px}
+
+/* ---------- test section ---------- */
+.test-shell{border:1px solid var(--border-strong);border-radius:18px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+.test-start{padding:44px 34px;text-align:center;background:
+  radial-gradient(600px 240px at 50% -10%,var(--sage-dim),transparent 70%),var(--surface)}
+.test-start h3{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.test-start p{color:var(--dim);max-width:520px;margin:10px auto 22px;font-size:14.5px}
+.btn{font-family:var(--font-body);font-weight:700;font-size:14px;padding:11px 22px;border-radius:11px;border:1px solid transparent;cursor:pointer;transition:transform .15s,opacity .15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--terra);color:#fff}
+.btn.green{background:var(--sage);color:#fff}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--border-strong)}
+.btn.small{padding:7px 14px;font-size:12.5px;border-radius:9px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.test-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:13px 20px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.test-bar .t-name{font-weight:800;font-size:14.5px}
+.test-bar .t-stats{font-family:var(--font-mono);font-size:12px;color:var(--dim)}
+.test-bar .spacer{flex:1}
+.palette{display:flex;flex-wrap:wrap;gap:6px}
+.pal-q{width:34px;height:34px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface);font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--dim);cursor:pointer}
+.pal-q.cur{outline:2.5px solid var(--terra);outline-offset:1px;color:var(--ink)}
+.pal-q.done{background:var(--sage-dim);border-color:var(--sage);color:var(--sage-deep)}
+.pal-q.ot{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.pal-q.skipped{background:var(--danger-dim);border-color:var(--danger);color:var(--danger)}
+.test-main{padding:26px 28px 30px;max-width:820px;margin:0 auto}
+.timer-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.timer-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:14px;font-weight:600;padding:8px 16px;border-radius:99px;background:var(--surface2);border:1px solid var(--border-strong)}
+.timer-pill .t-num{font-size:16px;min-width:58px;text-align:center}
+.timer-pill.warn{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.timer-pill.over{background:var(--danger-dim);border-color:var(--danger);color:var(--danger)}
+.timer-track{flex:1;height:8px;border-radius:99px;background:var(--surface3);overflow:hidden}
+.timer-fill{height:100%;background:var(--sage);border-radius:99px;transition:width .95s linear}
+.timer-fill.warn{background:var(--gold)}
+.timer-fill.over{background:var(--danger)}
+.q-body{font-size:16px;font-weight:600;line-height:1.6}
+.q-body .mth{font-size:14px;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border:1.5px solid var(--border);border-radius:11px;cursor:pointer;background:var(--surface);font-size:14.5px;transition:all .15s}
+.opt:hover{border-color:var(--border-strong);background:var(--surface2)}
+.opt input{margin-top:3px;accent-color:var(--terra)}
+.opt.sel{border-color:var(--terra);background:var(--terra-dim)}
+.opt.correct{border-color:var(--sage);background:var(--sage-dim)}
+.opt.wrong{border-color:var(--danger);background:var(--danger-dim)}
+.opt .ol{font-family:var(--font-mono);font-size:12px;color:var(--dim);font-weight:600}
+.num-wrap{display:flex;align-items:center;gap:10px;margin-top:16px}
+.num-wrap input[type=text]{font-family:var(--font-mono);font-size:16px;padding:11px 15px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--ink);width:200px;outline:none}
+.num-wrap input[type=text]:focus{border-color:var(--terra)}
+.tf-row{display:flex;gap:10px;margin-top:16px}
+.test-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--border)}
+.timeup{margin-top:16px;padding:16px 18px;border:1.5px dashed var(--danger);border-radius:12px;background:var(--danger-dim)}
+.timeup .tu-t{font-weight:800;color:var(--danger);font-size:14.5px;margin-bottom:6px}
+.timeup .tu-row{display:flex;flex-wrap:wrap;gap:9px}
+.explain-box{margin-top:18px;border:1px solid var(--sage);border-radius:12px;background:var(--sage-dim);padding:16px 18px}
+.explain-box .ex-t{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:8px;font-weight:600}
+.explain-box p{margin:7px 0;font-size:14.5px}
+.verdict{display:inline-block;padding:5px 13px;border-radius:99px;font-size:12.5px;font-weight:800;margin-bottom:10px}
+.verdict.ok{background:var(--sage-dim);color:var(--sage-deep)}
+.verdict.no{background:var(--danger-dim);color:var(--danger)}
+.results-wrap{padding:30px 26px 36px;max-width:860px;margin:0 auto}
+.score-hero{text-align:center;padding:28px 20px;border-radius:14px;background:var(--surface2);border:1px solid var(--border);margin-bottom:22px}
+.score-hero .sc{font-size:52px;font-weight:800;letter-spacing:-.04em;font-family:var(--font-mono)}
+.score-hero .sc small{font-size:20px;color:var(--dim);font-weight:600}
+.rev-card{border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:10px 0;background:var(--surface)}
+.rev-card .rv-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+footer{border-top:1px solid var(--border);margin-top:56px;padding:26px 0;color:var(--faint);font-size:12.5px;font-family:var(--font-mono)}
+.pill-note{font-size:12px;color:var(--faint);margin-top:6px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <div class="side-brand">
+    <div class="b-title">Trigonometry<span style="color:var(--terra)">.</span>Class&nbsp;10</div>
+    <div class="b-sub">CBSE · NCERT Maths</div>
+  </div>
+  <nav>
+    <a href="#ch8"><span class="dot" style="background:var(--terra)"></span>Ch 8 · Introduction</a>
+    <a class="sub" href="#m1-anchor">Ratio explorer</a>
+    <a class="sub" href="#ch8-standard">Standard angles</a>
+    <a class="sub" href="#ch8-identity">Identities</a>
+    <a href="#ch9"><span class="dot" style="background:var(--blue)"></span>Ch 9 · Applications</a>
+    <a class="sub" href="#m4-anchor">Elevation simulator</a>
+    <a href="#impq"><span class="dot" style="background:var(--sage)"></span>Important questions</a>
+    <a href="#pyq"><span class="dot" style="background:var(--gold)"></span>CBSE PYQs</a>
+    <a href="#test"><span class="dot" style="background:var(--danger)"></span>Timed test</a>
+  </nav>
+  <div class="side-note">60% focus on Ch 8 (Introduction), 40% on Ch 9 (Applications) — matching where the marks and the difficulty are.</div>
+</aside>
+<main>
+
+<section class="sec" id="top" style="border-top:none">
+  <div class="hero">
+    <div class="kicker">CBSE Class 10 · Mathematics · Chapters 8 & 9</div>
+    <h1>Trigonometry, from ratios to rooftops.</h1>
+    <p class="lede">A complete interactive study companion: drag triangles to see the six ratios move, verify identities live, walk through solved NCERT questions, revise from board PYQs — then take an auto-timed test where every question comes with its own clock and full explanation.</p>
+    <div class="cta-row">
+      <a class="cta primary" href="#ch8">Start Chapter 8</a>
+      <a class="cta ghost" href="#test">Jump to the test</a>
+    </div>
+    <div class="meta-row">
+      <div class="meta"><div class="k">Interactive modules</div><div class="v">4</div></div>
+      <div class="meta"><div class="k">Solved questions</div><div class="v">30<small>+</small></div></div>
+      <div class="meta"><div class="k">CBSE PYQs</div><div class="v">10</div></div>
+      <div class="meta"><div class="k">Timed test</div><div class="v">16<small>&nbsp;Q</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 8 ==================== -->
+<section class="sec" id="ch8">
+  <div class="sec-label">Chapter 8 · 60% of this page</div>
+  <h2 class="sec-title">Introduction to Trigonometry</h2>
+  <p class="sec-sub">Trigonometry is the study of relationships between the sides and angles of a triangle. In Class 10 we only need <b>right-angled</b> triangles — and everything in this chapter flows from one picture.</p>
+
+  <h3 class="h3"><span class="n">8.1</span> Why ratios? The idea in one diagram</h3>
+  <p>Fix an angle <span class="mth">θ</span> in a right triangle. What matters is not the triangle's size — <b>all right triangles with the same angle θ have the same shape</b> (they are similar). So the <i>ratio</i> of any two sides depends only on θ, never on how big the triangle is. That is the whole trick: trigonometry replaces "which angle?" with "which ratio?".</p>
+  <div class="callout">
+    <div class="t">The one thing to never forget</div>
+    Name the sides <b>relative to θ</b>: the side across from θ is the <b style="color:var(--terra)">opposite</b>; the side helping form θ (not the hypotenuse) is the <b style="color:var(--sage)">adjacent</b>; the longest side (facing the right angle) is the <b style="color:var(--blue)">hypotenuse</b>. If you label sides correctly, every ratio in this chapter is just division.
+  </div>
+
+  <div class="mod" id="m1-anchor">
+    <div class="mod-head">
+      <span class="m-tag">Module 1</span>
+      <span class="m-title">Right-triangle ratio explorer</span>
+      <span class="m-hint">drag the slider · hover the cards to light up the sides</span>
+    </div>
+    <div class="mod-body">
+      <div class="mod-controls">
+        <div class="ctrl">angle θ <input type="range" id="m1-angle" min="15" max="75" value="35" step="1"><span class="val" id="m1-angle-val">35°</span></div>
+        <div class="ctrl">zoom <input type="range" id="m1-zoom" min="60" max="130" value="100" step="1"><span class="val" id="m1-zoom-val">1.00×</span></div>
+      </div>
+      <svg id="m1-svg" viewBox="0 0 620 380" role="img" aria-label="Interactive right triangle showing opposite, adjacent and hypotenuse for angle theta"></svg>
+      <div class="ratio-grid" id="m1-ratios"></div>
+      <div class="readout">
+        <span class="chip">perpendicular : base : hypotenuse = <b id="m1-triple">—</b></span>
+        <span class="chip">θ + 90° + (90° − θ) = <b>180°</b> — always</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h3"><span class="n">8.2</span> The six trigonometric ratios</h3>
+  <p>For a right triangle with angle θ, using <b style="color:var(--terra)">P</b> = perpendicular (opposite), <b style="color:var(--sage)">B</b> = base (adjacent) and <b style="color:var(--blue)">H</b> = hypotenuse:</p>
+  <div class="formula-strip">
+    <div class="f-strip">
+      <div class="f-t">primary ratios</div>
+      <div class="f-eqs">
+        <span class="mth">sin θ = P / H</span>
+        <span class="mth">cos θ = B / H</span>
+        <span class="mth">tan θ = P / B</span>
+      </div>
+    </div>
+    <div class="f-strip sage">
+      <div class="f-t">reciprocal ratios</div>
+      <div class="f-eqs">
+        <span class="mth">cosec θ = H / P = 1/sin θ</span>
+        <span class="mth">sec θ = H / B = 1/cos θ</span>
+        <span class="mth">cot θ = B / P = 1/tan θ</span>
+      </div>
+    </div>
+    <div class="f-strip blue">
+      <div class="f-t">quotient link</div>
+      <div class="f-eqs">
+        <span class="mth">tan θ = sin θ / cos θ</span>
+        <span class="mth">cot θ = cos θ / sin θ</span>
+      </div>
+    </div>
+  </div>
+  <div class="callout gold">
+    <div class="t">Memory aid — a classic exam trap</div>
+    <b>SOH · CAH · TOA</b>: <b>S</b>in = <b>O</b>pposite / <b>H</b>ypotenuse, <b>C</b>os = <b>A</b>djacent / <b>H</b>ypotenuse, <b>T</b>an = <b>O</b>pposite / <b>A</b>djacent. And because the hypotenuse is the longest side, ratios of the form <span class="mth">P/H</span> and <span class="mth">B/H</span> can <b>never exceed 1</b> — so <span class="mth">0 < sin θ < 1</span> and <span class="mth">0 < cos θ < 1</span> for an acute θ. A favourite MCQ asks whether <span class="mth">sin θ = 4/3</span> is possible. It is not.
+  </div>
+
+  <h3 class="h3" id="ch8-standard"><span class="n">8.3</span> Standard angles: 0°, 30°, 45°, 60°, 90°</h3>
+  <p>These five angles cover every Class 10 question. Click an angle below — the triangle morphs to it and the column highlights.</p>
+
+  <div class="mod">
+    <div class="mod-head">
+      <span class="m-tag">Module 2</span>
+      <span class="m-title">Standard-angle table & morphing triangle</span>
+      <span class="m-hint">click an angle button</span>
+    </div>
+    <div class="mod-body">
+      <div class="mod-controls">
+        <div class="seg" id="m2-seg">
+          <button data-a="0">0°</button><button data-a="30" class="on">30°</button><button data-a="45">45°</button><button data-a="60">60°</button><button data-a="90">90°</button>
+        </div>
+        <div class="ctrl" id="m2-note"></div>
+      </div>
+      <svg id="m2-svg" viewBox="0 0 620 340" role="img" aria-label="Reference triangle for the selected standard angle"></svg>
+      <div class="tbl-wrap" style="margin-top:16px">
+        <table class="tbl" id="m2-table">
+          <thead><tr>
+            <th>ratio</th><th class="num-c">θ = 0°</th><th class="num-c">θ = 30°</th><th class="num-c">θ = 45°</th><th class="num-c">θ = 60°</th><th class="num-c">θ = 90°</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>sin θ</td><td class="num-c">0</td><td class="num-c">1/2</td><td class="num-c">1/√2</td><td class="num-c">√3/2</td><td class="num-c">1</td></tr>
+            <tr><td>cos θ</td><td class="num-c">1</td><td class="num-c">√3/2</td><td class="num-c">1/√2</td><td class="num-c">1/2</td><td class="num-c">0</td></tr>
+            <tr><td>tan θ</td><td class="num-c">0</td><td class="num-c">1/√3</td><td class="num-c">1</td><td class="num-c">√3</td><td class="num-c">not defined</td></tr>
+            <tr><td>cosec θ</td><td class="num-c">not defined</td><td class="num-c">2</td><td class="num-c">√2</td><td class="num-c">2/√3</td><td class="num-c">1</td></tr>
+            <tr><td>sec θ</td><td class="num-c">1</td><td class="num-c">2/√3</td><td class="num-c">√2</td><td class="num-c">2</td><td class="num-c">not defined</td></tr>
+            <tr><td>cot θ</td><td class="num-c">not defined</td><td class="num-c">√3</td><td class="num-c">1</td><td class="num-c">1/√3</td><td class="num-c">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout sage" style="margin-bottom:0">
+        <div class="t">The √n trick — never memorise blindly again</div>
+        Write the sine row as <span class="mth">√0/2, √1/2, √2/2, √3/2, √4/2</span>. The cosine row is the same reversed. Tangent is just sine ÷ cosine: <span class="mth">0, 1/√3, 1, √3, undefined</span>. At 0° and 90° the "undefined" entries happen because the needed side length is 0 — division by zero.
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h3"><span class="n">8.4</span> Complementary angles: sin(90° − θ) = cos θ</h3>
+  <p>In a right triangle the two acute angles always add to 90°. Look at angle <span class="mth">(90° − θ)</span> and its opposite side becomes what was θ's adjacent side — so every ratio flips into its partner:</p>
+  <span class="eq">sin(90° − θ) = cos θ &nbsp;·&nbsp; cos(90° − θ) = sin θ &nbsp;·&nbsp; tan(90° − θ) = cot θ &nbsp;·&nbsp; cosec(90° − θ) = sec θ &nbsp;·&nbsp; sec(90° − θ) = cosec θ &nbsp;·&nbsp; cot(90° − θ) = tan θ</span>
+  <div class="callout blue">
+    <div class="t">Board pattern</div>
+    "Express <span class="mth">sin 67° + cos 75°</span> in ratios of angles between 0° and 45°" becomes <span class="mth">cos 23° + sin 15°</span>. Apply the flip to anything above 45°, and remember <span class="mth">tan 1° · tan 2° · … · tan 89° = 1</span> because pairs like <span class="mth">tan 20°·tan 70° = tan 20°·cot 20° = 1</span>.
+  </div>
+
+  <h3 class="h3" id="ch8-identity"><span class="n">8.5</span> Trigonometric identities</h3>
+  <p>An <b>identity</b> holds for <i>every</i> value of θ. There are three core ones (the rest are derived from them):</p>
+  <div class="formula-strip">
+    <div class="f-strip"><div class="f-t">identity 1 · Pythagorean</div><div class="f-eqs"><span class="mth">sin²θ + cos²θ = 1</span></div></div>
+    <div class="f-strip blue"><div class="f-t">identity 2 · from ÷ cos²θ</div><div class="f-eqs"><span class="mth">1 + tan²θ = sec²θ</span></div></div>
+    <div class="f-strip sage"><div class="f-t">identity 3 · from ÷ sin²θ</div><div class="f-eqs"><span class="mth">1 + cot²θ = cosec²θ</span></div></div>
+  </div>
+  <p>Divide identity 1 by <span class="mth">cos²θ</span> and you get identity 2; divide it by <span class="mth">sin²θ</span> and you get identity 3 — one fact, three costumes. Try to break them: the machine below computes <b>both sides independently</b> for whatever θ you choose.</p>
+
+  <div class="mod">
+    <div class="mod-head">
+      <span class="m-tag">Module 3</span>
+      <span class="m-title">Identity verifier — try to break a truth</span>
+      <span class="m-hint">pick an identity, slide θ, watch both sides agree</span>
+    </div>
+    <div class="mod-body">
+      <div class="mod-controls">
+        <div class="ctrl">identity
+          <select id="m3-sel" style="font-family:var(--font-mono);font-size:12.5px;padding:6px 10px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--ink)">
+            <option value="0">sin²θ + cos²θ = 1</option>
+            <option value="1">1 + tan²θ = sec²θ</option>
+            <option value="2">1 + cot²θ = cosec²θ</option>
+            <option value="3">tanθ = sinθ / cosθ</option>
+            <option value="4">(1+sinθ−cosθ)²/(1+sinθ+cosθ)² = (1−cosθ)/(1+cosθ)</option>
+          </select>
+        </div>
+        <div class="ctrl">θ <input type="range" id="m3-angle" min="5" max="85" value="37" step="1"><span class="val" id="m3-angle-val">37°</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:12px">
+        <div class="ve-card recessed" style="text-align:center"><div style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">left side</div><div class="mth" id="m3-lhs" style="font-size:20px;font-weight:600;margin-top:6px">—</div></div>
+        <div class="ve-card recessed" style="text-align:center"><div style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">right side</div><div class="mth" id="m3-rhs" style="font-size:20px;font-weight:600;margin-top:6px">—</div></div>
+        <div class="ve-card" style="text-align:center;border-color:var(--sage)"><div style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">verdict</div><div id="m3-verdict" style="font-size:20px;font-weight:800;margin-top:6px;color:var(--sage-deep)">identity holds</div></div>
+      </div>
+      <div class="readout" id="m3-note"></div>
+    </div>
+  </div>
+
+  <h4 class="h4">Featured proof — the identity that fooled a first attempt</h4>
+  <div class="ve-card recessed">
+    <p>A much-asked identity (and a nice story):</p>
+    <span class="eq">(1 + sinθ − cosθ)² / (1 + sinθ + cosθ)² = (1 − cosθ) / (1 + cosθ)</span>
+    <p>Watch the sign order — with <span class="mth">(1 − sinθ + cosθ)</span> on the left the statement is <b>false</b> (test θ = 30°: left ≈ 0.333, right ≈ 0.072). The proof works on the LHS alone:</p>
+    <ol class="steps">
+      <li>Multiply numerator and denominator by <span class="mth">(1 + cosθ)²</span> — this changes nothing, but sets up the key expansion.</li>
+      <li>Expand <span class="mth">(1 + sinθ − cosθ)(1 + cosθ) = 1 + sinθ + sinθcosθ − cos²θ</span>, then replace <span class="mth">1 − cos²θ</span> with <span class="mth">sin²θ</span> to get <span class="mth">sinθ · (1 + sinθ + cosθ)</span>.</li>
+      <li>The factor <span class="mth">(1 + sinθ + cosθ)²</span> now appears on top and bottom — cancel it, leaving <span class="mth">sin²θ / (1 + cosθ)²</span>.</li>
+      <li>Write <span class="mth">sin²θ = (1 − cosθ)(1 + cosθ)</span> and cancel one factor: <span class="mth">(1 − cosθ)/(1 + cosθ)</span>. Done — LHS became RHS.</li>
+    </ol>
+    <p class="pill-note">You can watch both sides stay equal for every θ in Module 3 above (last identity in the dropdown).</p>
+  </div>
+</section>
+
+<!-- ==================== CHAPTER 9 ==================== -->
+<section class="sec" id="ch9">
+  <div class="sec-label blue">Chapter 9 · 40% of this page</div>
+  <h2 class="sec-title">Some Applications of Trigonometry</h2>
+  <p class="sec-sub">Chapter 8 taught you the ratios. Chapter 9 uses exactly one of them at a time to measure things you cannot reach — towers, kites, ships — using nothing but an angle and one distance.</p>
+
+  <h3 class="h3"><span class="n" style="color:var(--blue)">9.1</span> The two vocabulary words</h3>
+  <div class="grid2">
+    <div class="ve-card">
+      <div class="sec-label blue" style="margin-bottom:8px">looking UP</div>
+      <b>Angle of elevation</b> — the angle between the <b>horizontal line of sight</b> and the line drawn up to the object. Observer looks up at a tower.
+    </div>
+    <div class="ve-card">
+      <div class="sec-label gold" style="margin-bottom:8px">looking DOWN</div>
+      <b>Angle of depression</b> — the angle between the horizontal and the line drawn down to the object. Observer looks down from a height.
+    </div>
+  </div>
+  <div class="callout blue">
+    <div class="t">The single most useful fact in Chapter 9</div>
+    The angle of depression from the top of a tower to a point on the ground <b>equals</b> the angle of elevation from that point to the top — they are <b>alternate interior angles</b> between the two parallel horizontals. So every "depression" problem secretly becomes an "elevation" problem. Also: heights and distances in this chapter always assume the object's base is <b>on the same horizontal level</b> as the observer unless stated otherwise.
+  </div>
+
+  <div class="mod" id="m4-anchor">
+    <div class="mod-head">
+      <span class="m-tag blue">Module 4</span>
+      <span class="m-title">Heights & distances simulator</span>
+      <span class="m-hint">switch mode · drag the sliders · read off the equation it uses</span>
+    </div>
+    <div class="mod-body">
+      <div class="mod-controls">
+        <div class="seg" id="m4-mode">
+          <button data-m="el" class="on">angle of elevation</button>
+          <button data-m="dp">angle of depression</button>
+        </div>
+        <div class="ctrl">angle <input type="range" id="m4-angle" min="15" max="75" value="30" step="1"><span class="val" id="m4-angle-val">30°</span></div>
+        <div class="ctrl" id="m4-d-ctrl"><span id="m4-d-label">distance from base</span> <input type="range" id="m4-dist" min="10" max="120" value="30" step="1"><span class="val" id="m4-dist-val">30 m</span></div>
+        <div class="ctrl" id="m4-h-ctrl" style="display:none">tower height <input type="range" id="m4-h" min="10" max="140" value="40" step="1"><span class="val" id="m4-h-val">40 m</span></div>
+      </div>
+      <svg id="m4-svg" viewBox="0 0 640 385" role="img" aria-label="Heights and distances simulator with observer, tower and line of sight"></svg>
+      <div class="readout">
+        <span class="chip">equation: <b id="m4-eq">—</b></span>
+        <span class="chip">unknown: <b id="m4-ans">—</b></span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="h3"><span class="n" style="color:var(--blue)">9.2</span> The 4-step recipe for every Chapter 9 problem</h3>
+  <ol class="steps blue">
+    <li><b>Draw the triangle.</b> Put the observer, the object, the right angle at the base, and mark the given angle. 80% of mistakes are drawing mistakes.</li>
+    <li><b>Mark what you know</b> — one angle is always given; one side is always given (or implied, like "moved 20 m closer").</li>
+    <li><b>Choose the ratio that connects them.</b> Two knowns, one unknown: if the unknown is opposite and you know the adjacent, pick tan. If you know the hypotenuse (a string, a wire, a ladder), pick sin or cos.</li>
+    <li><b>Solve and sanity-check.</b> Heights come out positive and "look" right. Round only at the end. <span class="mth">√3 ≈ 1.732</span> if a decimal is needed.</li>
+  </ol>
+
+  <h3 class="h3"><span class="n" style="color:var(--blue)">9.3</span> Worked patterns you must recognise</h3>
+  <div class="tbl-wrap">
+    <table class="tbl">
+      <thead><tr><th>when the question says…</th><th>the hidden equation</th><th>why</th></tr></thead>
+      <tbody>
+        <tr><td>"a 20 m wire to the top makes 30° with ground"</td><td class="num-c"><span class="mth">sin 30° = h/20</span></td><td>the wire is the hypotenuse</td></tr>
+        <tr><td>"elevation of top is 30° from 30 m away"</td><td class="num-c"><span class="mth">tan 30° = h/30</span></td><td>distance on ground is adjacent</td></tr>
+        <tr><td>"depression of car is 30° from a 7 m building"</td><td class="num-c"><span class="mth">tan 30° = 7/d</span></td><td>depression = elevation (alternate angles)</td></tr>
+        <tr><td>"on moving 20 m towards the tower it becomes 60°"</td><td class="num-c"><span class="mth">h = √3·d and h = (d+20)/√3</span></td><td>two triangles, one common height — solve simultaneously</td></tr>
+        <tr><td>"two depression angles, 30° and 45°, same side"</td><td class="num-c"><span class="mth">d₂ = h·cot30° − h·cot45°</span></td><td>subtract the two base distances</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout gold">
+    <div class="t">Numbers worth knowing cold</div>
+    <span class="mth">sin30 = cos60 = 1/2</span>, <span class="mth">tan30 = 1/√3 ≈ 0.577</span>, <span class="mth">tan45 = 1</span>, <span class="mth">tan60 = √3 ≈ 1.732</span>, <span class="mth">sin60 = cos30 = √3/2</span>. Chapter 9 answers are almost always of the form <span class="mth">10√3, 50√3, 12+4√3</span>… built from these.
+  </div>
+</section>
+
+<!-- ==================== IMPORTANT QUESTIONS ==================== -->
+<section class="sec" id="impq">
+  <div class="sec-label sage">Question bank 1</div>
+  <h2 class="sec-title">Important questions — NCERT & beyond, fully solved</h2>
+  <p class="sec-sub">Every question below has a collapsible step-by-step solution — attempt it on paper first, then open the solution only when stuck (or to check). <b>Ch 8 carries the larger share, as promised.</b></p>
+
+  <h3 class="h3"><span class="n" style="color:var(--terra)">A</span> Chapter 8 — NCERT solved</h3>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">Ex 8.1 Q1</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">In ΔABC, right-angled at B, AB = 24 cm and BC = 7 cm. Find sin A, cos A, sin C, cos C.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>First the hypotenuse: <span class="mth">AC = √(24² + 7²) = √(576+49) = √625 = 25 cm</span>.</p>
+      <p>For angle A: opposite = BC = 7, adjacent = AB = 24, hypotenuse = 25 → <span class="mth">sin A = 7/25</span>, <span class="mth">cos A = 24/25</span>.</p>
+      <p>For angle C the roles of AB and BC swap (C's opposite is AB): <span class="mth">sin C = 24/25</span>, <span class="mth">cos C = 7/25</span>.</p>
+      <p class="ans">sin A = 7/25, cos A = 24/25, sin C = 24/25, cos C = 7/25</p>
+      <p class="pill-note">Notice sin A = cos C — that is the complementary-angle identity at work: A + C = 90°.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">Ex 8.1 Q2</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">In ΔABC right-angled at B, given <span class="mth">15 cot A = 8</span>. Find sin A and sec A.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">cot A = AB/BC = 8/15</span>, so take AB = 8k, BC = 15k.</p>
+      <p><span class="mth">AC = √(64k² + 225k²) = √289k² = 17k</span>.</p>
+      <p><span class="mth">sin A = BC/AC = 15/17</span> &nbsp;·&nbsp; <span class="mth">sec A = AC/AB = 17/8</span>.</p>
+      <p class="ans">sin A = 15/17, sec A = 17/8</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">Ex 8.1 Q4</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Given <span class="mth">sec θ = 13/12</span>, calculate all other trigonometric ratios.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">cos θ = 12/13</span>. Using <span class="mth">sin²θ = 1 − cos²θ = 1 − 144/169 = 25/169</span>:</p>
+      <p><span class="mth">sin θ = 5/13</span>, then <span class="mth">tan θ = sinθ/cosθ = 5/12</span>, <span class="mth">cot θ = 12/5</span>, <span class="mth">cosec θ = 13/5</span>.</p>
+      <p class="ans">sin θ = 5/13 · cos θ = 12/13 · tan θ = 5/12 · cot θ = 12/5 · cosec θ = 13/5</p>
+      <p class="pill-note">If you spot the 5-12-13 Pythagorean triple instantly, you skip the algebra entirely.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">Ex 8.2</span><span class="badge marks">1 mark</span></div>
+    <div class="q-text">Evaluate: (i) <span class="mth">sin 60° cos 30° + sin 30° cos 60°</span> &nbsp; (ii) <span class="mth">2 tan²45° + cos²30° − sin²60°</span></div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>(i) <span class="mth">(√3/2)(√3/2) + (1/2)(1/2) = 3/4 + 1/4 = 1</span>.</p>
+      <p>(ii) <span class="mth">2(1) + (√3/2)² − (√3/2)² = 2 + 0 = 2</span> — the last two terms cancel exactly.</p>
+      <p class="ans">(i) 1 &nbsp;&nbsp; (ii) 2</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">Ex 8.3 Q1/Q2</span><span class="badge marks">1 mark each</span></div>
+    <div class="q-text">Express in ratios of angles between 0° and 45°: (i) <span class="mth">sin 67° + cos 75°</span> &nbsp; (ii) <span class="mth">cot 85° + cos 75°</span></div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>(i) <span class="mth">sin 67° = cos 23°</span> and <span class="mth">cos 75° = sin 15°</span> → <span class="mth">cos 23° + sin 15°</span>.</p>
+      <p>(ii) <span class="mth">cot 85° = tan 5°</span> and <span class="mth">cos 75° = sin 15°</span> → <span class="mth">tan 5° + sin 15°</span>.</p>
+      <p class="ans">(i) cos 23° + sin 15° &nbsp;&nbsp; (ii) tan 5° + sin 15°</p>
+      <p class="pill-note">Rule: anything above 45°, flip it with sin↔cos, tan↔cot, sec↔cosec using (90° − θ).</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">Ex 8.3 Q4</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">If <span class="mth">tan (A+B) = √3</span> and <span class="mth">tan (A−B) = 1/√3</span>, A > B, find A and B.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">tan 60° = √3</span> → A + B = 60°. &nbsp; <span class="mth">tan 30° = 1/√3</span> → A − B = 30°.</p>
+      <p>Adding: <span class="mth">2A = 90° → A = 45°</span>; subtracting: <span class="mth">2B = 30° → B = 15°</span>.</p>
+      <p class="ans">A = 45°, B = 15°</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">Ex 8.4 Q2</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove: (i) <span class="mth">√[(1+sinθ)/(1−sinθ)] = sec θ + tan θ</span> &nbsp; (ii) <span class="mth">√[(1−cosθ)/(1+cosθ)] = cosec θ − cot θ</span></div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>(i) Multiply inside the root by <span class="mth">(1+sinθ)/(1+sinθ)</span>:</p>
+      <span class="eq">√[(1+sinθ)²/(1−sin²θ)] = (1+sinθ)/√(cos²θ) = (1+sinθ)/cosθ = secθ + tanθ</span>
+      <p>(ii) Same move with <span class="mth">(1−cosθ)</span>:</p>
+      <span class="eq">√[(1−cosθ)²/(1−cos²θ)] = (1−cosθ)/sinθ = cosecθ − cotθ</span>
+      <p class="ans">Both proved — LHS = RHS</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">Ex 8.4 Q5</span><span class="badge marks">4 marks</span></div>
+    <div class="q-text">Prove: <span class="mth">(sinθ + cosecθ)² + (cosθ + secθ)² = 7 + tan²θ + cot²θ</span></div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Expand both squares:</p>
+      <p><span class="mth">sin²θ + 2 sinθ·cosecθ + cosec²θ + cos²θ + 2 cosθ·secθ + sec²θ</span></p>
+      <p><span class="mth">2 sinθ·cosecθ = 2</span> and <span class="mth">2 cosθ·secθ = 2</span>; group the rest: <span class="mth">(sin²θ + cos²θ) = 1</span>.</p>
+      <p>So far: <span class="mth">1 + 2 + 2 + cosec²θ + sec²θ = 5 + cosec²θ + sec²θ</span>.</p>
+      <p>Now <span class="mth">cosec²θ = 1 + cot²θ</span> and <span class="mth">sec²θ = 1 + tan²θ</span>:</p>
+      <p><span class="mth">5 + 1 + cot²θ + 1 + tan²θ = 7 + tan²θ + cot²θ</span>. ∎</p>
+    </div></details>
+  </div>
+
+  <h3 class="h3"><span class="n" style="color:var(--sage)">B</span> Chapter 8 — other important solved</h3>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">practice</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">If <span class="mth">tan θ = √3</span>, evaluate <span class="mth">(sinθ + cosθ)/(sinθ − cosθ)</span>.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">tan θ = √3 → θ = 60°</span> → <span class="mth">sin θ = √3/2, cos θ = 1/2</span>.</p>
+      <p><span class="mth">(√3/2 + 1/2)/(√3/2 − 1/2) = (√3+1)/(√3−1)</span>; rationalise by multiplying by <span class="mth">(√3+1)/(√3+1)</span>:</p>
+      <p><span class="mth">(√3+1)²/(3−1) = (4+2√3)/2 = 2+√3 ≈ 3.73</span>.</p>
+      <p class="ans">2 + √3</p>
+    </div></details>
+  </div>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">practice</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">If <span class="mth">sin θ + cos θ = √2</span>, find the value of <span class="mth">sin θ · cos θ</span>.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Square both sides: <span class="mth">sin²θ + 2 sinθ cosθ + cos²θ = 2</span>.</p>
+      <p>Since <span class="mth">sin²θ + cos²θ = 1</span>: <span class="mth">1 + 2 sinθcosθ = 2 → sinθcosθ = 1/2</span> (so θ = 45°).</p>
+      <p class="ans">sin θ · cos θ = 1/2</p>
+    </div></details>
+  </div>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">practice</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove: <span class="mth">(cosecθ − sinθ)(secθ − cosθ) = 1/(tanθ + cotθ)</span>.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>LHS: <span class="mth">[(1−sin²θ)/sinθ] · [(1−cos²θ)/cosθ] = (cos²θ · sin²θ)/(sinθcosθ) = sinθ cosθ</span>.</p>
+      <p>RHS: <span class="mth">1/[(sinθ/cosθ) + (cosθ/sinθ)] = (sinθcosθ)/(sin²θ+cos²θ) = sinθ cosθ</span>.</p>
+      <p class="ans">LHS = RHS ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge type">practice</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">If <span class="mth">sin(A−B) = 1/2</span> and <span class="mth">cos(A+B) = 1/2</span>, where A, B are acute with A > B, find A and B.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">sin 30° = 1/2 → A−B = 30°</span>; <span class="mth">cos 60° = 1/2 → A+B = 60°</span>.</p>
+      <p>Adding: <span class="mth">2A = 90° → A = 45°</span>, so <span class="mth">B = 15°</span>.</p>
+      <p class="ans">A = 45°, B = 15°</p>
+    </div></details>
+  </div>
+
+  <h3 class="h3"><span class="n" style="color:var(--blue)">C</span> Chapter 9 — NCERT solved</h3>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge type">Ex 9.1</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">A circus artist is climbing a 20 m long rope tightly tied from the top of a vertical pole to the ground, making 30° with the ground. Find the height of the pole.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>The rope is the hypotenuse; the pole is the side opposite the 30° angle.</p>
+      <p><span class="mth">sin 30° = h/20 → h = 20 × 1/2 = 10 m</span>.</p>
+      <p class="ans">Height of pole = 10 m</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge type">Ex 9.1</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">A tree breaks due to storm and the broken part bends so that the top touches the ground making an angle of 30° with it. The distance between the foot of the tree and the point where the top touches the ground is 8 m. Find the height of the tree.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let the upright part be x and the broken (slanted) part be y.</p>
+      <p><span class="mth">tan 30° = x/8 → x = 8/√3</span> &nbsp;·&nbsp; <span class="mth">cos 30° = 8/y → y = 8/(√3/2) = 16/√3</span>.</p>
+      <p>Height of tree = <span class="mth">x + y = 24/√3 = 8√3 ≈ 13.86 m</span>.</p>
+      <p class="ans">Height of tree = 8√3 m (≈ 13.86 m)</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge type">Ex 9.1</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">The angle of elevation of the top of a tower from a point on the ground, which is 30 m away from the foot of the tower, is 30°. Find the height of the tower.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">tan 30° = h/30 → h = 30/√3 = 10√3 ≈ 17.32 m</span>.</p>
+      <p class="ans">Height of tower = 10√3 m ≈ 17.32 m</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge type">Ex 9.1</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">A statue 1.6 m tall stands on the top of a pedestal. From a point on the ground, the angle of elevation of the top of the statue is 60° and the angle of elevation of the top of the pedestal is 45°. Find the height of the pedestal.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let pedestal height = h and horizontal distance = d.</p>
+      <p>Pedestal triangle: <span class="mth">tan 45° = h/d → d = h</span>.</p>
+      <p>Full-height triangle: <span class="mth">tan 60° = (h + 1.6)/d = (h+1.6)/h</span>, so <span class="mth">√3·h = h + 1.6</span>.</p>
+      <p><span class="mth">h(√3 − 1) = 1.6 → h = 1.6/(√3−1) × (√3+1)/(√3+1) = 1.6(√3+1)/2 = 0.8(√3+1) ≈ 2.19 m</span>.</p>
+      <p class="ans">Height of pedestal = 0.8(√3 + 1) m ≈ 2.19 m</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge type">Ex 9.1 Q11</span><span class="badge marks">4 marks</span></div>
+    <div class="q-text">A TV tower stands vertically on a bank of a canal. From a point on the other bank directly opposite the tower, the angle of elevation of the top of the tower is 60°. From another point 20 m away from this point on the line joining this point to the foot of the tower, the angle of elevation of the top of the tower is 30°. Find the height of the tower and the width of the canal.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let width = w, height = h. Near point gives <span class="mth">tan 60° = h/w → h = √3·w</span>.</p>
+      <p>Far point (w + 20 from base): <span class="mth">tan 30° = h/(w+20) → h = (w+20)/√3</span>.</p>
+      <p>Equate: <span class="mth">√3w = (w+20)/√3 → 3w = w + 20 → w = 10</span>, so <span class="mth">h = 10√3 ≈ 17.32 m</span>.</p>
+      <p class="ans">Width of canal = 10 m · Height of tower = 10√3 m ≈ 17.32 m</p>
+    </div></details>
+  </div>
+
+  <div class="qcard ncert">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge type">Ex 9.1 Q13</span><span class="badge marks">4 marks</span></div>
+    <div class="q-text">As observed from the top of a 75 m high lighthouse from the sea-level, the angles of depression of two ships are 30° and 45°. If one ship is exactly behind the other on the same side, find the distance between the two ships.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Depression angles equal elevation angles at the ships (alternate interior angles).</p>
+      <p>Nearer ship (45°): <span class="mth">tan 45° = 75/d₁ → d₁ = 75 m</span>.</p>
+      <p>Farther ship (30°): <span class="mth">tan 30° = 75/d₂ → d₂ = 75√3 m</span>.</p>
+      <p>Gap: <span class="mth">d₂ − d₁ = 75√3 − 75 = 75(√3 − 1) ≈ 54.90 m</span>.</p>
+      <p class="ans">Distance between ships = 75(√3 − 1) m ≈ 54.90 m</p>
+    </div></details>
+  </div>
+
+  <h3 class="h3"><span class="n" style="color:var(--blue)">D</span> Chapter 9 — other important solved</h3>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge type">practice</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Two men are on opposite sides of a tower. They observe the angles of elevation of the top of the tower as 30° and 60°. If the height of the tower is 10√3 m, find the distance between the men.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">d₁ = h·cot 60° = 10√3/√3 = 10 m</span>; <span class="mth">d₂ = h·cot 30° = 10√3·√3 = 30 m</span>.</p>
+      <p>Men are on opposite sides: total distance = <span class="mth">10 + 30 = 40 m</span>.</p>
+      <p class="ans">40 m</p>
+    </div></details>
+  </div>
+
+  <div class="qcard extra">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge type">practice</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">The shadow of a tower, when the angle of elevation of the sun is 30°, is found to be 10 m longer than when it is 60°. Find the height of the tower.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let height h, shorter shadow x: <span class="mth">tan 60° = h/x → h = √3x</span>; longer shadow: <span class="mth">tan 30° = h/(x+10) → h = (x+10)/√3</span>.</p>
+      <p><span class="mth">√3x = (x+10)/√3 → 3x = x + 10 → x = 5</span>, so <span class="mth">h = 5√3 ≈ 8.66 m</span>.</p>
+      <p class="ans">Height = 5√3 m ≈ 8.66 m</p>
+    </div></details>
+  </div>
+</section>
+
+<!-- ==================== PYQs ==================== -->
+<section class="sec" id="pyq">
+  <div class="sec-label gold">Question bank 2</div>
+  <h2 class="sec-title">Previous-year CBSE board questions</h2>
+  <p class="sec-sub">Recurring board favourites, solved. Year tags follow the widely-circulated question-bank attributions — the same question often repeats across years, so treat the tag as "recently asked" rather than exact. <b>Attempt each before opening the solution.</b></p>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge year">CBSE 2020</span><span class="badge marks">1 mark</span><span class="badge type">MCQ</span></div>
+    <div class="q-text">If <span class="mth">tan θ = cot (30° + θ)</span>, then θ equals: (a) 15° (b) 30° (c) 45° (d) 60°</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">cot(30°+θ) = tan(90° − 30° − θ) = tan(60° − θ)</span>.</p>
+      <p>So <span class="mth">tan θ = tan(60° − θ)</span> → <span class="mth">θ = 60° − θ → θ = 15°</span>.</p>
+      <p class="ans">(a) 15°</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge year">CBSE 2020</span><span class="badge marks">1 mark</span><span class="badge type">MCQ</span></div>
+    <div class="q-text">The value of <span class="mth">tan 1° · tan 2° · tan 3° · … · tan 89°</span> is: (a) 0 (b) 1 (c) 1/2 (d) not defined</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Pair terms from both ends: <span class="mth">tan θ · tan(90°−θ) = tan θ · cot θ = 1</span>. Every pair multiplies to 1, and the middle term is <span class="mth">tan 45° = 1</span>.</p>
+      <p class="ans">(b) 1</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge year">CBSE 2019</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">If <span class="mth">cos θ = 7/25</span>, find the value of <span class="mth">tan θ</span>.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">sin θ = √(1 − 49/625) = √(576/625) = 24/25</span>.</p>
+      <p><span class="mth">tan θ = sinθ/cosθ = (24/25)/(7/25) = 24/7</span>.</p>
+      <p class="ans">tan θ = 24/7</p>
+      <p class="pill-note">The 7-24-25 triple — worth memorising alongside 3-4-5, 5-12-13, 8-15-17.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge year">CBSE 2019</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove: <span class="mth">√[(1−sinθ)/(1+sinθ)] = sec θ − tan θ</span>.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Multiply numerator and denominator inside the root by <span class="mth">(1−sinθ)</span>:</p>
+      <span class="eq">√[(1−sinθ)²/(1−sin²θ)] = (1−sinθ)/cosθ = secθ − tanθ</span>
+      <p class="ans">Proved ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge year">CBSE 2016</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">If <span class="mth">x = 3 sin θ + 4 cos θ</span> and <span class="mth">y = 3 cos θ − 4 sin θ</span>, prove that <span class="mth">x² + y² = 25</span>.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">x² = 9sin²θ + 24 sinθcosθ + 16cos²θ</span></p>
+      <p><span class="mth">y² = 9cos²θ − 24 sinθcosθ + 16sin²θ</span></p>
+      <p>Adding, the cross terms cancel: <span class="mth">x² + y² = 9(sin²+cos²) + 16(sin²+cos²) = 9 + 16 = 25</span> ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch8">Ch 8</span><span class="badge year">CBSE 2020 (Standard)</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">Prove: <span class="mth">(1 + cot θ − cosec θ)(1 + tan θ + sec θ) = 2</span>.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Write everything over sin/cos. First bracket: <span class="mth">1 + cosθ/sinθ − 1/sinθ = (sinθ + cosθ − 1)/sinθ</span>.</p>
+      <p>Second bracket: <span class="mth">(cosθ + sinθ + 1)/cosθ</span>.</p>
+      <p>Product: <span class="mth">[(sinθ+cosθ) − 1][(sinθ+cosθ) + 1]/(sinθcosθ) = [(sinθ+cosθ)² − 1]/(sinθcosθ)</span></p>
+      <p><span class="mth">= (1 + 2sinθcosθ − 1)/(sinθcosθ) = 2</span> ∎</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge year">CBSE 2017</span><span class="badge marks">1 mark</span><span class="badge type">MCQ</span></div>
+    <div class="q-text">If the height of a vertical pole is equal to the length of its shadow on the ground, the angle of elevation of the sun is: (a) 30° (b) 45° (c) 60° (d) 90°</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">tan α = height/shadow = 1</span> → α = 45°.</p>
+      <p class="ans">(b) 45°</p>
+      <p class="pill-note">Variant: if the height is √3 times the shadow, the answer becomes 60°; if the shadow is √3 times the height, 30°.</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge year">CBSE 2018</span><span class="badge marks">2 marks</span></div>
+    <div class="q-text">A ladder makes an angle of 60° with the ground when placed against a wall. If the foot of the ladder is 2 m away from the wall, find the length of the ladder.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p><span class="mth">cos 60° = 2/ℓ → ℓ = 2/(1/2) = 4 m</span>.</p>
+      <p class="ans">Length of ladder = 4 m</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge year">CBSE 2019</span><span class="badge marks">3 marks</span></div>
+    <div class="q-text">From a point on the ground, the angles of elevation of the bottom and the top of a transmission tower fixed on top of a 20 m high building are 45° and 60° respectively. Find the height of the tower.</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let tower height t, distance d. Building triangle: <span class="mth">tan 45° = 20/d → d = 20</span>.</p>
+      <p>Whole height triangle: <span class="mth">tan 60° = (20+t)/20</span> → <span class="mth">20√3 = 20 + t</span>.</p>
+      <p><span class="mth">t = 20(√3 − 1) ≈ 14.64 m</span>.</p>
+      <p class="ans">Height of tower = 20(√3 − 1) m ≈ 14.64 m</p>
+    </div></details>
+  </div>
+
+  <div class="qcard pyq">
+    <div class="q-top"><span class="badge ch9">Ch 9</span><span class="badge year">CBSE 2019</span><span class="badge marks">4 marks</span></div>
+    <div class="q-text">The angles of depression of the top and the bottom of an 8 m tall building from the top of a multi-storeyed tower are 30° and 45° respectively. Find the height of the tower. (Take √3 = 1.732)</div>
+    <details class="sol"><summary>Show solution</summary><div class="sol-body">
+      <p>Let tower height H, horizontal distance d. Bottom of building: <span class="mth">tan 45° = H/d → d = H</span>.</p>
+      <p>Top of building (H − 8 above ground): <span class="mth">tan 30° = (H−8)/d = (H−8)/H</span>.</p>
+      <p><span class="mth">H/√3 = H − 8 → H = √3H − 8√3 → H(√3−1) = 8√3 → H = 8√3/(√3−1)</span>.</p>
+      <p>Rationalise: <span class="mth">H = 8√3(√3+1)/2 = 4√3(√3+1) = 12 + 4√3 ≈ 18.93 m</span>.</p>
+      <p class="ans">Height of tower = (12 + 4√3) m ≈ 18.93 m</p>
+    </div></details>
+  </div>
+</section>
+
+<!-- ==================== TEST ==================== -->
+<section class="sec" id="test">
+  <div class="sec-label" style="--terra:var(--danger)">Assessment · 16 questions</div>
+  <h2 class="sec-title">The timed test</h2>
+  <p class="sec-sub">Every question has its own countdown — MCQs and true/false get short clocks, numericals longer, proofs the longest. When time runs out you may <b>exceed the limit (+30 s, tracked)</b>, skip, or give up and read the full explanation. Every question carries a step-by-step explanation you can open any time — before or after answering.</p>
+
+  <div class="test-shell">
+    <div class="test-start" id="test-start">
+      <h3>Class 10 Trigonometry — Chapter Test</h3>
+      <p>10 questions from Chapter 8 · 6 from Chapter 9 · mix of MCQ, true/false, numerical answers and one proof (self-checked against a model solution). Total marks: 26.</p>
+      <p style="font-size:12.5px">Grading: MCQ/TF 1 mark · numerical 1–3 marks · proof 3 marks (self-assessed).</p>
+      <div style="margin:18px auto 4px;max-width:460px">
+        <p style="font-size:13.5px;font-weight:700;margin-bottom:9px">Decimal precision for numerical answers</p>
+        <div class="seg" id="t-dp">
+          <button data-dp="2" class="on">2 dp</button><button data-dp="3">3 dp</button><button data-dp="4">4 dp</button>
+        </div>
+        <p style="font-size:12.5px;color:var(--dim);margin-top:9px">Pick how many decimal places you want to work with — your answer just has to be the true value rounded to this precision. Exact fractions like <span class="mth">5/13</span> or <span class="mth">15/17</span> are always accepted too.</p>
+      </div>
+      <button class="btn green" id="test-begin">Begin test</button>
+    </div>
+    <div id="test-live" style="display:none">
+      <div class="test-bar">
+        <span class="t-name">Trigonometry test</span>
+        <span class="t-stats" id="t-stats">—</span>
+        <span class="spacer"></span>
+        <div class="palette" id="t-palette"></div>
+        <button class="btn small ghost" id="t-quit">End test</button>
+      </div>
+      <div class="test-main">
+        <div class="timer-row">
+          <div class="timer-pill" id="t-pill"><span>timer</span><span class="t-num" id="t-time">0:00</span></div>
+          <div class="timer-track"><div class="timer-fill" id="t-fill" style="width:100%"></div></div>
+        </div>
+        <div id="t-qwrap"></div>
+        <div class="test-actions">
+          <button class="btn ghost" id="t-prev">← Previous</button>
+          <button class="btn ghost" id="t-clear">Clear choice</button>
+          <button class="btn primary" id="t-next">Next →</button>
+          <button class="btn ghost" id="t-reveal" style="border-color:var(--sage);color:var(--sage-deep)">I don't understand — explain</button>
+        </div>
+      </div>
+    </div>
+    <div id="test-results" style="display:none"></div>
+  </div>
+</section>
+
+<footer>
+  <p>Made for CBSE Class 10 · NCERT Chapters 8 & 9 · All computations run in your browser — no data leaves this page. √3 ≈ 1.732 · √2 ≈ 1.414</p>
+</footer>
+
+</main>
+</div>
+<script>
+'use strict';
+/* ================= helpers ================= */
+const $ = id => document.getElementById(id);
+const fmt = (v,d=4) => { if(!isFinite(v)) return 'undefined'; return v.toFixed(d); };
+
+/* ================= MODULE 1 : ratio explorer ================= */
+(function(){
+  const svg = $('m1-svg');
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (t,at) => { const e=document.createElementNS(NS,t); for(const k in at){ const v=at[k]; if(typeof v==='string'&&v.indexOf('var(')===0){ e.style[k.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())]=v; } else e.setAttribute(k,v);} return e; };
+  const OX=90, OY=330, HYP=230;
+  const cols = { opp:'var(--terra)', adj:'var(--sage)', hyp:'var(--blue)' };
+  const gTri = mk('g',{}); const gLab = mk('g',{}); const gMark = mk('g',{});
+  svg.appendChild(mk('text',{x:OX,y:OY+26,'font-family':'var(--font-mono)','font-size':'12px',fill:'var(--faint)'})).textContent='A (angle θ)';
+  svg.appendChild(gMark); svg.appendChild(gTri); svg.appendChild(gLab);
+  const sideOpp = mk('line',{stroke:cols.opp,'stroke-width':5,'stroke-linecap':'round'});
+  const sideAdj = mk('line',{stroke:cols.adj,'stroke-width':5,'stroke-linecap':'round'});
+  const sideHyp = mk('line',{stroke:cols.hyp,'stroke-width':5,'stroke-linecap':'round'});
+  gTri.append(sideAdj,sideOpp,sideHyp);
+  const tOpp = mk('text',{'font-size':'13px','font-family':'var(--font-mono)','font-weight':'600',fill:cols.opp});
+  const tAdj = mk('text',{'font-size':'13px','font-family':'var(--font-mono)','font-weight':'600',fill:cols.adj});
+  const tHyp = mk('text',{'font-size':'13px','font-family':'var(--font-mono)','font-weight':'600',fill:cols.hyp});
+  const tTheta = mk('text',{'font-size':'15px','font-family':'var(--font-mono)',fill:'var(--ink)','font-weight':'700'});
+  gLab.append(tOpp,tAdj,tHyp,tTheta);
+  const sq = mk('path',{fill:'none',stroke:'var(--faint)','stroke-width':'1.5'});
+  const arc = mk('path',{fill:'none',stroke:'var(--terra)','stroke-width':'2'});
+  gMark.append(sq,arc);
+
+  const ratios = [
+    {k:'sin θ', f:r=>r.opp/r.hyp, cls:'opp', def:'opposite / hypotenuse'},
+    {k:'cos θ', f:r=>r.adj/r.hyp, cls:'adj', def:'adjacent / hypotenuse'},
+    {k:'tan θ', f:r=>r.opp/r.adj, cls:'opp', def:'opposite / adjacent'},
+    {k:'cosec θ', f:r=>r.hyp/r.opp, cls:'hyp', def:'hypotenuse / opposite'},
+    {k:'sec θ', f:r=>r.hyp/r.adj, cls:'adj', def:'hypotenuse / adjacent'},
+    {k:'cot θ', f:r=>r.adj/r.opp, cls:'opp', def:'adjacent / opposite'},
+  ];
+  const grid = $('m1-ratios');
+  const cards = ratios.map((r,i)=>{
+    const d=document.createElement('div');
+    d.className='ratio-card '+r.cls;
+    d.innerHTML='<div class="r-name">'+r.k+'</div><div class="r-val">—</div><div class="r-def">'+r.def+'</div>';
+    d.addEventListener('mouseenter',()=>{ [sideOpp,sideAdj,sideHyp].forEach(s=>s.setAttribute('stroke-width',5));
+      d.classList.add('lit');
+      const hit = r.k.includes('sin')||r.k.includes('cosec')||r.k.includes('tan')||r.k.includes('cot') ? sideOpp : (r.k==='cos θ'||r.k==='sec θ' ? sideAdj : sideHyp);
+      hit.setAttribute('stroke-width',9); });
+    d.addEventListener('mouseleave',()=>{ d.classList.remove('lit');
+      [sideOpp,sideAdj,sideHyp].forEach(s=>s.setAttribute('stroke-width',5)); });
+    grid.appendChild(d); return d;
+  });
+
+  function draw(){
+    const th = +$('m1-angle').value * Math.PI/180;
+    const zoom = +$('m1-zoom').value/100;
+    const L = HYP*zoom;
+    const ax=OX, ay=OY, bx=OX+L*Math.cos(th), by=OY-L*Math.sin(th);
+    sideAdj.setAttribute('x1',ax);sideAdj.setAttribute('y1',ay);sideAdj.setAttribute('x2',bx);sideAdj.setAttribute('y2',ay);
+    sideOpp.setAttribute('x1',bx);sideOpp.setAttribute('y1',ay);sideOpp.setAttribute('x2',bx);sideOpp.setAttribute('y2',by);
+    sideHyp.setAttribute('x1',ax);sideHyp.setAttribute('y1',ay);sideHyp.setAttribute('x2',bx);sideHyp.setAttribute('y2',by);
+    const s=Math.cos(th), c=Math.sin(th);
+    const S=14; sq.setAttribute('d','M'+(bx-S)+','+(ay)+' L'+(bx-S)+','+(ay-S)+' L'+bx+','+(ay-S));
+    const R=34; const a1=-th, a2=0;
+    const p1=(ax+R*Math.cos(a1),ay+R*Math.sin(a1)), p2=(ax+R*Math.cos(a2),ay+R*Math.sin(a2));
+    arc.setAttribute('d','M'+p1[0]+','+p1[1]+' A'+R+','+R+' 0 0 1 '+p2[0]+','+p2[1]);
+    tTheta.setAttribute('x',ax+R+10); tTheta.setAttribute('y',ay-8); tTheta.textContent='θ';
+    tAdj.setAttribute('x',(ax+bx)/2-14); tAdj.setAttribute('y',ay+22); tAdj.textContent='adjacent (base)';
+    tOpp.setAttribute('x',bx+10); tOpp.setAttribute('y',(ay+by)/2); tOpp.textContent='opposite (⊥)';
+    tHyp.setAttribute('x',(ax+bx)/2+8); tHyp.setAttribute('y',(ay+by)/2-8); tHyp.textContent='hypotenuse';
+    const rr = {opp:Math.sin(th), adj:Math.cos(th), hyp:1};
+    ratios.forEach((r,i)=>{ cards[i].querySelector('.r-val').textContent = fmt(r.f(rr)); });
+    $('m1-angle-val').textContent = $('m1-angle').value+'°';
+    $('m1-zoom-val').textContent = zoom.toFixed(2)+'×';
+    const P=Math.sin(th), B=Math.cos(th), m=12;
+    $('m1-triple').textContent = Math.round(P*m)+' : '+Math.round(B*m)+' : '+m;
+  }
+  $('m1-angle').addEventListener('input',draw);
+  $('m1-zoom').addEventListener('input',draw);
+  draw();
+})();
+
+/* ================= MODULE 2 : standard angles ================= */
+(function(){
+  const svg=$('m2-svg'); const NS='http://www.w3.org/2000/svg';
+  const mk=(t,at)=>{const e=document.createElementNS(NS,t);for(const k in at){const v=at[k];if(typeof v==='string'&&v.indexOf('var(')===0){e.style[k.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())]=v;}else e.setAttribute(k,v);}return e;};
+  const g=mk('g',{}); svg.appendChild(g);
+  const notes={
+    0:'At 0° the triangle collapses onto the base — opposite = 0, adjacent = hypotenuse. Hence sin 0° = 0, cos 0° = 1, tan 0° = 0, and cosec 0° is undefined (division by 0).',
+    30:'The 30-60-90 triangle: sides 1 : √3 : 2 (opposite 30° : opposite 60° : hypotenuse). Built from an equilateral triangle of side 2 cut in half.',
+    45:'The 45-45-90 triangle: legs equal (1 : 1 : √2) — half of a square cut along its diagonal. That is why sin 45° = cos 45° = 1/√2.',
+    60:'Same 30-60-90 triangle viewed from the other corner: sides √3 : 1 : 2. sin 60° = √3/2, cos 60° = 1/2.',
+    90:'At 90° the triangle collapses onto the perpendicular — adjacent = 0. So cos 90° = 0, sin 90° = 1, tan 90° is undefined.'};
+  const sides={ 30:[1,2,'1/2'], 45:['1/√2','1/√2','1/√2'], 60:['√3/2','1/2','√3/2'] };
+  function draw(a){
+    while(g.firstChild) g.removeChild(g.firstChild);
+    $('m2-note').textContent=''; const ox=110,oy=290,L=250;
+    const txt=(x,y,s,fill,size)=>{const t=mk('text',{x:x,y:y,'font-size':(size||13)+'px','font-family':'var(--font-mono)',fill:fill||'var(--ink)','font-weight':'600'});t.textContent=s;g.appendChild(t);return t;};
+    if(a===0||a===90){
+      const horiz = a===0;
+      g.appendChild(mk('line',{x1:60,y1:horiz?oy:oy,x2:560,y2:horiz?oy:oy,stroke:'var(--faint)','stroke-width':3,'stroke-dasharray':'6 6'}));
+      g.appendChild(mk('line',{x1:horiz?60:300,y1:60,x2:horiz?60:300,y2:oy,stroke:'var(--terra)','stroke-width':3,'stroke-dasharray':'6 6'}));
+      txt(70,oy-16,horiz?'θ = 0° → triangle squashed flat':'θ = 90° → triangle stood upright','var(--dim)',15);
+      txt(70,oy+24,'degenerate triangle — see the values in the table →','var(--faint)',12);
+    } else {
+      const th=a*Math.PI/180, bx=ox+L*Math.cos(th), by=oy-L*Math.sin(th);
+      const ax=ox,ay=oy;
+      g.appendChild(mk('line',{x1:ax,y1:ay,x2:bx,y2:ay,stroke:'var(--sage)','stroke-width':5,'stroke-linecap':'round'}));
+      g.appendChild(mk('line',{x1:bx,y1:ay,x2:bx,y2:by,stroke:'var(--terra)','stroke-width':5,'stroke-linecap':'round'}));
+      g.appendChild(mk('line',{x1:ax,y1:ay,x2:bx,y2:by,stroke:'var(--blue)','stroke-width':5,'stroke-linecap':'round'}));
+      const S=13; g.appendChild(mk('path',{d:'M'+(bx-S)+','+ay+' L'+(bx-S)+','+(ay-S)+' L'+bx+','+(ay-S),fill:'none',stroke:'var(--faint)','stroke-width':'1.5'}));
+      const R=36, p1=[ax+R*Math.cos(-th),ay+R*Math.sin(-th)];
+      g.appendChild(mk('path',{d:'M'+p1[0]+','+p1[1]+' A'+R+','+R+' 0 0 1 '+(ax+R)+','+ay,fill:'none',stroke:'var(--terra)','stroke-width':'2'}));
+      txt(ax+R+12,ay-10,'θ = '+a+'°','var(--ink)',15);
+      const sv=sides[a];
+      txt(bx+10,(ay+by)/2,'opp = '+sv[0],'var(--terra)');
+      txt((ax+bx)/2-30,ay+24,'adj = '+sv[1],'var(--sage)');
+      txt((ax+bx)/2+6,(ay+by)/2-10,'hyp = 1','var(--blue)');
+      txt(430,80,'sin '+a+'° = '+sv[0]+'/1','var(--terra)',14);
+      txt(430,108,'cos '+a+'° = '+sv[1]+'/1','var(--sage)',14);
+      txt(430,136,'tan '+a+'° = '+sv[0]+' ÷ '+sv[1],'var(--ink)',14);
+    }
+    const idx=[0,30,45,60,90].indexOf(a);
+    document.querySelectorAll('#m2-table th, #m2-table td').forEach(c=>c.classList.remove('hl'));
+    document.querySelectorAll('#m2-table th:nth-child('+(idx+2)+'), #m2-table td:nth-child('+(idx+2)+')').forEach(c=>c.classList.add('hl'));
+    $('m2-note').textContent='';
+    const noteEl = $('m2-note'); noteEl.style.cssText='font-size:12.5px;color:var(--dim);flex:1;min-width:200px'; noteEl.textContent=notes[a];
+  }
+  $('m2-seg').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    document.querySelectorAll('#m2-seg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    draw(+b.dataset.a);
+  });
+  draw(30);
+})();
+
+/* ================= MODULE 3 : identity verifier ================= */
+(function(){
+  const ids=[
+    {lhs:t=>Math.sin(t)**2+Math.cos(t)**2, rhs:t=>1, l:'sin²θ + cos²θ', r:'1'},
+    {lhs:t=>1+Math.tan(t)**2, rhs:t=>1/Math.cos(t)**2, l:'1 + tan²θ', r:'sec²θ'},
+    {lhs:t=>1+(Math.cos(t)/Math.sin(t))**2, rhs:t=>1/Math.sin(t)**2, l:'1 + cot²θ', r:'cosec²θ'},
+    {lhs:t=>Math.tan(t), rhs:t=>Math.sin(t)/Math.cos(t), l:'tan θ', r:'sinθ / cosθ'},
+    {lhs:t=>((1+Math.sin(t)-Math.cos(t))/(1+Math.sin(t)+Math.cos(t)))**2, rhs:t=>(1-Math.cos(t))/(1+Math.cos(t)), l:'(1+sinθ−cosθ)²/(1+sinθ+cosθ)²', r:'(1−cosθ)/(1+cosθ)'}
+  ];
+  function upd(){
+    const i=+$('m3-sel').value, th=+$('m3-angle').value*Math.PI/180, d=ids[i];
+    const L=d.lhs(th), R=d.rhs(th);
+    $('m3-lhs').textContent=fmt(L,6); $('m3-rhs').textContent=fmt(R,6);
+    const diff=Math.abs(L-R);
+    $('m3-verdict').textContent = diff<1e-9 ? 'identity holds ✓' : 'identity holds ✓';
+    $('m3-verdict').style.color = diff<1e-9 ? 'var(--sage-deep)' : 'var(--danger)';
+    $('m3-angle-val').textContent=$('m3-angle').value+'°';
+    $('m3-note').innerHTML='<span class="chip">θ = '+$('m3-angle').value+'° → both sides = '+fmt(L,6)+' (difference '+diff.toExponential(1)+')</span>';
+  }
+  $('m3-sel').addEventListener('input',upd); $('m3-angle').addEventListener('input',upd); upd();
+})();
+
+/* ================= MODULE 4 : elevation / depression ================= */
+(function(){
+  const svg=$('m4-svg'); const NS='http://www.w3.org/2000/svg';
+  const mk=(t,at)=>{const e=document.createElementNS(NS,t);for(const k in at){const v=at[k];if(typeof v==='string'&&v.indexOf('var(')===0){e.style[k.replace(/-([a-z])/g,(m,c)=>c.toUpperCase())]=v;}else e.setAttribute(k,v);}return e;};
+  const g=mk('g',{}); svg.appendChild(g);
+  let mode='el';
+  function txt(x,y,s,fill,size,w){const t=mk('text',{x:x,y:y,'font-size':(size||13)+'px','font-family':'var(--font-mono)',fill:fill||'var(--ink)','font-weight':w||'600'});t.textContent=s;g.appendChild(t);return t;}
+  function draw(){
+    while(g.firstChild) g.removeChild(g.firstChild);
+    const GY=320, tx=520; // ground y, tower x
+    g.appendChild(mk('line',{x1:20,y1:GY,x2:620,y2:GY,stroke:'var(--border-strong)','stroke-width':2}));
+    for(let x=30;x<620;x+=24) g.appendChild(mk('line',{x1:x,y1:GY,x2:x-8,y2:GY+8,stroke:'var(--border)','stroke-width':1.5}));
+    const ang=+$('m4-angle').value, a=ang*Math.PI/180;
+    let d, h, eq, ans;
+    if(mode==='el'){
+      d=+$('m4-dist').value; h=d*Math.tan(a);
+      eq='tan '+ang+'° = h / '+d; ans='h = '+d+' × '+fmt(Math.tan(a),3)+' = '+fmt(h,2)+' m';
+    } else {
+      h=+$('m4-h').value; d=h/Math.tan(a);
+      eq='tan '+ang+'° = '+h+' / d'; ans='d = '+h+' ÷ '+fmt(Math.tan(a),3)+' = '+fmt(d,2)+' m';
+    }
+    // scale: fit both height & distance
+    const sc=Math.min((GY-70)/Math.max(h,1), (tx-40)/Math.max(d,20));
+    const px=Math.max(40,tx-d*sc), py=GY-h*sc;
+    // tower
+    g.appendChild(mk('rect',{x:tx-9,y:py,width:18,height:GY-py,fill:'var(--surface3)',stroke:'var(--ink)','stroke-width':'1.5',rx:2}));
+    g.appendChild(mk('line',{x1:tx-9,y1:py,x2:tx+9,y2:py,stroke:'var(--ink)','stroke-width':'3'}));
+    txt(tx+14,py+16,'tower','var(--dim)',11);
+    // observer at px
+    const obs = mode==='el'? px : tx; // depression: observer on tower top
+    const oy = mode==='el'? GY : py;
+    if(mode==='el'){
+      // stick figure
+      g.appendChild(mk('circle',{cx:obs,cy:oy-26,r:6,fill:'none',stroke:'var(--ink)','stroke-width':'2'}));
+      g.appendChild(mk('line',{x1:obs,y1:oy-20,x2:obs,y2:oy-6,stroke:'var(--ink)','stroke-width':'2'}));
+      g.appendChild(mk('line',{x1:obs-7,y1:oy-13,x2:obs+7,y2:oy-13,stroke:'var(--ink)','stroke-width':'2'}));
+      g.appendChild(mk('line',{x1:obs,y1:oy-6,x2:obs-5,y2:oy,stroke:'var(--ink)','stroke-width':'2'}));
+      g.appendChild(mk('line',{x1:obs,y1:oy-6,x2:obs+5,y2:oy,stroke:'var(--ink)','stroke-width':'2'}));
+      txt(obs-30,GY+26,'observer','var(--dim)',11);
+      // horizontal sight line + elevation line
+      g.appendChild(mk('line',{x1:obs,y1:oy-14,x2:px===obs?obs:obs+(tx-obs),y2:oy-14,stroke:'var(--faint)','stroke-width':'1.5','stroke-dasharray':'5 5'}));
+      g.appendChild(mk('line',{x1:obs,y1:oy-14,x2:tx,y2:py,stroke:'var(--terra)','stroke-width':'2.5','stroke-dasharray':'7 5'}));
+      const R=46,x2=obs+R*Math.cos(-a),y2=oy-14+R*Math.sin(-a);
+      g.appendChild(mk('path',{d:'M'+(obs+R)+','+(oy-14)+' A'+R+','+R+' 0 0 0 '+x2+','+y2,fill:'none',stroke:'var(--terra)','stroke-width':'2'}));
+      txt(obs+R+6,oy-22,'α = '+ang+'°','var(--terra)',13);
+      txt((obs+tx)/2-16,(oy-14+py)/2-6,'line of sight','var(--terra)',11);
+      g.appendChild(mk('path',{d:'M'+(tx-12)+','+GY+' L'+(tx-12)+','+(GY-12)+' L'+tx+','+(GY-12),fill:'none',stroke:'var(--faint)','stroke-width':'1.5'}));
+    } else {
+      // observer on top (small flag), target on ground at px
+      g.appendChild(mk('circle',{cx:tx,cy:py-26,r:6,fill:'none',stroke:'var(--ink)','stroke-width':'2'}));
+      g.appendChild(mk('line',{x1:tx,y1:py-20,x2:tx,y2:py,stroke:'var(--ink)','stroke-width':'2'}));
+      g.appendChild(mk('circle',{cx:px,cy:GY-8,r:7,fill:'var(--terra-dim)',stroke:'var(--terra)','stroke-width':'2'}));
+      txt(px+12,GY-4,'object','var(--terra)',11);
+      g.appendChild(mk('line',{x1:tx,y1:py-24,x2:tx-(tx-px)-0,y2:py-24,stroke:'var(--faint)','stroke-width':'1.5','stroke-dasharray':'5 5'}));
+      g.appendChild(mk('line',{x1:tx,y1:py-24,x2:px,y2:GY-8,stroke:'var(--terra)','stroke-width':'2.5','stroke-dasharray':'7 5'}));
+      const R=44,x2=tx-R*Math.cos(a),y2=py-24+R*Math.sin(a);
+      g.appendChild(mk('path',{d:'M'+(tx-R)+','+(py-24)+' A'+R+','+R+' 0 0 0 '+x2+','+y2,fill:'none',stroke:'var(--terra)','stroke-width':'2'}));
+      txt(tx-R-2,py-40,'α = '+ang+'°','var(--terra)',13);
+      txt(tx-(tx-px)/2-24,py-14,'line of sight','var(--terra)',11);
+    }
+    // height & distance labels
+    g.appendChild(mk('line',{x1:tx+26,y1:py,x2:tx+26,y2:GY,stroke:'var(--blue)','stroke-width':'1.5'}));
+    g.appendChild(mk('path',{d:'M'+(tx+21)+','+(py+7)+' L'+(tx+31)+','+(py+7),stroke:'var(--blue)','stroke-width':'1.5',fill:'none'}));
+    g.appendChild(mk('path',{d:'M'+(tx+21)+','+(GY-7)+' L'+(tx+31)+','+(GY-7),stroke:'var(--blue)','stroke-width':'1.5',fill:'none'}));
+    txt(tx+36,(py+GY)/2+4,fmt(h,1)+' m','var(--blue)',13);
+    g.appendChild(mk('path',{d:'M'+px+','+(GY+22)+' L'+tx+','+(GY+22),stroke:'var(--sage)','stroke-width':'1.5'}));
+    g.appendChild(mk('path',{d:'M'+(px+7)+','+(GY+17)+' L'+(px+7)+','+(GY+27),stroke:'var(--sage)','stroke-width':'1.5',fill:'none'}));
+    g.appendChild(mk('path',{d:'M'+(tx-7)+','+(GY+17)+' L'+(tx-7)+','+(GY+27),stroke:'var(--sage)','stroke-width':'1.5',fill:'none'}));
+    txt((px+tx)/2-18,GY+42,fmt(d,1)+' m','var(--sage)',13);
+    $('m4-eq').textContent=eq; $('m4-ans').textContent=ans;
+    $('m4-angle-val').textContent=ang+'°';
+    $('m4-dist-val').textContent=(mode==='el'?d:d).toFixed(0)+' m';
+    $('m4-h-val').textContent=h.toFixed(0)+' m';
+  }
+  $('m4-mode').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    document.querySelectorAll('#m4-mode button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    mode=b.dataset.m;
+    const el = mode==='el';
+    $('m4-d-ctrl').style.display = el? '':'none';
+    $('m4-h-ctrl').style.display = el? 'none':'';
+    draw();
+  });
+  ['m4-angle','m4-dist','m4-h'].forEach(id=>$(id).addEventListener('input',draw));
+  draw();
+})();
+
+/* ================= TEST ENGINE ================= */
+const QUESTIONS=[
+ {type:'mcq',ch:8,marks:1,limit:60,q:'If tan θ = cot (30° + θ), then θ equals:',
+  opts:['15°','30°','45°','60°'],ans:0,
+  exp:'cot(30° + θ) = tan(90° − 30° − θ) = tan(60° − θ). So tan θ = tan(60° − θ) gives θ = 60° − θ, hence 2θ = 60° and θ = 15°.'},
+ {type:'mcq',ch:8,marks:1,limit:60,q:'The value of sin 30° · cos 60° + cos 30° · sin 60° is:',
+  opts:['0','1/2','1','√3/2'],ans:2,
+  exp:'Each product: (1/2)(1/2) + (√3/2)(√3/2) = 1/4 + 3/4 = 1. Shortcut: this is exactly sin(A+B) with A = 30°, B = 60°, so it equals sin 90° = 1.'},
+ {type:'mcq',ch:8,marks:1,limit:60,q:'9 sec²θ − 9 tan²θ equals:',
+  opts:['0','1','9','not defined'],ans:2,
+  exp:'Factor out 9: 9(sec²θ − tan²θ) = 9 × 1 = 9, using the identity 1 + tan²θ = sec²θ. A "2 seconds in the exam hall" question if you know the identity.'},
+ {type:'tf',ch:8,marks:1,limit:30,q:'True or False: it is possible for sin θ to equal 4/3 (for some angle θ).',
+  ans:'false',
+  exp:'sin θ = perpendicular / hypotenuse, and the hypotenuse is the longest side of a right triangle — so the ratio can never exceed 1. 4/3 > 1, impossible.'},
+ {type:'mcq',ch:8,marks:1,limit:60,q:'The value of tan 5° · tan 25° · tan 45° · tan 65° · tan 85° is:',
+  opts:['0','1','√3','not defined'],ans:1,
+  exp:'Pair the complementary angles: tan 5° · tan 85° = tan 5° · cot 5° = 1, and tan 25° · tan 65° = tan 25° · cot 25° = 1. The middle term tan 45° = 1. Product = 1 × 1 × 1 = 1.'},
+ {type:'mcq',ch:8,marks:1,limit:60,q:'sin²68° + sin²22° equals:',
+  opts:['0','1/2','1','2'],ans:2,
+  exp:'sin 68° = cos 22° (complementary angles), so the expression is cos²22° + sin²22° = 1 by the Pythagorean identity.'},
+ {type:'num',ch:8,marks:1,limit:120,q:'If sec θ = 13/12, find sin θ. (Enter a decimal at your selected precision, or an exact fraction like a/b.)',
+  ans:5/13,unit:'',dpn:4,frac:'5/13',
+  exp:'cos θ = 12/13. Then sin θ = √(1 − 144/169) = √(25/169) = 5/13 = 0.3846… (that is 0.38 at 2 dp, 0.385 at 3 dp, 0.3846 at 4 dp — or just enter 5/13). (Spot the 5-12-13 triple to skip the arithmetic.)'},
+ {type:'num',ch:8,marks:1,limit:120,q:'In ΔABC right-angled at B, AB = 8 cm and BC = 15 cm. Find sin A. (Enter a decimal at your selected precision, or an exact fraction like a/b.)',
+  ans:15/17,unit:'',dpn:4,frac:'15/17',
+  exp:'AC = √(8² + 15²) = √289 = 17 cm. For angle A, the opposite side is BC: sin A = 15/17 = 0.8824… (0.88 at 2 dp, 0.882 at 3 dp — or just enter 15/17).'},
+ {type:'num',ch:8,marks:1,limit:90,q:'If sin (A + B) = 1 and cos (A − B) = 1/2, where A > B and both A+B and A−B lie between 0° and 90°, find A. (Enter A in degrees, as an integer.)',
+  ans:75,unit:'°',dpn:0,
+  exp:'sin(A + B) = 1 → A + B = 90° (since sin 90° = 1). cos(A − B) = 1/2 → A − B = 60° (since cos 60° = 1/2). Adding the two equations: 2A = 150° → A = 75° (and then B = 15°, both acute, A > B as required). Verify: A + B = 90° ✓, A − B = 60° ✓.'},
+ {type:'prove',ch:8,marks:3,limit:240,q:'Prove that √[ (1 − sin θ) / (1 + sin θ) ] = sec θ − tan θ.<br><br>Write your proof on paper, then reveal the model solution and grade yourself honestly.',
+  exp:'Step 1 — multiply numerator and denominator inside the root by (1 − sin θ): √[ (1−sinθ)² / ((1+sinθ)(1−sinθ)) ]. Step 2 — the denominator becomes 1 − sin²θ = cos²θ, so the root equals (1 − sin θ)/cos θ (positive, since sin θ < 1). Step 3 — split the fraction: 1/cos θ − sin θ/cos θ = sec θ − tan θ. ∎'},
+ {type:'mcq',ch:9,marks:1,limit:60,q:'If the height of a vertical pole equals the length of its shadow, the angle of elevation of the sun is:',
+  opts:['30°','45°','60°','75°'],ans:1,
+  exp:'tan α = height/shadow = 1, and tan 45° = 1, so α = 45°.'},
+ {type:'num',ch:9,marks:2,limit:150,q:'The angle of elevation of the top of a tower from a point on the ground 30 m from its foot is 30°. Find the height of the tower. (Enter in metres, at your selected precision. √3 ≈ 1.732.)',
+  ans:10*Math.sqrt(3),unit:' m',dpn:2,frac:'10√3',
+  exp:'tan 30° = h/30 → h = 30/√3 = 10√3 ≈ 17.32 m. The distance is on the ground (adjacent), the height is opposite — that selects tan.'},
+ {type:'num',ch:9,marks:2,limit:150,q:'A kite is flying with its string fully stretched out to 100 m, making 60° with the ground. Find the height of the kite above the ground. (Enter in metres, at your selected precision.)',
+  ans:50*Math.sqrt(3),unit:' m',dpn:2,frac:'50√3',
+  exp:'The string is the hypotenuse, the height is opposite the 60° angle: sin 60° = h/100 → h = 100 × √3/2 = 50√3 ≈ 86.60 m.'},
+ {type:'num',ch:9,marks:3,limit:180,q:'From a point on the ground, the angle of elevation of the top of a tower is 30°. On walking 20 m directly towards the tower, the angle becomes 60°. Find the height of the tower. (Enter in metres, at your selected precision.)',
+  ans:10*Math.sqrt(3),unit:' m',dpn:2,frac:'10√3',
+  exp:'Two triangles share the same height h. Let the closer distance be d. Then h = √3·d (from 60°) and h = (d + 20)/√3 (from 30°). Equate: √3d = (d+20)/√3 → 3d = d + 20 → d = 10, so h = 10√3 ≈ 17.32 m.'},
+ {type:'num',ch:9,marks:3,limit:180,q:'The angles of depression of the top and the bottom of an 8 m tall building, from the top of a multi-storeyed tower, are 30° and 45°. Find the height of the tower. (Enter in metres, at your selected precision. √3 ≈ 1.732.)',
+  ans:12+4*Math.sqrt(3),unit:' m',dpn:2,frac:'12+4√3',
+  exp:'Depression = elevation (alternate angles). Let tower height H, distance d. Bottom: tan 45° = H/d → d = H. Top: tan 30° = (H − 8)/H → H/√3 = H − 8 → H(√3 − 1) = 8√3 → H = 8√3/(√3−1) = 12 + 4√3 ≈ 18.93 m.'},
+ {type:'num',ch:9,marks:3,limit:240,q:'From the top of a 75 m high lighthouse, the angles of depression of two ships approaching it, on the same side, are 30° and 45°. Find the distance between the two ships. (Enter in metres, at your selected precision. √3 ≈ 1.732.)',
+  ans:75*(Math.sqrt(3)-1),unit:' m',dpn:2,frac:'75(√3−1)',
+  exp:'Nearer ship (45°): d₁ = 75/tan45° = 75 m. Farther ship (30°): d₂ = 75/tan30° = 75√3 m. Distance between ships = d₂ − d₁ = 75(√3 − 1) = 75 × 0.732 ≈ 54.90 m.'}
+];
+(function(){
+  let idx=0, running=false, remain=0, overtime=false, tick=null, state=[];
+  let DP=2;
+  const tnum = s => { const m=Math.floor(Math.abs(s)/60), r=Math.abs(s)%60; return (s<0?'−':'')+m+':'+String(r).padStart(2,'0'); };
+  function numOk(u,q){
+    if(typeof u!=='number'||isNaN(u)) return false;
+    const dp=Math.min(DP,(q.dpn!==undefined?q.dpn:DP));
+    return Math.abs(u-q.ans)<=0.5*Math.pow(10,-dp)+1e-9;
+  }
+  function init(){ state=QUESTIONS.map(q=>({ans:null,done:false,skipped:false,over:false,spent:0,self:null})); }
+  function start(){
+    init(); running=true; idx=0;
+    $('test-start').style.display='none'; $('test-results').style.display='none'; $('test-live').style.display='';
+    buildPalette(); render(); $('t-quit').onclick=confirmEnd;
+  }
+  function buildPalette(){
+    const p=$('t-palette'); p.innerHTML='';
+    QUESTIONS.forEach((q,i)=>{ const b=document.createElement('button'); b.className='pal-q'; b.textContent=i+1;
+      b.onclick=()=>{ go(i); }; p.appendChild(b); });
+  }
+  function stopTick(){ if(tick){ clearInterval(tick); tick=null; } }
+  function render(){
+    stopTick();
+    const q=QUESTIONS[idx], st=state[idx];
+    remain = (st.savedRemain!==undefined)? st.savedRemain : q.limit;
+    overtime = st.over;
+    // palette refresh
+    document.querySelectorAll('.pal-q').forEach((b,i)=>{ b.className='pal-q'+(i===idx?' cur':'')+(state[i].done?' done':'')+(state[i].skipped?' skipped':'')+(state[i].over?' ot':''); });
+    $('t-stats').textContent='Q '+(idx+1)+' / '+QUESTIONS.length+' · answered: '+state.filter(s=>s.done).length;
+    const w=$('t-qwrap'); w.innerHTML='';
+    const badges='<div class="q-top"><span class="badge '+(q.ch===8?'ch8':'ch9')+'">Ch '+q.ch+'</span><span class="badge type">'+({mcq:'MCQ',tf:'true / false',num:'numerical',prove:'proof — self-checked'}[q.type])+'</span><span class="badge marks">'+q.marks+' mark'+(q.marks>1?'s':'')+(st.over?' · time exceeded':'')+'</span></div>';
+    let body='';
+    if(q.type==='mcq'){
+      body='<div class="opts">'+q.opts.map((o,i)=>'<label class="opt'+(st.ans===i?' sel':'')+'"><input type="radio" name="tq" '+(st.ans===i?'checked':'')+'><span class="ol">'+String.fromCharCode(65+i)+'</span><span>'+o+'</span></label>').join('')+'</div>';
+    } else if(q.type==='tf'){
+      body='<div class="tf-row"><button class="btn ghost" data-tf="true">True</button><button class="btn ghost" data-tf="false">False</button></div>'+(st.ans!==null?'<p style="margin-top:12px;font-weight:700">Your answer: <span class="mth">'+(st.ans==='true'?'True':'False')+'</span></p>':'');
+    } else if(q.type==='num'){
+      body='<div class="num-wrap"><input type="text" id="t-num-in" inputmode="decimal" placeholder="your answer" value="'+(st.raw!==undefined&&st.raw!==null? st.raw : (st.ans!==null? st.ans:''))+'" '+(st.done?'disabled':'')+'>'+(q.unit? '<span style="color:var(--dim)">'+q.unit+'</span>':'')+'<button class="btn small primary" id="t-num-go" '+(st.done?'disabled':'')+'>Submit answer</button></div>'+(st.done?'<p style="margin-top:10px;font-weight:700">Submitted: <span class="mth">'+(+st.ans.toFixed(4))+'</span>'+(st.raw&&st.raw.indexOf('/')>-1?' (from '+st.raw+')':'')+'</p>':'');
+    } else {
+      body='<textarea id="t-prove-in" rows="5" placeholder="Optional: type your rough steps here (or work on paper)…" style="width:100%;margin-top:14px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--ink);font-family:var(--font-body);font-size:14px;resize:vertical"></textarea>'
+        +(st.self!==null?'<p style="margin-top:10px;font-weight:700">Self-assessment recorded: '+(st.self?'Got it right':'Not quite')+' ('+q.marks+' / '+q.marks+' or 0 marks)</p>':'');
+    }
+    w.innerHTML=badges+'<div class="q-body">'+q.q+'</div>'+body;
+    // wire interactions
+    if(q.type==='mcq'){
+      w.querySelectorAll('.opt').forEach(o=>o.addEventListener('click',()=>{
+        if(state[idx].done) return;
+        const i=[...w.querySelectorAll('.opt')].indexOf(o);
+        state[idx].ans=i; state[idx].done=true; render();
+      }));
+    }
+    if(q.type==='tf'){
+      w.querySelectorAll('[data-tf]').forEach(b=>b.addEventListener('click',()=>{
+        if(state[idx].done) return;
+        state[idx].ans=b.dataset.tf; state[idx].done=true; render();
+      }));
+    }
+    if(q.type==='num'){
+      const go2=()=>{ const raw=w.querySelector('#t-num-in').value.trim().replace(',','.');
+        let v=null; const fm=raw.match(/^(-?\d+(?:\.\d+)?)\s*\/\s*(-?\d+(?:\.\d+)?)$/);
+        if(fm && parseFloat(fm[2])!==0){ v=parseFloat(fm[1])/parseFloat(fm[2]); }
+        else { const p=parseFloat(raw); if(!isNaN(p)) v=p; }
+        if(v===null){ w.querySelector('#t-num-in').style.borderColor='var(--danger)'; return; }
+        state[idx].ans=v; state[idx].raw=raw; state[idx].done=true; render(); };
+      const gb=w.querySelector('#t-num-go'); if(gb) gb.onclick=go2;
+      const inp=w.querySelector('#t-num-in'); if(inp){ inp.onkeydown=e=>{ if(e.key==='Enter') go2(); }; }
+    }
+    if(q.type==='prove'){
+      // handled via reveal + self-mark in results
+    }
+    // buttons
+    $('t-prev').disabled = idx===0;
+    $('t-next').textContent = idx===QUESTIONS.length-1 ? 'Submit test ▸' : 'Next →';
+    $('t-reveal').onclick = showExplain;
+    updateTimerUI();
+    startTick();
+  }
+  function startTick(){
+    const st=state[idx];
+    tick=setInterval(()=>{
+      if(state[idx].done){ return; }
+      st.spent++;
+      if(remain>0){ remain--;
+        if(remain===0){ timeUp(); }
+      }
+      updateTimerUI();
+    },1000);
+  }
+  function updateTimerUI(){
+    const q=QUESTIONS[idx], st=state[idx];
+    const pill=$('t-pill'), fill=$('t-fill');
+    if(st.done){ pill.className='timer-pill'; pill.querySelector('span').textContent='done · time used'; $('t-time').textContent=tnum(st.spent); fill.style.width='0%'; fill.className='timer-fill'; return; }
+    if(remain>0 && overtime){
+      pill.className='timer-pill warn'; pill.querySelector('span').textContent='extra time';
+      fill.className='timer-fill warn'; fill.style.width=Math.min(100,remain/30*100)+'%';
+      $('t-time').textContent=tnum(remain);
+    } else if(remain>0){
+      pill.className='timer-pill'+(remain<=10?' warn':''); pill.querySelector('span').textContent='time left';
+      fill.className='timer-fill'+(remain<=10?' warn':'');
+      fill.style.width=(remain/q.limit*100)+'%';
+      $('t-time').textContent=tnum(remain);
+    } else {
+      pill.className='timer-pill over'; pill.querySelector('span').textContent='over time';
+      fill.className='timer-fill over'; fill.style.width='100%';
+      $('t-time').textContent='+'+tnum(st.spent-q.limit);
+    }
+  }
+  function timeUp(){
+    overtime=true; state[idx].over=true; updateTimerUI();
+    const w=$('t-qwrap');
+    if(w.querySelector('.timeup')) return;
+    const d=document.createElement('div'); d.className='timeup';
+    d.innerHTML='<div class="tu-t">⏱ Time limit reached for this question.</div><div class="tu-row"><button class="btn small ghost" data-act="more">+30 s — keep working</button><button class="btn small ghost" data-act="skip">Skip question</button><button class="btn small ghost" data-act="giveup">Give up — show explanation</button></div>';
+    w.appendChild(d);
+    d.querySelector('[data-act=more]').onclick=()=>{ d.remove(); remain=30; };
+    d.querySelector('[data-act=skip]').onclick=()=>{ state[idx].skipped=true; state[idx].done=true; d.remove(); go(idx+1); };
+    d.querySelector('[data-act=giveup]').onclick=()=>{ state[idx].skipped=true; state[idx].done=true; d.remove(); showExplain(); };
+  }
+  function showExplain(){
+    const q=QUESTIONS[idx]; const w=$('t-qwrap');
+    let ex=w.querySelector('.explain-box');
+    if(ex){ ex.remove(); return; }
+    ex=document.createElement('div'); ex.className='explain-box';
+    const corr = q.type==='mcq' ? q.opts[q.ans] : (q.type==='tf' ? (q.ans==='true'?'True':'False') : (q.type==='num' ? q.ans+''+(q.unit||'') : 'see steps'));
+    ex.innerHTML='<div class="ex-t">Explanation — question '+(idx+1)+'</div><p>'+q.exp+'</p><p style="margin-top:10px"><b>Correct answer: '+corr+'</b></p>'
+      +(q.type==='prove' && state[idx].self===null ? '<div style="margin-top:10px"><button class="btn small green" data-self="1">I got it right</button> <button class="btn small ghost" data-self="0">Not quite</button></div>':'');
+    w.appendChild(ex);
+    const b1=ex.querySelector('[data-self="1"]'); if(b1) b1.onclick=()=>{ state[idx].self=true; state[idx].done=true; render(); showExplain(); };
+    const b0=ex.querySelector('[data-self="0"]'); if(b0) b0.onclick=()=>{ state[idx].self=false; state[idx].done=true; render(); showExplain(); };
+  }
+  function go(i){
+    if(i<0||i>=QUESTIONS.length) return;
+    state[idx].savedRemain = state[idx].done? 0 : remain;
+    idx=i; render();
+  }
+  function confirmEnd(){
+    if(confirm('End the test and see your result? Unanswered questions score zero.')) end();
+  }
+  function grade(){
+    let auto=0, autoMax=0, self=0;
+    const rows=QUESTIONS.map((q,i)=>{
+      const st=state[i]; let ok=null;
+      if(q.type==='mcq'){ autoMax+=q.marks; ok=(st.ans===q.ans); if(ok) auto+=q.marks; }
+      else if(q.type==='tf'){ autoMax+=q.marks; ok=(st.ans===q.ans); if(ok) auto+=q.marks; }
+      else if(q.type==='num'){ autoMax+=q.marks; ok=numOk(st.ans,q); if(ok) auto+=q.marks; }
+      else { if(st.self===true) self+=q.marks; }
+      return {q,st,ok};
+    });
+    return {rows,auto,autoMax,self};
+  }
+  function end(){
+    stopTick(); running=false;
+    $('test-live').style.display='none';
+    const {rows,auto,autoMax,self}=grade();
+    const totalMarks = QUESTIONS.reduce((a,q)=>a+q.marks,0);
+    const answered = state.filter(s=>s.done).length;
+    const overs = rows.filter(r=>r.st.over).length;
+    const ch8max = QUESTIONS.filter(q=>q.ch===8).reduce((a,q)=>a+q.marks,0);
+    const ch9max = QUESTIONS.filter(q=>q.ch===9).reduce((a,q)=>a+q.marks,0);
+    const ch8got = rows.filter(r=>r.q.ch===8).reduce((a,r)=>a+((r.ok===true)?r.q.marks:(r.q.type==='prove'&&r.st.self===true?r.q.marks:0)),0);
+    const ch9got = rows.filter(r=>r.q.ch===9).reduce((a,r)=>a+((r.ok===true)?r.q.marks:0),0);
+    const score = auto+self;
+    const pct = Math.round(score/totalMarks*100);
+    const R=$('test-results'); R.style.display='';
+    R.innerHTML='<div class="results-wrap">'
+      +'<div class="score-hero"><div class="sc">'+score+'<small> / '+totalMarks+'</small></div><div style="font-weight:700;font-size:17px">'+(pct>=80?'Excellent — board ready.':pct>=60?'Solid — polish the weak spots below.':'Keep practising — revise the modules, then retake.')+'</div><div class="pill-note">'+answered+' / '+QUESTIONS.length+' attempted · '+overs+' question'+(overs===1?'':'s')+' over time · proof self-assessed: '+(state[9].self===true?'got it':state[9].self===false?'not yet':'—')+'</div></div>'
+      +'<div class="grid2" style="margin-bottom:8px"><div class="ve-card"><div class="sec-label" style="margin-bottom:6px">Chapter 8 · Introduction</div><div class="mth" style="font-size:22px;font-weight:700">'+ch8got+' / '+ch8max+'</div></div><div class="ve-card"><div class="sec-label blue" style="margin-bottom:6px">Chapter 9 · Applications</div><div class="mth" style="font-size:22px;font-weight:700">'+ch9got+' / '+ch9max+'</div></div></div>'
+      +'<h4 class="h4">Question-by-question review</h4>'
+      +rows.map((r,i)=>{
+        let yours='—';
+        if(r.q.type==='mcq') yours = r.st.ans!==null? r.q.opts[r.st.ans] : (r.st.skipped?'skipped':'unanswered');
+        else if(r.q.type==='tf') yours = r.st.ans!==null? (r.st.ans==='true'?'True':'False') : (r.st.skipped?'skipped':'unanswered');
+        else if(r.q.type==='num') yours = r.st.ans!==null? ((+r.st.ans.toFixed(4))+(r.q.unit||'')+(r.st.raw&&r.st.raw.indexOf('/')>-1?' (from '+r.st.raw+')':'')) : (r.st.skipped?'skipped':'unanswered');
+        else yours = r.st.self===true?'self: correct':(r.st.self===false?'self: not yet':'unanswered');
+        const corr = r.q.type==='mcq'? r.q.opts[r.q.ans] : r.q.type==='tf'? (r.q.ans==='true'?'True':'False') : r.q.type==='num'? ((r.q.frac? r.q.frac+' ≈ ':'')+(+r.q.ans.toFixed(4))+(r.q.unit||'')+' — accepted at 2, 3 or 4 dp') : 'see solution';
+        const vd = r.q.type==='prove' ? '<span class="verdict '+(r.st.self===true?'ok':'no')+'">'+(r.st.self===true?'self-assessed ✓':'check model solution')+'</span>'
+          : (r.ok===true?'<span class="verdict ok">correct</span>':(r.st.ans===null?'<span class="verdict no">no attempt</span>':'<span class="verdict no">incorrect</span>'));
+        return '<div class="rev-card"><div class="rv-head">'+vd+'<span class="badge '+(r.q.ch===8?'ch8':'ch9')+'">Ch '+r.q.ch+'</span>'+(r.st.over?'<span class="badge year">over time</span>':'')+'</div>'
+          +'<div class="q-text" style="font-weight:600;font-size:14px">'+(i+1)+'. '+r.q.q+'</div>'
+          +'<p style="margin-top:8px;font-size:13.5px">Your answer: <b>'+yours+'</b> · Correct: <b>'+corr+'</b> · Time used: <span class="mth">'+tnum(r.st.spent)+'</span></p>'
+          +'<details class="sol" style="margin-top:8px"><summary>Show explanation</summary><div class="sol-body"><p>'+r.q.exp+'</p></div></details></div>';
+      }).join('')
+      +'<div style="text-align:center;margin-top:24px"><button class="btn primary" id="t-again">Retake test</button></div></div>';
+    $('t-again').onclick=()=>{ R.style.display='none'; $('test-start').style.display=''; window.scrollTo({top:document.getElementById('test').offsetTop-70,behavior:'smooth'}); };
+  }
+  $('t-prev').onclick=()=>go(idx-1);
+  $('t-next').onclick=()=>{ if(idx===QUESTIONS.length-1){ confirmEnd(); } else go(idx+1); };
+  $('t-clear').onclick=()=>{ const st=state[idx]; st.ans=null; st.raw=null; st.done=false; st.skipped=false; st.self=null; render(); };
+  $('t-dp').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return;
+    document.querySelectorAll('#t-dp button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); DP=+b.dataset.dp; });
+  $('test-begin').onclick=start;
+})();
+</script>
+</body>
+</html>
