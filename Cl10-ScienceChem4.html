@@ -7,9 +7,6 @@
 <meta name="description" content="A premium interactive study app for NCERT Class 10 Science Chapter 4: Carbon and its Compounds — concept cards, diagrams, molecule builder, reaction lab, activity explorer, flashcards, practice hub and assessments.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="icon" type="image/png" href="logo-small.png">
-<link rel="shortcut icon" href="logo-small.png">
-<link rel="apple-touch-icon" href="logo-small.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
@@ -401,13 +398,17 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
     radial-gradient(90% 60% at 50% 120%, rgba(20,50,90,.05), transparent 60%)}
 
 /* real refraction: bend the backdrop, not just blur it (Chromium today) */
-@supports (backdrop-filter: url(#lg-refract)){
-  .dock,.coach{
-    -webkit-backdrop-filter:blur(7px) saturate(180%) brightness(1.10) url(#lg-refract);
-    backdrop-filter:blur(7px) saturate(180%) brightness(1.10) url(#lg-refract)}
-  [data-theme="light"] .dock,[data-theme="light"] .coach{
-    -webkit-backdrop-filter:blur(6px) saturate(150%) brightness(.99) contrast(1.06) url(#lg-refract);
-    backdrop-filter:blur(6px) saturate(150%) brightness(.99) contrast(1.06) url(#lg-refract)}
+/* gate the costly SVG refraction to large, fine-pointer screens (it forces a
+   per-frame filter pass on the backdrop, which stutters on phones) */
+@media (min-width:1001px) and (not (pointer:coarse)){
+  @supports (backdrop-filter: url(#lg-refract)){
+    .dock,.coach{
+      -webkit-backdrop-filter:blur(7px) saturate(180%) brightness(1.10) url(#lg-refract);
+      backdrop-filter:blur(7px) saturate(180%) brightness(1.10) url(#lg-refract)}
+    [data-theme="light"] .dock,[data-theme="light"] .coach{
+      -webkit-backdrop-filter:blur(6px) saturate(150%) brightness(.99) contrast(1.06) url(#lg-refract);
+      backdrop-filter:blur(6px) saturate(150%) brightness(.99) contrast(1.06) url(#lg-refract)}
+  }
 }
 
 /* ============ BOTTOM QUICK-DOCK ============ */
@@ -576,7 +577,6 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
   .dockbtn{min-width:42px; padding:7px 7px}
   .dock.wide .dockbtn{min-width:50px; padding:7px 8px}
   .dockprog{padding:4px}
-  .coach{right:10px; left:10px; width:auto; bottom:88px}
   .toast{bottom:88px}
   #molbg{opacity:.34}
 }
@@ -594,6 +594,88 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
   .dock .dockprog{gap:9px; padding:4px 12px 4px 5px}
   .dock .dockprog-txt{max-width:90px; opacity:1}
 }
+
+/* ============================================================
+   PERFORMANCE — phones: cheaper compositing, fewer live effects
+   ============================================================ */
+@media(max-width:1000px){
+  /* the animated molecule canvas is the single biggest CPU cost on phones */
+  #molbg{display:none !important}
+  /* heavy backdrop-filter is very costly on mobile GPUs — use a lighter blur */
+  .glass{
+    -webkit-backdrop-filter:blur(11px) saturate(150%) brightness(1.08);
+    backdrop-filter:blur(11px) saturate(150%) brightness(1.08)}
+  [data-theme="light"] .glass{
+    -webkit-backdrop-filter:blur(9px) saturate(140%) brightness(.99);
+    backdrop-filter:blur(9px) saturate(140%) brightness(.99)}
+  .glass::after{opacity:.7}
+  /* sheen sweep repaints the whole pill — drop it on phones */
+  .dock::before{display:none}
+  .dock.sheen::before{animation:none}
+  /* shorter, simpler motion */
+  .dock.rise{animation:fountainRise .5s cubic-bezier(.22,.9,.3,1) both}
+  .dock.sink{animation:fountainSink .34s cubic-bezier(.5,0,.75,0) both}
+  .card:hover,.card.lift:hover{transform:none}
+  .topiccard:hover .thumb-lg{transform:none}
+}
+
+/* ============================================================
+   STUDY COACH — phone layout (bottom sheet, fits every screen)
+   ============================================================ */
+@media(max-width:1000px){
+  .coach{
+    left:10px; right:10px; width:auto;
+    bottom:calc(84px + env(safe-area-inset-bottom, 0px));
+    max-height:calc(100dvh - 100px - env(safe-area-inset-bottom, 0px));
+    border-radius:22px;
+    /* no scale on mobile: scaling a backdrop-filter layer glitches on phones */
+    transform:translateY(26px); transform-origin:bottom center}
+  .coach.open{transform:none}
+  .coach-body{padding:12px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+    overscroll-behavior:contain; -webkit-overflow-scrolling:touch}
+  .coach-head{padding:12px 14px 10px}
+  .coach-stats{grid-template-columns:repeat(3,1fr)}
+  .coach-act{padding:11px 12px}
+  .coach-q{padding:11px}
+  .coach-q .opt{padding:8px 10px; margin:5px 0}
+}
+@media(max-width:420px){
+  .coach-stats span{font-size:.56rem}
+  .coach-h{margin:10px 0 6px}
+}
+
+/* ============================================================
+   FULL CHAPTER — every topic on one scrollable page
+   ============================================================ */
+.toc{position:sticky; top:74px; z-index:25; display:flex; gap:8px; overflow-x:auto; padding:9px;
+  margin-bottom:18px; border:1px solid var(--border); border-radius:16px;
+  background:color-mix(in srgb, var(--bg2) 86%, transparent);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); scrollbar-width:none}
+.toc::-webkit-scrollbar{display:none}
+.toc a{white-space:nowrap; padding:6px 12px; border-radius:100px; font-size:.76rem; font-weight:600;
+  color:var(--muted); border:1px solid var(--border); text-decoration:none; transition:.18s}
+.toc a:hover,.toc a.on{color:var(--cyan); border-color:var(--cyan); background:var(--cyan-soft)}
+.chapsec{scroll-margin-top:140px; padding:22px 0 6px; border-top:1px solid var(--border); margin-top:8px;
+  content-visibility:auto; contain-intrinsic-size:auto 520px}
+.chapsec:first-of-type{border-top:none}
+.chapsec .sechead{display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px}
+.chapsec .sechead h2{font-size:clamp(1.15rem,2.2vw,1.5rem); letter-spacing:-.02em}
+.chapsec .learnblock{margin:10px 0}
+.chapsec .learnblock b.t{color:var(--text)}
+.chapsec .learnblock p{margin:5px 0 0; color:var(--muted); font-size:.94rem}
+.chapsec .learnblock p b{color:var(--text)}
+.chapsec details.sub{margin:10px 0; border:1px solid var(--border); border-radius:14px; background:var(--panel)}
+.chapsec details.sub>summary{cursor:pointer; padding:12px 15px; font-weight:600; font-size:.88rem; list-style:none;
+  display:flex; align-items:center; gap:9px; color:var(--text)}
+.chapsec details.sub>summary::-webkit-details-marker{display:none}
+.chapsec details.sub>summary:hover{color:var(--cyan)}
+.chapsec details.sub[open]>summary{border-bottom:1px solid var(--border)}
+.chapsec details.sub .inner{padding:12px 15px}
+@media print{.toc{display:none}}
+
+/* long question lists: skip rendering work for off-screen cards */
+.q{content-visibility:auto; contain-intrinsic-size:auto 260px}
+.loadmore{display:block; width:100%; margin:6px 0 20px}
 
 </style>
 </head>
@@ -1620,6 +1702,11 @@ const QUESTIONS = {
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* --- device capability: phones get cheaper effects --- */
+const isSmall=()=>innerWidth<=1000;
+const isTouch=()=>{try{return matchMedia('(pointer:coarse)').matches;}catch(e){return false;}};
+const lightFX=()=>isSmall()||isTouch();
+const pqStep=()=>lightFX()?16:30;
 const SKEY='cc10.state.v1';
 
 const DEFAULT_STATE={theme:'dark',navCollapsed:false,completed:{},bookmarks:{},difficult:{},
@@ -1798,6 +1885,7 @@ const NAV=[
   {id:'dashboard',t:'Dashboard',i:'grid'},
   {id:'guide',t:'Guide & Map',i:'target'},
   {id:'learn',t:'Learn',i:'book'},
+  {id:'all',t:'Full Chapter',i:'layers'},
   {sec:'Explore'},
   {id:'diagrams',t:'Diagrams',i:'shape'},
   {id:'builder',t:'Molecule Builder',i:'atom'},
@@ -1832,8 +1920,10 @@ function route(){
   CUR_TOPIC=(VIEW==='topic')?arg:'';
   setActive(VIEW); setDock(VIEW);
   closeTpick();
+  if(COACH.open) closeCoach();   // never leave the coach floating over a new page
+  if(_tocObs && VIEW!=='all'){ _tocObs.disconnect(); _tocObs=null; }
   const m=$('#main');
-  const fn={dashboard:vDashboard,guide:vGuide,learn:vLearn,topic:vTopic,diagrams:vDiagrams,builder:vBuilder,
+  const fn={dashboard:vDashboard,guide:vGuide,learn:vLearn,all:vAll,topic:vTopic,diagrams:vDiagrams,builder:vBuilder,
     reactions:vReactions,activities:vActivities,flashcards:vFlashcards,practice:vPractice,
     assessment:vAssessment,notes:vNotes,search:vSearch,completeness:vCompleteness}[VIEW]||vDashboard;
   m.innerHTML='<div class="spinner" role="status" aria-label="Loading"></div>';
@@ -1849,7 +1939,7 @@ const reactionById=id=>CHAPTER.reactions.find(r=>r.id===id);
 const activityById=id=>CHAPTER.activities.find(a=>a.id===id);
 const completedCount=()=>Object.values(ST.completed).filter(Boolean).length;
 const pct=()=>Math.round(completedCount()/CHAPTER.topics.length*100);
-function markDone(id,val=true){ST.completed[id]=val; save(); updateMini(); if(val) toast('Topic marked complete ✔');}
+function markDone(id,val=true){ST.completed[id]=val; save(); updateMini(); toast(val?'Topic marked complete ✔':'Marked as not done');}
 function updateMini(){
   $('#miniBar').style.width=pct()+'%';
   $('#miniPct').textContent=pct()+'%';
@@ -1868,7 +1958,7 @@ function vDashboard(){
   const done=completedCount(), tot=CHAPTER.topics.length;
   const acc=ST.quizHistory.length?Math.round(ST.quizHistory.reduce((s,h)=>s+h.correct/h.total,0)/ST.quizHistory.length*100):0;
   const next=CHAPTER.topics.find(t=>!ST.completed[t.id])||CHAPTER.topics[0];
-  const quick=[['guide','Guide & Map','target'],['learn','Notes & Concepts','book'],['learn','Learn','book'],['diagrams','Diagrams','shape'],
+  const quick=[['all','Full Chapter','layers'],['guide','Guide & Map','target'],['learn','Notes & Concepts','book'],['learn','Learn','book'],['diagrams','Diagrams','shape'],
     ['reactions','Reactions','flask'],['practice','Practice','quiz'],['practice','NCERT Solutions','notes'],
     ['practice','Important Qs','target'],['practice','Board & PYQ','flag'],['flashcards','Revision','cards']];
   const uniq=[]; const seen={};
@@ -1967,7 +2057,7 @@ function vTopic(id){
   <h1 class="h1" style="font-size:clamp(1.6rem,3.4vw,2.4rem);margin:6px 0 6px">${esc(t.title)}</h1>
   <p class="lead">${esc(t.kicker)}</p>
   <div class="btnrow" style="margin:18px 0">
-    <button class="btn ${done?'':'primary'}" id="doneBtn" data-topic="${t.id}">${svg(IC.check,17)} ${done?'Marked complete':'Mark topic complete'}</button>
+    <button class="btn ${done?'':'primary'}" id="doneBtn" data-topic="${t.id}" aria-pressed="${done}">${svg(IC.check,17)} ${done?'Mark as not done':'Mark topic complete'}</button>
     ${t.activities&&t.activities.length?`<a class="btn" href="#/activities">${svg(IC.bolt,17)} Activities</a>`:''}
     <a class="btn ghost" href="#/practice">${svg(IC.quiz,17)} Practise this topic</a>
   </div>
@@ -2254,11 +2344,11 @@ function pool(){
   QUESTIONS.pyqs.forEach(q=>p.push({...q,src:q.tag,cat:'PYQ'}));
   return p;
 }
-let PQ={cat:'All'};
+let PQ={cat:'All',shown:0};
 function vPractice(){
   const p=pool();
   const cats=['All',...[...new Set(p.map(q=>q.cat))]];
-  PQ.all=p;
+  PQ.all=p; PQ.shown=pqStep();
   return `<div class="eyebrow">Practice hub</div>
   <h1 class="h2" style="margin:6px 0 8px">${p.length} questions, all with hints & solutions</h1>
   <p class="lead">Attempt first, then reveal <b>Hint 1</b>, <b>Hint 2</b> and the full <b>board-style solution</b>. Bookmark questions and retry your mistakes. NCERT questions are from the textbook; every other question is clearly labelled as teacher-created practice.</p>
@@ -2272,7 +2362,10 @@ function renderPQ(){
   let items=PQ.all.filter(q=>PQ.cat==='All'||q.cat===PQ.cat);
   if(term) items=items.filter(q=>JSON.stringify(q).toLowerCase().includes(term));
   if(!items.length){list.innerHTML=`<div class="empty">${svg(IC.search,52)}<p>No questions match. Try another keyword.</p></div>`;return;}
-  list.innerHTML=items.map(q=>qCard(q)).join('');
+  if(!PQ.shown) PQ.shown=pqStep();
+  const total=items.length, shown=Math.min(PQ.shown,total);
+  list.innerHTML=items.slice(0,shown).map(q=>qCard(q)).join('') +
+    (shown<total?`<button class="btn loadmore" id="pqMore">Show ${Math.min(pqStep(),total-shown)} more · ${shown} of ${total} shown</button>`:'');
 }
 function qCard(q){
   const bm=ST.bookmarks[q.id], df=ST.difficult[q.id];
@@ -2592,6 +2685,61 @@ function renderGuideList(term){
 }
 
 /* ============================================================
+   FULL CHAPTER — all topics on one scrollable page
+   ============================================================ */
+let _tocObs=null;
+function vAll(){
+  return `<div class="eyebrow">Full chapter</div>
+  <h1 class="h2" style="margin:6px 0 8px">All ${CHAPTER.topics.length} topics on one page</h1>
+  <p class="lead">The whole chapter in one continuous scroll — read straight through, or jump with the bar below. Mark each topic done as you finish it.</p>
+  <div class="btnrow" style="margin:14px 0 10px">
+    <button class="btn sm" onclick="window.print()">${svg(IC.print,15)} Print / Save as PDF</button>
+    <span class="pill">${completedCount()} / ${CHAPTER.topics.length} done</span>
+    <a class="btn sm ghost" href="#/learn">${svg(IC.book,15)} Topic cards instead</a>
+  </div>
+  <nav class="toc" id="toc" aria-label="Jump to a topic">
+    ${CHAPTER.topics.map(t=>`<a href="#/all" data-jump="${t.id}">${esc(t.num)} ${esc(t.title)}</a>`).join('')}
+  </nav>
+  ${CHAPTER.topics.map(chapSection).join('')}`;
+}
+function chapSection(t){
+  const done=!!ST.completed[t.id];
+  const dg=(t.diagrams||[]).map(diagramCard).join('');
+  const rx=(t.reactions||[]).map(x=>reactionCard(reactionById(x))).join('');
+  const ac=(t.activities||[]).map(x=>activityCard(activityById(x))).join('');
+  const tb=(t.tables||[]).map(tableCard).join('');
+  const extra=(dg||rx||ac||tb);
+  return `<section class="chapsec" id="sec_${t.id}">
+    <div class="sechead">
+      <div style="flex:1;min-width:200px">
+        <div class="tiny mono" style="color:var(--cyan)">${esc(t.num)} · ${esc(t.ref)} · ${t.mins} min</div>
+        <h2>${esc(t.title)}</h2>
+        <p class="small" style="margin:4px 0 0">${esc(t.kicker)}</p>
+      </div>
+      <button class="btn sm ${done?'':'primary'}" data-done="${t.id}" aria-pressed="${done}">${svg(IC.check,15)} ${done?'Mark as not done':'Mark done'}</button>
+      <a class="btn sm ghost" href="#/topic/${t.id}">Open topic</a>
+    </div>
+    ${t.learn.map(l=>`<div class="learnblock"><b class="t">${esc(l.t)}</b><p>${l.b}</p></div>`).join('')}
+    ${t.example?`<div class="callout ex"><b class="t">Example</b>${t.example}</div>`:''}
+    ${t.why?`<div class="callout why"><b class="t">Why it matters</b>${t.why}</div>`:''}
+    ${t.mistake?`<div class="callout mis"><b class="t">Common mistake</b>${t.mistake}</div>`:''}
+    ${t.points?`<div class="card" style="margin:12px 0"><div class="eyebrow">Key points</div><ul class="solsteps" style="margin-top:6px">${t.points.map(p=>`<li>${p}</li>`).join('')}</ul></div>`:''}
+    ${extra?`<details class="sub"><summary>${svg(IC.layers,16)} Diagrams, reactions, activities &amp; tables</summary><div class="inner">${dg}${rx}${ac}${tb}</div></details>`:''}
+  </section>`;
+}
+function setupToc(){
+  if(_tocObs){_tocObs.disconnect(); _tocObs=null;}
+  const secs=$$('.chapsec'); if(!secs.length) return;
+  try{
+    _tocObs=new IntersectionObserver(es=>{es.forEach(en=>{ if(en.isIntersecting){
+      const id=en.target.id.replace('sec_','');
+      $$('.toc a').forEach(a=>a.classList.toggle('on',a.dataset.jump===id)); } });},
+      {rootMargin:'-150px 0px -70% 0px'});
+    secs.forEach(s=>_tocObs.observe(s));
+  }catch(e){}
+}
+
+/* ============================================================
    COMPLETENESS
    ============================================================ */
 function vCompleteness(){
@@ -2646,8 +2794,9 @@ function vCompleteness(){
 function afterRender(){
   if(VIEW==='builder') afterBuilder();
   if(VIEW==='practice'){renderPQ();
-    $$('#pqTabs .tab').forEach(t=>t.onclick=()=>{PQ.cat=t.dataset.cat;$$('#pqTabs .tab').forEach(x=>x.classList.toggle('on',x===t));renderPQ();});
-    $('#pqSearch')?.addEventListener('input',renderPQ);}
+    $$('#pqTabs .tab').forEach(t=>t.onclick=()=>{PQ.cat=t.dataset.cat; PQ.shown=pqStep(); $$('#pqTabs .tab').forEach(x=>x.classList.toggle('on',x===t));renderPQ();});
+    $('#pqSearch')?.addEventListener('input',()=>{PQ.shown=pqStep(); renderPQ();});}
+  if(VIEW==='all'){setupToc();}
   if(VIEW==='assessment'){
     $$('[data-quiztopic]').forEach(p=>p.onclick=()=>startQuiz('topic',p.dataset.quiztopic));
     $$('[data-quiz]').forEach(b=>b.onclick=()=>startQuiz(b.dataset.quiz));
@@ -2678,7 +2827,17 @@ function delegate(e){
   const hint=t.closest('[data-hint]'); if(hint){const el=$('#'+hint.dataset.hint); if(el) el.classList.toggle('hide'); return;}
   const bm=t.closest('[data-bm]'); if(bm){const id=bm.dataset.bm; ST.bookmarks[id]=!ST.bookmarks[id]; save(); bm.style.color=ST.bookmarks[id]?'var(--amber)':''; toast(ST.bookmarks[id]?'Bookmarked':'Removed bookmark'); return;}
   const df=t.closest('[data-diff]'); if(df){const id=df.dataset.diff; ST.difficult[id]=!ST.difficult[id]; save(); df.style.color=ST.difficult[id]?'var(--amber)':''; df.style.borderColor=ST.difficult[id]?'var(--amber)':''; toast(ST.difficult[id]?'Marked difficult':'Unmarked'); return;}
-  const db=t.closest('#doneBtn'); if(db){const id=db.dataset.topic; markDone(id); db.className='btn'; db.innerHTML=svg(IC.check,17)+' Marked complete'; return;}
+  const db=t.closest('#doneBtn'); if(db){const id=db.dataset.topic; const now=!ST.completed[id]; markDone(id,now);
+    db.className='btn'+(now?'':' primary'); db.setAttribute('aria-pressed',String(now));
+    db.innerHTML=svg(IC.check,17)+' '+(now?'Mark as not done':'Mark topic complete'); return;}
+  const dn=t.closest('[data-done]'); if(dn){const id=dn.dataset.done; const now=!ST.completed[id]; markDone(id,now);
+    dn.className='btn sm'+(now?'':' primary'); dn.setAttribute('aria-pressed',String(now));
+    dn.innerHTML=svg(IC.check,15)+' '+(now?'Mark as not done':'Mark done'); return;}
+  const jp=t.closest('[data-jump]'); if(jp){e.preventDefault();
+    const el=document.getElementById('sec_'+jp.dataset.jump);
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    $$('.toc a').forEach(a=>a.classList.toggle('on',a===jp)); return;}
+  if(t.closest('#pqMore')){PQ.shown+=pqStep(); renderPQ(); return;}
   // practice MCQ attempt
   const opt=t.closest('[data-opt]'); if(opt){const [qid,i]=opt.dataset.opt.split(':'); const i2=+i;
     const q=PQ.all.find(x=>x.id===qid); if(!q) return;
@@ -2853,7 +3012,7 @@ function coachActions(){
   if(ST.quizHistory.length && ST.quizHistory.length<3) acts.push({ic:'clock',t:'Try the timed chapter test',s:'15 questions in 15 minutes.',go:'#/assessment'});
   if(!acts.length) acts.push({ic:'shape',t:'Explore the diagrams',s:'See the structures behind each reaction.',go:'#/diagrams'});
   acts.push({ic:'notes',t:'Print a revision sheet',s:'Clean, printable notes for the whole chapter.',go:'#/notes'});
-  return acts.slice(0,3);
+  return acts.slice(0, lightFX()?2:3);   // fewer steps on phones so the panel fits without scrolling
 }
 function coachQuickCheck(){
   const pool=QUESTIONS.mcqs;
@@ -2918,13 +3077,17 @@ function closeMnav(){$('#mnav').classList.remove('show');}
 
 /* ---------- molecular background ---------- */
 function bg(){
-  const c=$('#molbg'); if(!c) return; const ctx=c.getContext('2d');
+  const c=$('#molbg'); if(!c) return;
+  // skip entirely on phones / reduced-motion: this is the biggest CPU cost on mobile
+  if(lightFX()||matchMedia('(prefers-reduced-motion: reduce)').matches){ c.style.display='none'; return; }
+  const ctx=c.getContext('2d');
   let w,h,nodes=[]; const N=26;
   function size(){w=c.width=innerWidth; h=c.height=innerHeight;}
   size(); addEventListener('resize',size);
   for(let i=0;i<N;i++) nodes.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*2+1.5});
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function frame(){
+    if(lightFX()){ ctx.clearRect(0,0,w,h); return; }   // stop if the window shrinks
     ctx.clearRect(0,0,w,h);
     const light=document.documentElement.getAttribute('data-theme')==='light';
     for(let i=0;i<N;i++){const a=nodes[i];
@@ -2962,7 +3125,11 @@ function initZoom(){
 function initCoach(){
   $('#dockCoach').onclick=()=>{ if(TPK.open) closeTpick(); toggleCoach(); };
   $('#coachClose').onclick=closeCoach;
-  $('#coachBody').addEventListener('click',e=>{const o=e.target.closest('[data-coach]'); if(o) coachAnswer(+o.dataset.coach);});
+  $('#coachBody').addEventListener('click',e=>{
+    const o=e.target.closest('[data-coach]'); if(o){ coachAnswer(+o.dataset.coach); return; }
+    // on phones, choosing a next step closes the coach so it never blocks the page
+    if(e.target.closest('.coach-act') && lightFX()) closeCoach();
+  });
   const co=$('#coach');
   co.addEventListener('mouseenter',()=>clearTimeout(COACH.closeTimer));
   co.addEventListener('mouseleave',()=>{ COACH.closeTimer=setTimeout(()=>{ if(!co.matches(':hover')) closeCoach(); },1100); });
@@ -2993,10 +3160,12 @@ function boot(){
   const dockHide=()=>{ if(!dockEl||_dockHidden) return;
     dockEl.classList.remove('rise'); dockEl.classList.add('sink');
     _dockHidden=true; };
-  addEventListener('scroll',()=>{const y=window.scrollY;
-    if(y>340 && y>_lastY+6) dockHide();
-    else if(y<_lastY-6 || y<=340) dockShow();
-    _lastY=y;},{passive:true});
+  let _raf=false;
+  addEventListener('scroll',()=>{ if(_raf) return; _raf=true;
+    requestAnimationFrame(()=>{ _raf=false; const y=window.scrollY;
+      if(y>340 && y>_lastY+6) dockHide();
+      else if(y<_lastY-6 || y<=340) dockShow();
+      _lastY=y; }); },{passive:true});
   $('#themeBtn').onclick=()=>{ST.theme=ST.theme==='dark'?'light':'dark'; save(); applyTheme();};
   $('#menubtn').onclick=openMnav;
   $('#mnavX').onclick=closeMnav;
