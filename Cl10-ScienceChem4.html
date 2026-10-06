@@ -7,9 +7,6 @@
 <meta name="description" content="A premium interactive study app for NCERT Class 10 Science Chapter 4: Carbon and its Compounds — concept cards, diagrams, molecule builder, reaction lab, activity explorer, flashcards, practice hub and assessments.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="icon" type="image/png" href="logo-small.png">
-<link rel="shortcut icon" href="logo-small.png">
-<link rel="apple-touch-icon" href="logo-small.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
@@ -26,7 +23,7 @@
   --shadow:0 20px 50px -20px rgba(0,0,0,.75);
   --shadow-sm:0 8px 24px -12px rgba(0,0,0,.7);
   --r:18px; --r-lg:26px; --r-sm:12px;
-  --maxw:1240px;
+  --maxw:min(2400px,98vw);
   --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --disp:'Sora','Space Grotesk',var(--sans);
   --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
@@ -57,7 +54,7 @@ body::before{
     linear-gradient(180deg,var(--bg),var(--bg2) 60%,var(--bg));
 }
 #molbg{position:fixed; inset:0; z-index:-1; opacity:.5; pointer-events:none}
-[data-theme="light"] #molbg{opacity:.32}
+[data-theme="light"] #molbg{opacity:.5}
 a{color:var(--cyan); text-decoration:none}
 h1,h2,h3,h4{font-family:var(--disp); line-height:1.15; margin:0}
 ::selection{background:var(--cyan); color:#04121a}
@@ -106,9 +103,13 @@ aside.nav::-webkit-scrollbar{width:7px}
 .navhead{display:flex; align-items:flex-end; gap:8px; margin:0 0 6px}
 .jump{flex:1; min-width:0}
 .jump-label{display:block; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); font-weight:700; margin:0 2px 5px}
-.jump select{width:100%; padding:9px 11px; border-radius:11px; border:1px solid var(--border); background:var(--panel2);
-  color:var(--text); font-family:var(--sans); font-size:.84rem; cursor:pointer; outline:none; transition:.2s}
-.jump select:hover,.jump select:focus{border-color:var(--cyan)}
+.jumpbtn{width:100%; display:flex; align-items:center; gap:8px; padding:9px 11px; border-radius:11px;
+  border:1px solid var(--border); background:var(--panel2); color:var(--text); font-family:var(--sans);
+  font-size:.84rem; cursor:pointer; outline:none; transition:.2s; text-align:left}
+.jumpbtn:hover,.jumpbtn:focus-visible{border-color:var(--cyan)}
+.jumpbtn span{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.jumpbtn svg{width:15px;height:15px; color:var(--muted); flex:0 0 auto; transition:transform .25s}
+.jumpbtn[aria-expanded="true"] svg{transform:rotate(180deg); color:var(--cyan)}
 .navtoggle{width:34px;height:36px;flex:0 0 auto; border-radius:10px; border:1px solid var(--border); background:var(--panel);
   color:var(--muted); display:grid; place-items:center; cursor:pointer; transition:.2s}
 .navtoggle:hover{border-color:var(--cyan); color:var(--cyan)}
@@ -139,7 +140,9 @@ main{min-width:0}
 .card:hover{border-color:var(--border2)}
 .card.lift:hover{transform:translateY(-4px); box-shadow:var(--shadow)}
 .grid{display:grid; gap:16px}
-.g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(310px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(205px,1fr))}
 .eyebrow{font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--cyan); font-weight:700}
 .h1{font-size:clamp(1.9rem,4.4vw,3rem); letter-spacing:-.03em}
 .h2{font-size:clamp(1.35rem,2.6vw,1.9rem); letter-spacing:-.02em}
@@ -339,28 +342,209 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
   font-size:.9rem; font-weight:600; opacity:0; visibility:hidden; pointer-events:none; max-width:90vw; text-align:center}
 .toast.show{transform:translate(-50%,0); opacity:1; visibility:visible}
 
-/* bottom quick-action dock */
-.dock{position:fixed; left:50%; bottom:18px; transform:translateX(-50%); z-index:150;
-  display:flex; align-items:center; gap:4px; padding:7px 9px;
-  background:color-mix(in srgb, var(--bg2) 88%, transparent); backdrop-filter:blur(16px);
-  border:1px solid var(--border2); border-radius:100px; box-shadow:var(--shadow);
-  transition:transform .32s cubic-bezier(.2,.8,.2,1), opacity .32s}
-.dock.hide{transform:translate(-50%,150%); opacity:0; pointer-events:none}
-[data-theme="light"] .dock{background:rgba(255,255,255,.9)}
-.dockbtn{display:flex; flex-direction:column; align-items:center; gap:2px; min-width:56px; padding:7px 10px;
-  border-radius:100px; border:none; background:transparent; color:var(--muted); cursor:pointer;
-  font-family:var(--sans); font-size:.64rem; font-weight:600; letter-spacing:.02em; transition:.18s; text-decoration:none}
-.dockbtn svg{width:19px;height:19px}
-.dockbtn:hover{background:var(--panel2); color:var(--text); transform:translateY(-2px)}
+/* ============ LIQUID GLASS (layered: blur · tint · rim · specular · depth · elevation) ============ */
+.glass{position:relative; isolation:isolate;
+  /* 2 · body tint — top-lit translucent wash so the pane has substance */
+  background:
+    linear-gradient(152deg, rgba(255,255,255,.20), rgba(255,255,255,.065) 34%, rgba(255,255,255,.025) 56%, rgba(255,255,255,.085) 82%, rgba(255,255,255,.15)),
+    radial-gradient(120% 100% at 10% 0%, rgba(34,211,238,.12), transparent 55%),
+    radial-gradient(120% 100% at 94% 104%, rgba(167,139,250,.11), transparent 55%);
+  /* 1 · backdrop — less blur, more lensing (Apple-accurate) */
+  -webkit-backdrop-filter:blur(24px) saturate(190%) brightness(1.14);
+  backdrop-filter:blur(24px) saturate(190%) brightness(1.14);
+  /* 3 · rim — light-catching hairline */
+  border:1px solid rgba(255,255,255,.30);
+  /* 6 elevation · 4 specular · 5 inner depth */
+  box-shadow:
+    0 32px 74px -26px rgba(0,0,0,.85),
+    0 6px 18px -8px rgba(0,0,0,.5),
+    0 0 0 1px rgba(255,255,255,.07),
+    inset 0 1.5px 0 rgba(255,255,255,.68),
+    inset 0 -1.5px 1px rgba(255,255,255,.20),
+    inset 1.5px 0 0 rgba(255,255,255,.20),
+    inset -1.5px 0 0 rgba(255,255,255,.20),
+    inset 0 -12px 26px rgba(255,255,255,.06),
+    inset 0 0 40px rgba(255,255,255,.045)}
+.glass::after{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:-1;
+  background:
+    radial-gradient(140% 80% at 50% -30%, rgba(255,255,255,.44), transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,.20), transparent 44%),
+    radial-gradient(90% 60% at 50% 120%, rgba(255,255,255,.12), transparent 60%)}
+
+/* --- light mode: glass on a light page. The #1 fix is a DARKER rim, since
+       white rims/highlights vanish over white. Denser tint, softer shadow. --- */
+[data-theme="light"] .glass{
+  /* visibly tinted (not white-on-white): cool frosted body, darker mid-tones */
+  background:
+    linear-gradient(152deg, rgba(255,255,255,.88), rgba(238,245,255,.62) 36%, rgba(224,236,252,.58) 60%, rgba(255,255,255,.80)),
+    radial-gradient(120% 100% at 10% 0%, rgba(8,145,178,.13), transparent 55%),
+    radial-gradient(120% 100% at 94% 104%, rgba(124,58,237,.11), transparent 55%);
+  /* brightness(.98) = lensing: the pane slightly darkens what is behind it */
+  -webkit-backdrop-filter:blur(16px) saturate(165%) brightness(.98) contrast(1.10);
+  backdrop-filter:blur(16px) saturate(165%) brightness(.98) contrast(1.10);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:
+    0 20px 44px -16px rgba(20,50,90,.36),
+    0 5px 14px -6px rgba(20,50,90,.22),
+    0 0 0 1px rgba(15,40,75,.20),
+    inset 0 1.5px 0 #fff,
+    inset 0 -2px 3px rgba(20,50,90,.13),
+    inset 1.5px 0 0 rgba(255,255,255,1),
+    inset -1.5px 0 0 rgba(255,255,255,1),
+    inset 0 -16px 28px rgba(20,50,90,.10)}
+[data-theme="light"] .glass::after{background:
+    radial-gradient(140% 80% at 50% -30%, rgba(255,255,255,.95), transparent 55%),
+    linear-gradient(135deg, rgba(255,255,255,.60), transparent 46%),
+    radial-gradient(90% 60% at 50% 120%, rgba(20,50,90,.05), transparent 60%)}
+
+/* real refraction: bend the backdrop, not just blur it (Chromium today) */
+@supports (backdrop-filter: url(#lg-refract)){
+  .dock,.coach{
+    -webkit-backdrop-filter:blur(7px) saturate(180%) brightness(1.10) url(#lg-refract);
+    backdrop-filter:blur(7px) saturate(180%) brightness(1.10) url(#lg-refract)}
+  [data-theme="light"] .dock,[data-theme="light"] .coach{
+    -webkit-backdrop-filter:blur(6px) saturate(150%) brightness(.99) contrast(1.06) url(#lg-refract);
+    backdrop-filter:blur(6px) saturate(150%) brightness(.99) contrast(1.06) url(#lg-refract)}
+}
+
+/* ============ BOTTOM QUICK-DOCK ============ */
+.dock{position:fixed; left:50%; bottom:18px; transform:translateX(-50%); z-index:150; overflow:hidden;
+  display:flex; align-items:center; gap:2px; padding:7px; border-radius:100px;
+  transition:padding .3s cubic-bezier(.2,.8,.2,1), gap .3s}
+/* persistent hidden state (NOT .hide — that is display:none and would kill the animation) */
+.dock.hidden{transform:translate(-50%,300%) scale(.62,.4); opacity:0; filter:blur(18px); pointer-events:none}
+/* fountain: springs up from the bottom edge, stretches like liquid, settles */
+.dock.rise{animation:fountainRise .82s cubic-bezier(.22,.9,.3,1) both}
+.dock.sink{animation:fountainSink .5s cubic-bezier(.5,0,.75,0) both}
+@keyframes fountainRise{
+  0%{transform:translate(-50%,300%) scale(.62,.4); opacity:0; filter:blur(18px)}
+  36%{transform:translate(-50%,-17%) scale(.94,1.15); opacity:1; filter:blur(2px)}
+  55%{transform:translate(-50%,8%) scale(1.04,.95); filter:blur(0)}
+  73%{transform:translate(-50%,-4%) scale(.99,1.03)}
+  88%{transform:translate(-50%,2%) scale(1.005,.99)}
+  100%{transform:translate(-50%,0) scale(1); opacity:1; filter:blur(0)}
+}
+@keyframes fountainSink{
+  0%{transform:translate(-50%,0) scale(1); opacity:1; filter:blur(0)}
+  22%{transform:translate(-50%,8%) scale(1.03,.95); opacity:1; filter:blur(0)}
+  100%{transform:translate(-50%,300%) scale(.62,.4); opacity:0; filter:blur(18px)}
+}
+.dock::before{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:3;
+  background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.34) 46%, rgba(255,255,255,.09) 54%, transparent 70%);
+  transform:translateX(-78%); opacity:0}
+.dock.sheen::before{animation:sheenSweep 1.05s cubic-bezier(.3,.7,.3,1)}
+@keyframes sheenSweep{0%{opacity:0;transform:translateX(-80%)}20%{opacity:1}100%{opacity:0;transform:translateX(80%)}}
+.dockbtn{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;
+  min-width:42px; padding:8px 8px; border-radius:100px; border:none; background:transparent; color:var(--muted);
+  cursor:pointer; font-family:var(--sans); font-size:.64rem; font-weight:600; letter-spacing:.02em;
+  transition:background .2s, color .2s, transform .2s, min-width .3s cubic-bezier(.2,.8,.2,1), padding .3s; text-decoration:none}
+.dockbtn svg{width:19px;height:19px; flex:0 0 auto}
+.dockbtn>span{max-height:0; opacity:0; overflow:hidden; transition:max-height .28s cubic-bezier(.2,.8,.2,1), opacity .2s, margin-top .28s; white-space:nowrap}
+.dockbtn:hover{background:rgba(255,255,255,.12); color:var(--text); transform:translateY(-2px)}
+[data-theme="light"] .dockbtn:hover{background:rgba(20,50,90,.08)}
 .dockbtn.on{background:var(--cyan-soft); color:var(--cyan)}
-.dockprog{display:flex; align-items:center; gap:9px; padding:4px 14px 4px 5px; border-radius:100px; margin-left:4px;
-  background:var(--panel2); border:1px solid var(--border); text-decoration:none; transition:.18s}
+.dock:hover .dockbtn,.dock:focus-within .dockbtn,.dock.wide .dockbtn{min-width:58px; padding:8px 10px}
+.dock:hover .dockbtn>span,.dock:focus-within .dockbtn>span,.dock.wide .dockbtn>span{max-height:14px; opacity:1; margin-top:2px}
+.dockprog{display:flex; align-items:center; gap:0; padding:4px; border-radius:100px; margin-left:2px;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); text-decoration:none;
+  transition:gap .3s, padding .3s cubic-bezier(.2,.8,.2,1), border-color .2s}
+[data-theme="light"] .dockprog{background:rgba(20,50,90,.05); border-color:rgba(20,50,90,.12)}
 .dockprog:hover{border-color:var(--cyan)}
-.dockring{width:38px;height:38px;border-radius:50%;flex:0 0 auto; display:grid; place-items:center;
-  background:conic-gradient(var(--cyan) calc(var(--p,0)*1%), var(--panel2) 0); position:relative}
-.dockring::after{content:""; position:absolute; inset:5px; border-radius:50%; background:var(--bg2)}
-.dockring b{position:relative; z-index:1; font-family:var(--disp); font-size:.66rem; color:var(--text)}
-.dockprog-txt{font-size:.68rem; color:var(--muted); font-weight:600}
+.dockring{width:36px;height:36px;border-radius:50%;flex:0 0 auto; display:grid; place-items:center;
+  background:conic-gradient(var(--cyan) calc(var(--p,0)*1%), rgba(255,255,255,.14) 0); position:relative}
+.dockring::after{content:""; position:absolute; inset:5px; border-radius:50%; background:color-mix(in srgb, var(--bg2) 92%, transparent)}
+.dockring b{position:relative; z-index:1; font-family:var(--disp); font-size:.64rem; color:var(--text)}
+.dockprog-txt{font-size:.68rem; color:var(--muted); font-weight:600; max-width:0; opacity:0; overflow:hidden; white-space:nowrap;
+  transition:max-width .3s cubic-bezier(.2,.8,.2,1), opacity .2s, margin-left .3s}
+.dock:hover .dockprog,.dock:focus-within .dockprog,.dock.wide .dockprog{gap:9px; padding:4px 14px 4px 5px}
+.dock:hover .dockprog-txt,.dock:focus-within .dockprog-txt,.dock.wide .dockprog-txt{max-width:90px; opacity:1; margin-left:0}
+
+/* ============ STUDY COACH (remote guide) ============ */
+.coach{position:fixed; right:20px; bottom:96px; width:min(392px, calc(100vw - 32px)); z-index:165;
+  border-radius:24px; padding:0; overflow:hidden; transform-origin:bottom right;
+  display:flex; flex-direction:column; max-height:min(84vh,760px);
+  transform:translateY(16px) scale(.9); opacity:0; pointer-events:none;
+  transition:transform .38s cubic-bezier(.2,.9,.25,1.06), opacity .26s ease}
+.coach.open{transform:none; opacity:1; pointer-events:auto}
+.coach-head{display:flex; align-items:center; gap:10px; padding:14px 16px 12px; border-bottom:1px solid rgba(255,255,255,.13); flex:0 0 auto}
+.coach-head .av{width:36px;height:36px;border-radius:12px;flex:0 0 auto; display:grid;place-items:center; color:#04121a;
+  background:linear-gradient(135deg,var(--cyan),var(--teal) 60%,var(--violet)); box-shadow:0 8px 20px -8px var(--cyan)}
+.coach-head .av svg{width:19px;height:19px}
+.coach-head b{font-family:var(--disp); font-size:.95rem; display:block; line-height:1.15}
+.coach-head .tiny{display:block}
+.coach-head .xbtn{margin-left:auto; width:30px;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.16);
+  background:transparent; color:var(--muted); cursor:pointer; display:grid; place-items:center; transition:.2s}
+.coach-head .xbtn:hover{color:var(--text); border-color:var(--cyan)}
+.coach-head .xbtn svg{width:15px;height:15px}
+.coach-body{padding:14px 16px 16px; flex:1; min-height:0; overflow-y:auto}
+.coach-meter{display:flex; align-items:center; gap:12px; margin-bottom:10px}
+.coach-meter .bar{flex:1; height:8px; border-radius:20px; background:rgba(255,255,255,.13); overflow:hidden}
+.coach-meter .bar i{display:block; height:100%; border-radius:20px; background:linear-gradient(90deg,var(--cyan),var(--teal)); transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.coach-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px}
+.coach-stats div{background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 9px; text-align:center}
+.coach-stats b{display:block; font-family:var(--disp); font-size:1.05rem}
+.coach-stats span{font-size:.62rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase}
+.coach-h{font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); font-weight:700; margin:12px 0 6px}
+.coach-act{display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:9px 11px; border-radius:13px;
+  border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); color:var(--text); cursor:pointer;
+  font-family:var(--sans); font-size:.85rem; font-weight:600; margin-bottom:6px; transition:.2s; text-decoration:none}
+.coach-act:hover{background:rgba(255,255,255,.13); border-color:var(--cyan); transform:translateX(3px)}
+[data-theme="light"] .coach-act{background:rgba(20,50,90,.045); border-color:rgba(20,50,90,.12)}
+[data-theme="light"] .coach-act:hover{background:rgba(20,50,90,.09)}
+.coach-act .ic{width:30px;height:30px;border-radius:9px;flex:0 0 auto; display:grid;place-items:center; background:var(--cyan-soft); color:var(--cyan)}
+.coach-act .ic svg{width:16px;height:16px}
+.coach-act .sub{display:block; font-size:.72rem; font-weight:400; color:var(--muted); margin-top:2px}
+.coach-q{background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:14px; padding:12px; margin-top:4px}
+[data-theme="light"] .coach-q{background:rgba(20,50,90,.045)}
+.coach-q .opt{padding:9px 11px; font-size:.84rem; margin:6px 0}
+
+/* ============ ZOOM MODAL ============ */
+.zoom{position:fixed; inset:0; z-index:230; display:grid; place-items:center; padding:20px;
+  background:rgba(3,7,14,.68); -webkit-backdrop-filter:blur(12px) saturate(140%); backdrop-filter:blur(12px) saturate(140%);
+  opacity:0; pointer-events:none; transition:opacity .28s ease}
+.zoom.open{opacity:1; pointer-events:auto}
+.zoom .zpanel{width:min(1080px,94vw); max-height:88vh; border-radius:26px; display:flex; flex-direction:column;
+  transform:scale(.94); transition:transform .32s cubic-bezier(.2,.9,.25,1.06)}
+.zoom.open .zpanel{transform:none}
+.zoom .zhead{display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid rgba(255,255,255,.13)}
+.zoom .zhead b{font-family:var(--disp); font-size:.98rem}
+.zoom .zhead .xbtn{margin-left:auto; width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.18);
+  background:transparent; color:var(--muted); cursor:pointer; display:grid; place-items:center; transition:.2s}
+.zoom .zhead .xbtn:hover{color:var(--text); border-color:var(--cyan)}
+.zoom .zhead .xbtn svg{width:16px;height:16px}
+.zoom .zbody{padding:22px; overflow:auto; display:grid; place-items:center; flex:1; min-height:0}
+.zoom .zbody svg{width:100%; max-width:900px; height:auto; transition:transform .28s cubic-bezier(.2,.8,.2,1); transform-origin:center}
+.zoom .zbar{display:flex; gap:8px; align-items:center; justify-content:center; padding:12px 18px; border-top:1px solid rgba(255,255,255,.13); flex-wrap:wrap}
+.zoom .zlevel{font-family:var(--mono); font-size:.78rem; color:var(--muted); min-width:52px; text-align:center}
+
+/* ============ TOPIC PICKER DROPDOWN ============ */
+.tpick-panel{position:fixed; z-index:180; width:min(340px, calc(100vw - 24px)); border-radius:20px; padding:8px;
+  max-height:min(62vh,520px); overflow-y:auto; transform-origin:top left;
+  transform:translateY(-8px) scale(.96); opacity:0; pointer-events:none;
+  transition:transform .26s cubic-bezier(.2,.9,.25,1.06), opacity .2s ease}
+.tpick-panel.open{transform:none; opacity:1; pointer-events:auto}
+.tpick-item{display:flex; align-items:center; gap:11px; padding:8px 9px; border-radius:14px; cursor:pointer;
+  color:var(--text); transition:.18s; border:1px solid transparent; text-decoration:none}
+.tpick-item:hover,.tpick-item:focus-visible{background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.18); outline:none}
+[data-theme="light"] .tpick-item:hover,[data-theme="light"] .tpick-item:focus-visible{background:rgba(20,50,90,.07)}
+.tpick-item.cur{background:var(--cyan-soft); border-color:rgba(34,211,238,.35)}
+.tpick-item .thumb{width:44px;height:44px;flex:0 0 auto; border-radius:12px; overflow:hidden; display:grid; place-items:center;
+  background:linear-gradient(140deg, rgba(34,211,238,.16), rgba(167,139,250,.12)); border:1px solid rgba(255,255,255,.14)}
+.tpick-item .thumb svg{width:38px;height:38px}
+.tpick-item b{font-size:.86rem; font-weight:600; display:block; line-height:1.2}
+.tpick-item .tiny{display:block; margin-top:2px}
+.tpick-item .go{margin-left:auto; color:var(--faint); flex:0 0 auto}
+.tpick-item .go svg{width:15px;height:15px}
+.tpick-head{padding:8px 10px 6px; display:flex; align-items:center; gap:8px; border-bottom:1px solid rgba(255,255,255,.12); margin-bottom:6px}
+.tpick-head input{flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:var(--sans); font-size:.86rem}
+.tpick-head svg{width:16px;height:16px; color:var(--muted)}
+
+/* topic thumbnails on cards */
+.thumb-lg{width:100%; height:104px; border-radius:14px; overflow:hidden; display:grid; place-items:center; margin-bottom:12px;
+  background:linear-gradient(140deg, rgba(34,211,238,.13), rgba(167,139,250,.10)); border:1px solid var(--border)}
+.thumb-lg svg{width:150px;height:88px}
+.topiccard .thumb-lg{transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.topiccard:hover .thumb-lg{transform:scale(1.05)}
 
 /* mobile nav overlay */
 .mnav{position:fixed; inset:0; z-index:120; background:rgba(4,8,16,.72); backdrop-filter:blur(6px); opacity:0; pointer-events:none; transition:.3s}
@@ -386,24 +570,46 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
   .shell{padding:16px 14px 108px; gap:0}
   .flash{height:250px}
   .dock{bottom:10px; gap:2px; padding:6px 7px}
-  .dockbtn{min-width:46px; padding:6px 7px}
-  .dockprog-txt{display:none}
-  .dockprog{padding:4px 8px 4px 4px}
+  .dockbtn{min-width:42px; padding:7px 7px}
+  .dock.wide .dockbtn{min-width:50px; padding:7px 8px}
+  .dockprog{padding:4px}
+  .coach{right:10px; left:10px; width:auto; bottom:88px}
   .toast{bottom:88px}
-  #molbg{opacity:.22}
+  #molbg{opacity:.34}
 }
 @media print{
-  header.top,aside.nav,.btn,.mnav,.dgctl,#molbg,.dock,.toast{display:none !important}
+  header.top,aside.nav,.btn,.mnav,.dgctl,#molbg,.dock,.toast,.coach,.zoom,.tpick-panel{display:none !important}
   body{background:#fff;color:#000}
   .shell{display:block;padding:0}
   .card,.acc{break-inside:avoid; box-shadow:none; border-color:#ccc}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
+/* touch devices: no hover, so keep the dock expanded */
+@media(hover:none){
+  .dock .dockbtn{min-width:56px}
+  .dock .dockbtn>span{max-height:14px; opacity:1; margin-top:2px}
+  .dock .dockprog{gap:9px; padding:4px 12px 4px 5px}
+  .dock .dockprog-txt{max-width:90px; opacity:1}
+}
 
 </style>
 </head>
 <body>
 <canvas id="molbg" aria-hidden="true"></canvas>
+
+<!-- SVG refraction filter: bends the backdrop so glass really lenses (Chromium) -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;pointer-events:none">
+  <filter id="lg-refract" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.006 0.011" numOctaves="2" seed="7" result="noise"/>
+    <feGaussianBlur in="noise" stdDeviation="1.8" result="soft"/>
+    <feDisplacementMap in="SourceGraphic" in2="soft" scale="26" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="lg-refract-strong" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.004 0.009" numOctaves="2" seed="3" result="noise"/>
+    <feGaussianBlur in="noise" stdDeviation="2.4" result="soft"/>
+    <feDisplacementMap in="SourceGraphic" in2="soft" scale="40" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 
 <header class="top">
   <div class="wrap topin">
@@ -427,10 +633,11 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
   <aside class="nav" id="sideNav" aria-label="Main navigation">
     <div class="navhead">
       <div class="jump">
-        <label class="jump-label" for="topicJump">Jump to a topic</label>
-        <select id="topicJump" aria-label="Jump to a topic">
-          <option value="">Select a topic…</option>
-        </select>
+        <label class="jump-label" id="jumpLabel1">Jump to a topic</label>
+        <button class="jumpbtn" id="topicJump" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="jumpLabel1">
+          <span id="topicJumpLabel">Select a topic…</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
       <button class="navtoggle" id="navToggle" title="Collapse / expand sidebar" aria-label="Collapse or expand sidebar" aria-expanded="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
@@ -441,7 +648,7 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
   <main id="main" role="main"></main>
 </div>
 
-<nav class="dock" id="dock" aria-label="Quick actions">
+<nav class="dock glass" id="dock" aria-label="Quick actions">
   <a class="dockbtn" href="#/dashboard" data-dock="dashboard" title="Dashboard">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg><span>Home</span>
   </a>
@@ -453,6 +660,9 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
   </a>
   <button class="dockbtn" id="dockTop" title="Back to top" aria-label="Back to top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5M6 11l6-6 6 6"/></svg><span>Top</span>
+  </button>
+  <button class="dockbtn" id="dockCoach" title="Study Coach — what to do next" aria-label="Open study coach">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M18 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg><span>Coach</span>
   </button>
   <a class="dockprog" href="#/dashboard" title="Your chapter progress" aria-label="Chapter progress">
     <span class="dockring" id="dockRing"><b id="dockPct">0%</b></span>
@@ -467,10 +677,51 @@ mark{background:var(--amber); color:#2b1a02; padding:0 3px; border-radius:4px}
     </button>
     <div style="height:34px"></div>
     <div class="jump" style="margin-bottom:12px">
-      <label class="jump-label" for="topicJumpM">Jump to a topic</label>
-      <select id="topicJumpM" aria-label="Jump to a topic"><option value="">Select a topic…</option></select>
+      <label class="jump-label" id="jumpLabel2">Jump to a topic</label>
+      <button class="jumpbtn" id="topicJumpM" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="jumpLabel2">
+        <span>Select a topic…</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
     </div>
     <nav id="mnavlinks" aria-label="Mobile navigation"></nav>
+  </div>
+</div>
+
+<div class="tpick-panel glass" id="tpick" role="listbox" aria-label="Choose a topic">
+  <div class="tpick-head">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input id="tpickSearch" placeholder="Search topics…" aria-label="Search topics">
+  </div>
+  <div id="tpickList"></div>
+</div>
+
+<aside class="coach glass" id="coach" aria-label="Study coach" aria-live="polite">
+  <div class="coach-head">
+    <span class="av" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M18 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></span>
+    <span style="min-width:0"><b>Study Coach</b><span class="tiny" id="coachHello">Let's find your next step</span></span>
+    <button class="xbtn" id="coachClose" aria-label="Close study coach">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="coach-body" id="coachBody"></div>
+</aside>
+
+<div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Diagram zoom">
+  <div class="zpanel glass">
+    <div class="zhead">
+      <b id="zoomTitle">Diagram</b>
+      <button class="xbtn" id="zoomClose" aria-label="Close zoom">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="zbody" id="zoomBody"></div>
+    <div class="zbar">
+      <button class="btn sm" id="zoomOut" aria-label="Zoom out">− Zoom out</button>
+      <span class="zlevel" id="zoomLevel">100%</span>
+      <button class="btn sm" id="zoomIn" aria-label="Zoom in">+ Zoom in</button>
+      <button class="btn sm ghost" id="zoomReset">Reset</button>
+      <button class="btn sm ghost" id="zoomLabels">Hide labels</button>
+    </div>
   </div>
 </div>
 
@@ -1570,18 +1821,21 @@ function setDock(route){$$('[data-dock]').forEach(a=>a.classList.toggle('on',a.d
 function setActive(route){$$('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===route));}
 
 let VIEW='dashboard';
+let CUR_TOPIC='';
 function route(){
   const h=(location.hash||'#/dashboard').replace('#/','');
   const [r,arg]=h.split('/');
   VIEW=r||'dashboard';
+  CUR_TOPIC=(VIEW==='topic')?arg:'';
   setActive(VIEW); setDock(VIEW);
+  closeTpick();
   const m=$('#main');
   const fn={dashboard:vDashboard,guide:vGuide,learn:vLearn,topic:vTopic,diagrams:vDiagrams,builder:vBuilder,
     reactions:vReactions,activities:vActivities,flashcards:vFlashcards,practice:vPractice,
     assessment:vAssessment,notes:vNotes,search:vSearch,completeness:vCompleteness}[VIEW]||vDashboard;
   m.innerHTML='<div class="spinner" role="status" aria-label="Loading"></div>';
   requestAnimationFrame(()=>{try{m.innerHTML=fn(arg);afterRender();}catch(e){m.innerHTML=`<div class="card"><h3 class="h3">Something went wrong</h3><p class="small">${esc(e.message)}</p><button class="btn sm" onclick="location.reload()">Reload</button></div>`;}});
-  const tj=$('#topicJump'); if(tj) tj.value=(VIEW==='topic'&&arg)?arg:'';
+  const tjl=$('#topicJumpLabel'); if(tjl){const t=CUR_TOPIC?topicById(CUR_TOPIC):null; tjl.textContent=t?(t.num+' · '+t.title):'Select a topic…';}
   window.scrollTo({top:0,behavior:'smooth'});
   closeMnav();
 }
@@ -1679,6 +1933,7 @@ function topicCard(t){
   return `<a class="card lift topiccard ${done?'done':''}" href="#/topic/${t.id}">
     <div class="bar"></div>
     <div class="chk">${svg(IC.check,13)}</div>
+    <div class="thumb-lg">${topicArt(t.id)}</div>
     <div class="num">${esc(t.num)} · ${esc(t.ref)}</div>
     <h3 class="h3" style="margin:7px 0 6px">${esc(t.title)}</h3>
     <p class="small">${esc(t.kicker)}</p>
@@ -1754,7 +2009,7 @@ function diagramCard(key){
       <h3 class="h3">${esc(d.t)}</h3>
       <div class="dgctl">
         <button class="btn sm" data-dgtoggle="${id}">${svg(IC.eyeoff,15)} Hide labels</button>
-        <button class="btn sm" data-dgzoom="${id}">${svg(IC.search,15)} Zoom</button>
+        <button class="btn sm" data-dgz="${key}">${svg(IC.search,15)} Zoom</button>
       </div>
     </div>
     <div class="diagrambox" id="${id}">${d.d(key)}</div>
@@ -2326,10 +2581,11 @@ function renderGuideList(term){
   const items=CHAPTER.topics.filter(t=>!term || (t.title+' '+t.kicker+' '+t.num+' '+t.ref).toLowerCase().includes(term));
   if(!items.length){out.innerHTML=`<div class="empty">${svg(IC.search,52)}<p>No topic matches “${esc(term)}”. Try another keyword.</p></div>`;return;}
   out.innerHTML=`<p class="tiny" style="margin-bottom:10px">${items.length} topic(s)</p>`+
-    items.map(t=>`<a class="searchres" href="#/topic/${t.id}" style="display:block">
-      <span class="pill cyan">${esc(t.num)}</span>
+    items.map(t=>`<a class="searchres" href="#/topic/${t.id}" style="display:flex;gap:11px;align-items:center">
+      <span class="thumb" style="width:44px;height:44px;flex:0 0 auto;border-radius:12px;display:grid;place-items:center;background:linear-gradient(140deg, rgba(34,211,238,.16), rgba(167,139,250,.12));border:1px solid var(--border)">${topicArt(t.id)}</span>
+      <span style="min-width:0"><span class="pill cyan">${esc(t.num)}</span>
       <b style="font-size:.95rem;color:var(--text);margin-left:6px">${esc(t.title)}</b>
-      <div class="tiny" style="margin-top:4px">${esc(t.kicker)} · ${t.mins} min</div></a>`).join('');
+      <div class="tiny" style="margin-top:4px">${esc(t.kicker)} · ${t.mins} min</div></span></a>`).join('');
 }
 
 /* ============================================================
@@ -2414,8 +2670,7 @@ function delegate(e){
   const dgt=t.closest('[data-dgtoggle]'); if(dgt){const box=$('#'+dgt.dataset.dgtoggle); const hidden=box.dataset.hidden==='1';
     box.dataset.hidden=hidden?'0':'1'; $$('.lbl',box).forEach(l=>l.classList.toggle('hidden',!hidden));
     dgt.innerHTML=(hidden?'Hide':'Show')+' labels'; return;}
-  const dgz=t.closest('[data-dgzoom]'); if(dgz){const box=$('#'+dgz.dataset.dgzoom); box.style.transition='.3s';
-    const z=box.dataset.z==='1'?'':'scale(1.35)'; box.dataset.z=box.dataset.z==='1'?'0':'1'; box.style.transform=z; box.style.transformOrigin='center'; return;}
+  const dgz=t.closest('[data-dgz]'); if(dgz){openZoom(dgz.dataset.dgz); return;}
   const rev=t.closest('[data-reveal]'); if(rev){const a=$('#ans_'+rev.dataset.reveal); a.classList.toggle('hide'); rev.textContent=a.classList.contains('hide')?'Reveal answer':'Hide answer'; return;}
   const hint=t.closest('[data-hint]'); if(hint){const el=$('#'+hint.dataset.hint); if(el) el.classList.toggle('hide'); return;}
   const bm=t.closest('[data-bm]'); if(bm){const id=bm.dataset.bm; ST.bookmarks[id]=!ST.bookmarks[id]; save(); bm.style.color=ST.bookmarks[id]?'var(--amber)':''; toast(ST.bookmarks[id]?'Bookmarked':'Removed bookmark'); return;}
@@ -2441,6 +2696,217 @@ function delegate(e){
   if(t.closest('#qzFinish')){finishQuiz(); return;}
 }
 function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ============================================================
+   TOPIC ARTWORK (original SVG thumbnails, one per topic)
+   ============================================================ */
+const ART={
+  t0:`<circle cx="60" cy="36" r="20" fill="none" stroke="#2dd4bf" stroke-width="2.4" stroke-dasharray="6 5"/>
+      <circle cx="60" cy="36" r="7" fill="#22d3ee"/><path d="M60 16v-7M60 56v7M40 36h-7M80 36h7" stroke="#93a5c2" stroke-width="2.2"/>`,
+  t1:`<circle cx="47" cy="36" r="17" fill="none" stroke="#22d3ee" stroke-width="2.4"/>
+      <circle cx="73" cy="36" r="17" fill="none" stroke="#a78bfa" stroke-width="2.4"/>
+      <circle cx="57" cy="36" r="3.4" fill="#fbbf24"/><circle cx="63" cy="36" r="3.4" fill="#fbbf24"/>`,
+  t2:`<path d="M32 22l13-13 13 13-13 13z" fill="none" stroke="#22d3ee" stroke-width="2.4"/>
+      <path d="M84 20l10 6v12l-10 6-10-6V26z" fill="none" stroke="#2dd4bf" stroke-width="2.4"/>
+      <path d="M84 20v24M74 26l20 12M94 26L74 38" stroke="#2dd4bf" stroke-width="1" opacity=".5"/>`,
+  t3:`<path d="M28 36h18M62 36h18" stroke="#2dd4bf" stroke-width="3"/>
+      <circle cx="20" cy="36" r="8" fill="none" stroke="#22d3ee" stroke-width="2.4"/>
+      <circle cx="54" cy="36" r="8" fill="none" stroke="#22d3ee" stroke-width="2.4"/>
+      <circle cx="88" cy="36" r="8" fill="none" stroke="#22d3ee" stroke-width="2.4"/>
+      <circle cx="88" cy="18" r="6" fill="none" stroke="#a78bfa" stroke-width="2"/><path d="M88 28v-4" stroke="#a78bfa" stroke-width="2"/>`,
+  t4:`<line x1="34" y1="24" x2="86" y2="24" stroke="#2dd4bf" stroke-width="3"/>
+      <circle cx="26" cy="24" r="8" fill="none" stroke="#22d3ee" stroke-width="2.2"/><circle cx="94" cy="24" r="8" fill="none" stroke="#22d3ee" stroke-width="2.2"/>
+      <line x1="34" y1="44" x2="86" y2="44" stroke="#fbbf24" stroke-width="3"/><line x1="34" y1="52" x2="86" y2="52" stroke="#fbbf24" stroke-width="3"/>
+      <circle cx="26" cy="48" r="8" fill="none" stroke="#22d3ee" stroke-width="2.2"/><circle cx="94" cy="48" r="8" fill="none" stroke="#22d3ee" stroke-width="2.2"/>`,
+  t5:`<path d="M46 14l16 9v18l-16 9-16-9V23z" fill="none" stroke="#2dd4bf" stroke-width="2.4"/>
+      <circle cx="46" cy="14" r="5" fill="none" stroke="#22d3ee" stroke-width="2"/>
+      <path d="M62 32h16" stroke="#a78bfa" stroke-width="2.6"/><circle cx="84" cy="32" r="6" fill="none" stroke="#a78bfa" stroke-width="2.2"/>`,
+  t6:`<rect x="22" y="22" width="76" height="28" rx="14" fill="none" stroke="#fbbf24" stroke-width="2.4"/>
+      <text x="60" y="41" text-anchor="middle" fill="#fbbf24" font-size="14" font-family="monospace" font-weight="700">—OH</text>
+      <text x="60" y="64" text-anchor="middle" fill="#93a5c2" font-size="9">functional group</text>`,
+  t7:`<rect x="24" y="46" width="14" height="12" rx="3" fill="#22d3ee" opacity=".85"/>
+      <rect x="44" y="36" width="14" height="22" rx="3" fill="#2dd4bf" opacity=".85"/>
+      <rect x="64" y="26" width="14" height="32" rx="3" fill="#a78bfa" opacity=".85"/>
+      <rect x="84" y="16" width="14" height="42" rx="3" fill="#fbbf24" opacity=".85"/>
+      <text x="60" y="68" text-anchor="middle" fill="#93a5c2" font-size="9">each step = –CH₂–</text>`,
+  t8:`<rect x="20" y="20" width="34" height="24" rx="10" fill="none" stroke="#22d3ee" stroke-width="2.2"/>
+      <text x="37" y="36" text-anchor="middle" fill="#22d3ee" font-size="11" font-family="monospace">-ane</text>
+      <path d="M58 32h10M64 27l6 5-6 5" stroke="#93a5c2" stroke-width="2" fill="none"/>
+      <rect x="76" y="20" width="30" height="24" rx="10" fill="none" stroke="#fbbf24" stroke-width="2.2"/>
+      <text x="91" y="36" text-anchor="middle" fill="#fbbf24" font-size="11" font-family="monospace">-ene</text>`,
+  t9:`<path d="M60 8c8 14 16 20 16 30a16 16 0 0 1-32 0c0-10 8-16 16-30z" fill="none" stroke="#fbbf24" stroke-width="2.6"/>
+      <path d="M60 30c4 7 8 10 8 15a8 8 0 0 1-16 0c0-5 4-8 8-15z" fill="#fbbf24" opacity=".55"/>
+      <text x="60" y="66" text-anchor="middle" fill="#93a5c2" font-size="9">heat + light</text>`,
+  t10:`<circle cx="34" cy="30" r="14" fill="none" stroke="#a78bfa" stroke-width="2.4"/>
+      <text x="34" y="34" text-anchor="middle" fill="#a78bfa" font-size="9" font-family="monospace">KMnO₄</text>
+      <path d="M56 30h14M64 25l6 5-6 5" stroke="#93a5c2" stroke-width="2" fill="none"/>
+      <circle cx="88" cy="30" r="14" fill="none" stroke="#2dd4bf" stroke-width="2.4"/>
+      <text x="88" y="34" text-anchor="middle" fill="#2dd4bf" font-size="10" font-family="monospace">–COOH</text>
+      <text x="60" y="62" text-anchor="middle" fill="#93a5c2" font-size="9">alcohol → acid</text>`,
+  t11:`<circle cx="34" cy="36" r="9" fill="none" stroke="#22d3ee" stroke-width="2.2"/><circle cx="58" cy="36" r="9" fill="none" stroke="#22d3ee" stroke-width="2.2"/>
+      <line x1="43" y1="31" x2="49" y2="31" stroke="#fbbf24" stroke-width="2.6"/><line x1="43" y1="41" x2="49" y2="41" stroke="#fbbf24" stroke-width="2.6"/>
+      <path d="M72 36h12" stroke="#2dd4bf" stroke-width="2.6"/><circle cx="92" cy="36" r="7" fill="none" stroke="#2dd4bf" stroke-width="2.2"/>
+      <text x="92" y="39" text-anchor="middle" fill="#2dd4bf" font-size="9" font-family="monospace">H₂</text>
+      <text x="60" y="62" text-anchor="middle" fill="#93a5c2" font-size="9">+ hydrogen (Ni/Pd)</text>`,
+  t12:`<circle cx="34" cy="36" r="10" fill="none" stroke="#22d3ee" stroke-width="2.2"/>
+      <text x="34" y="40" text-anchor="middle" fill="#22d3ee" font-size="10">H</text>
+      <path d="M50 30c8-8 20-8 28 0M78 42c-8 8-20 8-28 0" stroke="#93a5c2" stroke-width="1.8" fill="none"/>
+      <circle cx="90" cy="36" r="10" fill="none" stroke="#fbbf24" stroke-width="2.2"/>
+      <text x="90" y="40" text-anchor="middle" fill="#fbbf24" font-size="10">Cl</text>
+      <text x="60" y="64" text-anchor="middle" fill="#93a5c2" font-size="9">in sunlight</text>`,
+  t13:`<rect x="44" y="18" width="32" height="10" rx="3" fill="none" stroke="#2dd4bf" stroke-width="2.2"/>
+      <path d="M48 28v20a10 10 0 0 0 10 10h4a10 10 0 0 0 10-10V28" fill="none" stroke="#2dd4bf" stroke-width="2.2"/>
+      <path d="M52 44h16" stroke="#22d3ee" stroke-width="2" opacity=".7"/>
+      <text x="60" y="66" text-anchor="middle" fill="#93a5c2" font-size="9">C₂H₅OH</text>`,
+  t14:`<rect x="46" y="14" width="28" height="8" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.2"/>
+      <path d="M50 22v22a10 10 0 0 0 10 10h0a10 10 0 0 0 10-10V22" fill="none" stroke="#fbbf24" stroke-width="2.2"/>
+      <path d="M60 30v14M54 36h12" stroke="#2dd4bf" stroke-width="2"/>
+      <text x="60" y="66" text-anchor="middle" fill="#93a5c2" font-size="9">CH₃COOH · vinegar</text>`,
+  t15:`<circle cx="60" cy="34" r="12" fill="none" stroke="#fbbf24" stroke-width="2.2"/>
+      ${Array.from({length:10}).map((_,i)=>{const a=i/10*Math.PI*2;return `<line x1="${(60+Math.cos(a)*12).toFixed(1)}" y1="${(34+Math.sin(a)*12).toFixed(1)}" x2="${(60+Math.cos(a)*24).toFixed(1)}" y2="${(34+Math.sin(a)*24).toFixed(1)}" stroke="#2dd4bf" stroke-width="2"/><circle cx="${(60+Math.cos(a)*24).toFixed(1)}" cy="${(34+Math.sin(a)*24).toFixed(1)}" r="3" fill="#22d3ee"/>`}).join('')}
+      <text x="60" y="68" text-anchor="middle" fill="#93a5c2" font-size="9">micelle · soap</text>`
+};
+function topicArt(id){return `<svg viewBox="0 0 120 72" role="img" aria-hidden="true">${ART[id]||ART.t0}</svg>`;}
+
+/* ============================================================
+   TOPIC PICKER (dropdown with pictures)
+   ============================================================ */
+let TPK={open:false,trigger:null};
+function tpickItemsHTML(term){
+  term=(term||'').trim().toLowerCase();
+  const items=CHAPTER.topics.filter(t=>!term||(t.title+' '+t.kicker+' '+t.num).toLowerCase().includes(term));
+  if(!items.length) return `<div class="empty" style="padding:22px">${svg(IC.search,38)}<p class="small">No topic matches “${esc(term)}”.</p></div>`;
+  return items.map(t=>`<a class="tpick-item ${VIEW==='topic'&&t.id===CUR_TOPIC?'cur':''}" href="#/topic/${t.id}" data-tp="${t.id}" role="option">
+      <span class="thumb">${topicArt(t.id)}</span>
+      <span style="min-width:0"><b>${esc(t.title)}</b><span class="tiny">${esc(t.num)} · ${esc(t.ref)} · ${t.mins} min</span></span>
+      <span class="go">${svg(IC.chev,15)}</span></a>`).join('');
+}
+function openTpick(trigger){
+  const panel=$('#tpick'); if(!panel) return;
+  TPK.trigger=trigger; TPK.open=true;
+  $('#tpickList').innerHTML=tpickItemsHTML('');
+  const s=$('#tpickSearch'); if(s) s.value='';
+  panel.classList.add('open');
+  if(trigger) trigger.setAttribute('aria-expanded','true');
+  // position under trigger (fixed, so it is never clipped by the sidebar)
+  const r=trigger.getBoundingClientRect();
+  const pw=Math.min(340, innerWidth-24);
+  let left=Math.min(Math.max(12, r.left), innerWidth-pw-12);
+  let top=r.bottom+8;
+  const ph=Math.min(panel.offsetHeight||420, innerHeight*0.62);
+  if(top+ph>innerHeight-12) top=Math.max(12, innerHeight-ph-12);
+  panel.style.width=pw+'px'; panel.style.left=left+'px'; panel.style.top=top+'px';
+  const inp=$('#tpickSearch'); if(inp) setTimeout(()=>inp.focus(),60);
+}
+function closeTpick(){
+  const panel=$('#tpick'); if(!panel) return;
+  TPK.open=false; panel.classList.remove('open');
+  if(TPK.trigger) TPK.trigger.setAttribute('aria-expanded','false');
+}
+
+/* ============================================================
+   ZOOM MODAL
+   ============================================================ */
+let ZM={level:1,key:null,labels:true};
+function openZoom(key){
+  const d=DIA[key]; if(!d) return;
+  ZM={level:1,key,labels:true};
+  $('#zoomTitle').textContent=d.t;
+  $('#zoomBody').innerHTML=d.d(key);
+  $('#zoomLabels').textContent='Hide labels';
+  applyZoom();
+  $('#zoom').classList.add('open');
+  document.body.style.overflow='hidden';
+  $('#zoomClose').focus();
+}
+function closeZoom(){
+  $('#zoom').classList.remove('open');
+  document.body.style.overflow='';
+}
+function applyZoom(){
+  const svgEl=$('#zoomBody svg'); if(!svgEl) return;
+  svgEl.style.transform=`scale(${ZM.level})`;
+  $('#zoomLevel').textContent=Math.round(ZM.level*100)+'%';
+  $('#zoomOut').disabled=ZM.level<=0.6;
+  $('#zoomIn').disabled=ZM.level>=3;
+}
+
+/* ============================================================
+   STUDY COACH (remote guide)
+   ============================================================ */
+let COACH={open:false,closeTimer:null,q:null};
+function coachActions(){
+  const acts=[]; const tot=CHAPTER.topics.length; const done=completedCount();
+  const nextTopic=CHAPTER.topics.find(t=>!ST.completed[t.id]);
+  const stats=ST.topicStats||{};
+  const weak=Object.entries(stats).filter(([,v])=>v.total>=2).map(([k,v])=>({k,a:v.correct/v.total})).sort((x,y)=>x.a-y.a)[0];
+  if(!ST.quizHistory.length) acts.push({ic:'quiz',t:'Start with a quick quiz',s:'You have not taken a quiz yet — try a topic quiz.',go:'#/assessment'});
+  if(weak && weak.a<0.75){const t=topicById(weak.k); if(t) acts.push({ic:'target',t:'Revise: '+t.title,s:'Your weakest topic so far ('+Math.round(weak.a*100)+'% accuracy).',go:'#/topic/'+t.id});}
+  if(ST.mistakes.length) acts.push({ic:'refresh',t:'Retry your mistakes',s:ST.mistakes.length+' question(s) saved in the mistake notebook.',go:'#/assessment'});
+  if(nextTopic) acts.push({ic:'book',t:'Continue learning',s:'Next up: '+nextTopic.num+' · '+nextTopic.title,go:'#/topic/'+nextTopic.id});
+  else acts.push({ic:'award',t:'Take the mastery test',s:'All topics complete — earn your certificate!',go:'#/assessment'});
+  const diffs=Object.keys(ST.cardDiff||{}).length;
+  if(diffs) acts.push({ic:'cards',t:'Review difficult flashcards',s:diffs+' card(s) marked difficult.',go:'#/flashcards'});
+  if(ST.quizHistory.length && ST.quizHistory.length<3) acts.push({ic:'clock',t:'Try the timed chapter test',s:'15 questions in 15 minutes.',go:'#/assessment'});
+  if(!acts.length) acts.push({ic:'shape',t:'Explore the diagrams',s:'See the structures behind each reaction.',go:'#/diagrams'});
+  acts.push({ic:'notes',t:'Print a revision sheet',s:'Clean, printable notes for the whole chapter.',go:'#/notes'});
+  return acts.slice(0,3);
+}
+function coachQuickCheck(){
+  const pool=QUESTIONS.mcqs;
+  COACH.q=pool[Math.floor(Math.random()*pool.length)];
+}
+function renderCoach(){
+  if(!$('#coachBody')) return;
+  const tot=CHAPTER.topics.length, done=completedCount(), p=pct();
+  const acc=ST.quizHistory.length?Math.round(ST.quizHistory.reduce((s,h)=>s+h.correct/h.total,0)/ST.quizHistory.length*100):0;
+  const hello=ST.name?('Hi '+esc(ST.name)+' — here is your next step'):'Here is what to do next';
+  $('#coachHello').innerHTML=hello;
+  if(!COACH.q) coachQuickCheck();
+  const q=COACH.q;
+  const acts=coachActions();
+  $('#coachBody').innerHTML=`
+    <div class="coach-meter">
+      ${ring(p,54)}
+      <div style="flex:1"><div class="small" style="color:var(--text);font-weight:600">${done} of ${tot} topics complete</div>
+      <div class="tiny">${p<100?'Keep going — you are making steady progress.':'Chapter finished. Outstanding!'}</div></div>
+    </div>
+    <div class="coach-stats">
+      <div><b>${ST.quizHistory.length}</b><span>Quizzes</span></div>
+      <div><b>${acc}%</b><span>Accuracy</span></div>
+      <div><b>${ST.mistakes.length}</b><span>To retry</span></div>
+    </div>
+    <div class="coach-h">What to do next</div>
+    ${acts.map(a=>`<a class="coach-act" href="${a.go}"><span class="ic">${svg(IC[a.ic],16)}</span><span>${esc(a.t)}<span class="sub">${esc(a.s)}</span></span></a>`).join('')}
+    <div class="coach-h">Quick self-check</div>
+    <div class="coach-q">
+      <div class="small" style="color:var(--text);font-weight:600">${esc(q.q)}</div>
+      <div id="coachOpts">${q.options.map((o,i)=>`<div class="opt" data-coach="${i}" role="button" tabindex="0"><span class="k">${'ABCD'[i]}</span><span>${esc(o)}</span></div>`).join('')}</div>
+      <div id="coachFb"></div>
+    </div>`;
+}
+function coachAnswer(i){
+  const q=COACH.q; if(!q) return;
+  const ok=i===q.answer;
+  $$('#coachOpts .opt').forEach((o,j)=>{o.classList.add('dim'); if(j===q.answer) o.classList.add('correct');});
+  if(!ok) $('#coachOpts .opt[data-coach="'+i+'"]')?.classList.add('wrong');
+  $('#coachFb').innerHTML=feedbackHTML(ok, ok?'Correct!':('Not quite — the answer is '+ 'ABCD'[q.answer] +'.')) +
+    `<div class="tiny" style="margin-top:6px">${esc(q.sol[0]||'')}</div>
+     <div class="btnrow" style="margin-top:8px"><button class="btn sm ghost" id="coachAgain">Another question</button></div>`;
+  if(!ok && !ST.mistakes.includes(q.id)){ST.mistakes.push(q.id); save();}
+  const a=$('#coachAgain'); if(a) a.onclick=()=>{coachQuickCheck(); renderCoach();};
+}
+function openCoach(){
+  clearTimeout(COACH.closeTimer);
+  renderCoach();
+  $('#coach').classList.add('open'); COACH.open=true;
+  $('#dockCoach')?.setAttribute('aria-expanded','true');
+}
+function closeCoach(){
+  $('#coach').classList.remove('open'); COACH.open=false;
+  $('#dockCoach')?.setAttribute('aria-expanded','false');
+}
+function toggleCoach(){ COACH.open?closeCoach():openCoach(); }
 
 /* ---------- theme & mobile nav ---------- */
 function applyTheme(){document.documentElement.setAttribute('data-theme',ST.theme); $('#themeBtn').innerHTML=svg(ST.theme==='dark'?IC.sun:IC.moon,19);}
@@ -2471,27 +2937,73 @@ function bg(){
 /* ---------- boot ---------- */
 function applyNavCollapsed(){const s=$('#shell'); if(!s) return; s.classList.toggle('navcollapsed',!!ST.navCollapsed);
   const b=$('#navToggle'); if(b) b.setAttribute('aria-expanded',String(!ST.navCollapsed));}
-function buildTopicJump(){['#topicJump','#topicJumpM'].forEach(sel=>{const tj=$(sel); if(!tj||tj.dataset.built) return; tj.dataset.built='1';
-  CHAPTER.topics.forEach(t=>{const o=document.createElement('option'); o.value=t.id; o.textContent=t.num+' · '+t.title; tj.appendChild(o);});
-  tj.onchange=()=>{ if(tj.value){location.hash='#/topic/'+tj.value; closeMnav();} };});
+function initPicker(){
+  ['#topicJump','#topicJumpM'].forEach(sel=>{const b=$(sel); if(!b) return;
+    b.onclick=e=>{e.stopPropagation(); (TPK.open&&TPK.trigger===b)?closeTpick():openTpick(b);};});
+  $('#tpickSearch')?.addEventListener('input',e=>{$('#tpickList').innerHTML=tpickItemsHTML(e.target.value);});
+  $('#tpick')?.addEventListener('click',e=>{ if(e.target.closest('[data-tp]')) closeTpick(); });
+  document.addEventListener('click',e=>{ if(TPK.open && !e.target.closest('#tpick') && !e.target.closest('#topicJump') && !e.target.closest('#topicJumpM')) closeTpick(); });
+  addEventListener('resize',()=>closeTpick());
+  addEventListener('scroll',()=>{ if(TPK.open) closeTpick(); },{passive:true});
+}
+function initZoom(){
+  $('#zoomClose').onclick=closeZoom;
+  $('#zoom').onclick=e=>{ if(e.target.id==='zoom') closeZoom(); };
+  $('#zoomIn').onclick=()=>{ZM.level=Math.min(3,ZM.level+0.25); applyZoom();};
+  $('#zoomOut').onclick=()=>{ZM.level=Math.max(0.6,ZM.level-0.25); applyZoom();};
+  $('#zoomReset').onclick=()=>{ZM.level=1; applyZoom();};
+  $('#zoomLabels').onclick=()=>{const b=$('#zoomBody'); ZM.labels=!ZM.labels;
+    $$('.lbl',b).forEach(l=>l.classList.toggle('hidden',!ZM.labels));
+    $('#zoomLabels').textContent=ZM.labels?'Hide labels':'Show labels';};
+}
+function initCoach(){
+  $('#dockCoach').onclick=()=>{ if(TPK.open) closeTpick(); toggleCoach(); };
+  $('#coachClose').onclick=closeCoach;
+  $('#coachBody').addEventListener('click',e=>{const o=e.target.closest('[data-coach]'); if(o) coachAnswer(+o.dataset.coach);});
+  const co=$('#coach');
+  co.addEventListener('mouseenter',()=>clearTimeout(COACH.closeTimer));
+  co.addEventListener('mouseleave',()=>{ COACH.closeTimer=setTimeout(()=>{ if(!co.matches(':hover')) closeCoach(); },1100); });
 }
 
 function boot(){
-  applyTheme(); renderNav(); updateMini(); buildTopicJump(); applyNavCollapsed(); route();
+  applyTheme(); renderNav(); updateMini(); applyNavCollapsed(); initPicker(); initZoom(); initCoach(); route();
   addEventListener('hashchange',route);
   $('#main').addEventListener('click',delegate,true);
   $('#navToggle').onclick=()=>{ST.navCollapsed=!ST.navCollapsed; save(); applyNavCollapsed();};
   $('#dockTop').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
-  let _lastY=window.scrollY;
-  addEventListener('scroll',()=>{const d=$('#dock'); if(!d) return; const y=window.scrollY;
-    if(y>320 && y>_lastY+8) d.classList.add('hide');
-    else if(y<_lastY-8 || y<=320) d.classList.remove('hide');
+  let _lastY=window.scrollY, _dockHidden=false;
+  const dockEl=$('#dock');
+  const sheen=()=>{const d=dockEl; if(!d) return;
+    d.classList.remove('sheen'); void d.offsetWidth; d.classList.add('sheen');
+    clearTimeout(d._st); d._st=setTimeout(()=>d.classList.remove('sheen'),1150);};
+  if(dockEl){
+    dockEl.addEventListener('animationend',e=>{
+      if(e.animationName==='fountainRise'){ dockEl.classList.remove('rise'); }
+      else if(e.animationName==='fountainSink'){ dockEl.classList.remove('sink'); dockEl.classList.add('hidden'); }
+    });
+    // fountain in on first paint
+    setTimeout(()=>{ if(!_dockHidden){ dockEl.classList.add('rise'); setTimeout(sheen,300); } },220);
+  }
+  const dockShow=()=>{ if(!dockEl||!_dockHidden) return;
+    dockEl.classList.remove('sink'); dockEl.classList.remove('hidden'); dockEl.classList.add('rise');
+    _dockHidden=false; sheen(); };
+  const dockHide=()=>{ if(!dockEl||_dockHidden) return;
+    dockEl.classList.remove('rise'); dockEl.classList.add('sink');
+    _dockHidden=true; };
+  addEventListener('scroll',()=>{const y=window.scrollY;
+    if(y>340 && y>_lastY+6) dockHide();
+    else if(y<_lastY-6 || y<=340) dockShow();
     _lastY=y;},{passive:true});
   $('#themeBtn').onclick=()=>{ST.theme=ST.theme==='dark'?'light':'dark'; save(); applyTheme();};
   $('#menubtn').onclick=openMnav;
   $('#mnavX').onclick=closeMnav;
   $('#mnav').onclick=e=>{if(e.target.id==='mnav')closeMnav();};
   addEventListener('keydown',e=>{
+    if(e.key==='Escape'){
+      if($('#zoom').classList.contains('open')){closeZoom(); return;}
+      if(COACH.open){closeCoach(); return;}
+      if(TPK.open){closeTpick(); return;}
+    }
     if(VIEW!=='flashcards')return;
     if(e.key==='ArrowRight'){$('#fcNext')?.click();}
     if(e.key==='ArrowLeft'){$('#fcPrev')?.click();}
