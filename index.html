@@ -1025,7 +1025,10 @@ html.lite-solid .quick-card, html.lite-solid .footer-content, html.lite-solid .s
     if (mobile) root.classList.add("lite");
     var cores = navigator.hardwareConcurrency || 4;
     var mem = typeof navigator.deviceMemory === "number" ? navigator.deviceMemory : null;
-    var weak = cores <= 2 || (mem !== null && mem <= 3);
+    var saved = null;
+    try { saved = localStorage.getItem("hx-perf"); } catch (e) {}
+    if (saved === "low") { root.classList.add("lite", "lite-solid"); return; }   /* this device struggled before */
+    var weak = cores <= 4 || (mem !== null && mem <= 4);
     if (mobile && (reduced || weak)) root.classList.add("lite-solid");
 })();
 </script>
@@ -1174,6 +1177,8 @@ html.lite-solid .quick-card, html.lite-solid .footer-content, html.lite-solid .s
    Footprints jefp1 · Kshitij jhks1 · Kritika jhkr1
    ============================================================ */
 var PDF = function (code) { return "https://ncert.nic.in/textbook/pdf/" + code + ".pdf"; };
+/* CBSE Artificial Intelligence (Skill Subject 417) — official curriculum PDF */
+var AI_PDF = "https://cbseacademic.nic.in/web_material/Curriculum26/sec/417-AI-X.pdf";
 
 var SUBJECTS = [
     {
@@ -1318,6 +1323,45 @@ var SUBJECTS = [
                 { n: "08", t: "Bholi", code: "jefp108" }
             ]}
         ]
+    },
+    {
+        id: "sanskrit", name: "Sanskrit", icon: "languages",
+        groups: [
+            { title: "शेमुषी · Shemushi (Part 2)", chapters: [
+                { n: "01", t: "शुचिपर्यावरणम् · Shuchiparyavaranam", code: "jhsk101" },
+                { n: "02", t: "बुद्धिर्बलवती सदा · Buddhirbalavati Sada", code: "jhsk102" },
+                { n: "03", t: "शिशुलालनम् · Shishulalanam", code: "jhsk103" },
+                { n: "04", t: "जननी तुल्यवत्सला · Janani Tulyavatsala", code: "jhsk104" },
+                { n: "05", t: "सुभाषितानि · Subhashitani", code: "jhsk105" },
+                { n: "06", t: "सौहार्दं प्रकृतेः शोभा · Sauhardam Prakriteh Shobha", code: "jhsk106" },
+                { n: "07", t: "विचित्रः साक्षी · Vichitrah Sakshi", code: "jhsk107" },
+                { n: "08", t: "सूक्तयः · Suktayah", code: "jhsk108" },
+                { n: "09", t: "भूकम्पविभीषिका · Bhukampavibhishika", code: "jhsk109" },
+                { n: "10", t: "अन्योक्तयः · Anyoktayah", code: "jhsk110" }
+            ]}
+        ]
+    },
+    {
+        id: "ai", name: "Artificial Intelligence", icon: "sparkles",
+        unitWord: "units", hint: "tap for the official CBSE syllabus",
+        groups: [
+            { title: "Part B · Subject Skills (Code 417)", chapters: [
+                { n: "01", t: "Revisiting AI Project Cycle & Ethical Frameworks", url: AI_PDF },
+                { n: "02", t: "Advanced Concepts of Modelling in AI", url: AI_PDF },
+                { n: "03", t: "Evaluating Models", url: AI_PDF },
+                { n: "04", t: "Statistical Data", url: AI_PDF },
+                { n: "05", t: "Computer Vision", url: AI_PDF },
+                { n: "06", t: "Natural Language Processing", url: AI_PDF },
+                { n: "07", t: "Advance Python", url: AI_PDF }
+            ]},
+            { title: "Part A · Employability Skills", chapters: [
+                { n: "01", t: "Communication Skills-II", url: AI_PDF },
+                { n: "02", t: "Self-Management Skills-II", url: AI_PDF },
+                { n: "03", t: "ICT Skills-II", url: AI_PDF },
+                { n: "04", t: "Entrepreneurial Skills-II", url: AI_PDF },
+                { n: "05", t: "Green Skills-II", url: AI_PDF }
+            ]}
+        ]
     }
 ];
 
@@ -1386,6 +1430,24 @@ var EXPLANATIONS = [
                 { t: "Coming Soon", href: null, kind: "soon" }
             ]}
         ]
+    },
+    {
+        name: "Sanskrit", icon: "languages",
+        groups: [
+            { title: "Explanation", items: [
+                { t: "Coming Soon", href: null, kind: "soon" },
+                { t: "Coming Soon", href: null, kind: "soon" }
+            ]}
+        ]
+    },
+    {
+        name: "Artificial Intelligence", icon: "sparkles",
+        groups: [
+            { title: "Explanation", items: [
+                { t: "Coming Soon", href: null, kind: "soon" },
+                { t: "Coming Soon", href: null, kind: "soon" }
+            ]}
+        ]
     }
 ];
 
@@ -1422,7 +1484,7 @@ function renderSyllabus() {
                 '<span class="module-left">' +
                     '<span class="icon-core">' + (ICONS[sub.icon] || "") + '</span>' +
                     '<span class="module-title"><h2>' + esc(sub.name) + '</h2>' +
-                    '<span class="module-count">' + count + ' chapters · tap for NCERT PDFs</span></span>' +
+                    '<span class="module-count">' + count + ' ' + (sub.unitWord || "chapters") + ' · ' + (sub.hint || "tap for NCERT PDFs") + '</span></span>' +
                 '</span>' +
                 '<span class="chevron">' + ICONS.chevron + '</span>' +
             '</button>' +
@@ -1430,7 +1492,7 @@ function renderSyllabus() {
         sub.groups.forEach(function (g) {
             html += '<div><h3 class="division-title">' + esc(g.title) + '</h3><ul class="chapter-list">';
             g.chapters.forEach(function (ch) {
-                html += '<li><a class="chapter-item" href="' + PDF(ch.code) + '" target="_blank" rel="noopener">' +
+                html += '<li><a class="chapter-item" href="' + (ch.url || PDF(ch.code)) + '" target="_blank" rel="noopener">' +
                     '<span class="ch-num">' + esc(ch.n) + '</span>' +
                     '<span class="ch-name">' + esc(ch.t) + '</span>' +
                     '<span class="ch-open">' + ICONS.arrow + '</span></a></li>';
@@ -1461,7 +1523,7 @@ function renderExplanations() {
             html += '<div><h3 class="division-title">' + esc(g.title) + '</h3><ul class="chapter-list">';
             g.items.forEach(function (it) {
                 if (it.href) {
-                    html += '<li><a class="chapter-item notes" href="' + esc(it.href) + '">' +
+                    html += '<li><a class="chapter-item notes" href="' + esc(it.href) + '" target="_blank" rel="noopener">' +
                         '<span class="ch-num">→</span>' +
                         '<span class="ch-name">' + esc(it.t) + '</span>' +
                         '<span class="ch-open">' + ICONS.arrow + '</span></a></li>';
@@ -1551,6 +1613,7 @@ var VIEWS = ["home", "syllabus", "explanations"];
 
 function switchView(id, updateHash) {
     if (VIEWS.indexOf(id) === -1) id = "home";
+    ensureView(id);
     document.querySelectorAll(".view").forEach(function (v) { v.classList.toggle("active", v.id === "view-" + id); });
     document.querySelectorAll("[data-view]").forEach(function (b) {
         var on = b.getAttribute("data-view") === id;
@@ -1654,14 +1717,14 @@ document.addEventListener("click", function (e) {
     SUBJECTS.forEach(function (s) {
         s.groups.forEach(function (g) {
             g.chapters.forEach(function (ch) {
-                index.push({ label: ch.t, meta: s.name + " · " + g.title, href: PDF(ch.code), kind: "pdf", target: "_blank", rel: "noopener" });
+                index.push({ label: ch.t, meta: s.name + " · " + g.title, href: ch.url || PDF(ch.code), kind: ch.url ? "notes" : "pdf", target: "_blank", rel: "noopener" });
             });
         });
     });
     EXPLANATIONS.forEach(function (m) {
         m.groups.forEach(function (g) {
             g.items.forEach(function (it) {
-                if (it.href) index.push({ label: it.t, meta: "Explanations · " + m.name, href: it.href, kind: it.kind === "ai" ? "ai" : "notes" });
+                if (it.href) index.push({ label: it.t, meta: "Explanations · " + m.name, href: it.href, kind: it.kind === "ai" ? "ai" : "notes", target: "_blank", rel: "noopener" });
             });
         });
     });
@@ -1769,10 +1832,56 @@ document.addEventListener("click", function (e) {
 })();
 
 /* ============================================================
+   LAZY VIEWS — the big chapter lists are built only when the
+   user actually opens that tab, so first paint stays light.
+   ============================================================ */
+var RENDERED = {};
+function ensureView(id) {
+    if (id === "syllabus" && !RENDERED.syllabus) { renderSyllabus(); RENDERED.syllabus = 1; }
+    if (id === "explanations" && !RENDERED.explanations) { renderExplanations(); RENDERED.explanations = 1; }
+}
+
+/* ============================================================
+   ADAPTIVE PERFORMANCE GUARD
+   Watches the real frame rate while you scroll. If this device
+   keeps struggling it steps the effects down and remembers it
+   for next time.
+   ============================================================ */
+(function () {
+    var root = document.documentElement;
+    if (root.classList.contains("lite-solid")) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var frames = 0, t0 = 0, bad = 0, activeUntil = 0;
+    window.addEventListener("scroll", function () { activeUntil = performance.now() + 1800; }, { passive: true });
+    function loop(t) {
+        if (t0 === 0) t0 = t;
+        frames++;
+        var dt = t - t0;
+        if (dt >= 900) {
+            if (t < activeUntil) {                    /* judge only while scrolling */
+                var fps = frames / (dt / 1000);
+                if (fps < 46) bad++; else bad = 0;
+                if (bad >= 3) { frames = 0; t0 = 0; step(); return; }
+            } else { bad = 0; }
+            frames = 0; t0 = 0;
+        }
+        requestAnimationFrame(loop);
+    }
+    function step() {
+        if (!root.classList.contains("lite")) {       /* step 1: drop the extras */
+            root.classList.add("lite");
+            requestAnimationFrame(loop);
+            return;
+        }
+        root.classList.add("lite-solid");             /* step 2: no live blur at all */
+        try { localStorage.setItem("hx-perf", "low"); } catch (e) {}
+    }
+    window.addEventListener("load", function () { requestAnimationFrame(loop); });
+})();
+
+/* ============================================================
    BOOT
    ============================================================ */
-renderSyllabus();
-renderExplanations();
 renderDistribution();
 switchView((location.hash || "#home").replace("#", ""), false);
 </script>
