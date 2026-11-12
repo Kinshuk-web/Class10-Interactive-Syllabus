@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magnetic Effects of Electric Current — Interactive Chapter 12 | Class 10 Science</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],display:['"Space Grotesk"','Inter','sans-serif']}}}}</script>
+<style>
+  :root{--a1:#6366f1;--a2:#22d3ee;--a3:#a78bfa;--glow:rgba(99,102,241,.55);--panel:#0a0f2b;--deep:#05081a}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--deep)}
+  .display{font-family:'Space Grotesk','Inter',sans-serif}
+  /* electric background */
+  #bg{position:fixed;inset:0;z-index:-2;background:
+    radial-gradient(circle at 15% 10%,rgba(99,102,241,.35),transparent 42%),
+    radial-gradient(circle at 85% 80%,rgba(34,211,238,.25),transparent 45%),
+    radial-gradient(circle at 55% 45%,rgba(167,139,250,.16),transparent 55%),
+    linear-gradient(165deg,#05081a,#0a1030 55%,#05081a);}
+  #bg::after{content:'';position:absolute;inset:0;opacity:.28;
+    background-image:linear-gradient(rgba(99,102,241,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.22) 1px,transparent 1px);
+    background-size:60px 60px;animation:gridmove 26s linear infinite}
+  @keyframes gridmove{to{background-position:60px 60px}}
+  #fx{position:fixed;inset:0;z-index:-1;pointer-events:none}
+  .orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.32;z-index:-1;pointer-events:none}
+  .orb1{width:380px;height:380px;background:#6366f1;top:-100px;left:-80px;animation:f1 20s ease-in-out infinite}
+  .orb2{width:320px;height:320px;background:#22d3ee;bottom:-80px;right:-60px;animation:f2 24s ease-in-out infinite}
+  @keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+  @keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(-70px,-50px)}}
+  .accent-text{color:var(--a1)}
+  .accent2-text{color:var(--a2)}
+  .accent-grad{background:linear-gradient(120deg,var(--a1),var(--a2))}
+  .accent-grad-text{background:linear-gradient(120deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .glass{background:rgba(255,255,255,.055);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1)}
+  .card{background:var(--panel);border:1px solid rgba(255,255,255,.09)}
+  .chip{transition:all .2s;cursor:pointer}
+  .chip:hover{transform:translateY(-1px)}
+  .chip-active{background:var(--a1)!important;color:#05081a!important;border-color:var(--a1)!important;font-weight:800}
+  .part{cursor:pointer;transition:filter .2s}
+  .part:hover{filter:brightness(1.3)}
+  .active-part{filter:brightness(1.5) drop-shadow(0 0 10px var(--a2))}
+  .ans-body{max-height:0;overflow:hidden;transition:max-height .45s ease}
+  .ans-body.open{max-height:1700px}
+  .nav-pill{transition:all .2s}
+  .nav-pill:hover{background:rgba(255,255,255,.12)}
+  .flow{stroke-dasharray:8 8;animation:dash 2.6s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-160}}
+  .pulse{animation:pl 2s ease-in-out infinite}
+  @keyframes pl{0%,100%{opacity:.45}50%{opacity:1}}
+  .quiz-opt{transition:all .2s}
+  .quiz-opt:hover{border-color:var(--a1);background:rgba(255,255,255,.06)}
+  .quiz-opt.correct{background:#052e16;border-color:#22c55e;color:#bbf7d0}
+  .quiz-opt.wrong{background:#3f0d0d;border-color:#ef4444;color:#fecaca}
+  .quiz-opt.locked{pointer-events:none}
+  .btn-spark{position:relative;overflow:hidden}
+  .btn-spark::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-100%)}
+  .btn-spark:hover::after{animation:sweep .8s}
+  @keyframes sweep{to{transform:translateX(100%)}}
+  /* needle */
+  #needle{transform-origin:110px 96px;transition:transform .7s cubic-bezier(.34,1.56,.64,1)}
+  /* motor coil */
+  #coil{transform-origin:230px 150px;transition:transform .05s linear}
+  /* rod */
+  #rod{transition:transform .7s cubic-bezier(.34,1.56,.64,1)}
+  .glow-ring{filter:drop-shadow(0 0 8px var(--a2))}
+  ::-webkit-scrollbar{width:10px}
+  ::-webkit-scrollbar-track{background:#0b1220}
+  ::-webkit-scrollbar-thumb{background:var(--a1);border-radius:6px}
+</style>
+</head>
+<body class="text-slate-200">
+<div id="bg"></div>
+<canvas id="fx"></canvas>
+<div class="orb orb1"></div><div class="orb orb2"></div>
+
+<!-- NAV -->
+<nav class="sticky top-0 z-50 backdrop-blur-xl bg-black/45 border-b border-white/10">
+  <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between gap-3">
+    <a href="#top" class="flex items-center gap-2 font-extrabold text-white shrink-0">
+      <span class="w-9 h-9 rounded-xl accent-grad flex items-center justify-center text-black"><i class="fa-solid fa-bolt"></i></span>
+      <span class="hidden sm:block text-sm display">FieldLab</span>
+    </a>
+    <div class="hidden lg:flex gap-0.5 text-[11px] font-bold text-slate-300 whitespace-nowrap">
+      <a href="#field" class="nav-pill px-2.5 py-1.5 rounded-lg">Field Lines</a>
+      <a href="#wire" class="nav-pill px-2.5 py-1.5 rounded-lg">Current → Field</a>
+      <a href="#force" class="nav-pill px-2.5 py-1.5 rounded-lg">Force &amp; LHR</a>
+      <a href="#domestic" class="nav-pill px-2.5 py-1.5 rounded-lg">Domestic</a>
+      <a href="#bonus" class="nav-pill px-2.5 py-1.5 rounded-lg">Motor/Generator</a>
+      <a href="#magqa" class="nav-pill px-2.5 py-1.5 rounded-lg">Q&amp;A</a>
+      <a href="#mcq" class="nav-pill px-2.5 py-1.5 rounded-lg">Test</a>
+    </div>
+    <button id="navToggle" onclick="toggleNav()" aria-controls="navMenu" aria-expanded="false" aria-label="Open menu"
+      class="lg:hidden flex items-center gap-2 px-3 py-2 rounded-xl glass text-white text-xs font-bold active:scale-95 transition-transform">
+      <i id="navIcon" class="fa-solid fa-bars"></i><span class="hidden sm:inline">Menu</span>
+    </button>
+  </div>
+  <div id="navMenu" class="lg:hidden hidden border-t border-white/10 bg-black/85 backdrop-blur-xl">
+    <div class="px-3 py-3 grid grid-cols-2 gap-1.5 text-slate-200 text-xs font-bold">
+      <a href="#field" onclick="closeNav()" class="px-3 py-2.5 rounded-lg bg-white/5"><i class="fa-solid fa-magnet w-4 accent-text"></i> Field Lines</a>
+      <a href="#wire" onclick="closeNav()" class="px-3 py-2.5 rounded-lg bg-white/5"><i class="fa-solid fa-plug w-4 accent-text"></i> Current → Field</a>
+      <a href="#force" onclick="closeNav()" class="px-3 py-2.5 rounded-lg bg-white/5"><i class="fa-solid fa-hand-point-right w-4 accent-text"></i> Force &amp; LHR</a>
+      <a href="#domestic" onclick="closeNav()" class="px-3 py-2.5 rounded-lg bg-white/5"><i class="fa-solid fa-house w-4 accent-text"></i> Domestic</a>
+      <a href="#bonus" onclick="closeNav()" class="px-3 py-2.5 rounded-lg bg-white/5"><i class="fa-solid fa-gears w-4 accent-text"></i> Motor/Generator</a>
+      <a href="#magqa" onclick="closeNav()" class="px-3 py-2.5 rounded-lg bg-white/5"><i class="fa-solid fa-circle-question w-4 accent-text"></i> Q&amp;A</a>
+      <a href="#mcq" onclick="closeNav()" class="px-3 py-2.5 rounded-lg bg-white/5 col-span-2 text-center"><i class="fa-solid fa-clipboard-question w-4 accent-text"></i> 20-Question Test</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header id="top" class="max-w-6xl mx-auto px-4 pt-12 pb-6 text-center">
+  <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-[11px] font-bold text-slate-200">
+    <i class="fa-solid fa-bolt accent-text"></i> NCERT Science • Class 10 • Chapter 12
+  </span>
+  <h1 class="display text-3xl sm:text-5xl font-bold mt-4 text-white leading-tight">
+    <span class="accent-grad-text">Magnetic Effects of<br>Electric Current</span>
+  </h1>
+  <p class="mt-3 text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
+    A current makes a field. A field pushes a current. Reverse one and everything flips — tap, toggle and play your way through the chapter.
+  </p>
+  <div class="mt-6 flex flex-wrap justify-center gap-2 text-[11px] font-bold text-slate-300">
+    <span class="px-3 py-2 rounded-xl glass"><i class="fa-solid fa-hand-pointer accent-text mr-1.5"></i>12 tappable diagrams</span>
+    <span class="px-3 py-2 rounded-xl glass"><i class="fa-solid fa-arrows-rotate accent-text mr-1.5"></i>5 working simulations</span>
+    <span class="px-3 py-2 rounded-xl glass"><i class="fa-solid fa-house accent-text mr-1.5"></i>domestic circuit explorer</span>
+    <span class="px-3 py-2 rounded-xl glass"><i class="fa-solid fa-clipboard-question accent-text mr-1.5"></i>20-question test</span>
+  </div>
+</header>
+<!-- ===== 12.1 MAGNETIC FIELD ===== -->
+<section id="field" class="scroll-mt-24 max-w-6xl mx-auto px-4 py-10">
+  <div class="text-center mb-7">
+    <span class="px-3 py-1 rounded-full text-[11px] font-bold glass accent-text">Section 12.1</span>
+    <h2 class="display text-2xl sm:text-3xl font-bold text-white mt-3">Magnetic field and field lines</h2>
+    <p class="mt-2 text-slate-400 text-sm max-w-2xl mx-auto">A compass needle is itself a tiny bar magnet. Bring a magnet near it and it turns — because a <b class="text-slate-200">magnetic field</b> fills the space around the magnet.</p>
+  </div>
+
+  <div class="card rounded-3xl p-4 sm:p-6 shadow-2xl">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+      <b class="text-white text-sm"><i class="fa-solid fa-magnet accent-text mr-1.5"></i> Field lines around a bar magnet — tap a part</b>
+      <button id="btn-fields" onclick="toggleFieldFlow()" class="btn-spark px-4 py-2 rounded-xl accent-grad text-black text-xs font-extrabold"><i class="fa-solid fa-pause mr-1"></i> Pause lines</button>
+    </div>
+    <svg viewBox="0 0 720 380" class="w-full h-auto" role="img" aria-label="Magnetic field lines around a bar magnet">
+      <rect x="0" y="0" width="720" height="380" rx="14" fill="#05081a"/>
+      <g id="fieldLines" class="flow" stroke="#22d3ee" stroke-width="2" fill="none" opacity=".85">
+        <path d="M280,160 C200,110 140,110 110,150 C86,182 110,230 170,238 C220,245 255,215 280,200"/>
+        <path d="M280,150 C210,60 120,60 80,120 C50,168 80,250 160,268 C215,280 258,240 280,215"/>
+        <path d="M440,160 C520,110 580,110 610,150 C634,182 610,230 550,238 C500,245 465,215 440,200"/>
+        <path d="M440,150 C510,60 600,60 640,120 C670,168 640,250 560,268 C505,280 462,240 440,215"/>
+        <path d="M300,120 C340,60 380,60 420,120"/>
+        <path d="M300,262 C340,322 380,322 420,262"/>
+      </g>
+      <!-- magnet -->
+      <g class="part" onclick="selPart('field','north')">
+        <rect x="280" y="140" width="80" height="100" rx="6" fill="#dc2626" stroke="#f87171" stroke-width="2" id="field-north"/>
+        <text x="320" y="196" text-anchor="middle" font-size="26" font-weight="800" fill="#fff">N</text>
+      </g>
+      <g class="part" onclick="selPart('field','south')">
+        <rect x="360" y="140" width="80" height="100" rx="6" fill="#2563eb" stroke="#60a5fa" stroke-width="2" id="field-south"/>
+        <text x="400" y="196" text-anchor="middle" font-size="26" font-weight="800" fill="#fff">S</text>
+      </g>
+      <!-- inside arrow -->
+      <path d="M398,190 L362,190" stroke="#facc15" stroke-width="3" marker-end="url(#inArrow)"/>
+      <defs><marker id="inArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#facc15"/></marker></defs>
+      <text x="380" y="182" text-anchor="middle" font-size="8.5" fill="#facc15">inside: S -> N</text>
+      <!-- compass -->
+      <g class="part" onclick="selPart('field','compass')">
+        <circle cx="600" cy="300" r="34" fill="#0f172a" stroke="#94a3b8" stroke-width="2" id="field-compass"/>
+        <g id="compassNeedle" style="transform-origin:600px 300px;transition:transform .8s">
+          <path d="M600,272 L608,300 L600,328 L592,300 Z" fill="#e2e8f0"/>
+          <path d="M600,272 L608,300 L592,300 Z" fill="#ef4444"/>
+        </g>
+        <text x="600" y="352" text-anchor="middle" font-size="9" fill="#94a3b8">compass</text>
+      </g>
+      <text x="130" y="40" font-size="9.5" fill="#67e8f9">field lines emerge from N and enter S</text>
+      <text x="130" y="356" font-size="9.5" fill="#94a3b8">lines are closer where the field is stronger (near the poles)</text>
+    </svg>
+    <div class="flex flex-wrap justify-center gap-1.5 mt-3">
+      <button onclick="selPart('field','north')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">North pole</button>
+      <button onclick="selPart('field','south')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">South pole</button>
+      <button onclick="selPart('field','lines')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">Field lines</button>
+      <button onclick="selPart('field','compass')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">Compass</button>
+    </div>
+    <div id="fieldInfo" class="mt-3 glass rounded-2xl p-4 text-sm text-slate-300">
+      <b class="accent-text text-xs uppercase tracking-wide">Tap a part</b>
+      <p class="mt-1">By convention, field lines emerge from the north pole and merge at the south pole — and inside the magnet they run from south to north, so the lines form closed curves.</p>
+    </div>
+  </div>
+
+  <!-- compass + current activity -->
+  <div class="grid lg:grid-cols-2 gap-4 mt-5">
+    <div class="card rounded-3xl p-5">
+      <div class="flex items-center justify-between mb-2">
+        <b class="text-white text-sm"><i class="fa-solid fa-compass accent-text mr-1.5"></i> Activity 12.1 — current deflects a needle</b>
+        <button id="btn-needle" onclick="toggleCurrent()" class="px-3 py-1.5 rounded-lg accent-grad text-black text-[11px] font-extrabold">Switch ON</button>
+      </div>
+      <svg viewBox="0 0 340 220" class="w-full h-auto" role="img" aria-label="Compass needle deflected by current">
+        <rect x="0" y="0" width="340" height="220" rx="12" fill="#05081a"/>
+        <!-- circuit -->
+        <path d="M40,170 L40,120 L110,120" stroke="#f59e0b" stroke-width="3" fill="none"/>
+        <path d="M110,120 L230,120" stroke="#94a3b8" stroke-width="3" fill="none"/>
+        <path d="M230,120 L230,170 L40,170" stroke="#f59e0b" stroke-width="3" fill="none"/>
+        <!-- battery -->
+        <g stroke="#22c55e" stroke-width="4"><line x1="70" y1="112" x2="70" y2="128"/><line x1="80" y1="116" x2="80" y2="124"/></g>
+        <text x="75" y="146" text-anchor="middle" font-size="8.5" fill="#86efac">cell</text>
+        <!-- key -->
+        <g id="keySwitch"><line x1="150" y1="120" x2="170" y2="106" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/></g>
+        <text x="160" y="100" text-anchor="middle" font-size="8.5" fill="#fbbf24">key</text>
+        <!-- wire over compass -->
+        <line x1="110" y1="120" x2="230" y2="120" stroke="#e2e8f0" stroke-width="3"/>
+        <!-- compass -->
+        <circle cx="170" cy="168" r="30" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+        <circle cx="170" cy="168" r="22" fill="none" stroke="#334155" stroke-width="1"/>
+        <g id="needle" style="transform-origin:170px 168px">
+          <path d="M170,146 L176,168 L170,190 L164,168 Z" fill="#e2e8f0"/>
+          <path d="M170,146 L176,168 L164,168 Z" fill="#ef4444"/>
+        </g>
+        <text x="170" y="212" text-anchor="middle" font-size="8.5" fill="#94a3b8" id="needleLabel">no current — needle points N-S</text>
+        <!-- current arrow -->
+        <g id="currentArrow" opacity="0">
+          <path d="M190,108 L206,108" stroke="#22d3ee" stroke-width="2.5" marker-end="url(#cArr)"/>
+          <text x="198" y="100" text-anchor="middle" font-size="8.5" fill="#22d3ee">current</text>
+        </g>
+        <defs><marker id="cArr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#22d3ee"/></marker></defs>
+      </svg>
+      <p class="text-[11px] text-slate-400 mt-2">Switch the key on and the needle jumps — a current-carrying wire has a magnetic field around it. Reverse the cell connections and it deflects the other way.</p>
+    </div>
+
+    <div class="card rounded-3xl p-5">
+      <b class="text-white text-sm"><i class="fa-solid fa-list-check accent-text mr-1.5"></i> Five properties examiners ask about</b>
+      <ul class="mt-3 space-y-2 text-xs text-slate-400 list-disc pl-4">
+        <li>A magnetic field has both <b class="text-slate-200">direction and magnitude</b>.</li>
+        <li>Direction = the direction in which a <b class="text-slate-200">north pole</b> of a compass needle moves inside it.</li>
+        <li>Field lines <b class="text-slate-200">emerge from the north pole and merge at the south pole</b>.</li>
+        <li>Inside the magnet, field lines run <b class="text-slate-200">south → north</b>, so field lines are <b class="text-slate-200">closed curves</b>.</li>
+        <li>Field lines are <b class="text-slate-200">closer together where the field is stronger</b> — near the poles.</li>
+      </ul>
+      <div class="mt-3 rounded-xl bg-white/5 p-3 text-[11px] text-slate-300">
+        <b class="accent2-text">Activity 12.2:</b> iron filings sprinkled near a bar magnet arrange themselves along the field lines — each filing becomes a tiny compass needle.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 12.2 FIELD DUE TO CURRENT ===== -->
+<section id="wire" class="scroll-mt-24 max-w-6xl mx-auto px-4 py-10">
+  <div class="text-center mb-7">
+    <span class="px-3 py-1 rounded-full text-[11px] font-bold glass accent-text">Section 12.2</span>
+    <h2 class="display text-2xl sm:text-3xl font-bold text-white mt-3">Magnetic field due to a current-carrying conductor</h2>
+    <p class="mt-2 text-slate-400 text-sm max-w-2xl mx-auto">The pattern depends on the <b class="text-slate-200">shape</b> of the conductor. Reverse the current and every field line reverses.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-4">
+    <!-- straight wire -->
+    <div class="card rounded-3xl p-5">
+      <div class="flex items-center justify-between mb-2">
+        <b class="text-white text-sm"><i class="fa-solid fa-grip-lines-vertical accent-text mr-1.5"></i> Straight conductor — concentric circles</b>
+        <button id="btn-wire" onclick="toggleWireCurrent()" class="px-3 py-1.5 rounded-lg accent-grad text-black text-[11px] font-extrabold">Reverse current</button>
+      </div>
+      <svg viewBox="0 0 360 300" class="w-full h-auto" role="img" aria-label="Magnetic field around a straight wire">
+        <rect x="0" y="0" width="360" height="300" rx="12" fill="#05081a"/>
+        <g id="wireCircles" stroke="#22d3ee" stroke-width="2" fill="none" opacity=".9">
+          <ellipse cx="180" cy="150" rx="34" ry="12" class="flow" id="c1"/>
+          <ellipse cx="180" cy="150" rx="64" ry="22" class="flow" id="c2"/>
+          <ellipse cx="180" cy="150" rx="98" ry="34" class="flow" id="c3"/>
+          <ellipse cx="180" cy="150" rx="132" ry="46" class="flow" id="c4"/>
+        </g>
+        <!-- wire (into page) -->
+        <circle cx="180" cy="150" r="11" fill="#e2e8f0"/>
+        <circle cx="180" cy="150" r="5" fill="#05081a" id="wireDot"/>
+        <text x="180" y="118" text-anchor="middle" font-size="8.5" fill="#cbd5e1" id="wireDir">current INTO page (x)</text>
+        <text x="180" y="286" text-anchor="middle" font-size="9" fill="#94a3b8">field lines = concentric circles around the wire</text>
+        <g font-size="8.5" fill="#22d3ee">
+          <text x="214" y="146">B ~ I</text>
+          <text x="248" y="200">B decreases with distance</text>
+        </g>
+      </svg>
+      <p class="text-[11px] text-slate-400 mt-2">Field strength is directly proportional to the current and inversely proportional to the distance from the wire. Tap the button to reverse the current — the circles' arrows flip.</p>
+    </div>
+
+    <!-- right hand thumb rule -->
+    <div class="card rounded-3xl p-5">
+      <b class="text-white text-sm"><i class="fa-solid fa-hand accent-text mr-1.5"></i> Right-hand thumb rule</b>
+      <svg viewBox="0 0 360 300" class="w-full h-auto mt-2" role="img" aria-label="Right hand thumb rule">
+        <rect x="0" y="0" width="360" height="300" rx="12" fill="#05081a"/>
+        <!-- hand -->
+        <g>
+          <rect x="150" y="120" width="46" height="120" rx="22" fill="#fcd34d" opacity=".95"/>
+          <rect x="196" y="96" width="66" height="26" rx="13" fill="#fcd34d" transform="rotate(-18 196 96)"/>
+          <rect x="196" y="132" width="72" height="24" rx="12" fill="#fbbf24" transform="rotate(-8 196 132)"/>
+          <rect x="196" y="164" width="66" height="22" rx="11" fill="#fbbf24" transform="rotate(2 196 164)"/>
+          <rect x="196" y="194" width="56" height="20" rx="10" fill="#fbbf24" transform="rotate(10 196 194)"/>
+          <rect x="172" y="52" width="24" height="76" rx="12" fill="#f59e0b"/>
+        </g>
+        <!-- thumb = current -->
+        <path d="M184,60 L184,20" stroke="#22d3ee" stroke-width="3" marker-end="url(#cArr2)"/>
+        <text x="184" y="14" text-anchor="middle" font-size="9" fill="#22d3ee" font-weight="700">thumb -> CURRENT</text>
+        <defs><marker id="cArr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#22d3ee"/></marker></defs>
+        <!-- curl -->
+        <path d="M266,110 C300,130 300,190 266,212" stroke="#a78bfa" stroke-width="2.5" fill="none" marker-end="url(#cArr3)"/>
+        <defs><marker id="cArr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#a78bfa"/></marker></defs>
+        <text x="308" y="164" text-anchor="middle" font-size="8.5" fill="#a78bfa" font-weight="700">fingers -></text>
+        <text x="308" y="176" text-anchor="middle" font-size="8.5" fill="#a78bfa" font-weight="700">FIELD</text>
+        <text x="180" y="272" text-anchor="middle" font-size="9" fill="#94a3b8">hold the wire in your right hand, thumb along the current</text>
+      </svg>
+      <p class="text-[11px] text-slate-400 mt-2">Your curled fingers then give the direction of the magnetic field lines — a convenient way to find the field direction without a compass.</p>
+    </div>
+  </div>
+
+  <!-- circular loop + solenoid -->
+  <div class="grid lg:grid-cols-2 gap-4 mt-5">
+    <div class="card rounded-3xl p-5">
+      <b class="text-white text-sm"><i class="fa-regular fa-circle accent-text mr-1.5"></i> Circular loop</b>
+      <svg viewBox="0 0 360 290" class="w-full h-auto mt-2" role="img" aria-label="Magnetic field of a current carrying circular loop">
+        <rect x="0" y="0" width="360" height="290" rx="12" fill="#05081a"/>
+        <ellipse cx="180" cy="150" rx="86" ry="60" fill="none" stroke="#f59e0b" stroke-width="4"/>
+        <g stroke="#22d3ee" stroke-width="2" fill="none" class="flow" opacity=".9">
+          <ellipse cx="180" cy="150" rx="120" ry="84"/>
+          <ellipse cx="180" cy="150" rx="150" ry="104"/>
+          <path d="M120,130 L240,130"/><path d="M126,146 L234,146"/><path d="M126,154 L234,154"/><path d="M120,170 L240,170"/>
+        </g>
+        <circle cx="180" cy="150" r="6" fill="#facc15" class="glow-ring"/>
+        <text x="180" y="128" text-anchor="middle" font-size="8.5" fill="#facc15">field at centre = straight lines</text>
+        <text x="180" y="264" text-anchor="middle" font-size="9" fill="#94a3b8">arcs become straight lines at the centre of the loop</text>
+        <text x="180" y="280" text-anchor="middle" font-size="8.5" fill="#fbbf24">n turns -> field n times as large</text>
+      </svg>
+      <p class="text-[11px] text-slate-400 mt-2">At every point of the loop the field is circular; near the centre those big arcs look like parallel straight lines. Each turn adds to the field, so a coil of n turns gives n times the field of a single turn.</p>
+    </div>
+
+    <div class="card rounded-3xl p-5">
+      <b class="text-white text-sm"><i class="fa-solid fa-cylinder-vertical accent-text mr-1.5"></i> Solenoid &amp; electromagnet</b>
+      <svg viewBox="0 0 360 290" class="w-full h-auto mt-2" role="img" aria-label="Field of a solenoid and an electromagnet">
+        <rect x="0" y="0" width="360" height="290" rx="12" fill="#05081a"/>
+        <!-- coil turns -->
+        <g stroke="#f59e0b" stroke-width="4" fill="none">
+          <ellipse cx="120" cy="140" rx="14" ry="44"/><ellipse cx="148" cy="140" rx="14" ry="44"/>
+          <ellipse cx="176" cy="140" rx="14" ry="44"/><ellipse cx="204" cy="140" rx="14" ry="44"/>
+          <ellipse cx="232" cy="140" rx="14" ry="44"/>
+        </g>
+        <!-- core -->
+        <rect x="100" y="132" width="150" height="16" rx="8" fill="#64748b" opacity=".9"/>
+        <text x="175" y="196" text-anchor="middle" font-size="8.5" fill="#cbd5e1">soft iron core -> electromagnet</text>
+        <!-- field -->
+        <g stroke="#22d3ee" stroke-width="2" fill="none" class="flow" opacity=".9">
+          <path d="M104,140 L248,140"/>
+          <path d="M104,150 L248,150"/>
+          <path d="M104,130 L248,130"/>
+          <path d="M104,140 C60,120 60,60 120,44 C180,30 240,44 260,70"/>
+          <path d="M104,140 C60,160 60,220 120,236 C180,250 240,236 260,210"/>
+        </g>
+        <text x="300" y="64" text-anchor="middle" font-size="8.5" fill="#67e8f9">N</text>
+        <text x="300" y="224" text-anchor="middle" font-size="8.5" fill="#67e8f9">S</text>
+        <text x="180" y="272" text-anchor="middle" font-size="9" fill="#94a3b8">inside: parallel straight lines -> uniform field</text>
+      </svg>
+      <p class="text-[11px] text-slate-400 mt-2">A solenoid's field looks just like a bar magnet's — one end behaves as north, the other as south — but the field <b>inside</b> is uniform. Put soft iron inside and you get an <b>electromagnet</b>.</p>
+    </div>
+  </div>
+
+  <div class="grid sm:grid-cols-3 gap-4 mt-5">
+    <div class="card rounded-2xl p-4">
+      <b class="text-sm text-white"><i class="fa-solid fa-shapes accent-text mr-1"></i> Shape decides the pattern</b>
+      <p class="text-xs text-slate-400 mt-1.5">Straight wire → concentric circles. Loop → circles growing outward, straight at the centre. Solenoid → like a bar magnet.</p>
+    </div>
+    <div class="card rounded-2xl p-4">
+      <b class="text-sm text-white"><i class="fa-solid fa-plus accent-text mr-1"></i> More turns, more field</b>
+      <p class="text-xs text-slate-400 mt-1.5">In a coil of n turns the current in every turn flows the same way, so the fields simply add up: n times the field of one turn.</p>
+    </div>
+    <div class="card rounded-2xl p-4">
+      <b class="text-sm text-white"><i class="fa-solid fa-power-off accent-text mr-1"></i> Electromagnet = switchable magnet</b>
+      <p class="text-xs text-slate-400 mt-1.5">A core of soft iron wrapped with insulated copper wire. It is magnetic only while current flows — and its strength can be changed by changing the current.</p>
+    </div>
+  </div>
+</section>
+<!-- ===== 12.3 FORCE & FLEMING'S LHR ===== -->
+<section id="force" class="scroll-mt-24 max-w-6xl mx-auto px-4 py-10">
+  <div class="text-center mb-7">
+    <span class="px-3 py-1 rounded-full text-[11px] font-bold glass accent-text">Section 12.3</span>
+    <h2 class="display text-2xl sm:text-3xl font-bold text-white mt-3">Force on a current-carrying conductor</h2>
+    <p class="mt-2 text-slate-400 text-sm max-w-2xl mx-auto">Ampere suggested it: if a current makes a field that pushes a magnet, the magnet must push back on the current. Flip the current and the rod jumps the other way.</p>
+  </div>
+
+  <div class="card rounded-3xl p-4 sm:p-6 shadow-2xl">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+      <b class="text-white text-sm"><i class="fa-solid fa-hand-point-right accent-text mr-1.5"></i> Activity 12.7 — aluminium rod between magnet poles</b>
+      <button id="btn-rod" onclick="toggleRodCurrent()" class="btn-spark px-4 py-2 rounded-xl accent-grad text-black text-xs font-extrabold"><i class="fa-solid fa-arrows-rotate mr-1"></i> Reverse current</button>
+    </div>
+    <svg viewBox="0 0 720 380" class="w-full h-auto" role="img" aria-label="Force on a current carrying rod in a magnetic field">
+      <rect x="0" y="0" width="720" height="380" rx="14" fill="#05081a"/>
+      <!-- horseshoe magnet poles -->
+      <rect x="180" y="60" width="360" height="40" rx="8" fill="#2563eb" stroke="#60a5fa" stroke-width="2"/>
+      <text x="360" y="86" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">S  (south pole, above)</text>
+      <rect x="180" y="280" width="360" height="40" rx="8" fill="#dc2626" stroke="#f87171" stroke-width="2"/>
+      <text x="360" y="306" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">N  (north pole, below)</text>
+      <!-- field arrows upward -->
+      <g stroke="#22d3ee" stroke-width="2" opacity=".9">
+        <path d="M240,272 L240,110" class="flow" marker-end="url(#fArr)"/>
+        <path d="M300,272 L300,110" class="flow" marker-end="url(#fArr)"/>
+        <path d="M360,272 L360,110" class="flow" marker-end="url(#fArr)"/>
+        <path d="M420,272 L420,110" class="flow" marker-end="url(#fArr)"/>
+        <path d="M480,272 L480,110" class="flow" marker-end="url(#fArr)"/>
+      </g>
+      <defs><marker id="fArr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#22d3ee"/></marker>
+      <marker id="rodArr" markerWidth="9" markerHeight="9" refX="7" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#facc15"/></marker></defs>
+      <text x="600" y="180" font-size="9.5" fill="#22d3ee">magnetic field B (upwards)</text>
+      <path d="M596,196 L560,196" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#fArr)"/>
+
+      <!-- rod -->
+      <g id="rod">
+        <rect x="300" y="182" width="120" height="16" rx="8" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="296" y="176" font-size="10" font-weight="800" fill="#e2e8f0">A</text>
+        <text x="424" y="176" font-size="10" font-weight="800" fill="#e2e8f0">B</text>
+        <!-- current arrow -->
+        <g id="rodCurrent">
+          <path d="M356,190 L390,190" stroke="#f59e0b" stroke-width="3" marker-end="url(#rodArr)"/>
+        </g>
+        <text x="360" y="222" text-anchor="middle" font-size="9" fill="#f59e0b" id="rodCurrentLabel">current A -> B</text>
+      </g>
+      <!-- force arrow -->
+      <g id="forceArrow">
+        <path d="M360,240 L360,272" stroke="#facc15" stroke-width="3.5" marker-end="url(#rodArr)"/>
+      </g>
+      <text x="392" y="262" font-size="9.5" fill="#facc15" font-weight="700" id="forceLabel">force</text>
+      <text x="360" y="352" text-anchor="middle" font-size="9.5" fill="#94a3b8">the force is perpendicular to both the current and the field</text>
+    </svg>
+    <div id="forceInfo" class="mt-3 glass rounded-2xl p-4 text-sm text-slate-300">
+      <b class="accent-text text-xs uppercase tracking-wide">Current A → B</b>
+      <p class="mt-1">The rod is displaced. Reverse the current, or interchange the magnet poles, and the displacement reverses — so the force depends on the direction of both the current and the field.</p>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-4 mt-5">
+    <div class="card rounded-3xl p-5">
+      <b class="text-white text-sm"><i class="fa-solid fa-hand accent-text mr-1.5"></i> Fleming's left-hand rule</b>
+      <svg viewBox="0 0 380 300" class="w-full h-auto mt-2" role="img" aria-label="Fleming's left hand rule">
+        <rect x="0" y="0" width="380" height="300" rx="12" fill="#05081a"/>
+        <!-- palm -->
+        <rect x="140" y="120" width="90" height="100" rx="18" fill="#fcd34d"/>
+        <!-- thumb (force) -->
+        <rect x="228" y="140" width="70" height="24" rx="12" fill="#fbbf24" transform="rotate(-24 228 140)"/>
+        <!-- forefinger (field) -->
+        <rect x="150" y="40" width="24" height="86" rx="12" fill="#f59e0b"/>
+        <!-- middle finger (current) -->
+        <rect x="176" y="96" width="70" height="22" rx="11" fill="#f59e0b" transform="rotate(-6 176 96)"/>
+        <g font-size="9" font-weight="800">
+          <text x="150" y="30" fill="#22d3ee">FOREFINGER -> FIELD (B)</text>
+          <text x="252" y="222" fill="#f59e0b">MIDDLE -> CURRENT (I)</text>
+          <text x="300" y="132" fill="#facc15">THUMB -> FORCE (F)</text>
+        </g>
+        <g stroke-width="2" fill="none">
+          <path d="M162,34 L162,20" stroke="#22d3ee" marker-end="url(#lhrA)"/>
+          <path d="M246,108 L280,100" stroke="#f59e0b" marker-end="url(#lhrB)"/>
+          <path d="M290,138 L320,126" stroke="#facc15" marker-end="url(#lhrC)"/>
+        </g>
+        <defs>
+          <marker id="lhrA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#22d3ee"/></marker>
+          <marker id="lhrB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#f59e0b"/></marker>
+          <marker id="lhrC" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#facc15"/></marker>
+        </defs>
+        <text x="190" y="270" text-anchor="middle" font-size="9" fill="#94a3b8">stretch thumb, forefinger and middle finger mutually perpendicular</text>
+      </svg>
+    </div>
+    <div class="card rounded-3xl p-5">
+      <b class="text-white text-sm"><i class="fa-solid fa-circle-info accent-text mr-1.5"></i> What changes the force</b>
+      <ul class="mt-3 space-y-2 text-xs text-slate-400 list-disc pl-4">
+        <li>The force is <b class="text-slate-200">largest when the current is at right angles</b> to the magnetic field.</li>
+        <li>Reversing the <b class="text-slate-200">current</b> reverses the force.</li>
+        <li>Reversing the <b class="text-slate-200">field</b> (interchanging poles) also reverses the force.</li>
+        <li>With both perpendicular, the force is <b class="text-slate-200">perpendicular to both</b> — given by Fleming's left-hand rule.</li>
+        <li>Devices using this effect: electric motor, electric generator, loudspeakers, microphones and measuring instruments.</li>
+      </ul>
+      <div class="mt-3 rounded-xl bg-white/5 p-3 text-[11px] text-slate-300">
+        <b class="accent2-text">Why a rheostat in the circuit?</b> To change the current and show that a larger current gives a larger displacement.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 12.4 DOMESTIC CIRCUITS ===== -->
+<section id="domestic" class="scroll-mt-24 max-w-6xl mx-auto px-4 py-10">
+  <div class="text-center mb-7">
+    <span class="px-3 py-1 rounded-full text-[11px] font-bold glass accent-text">Section 12.4</span>
+    <h2 class="display text-2xl sm:text-3xl font-bold text-white mt-3">Domestic electric circuits</h2>
+    <p class="mt-2 text-slate-400 text-sm max-w-2xl mx-auto">220 V, 50 Hz, three wires and one very important green one. Tap any part of the house wiring.</p>
+  </div>
+
+  <div class="card rounded-3xl p-4 sm:p-6 shadow-2xl">
+    <svg viewBox="0 0 720 470" class="w-full h-auto" role="img" aria-label="Domestic electric circuit diagram">
+      <rect x="0" y="0" width="720" height="470" rx="14" fill="#05081a"/>
+      <!-- poles -->
+      <g class="part" onclick="selPart('dom','supply')">
+        <path d="M60,60 L60,180" stroke="#94a3b8" stroke-width="5" id="dom-supply"/>
+        <path d="M60,70 L110,70" stroke="#94a3b8" stroke-width="3"/>
+        <path d="M60,90 L110,90" stroke="#94a3b8" stroke-width="3"/>
+        <text x="42" y="50" font-size="9" fill="#cbd5e1">supply</text>
+      </g>
+      <!-- live -->
+      <g class="part" onclick="selPart('dom','live')">
+        <path d="M110,70 L250,70" stroke="#ef4444" stroke-width="4" id="dom-live"/>
+        <text x="150" y="60" font-size="9" fill="#fca5a5" font-weight="700">LIVE (red)</text>
+      </g>
+      <!-- neutral -->
+      <g class="part" onclick="selPart('dom','neutral')">
+        <path d="M110,90 L250,90" stroke="#94a3b8" stroke-width="4" id="dom-neutral"/>
+        <text x="150" y="108" font-size="9" fill="#cbd5e1" font-weight="700">NEUTRAL (black)</text>
+      </g>
+      <!-- meter -->
+      <g class="part" onclick="selPart('dom','meter')">
+        <rect x="250" y="56" width="70" height="52" rx="8" fill="#1e293b" stroke="#60a5fa" stroke-width="2" id="dom-meter"/>
+        <text x="285" y="78" text-anchor="middle" font-size="8.5" fill="#93c5fd" font-weight="800">METER</text>
+        <text x="285" y="92" text-anchor="middle" font-size="8" fill="#64748b">kWh</text>
+      </g>
+      <!-- main fuse -->
+      <g class="part" onclick="selPart('dom','fuse')">
+        <rect x="336" y="58" width="56" height="26" rx="6" fill="#3f1d0c" stroke="#f59e0b" stroke-width="2" id="dom-fuse"/>
+        <text x="364" y="76" text-anchor="middle" font-size="8" fill="#fbbf24" font-weight="800">FUSE</text>
+      </g>
+      <!-- main switch -->
+      <g class="part" onclick="selPart('dom','switch')">
+        <circle cx="420" cy="71" r="14" fill="#1e293b" stroke="#22d3ee" stroke-width="2" id="dom-switch"/>
+        <line x1="420" y1="71" x2="432" y2="59" stroke="#22d3ee" stroke-width="2.5"/>
+        <text x="420" y="46" text-anchor="middle" font-size="8" fill="#67e8f9">MAIN SWITCH</text>
+      </g>
+      <!-- distribution -->
+      <path d="M434,71 L500,71" stroke="#ef4444" stroke-width="4"/>
+      <path d="M434,90 L500,90" stroke="#94a3b8" stroke-width="4"/>
+      <path d="M500,71 L500,140" stroke="#ef4444" stroke-width="4"/>
+      <path d="M500,90 L500,300" stroke="#94a3b8" stroke-width="4"/>
+
+      <!-- 15 A circuit -->
+      <g class="part" onclick="selPart('dom','circuit15')">
+        <rect x="470" y="140" width="220" height="70" rx="10" fill="#0b2e1a" stroke="#22c55e" stroke-width="2" id="dom-circuit15"/>
+        <text x="580" y="162" text-anchor="middle" font-size="9.5" fill="#86efac" font-weight="800">15 A CIRCUIT</text>
+        <text x="580" y="178" text-anchor="middle" font-size="8.5" fill="#4ade80">geyser · air cooler · heater</text>
+        <text x="580" y="194" text-anchor="middle" font-size="8" fill="#22c55e">high power appliances</text>
+      </g>
+      <!-- 5 A circuit -->
+      <g class="part" onclick="selPart('dom','circuit5')">
+        <rect x="470" y="232" width="220" height="70" rx="10" fill="#0b1f2e" stroke="#38bdf8" stroke-width="2" id="dom-circuit5"/>
+        <text x="580" y="254" text-anchor="middle" font-size="9.5" fill="#7dd3fc" font-weight="800">5 A CIRCUIT</text>
+        <text x="580" y="270" text-anchor="middle" font-size="8.5" fill="#38bdf8">bulbs · fans · TV</text>
+        <text x="580" y="286" text-anchor="middle" font-size="8" fill="#0ea5e9">low power appliances</text>
+      </g>
+      <path d="M500,140 L470,140" stroke="#ef4444" stroke-width="3"/>
+      <path d="M500,232 L470,232" stroke="#ef4444" stroke-width="3"/>
+
+      <!-- earth wire -->
+      <g class="part" onclick="selPart('dom','earth')">
+        <path d="M500,300 L500,340 L120,340 L120,392" stroke="#22c55e" stroke-width="4" fill="none" id="dom-earth"/>
+        <rect x="96" y="392" width="48" height="10" rx="3" fill="#22c55e"/>
+        <path d="M104,402 L104,418 M116,402 L116,422 M128,402 L128,418" stroke="#22c55e" stroke-width="2.5"/>
+        <text x="180" y="332" font-size="9" fill="#86efac" font-weight="700">EARTH WIRE (green) -> metal plate deep in the earth</text>
+      </g>
+      <!-- appliance -->
+      <g class="part" onclick="selPart('dom','appliance')">
+        <rect x="560" y="360" width="90" height="60" rx="8" fill="#1e293b" stroke="#a78bfa" stroke-width="2" id="dom-appliance"/>
+        <text x="605" y="384" text-anchor="middle" font-size="8.5" fill="#c4b5fd" font-weight="800">METALLIC</text>
+        <text x="605" y="396" text-anchor="middle" font-size="8.5" fill="#c4b5fd" font-weight="800">BODY</text>
+        <text x="605" y="410" text-anchor="middle" font-size="7.5" fill="#8b5cf6">press · fridge · toaster</text>
+        <path d="M605,360 L605,340" stroke="#22c55e" stroke-width="2.5" stroke-dasharray="5 4"/>
+      </g>
+      <text x="360" y="452" text-anchor="middle" font-size="9" fill="#64748b">potential difference between live and neutral = 220 V · frequency 50 Hz</text>
+    </svg>
+    <div class="flex flex-wrap justify-center gap-1.5 mt-3">
+      <button onclick="selPart('dom','live')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">Live</button>
+      <button onclick="selPart('dom','neutral')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">Neutral</button>
+      <button onclick="selPart('dom','earth')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">Earth</button>
+      <button onclick="selPart('dom','meter')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">Meter</button>
+      <button onclick="selPart('dom','fuse')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">Fuse</button>
+      <button onclick="selPart('dom','circuit15')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">15 A circuit</button>
+      <button onclick="selPart('dom','circuit5')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">5 A circuit</button>
+      <button onclick="selPart('dom','appliance')" class="chip px-2.5 py-1 rounded-lg glass text-[10.5px] font-bold">Earthing</button>
+    </div>
+    <div id="domInfo" class="mt-3 glass rounded-2xl p-4 text-sm text-slate-300">
+      <b class="accent-text text-xs uppercase tracking-wide">Tap a part</b>
+      <p class="mt-1">Two separate circuits keep high-power and low-power appliances apart — so a geyser starting up does not dim your lights.</p>
+    </div>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
+    <div class="card rounded-2xl p-4">
+      <b class="text-sm text-white"><i class="fa-solid fa-fire-flame-simple text-amber-400 mr-1"></i> Fuse</b>
+      <p class="text-xs text-slate-400 mt-1.5">The most important safety device. A thin wire that melts and breaks the circuit if current exceeds the rating — protecting against short-circuiting and overloading.</p>
+    </div>
+    <div class="card rounded-2xl p-4">
+      <b class="text-sm text-white"><i class="fa-solid fa-triangle-exclamation text-rose-400 mr-1"></i> Overloading</b>
+      <p class="text-xs text-slate-400 mt-1.5">Too many high-power appliances on one circuit draw more current than the wire can safely carry, heating the wires.</p>
+    </div>
+    <div class="card rounded-2xl p-4">
+      <b class="text-sm text-white"><i class="fa-solid fa-bolt text-yellow-400 mr-1"></i> Short circuit</b>
+      <p class="text-xs text-slate-400 mt-1.5">Live and neutral touch directly — resistance drops to almost zero and the current increases heavily.</p>
+    </div>
+    <div class="card rounded-2xl p-4">
+      <b class="text-sm text-white"><i class="fa-solid fa-plug-circle-bolt text-emerald-400 mr-1"></i> Earthing</b>
+      <p class="text-xs text-slate-400 mt-1.5">The green wire connects a metallic body to earth, giving leakage current a low-resistance path — so the user does not get a severe shock.</p>
+    </div>
+  </div>
+
+  <div class="card rounded-3xl p-5 mt-4">
+    <b class="text-sm text-white"><i class="fa-solid fa-calculator accent-text mr-1"></i> NCERT exercise — the oven problem</b>
+    <p class="text-xs text-slate-400 mt-2">A 2 kW oven is used on a domestic circuit of 220 V with a 5 A rating. What happens?</p>
+    <div class="mt-2 bg-black/40 rounded-xl p-3 font-mono text-[12px] text-cyan-200">
+      I = P / V = 2000 W ÷ 220 V ≈ 9.1 A
+    </div>
+    <p class="text-xs text-slate-400 mt-2">9.1 A is far more than the 5 A rating → the circuit is <b class="text-slate-200">overloaded</b>. The fuse will melt (or the MCB will trip) and the circuit breaks — otherwise the wiring would overheat and could cause a fire.</p>
+  </div>
+</section>
+
+<!-- ===== BONUS: MOTOR / EMI / GENERATOR ===== -->
+<section id="bonus" class="scroll-mt-24 max-w-6xl mx-auto px-4 py-10">
+  <div class="text-center mb-7">
+    <span class="px-3 py-1 rounded-full text-[11px] font-bold glass text-amber-300 border-amber-400/40"><i class="fa-solid fa-star mr-1"></i> Beyond the current NCERT</span>
+    <h2 class="display text-2xl sm:text-3xl font-bold text-white mt-3">Motor, induction &amp; generator</h2>
+    <p class="mt-2 text-slate-400 text-sm max-w-2xl mx-auto">These sections were removed from the rationalised NCERT textbook, but many schools still teach them and they explain how the chapter is used in real machines.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-4">
+    <!-- motor -->
+    <div class="card rounded-3xl p-5">
+      <div class="flex items-center justify-between mb-2">
+        <b class="text-white text-sm"><i class="fa-solid fa-arrows-spin accent-text mr-1.5"></i> Electric motor</b>
+        <button id="btn-motor" onclick="toggleMotor()" class="px-3 py-1.5 rounded-lg accent-grad text-black text-[11px] font-extrabold"><i class="fa-solid fa-play mr-1"></i> Start</button>
+      </div>
+      <svg viewBox="0 0 460 300" class="w-full h-auto" role="img" aria-label="Electric motor with rotating coil">
+        <rect x="0" y="0" width="460" height="300" rx="12" fill="#05081a"/>
+        <!-- magnet poles -->
+        <rect x="60" y="60" width="40" height="180" rx="6" fill="#dc2626"/><text x="80" y="154" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">N</text>
+        <rect x="360" y="60" width="40" height="180" rx="6" fill="#2563eb"/><text x="380" y="154" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">S</text>
+        <g stroke="#22d3ee" stroke-width="1.8" opacity=".8">
+          <path d="M104,150 L356,150" class="flow" marker-end="url(#mArr)"/>
+        </g>
+        <defs><marker id="mArr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#22d3ee"/></marker></defs>
+        <!-- coil -->
+        <g id="coil">
+          <rect x="150" y="118" width="160" height="64" rx="8" fill="none" stroke="#f59e0b" stroke-width="5"/>
+          <rect x="150" y="118" width="160" height="64" rx="8" fill="#f59e0b" opacity=".12"/>
+          <text x="230" y="152" text-anchor="middle" font-size="9.5" fill="#fbbf24" font-weight="800">COIL (ABCD)</text>
+          <path d="M230,118 L230,96" stroke="#cbd5e1" stroke-width="3"/>
+          <path d="M230,182 L230,204" stroke="#cbd5e1" stroke-width="3"/>
+        </g>
+        <!-- commutator -->
+        <circle cx="230" cy="228" r="16" fill="#1e293b" stroke="#a78bfa" stroke-width="2"/>
+        <path d="M230,212 L230,244" stroke="#a78bfa" stroke-width="2"/>
+        <text x="230" y="262" text-anchor="middle" font-size="8.5" fill="#c4b5fd">split-ring commutator</text>
+        <!-- battery -->
+        <path d="M120,270 L120,290 L340,290 L340,270" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
+        <g stroke="#22c55e" stroke-width="3"><line x1="222" y1="284" x2="222" y2="296"/><line x1="234" y1="288" x2="234" y2="292"/></g>
+        <text x="360" y="200" font-size="8.5" fill="#facc15" id="motorForce">force</text>
+        <text x="120" y="42" font-size="9" fill="#94a3b8">coil rotates because the two sides experience forces in opposite directions</text>
+      </svg>
+      <p class="text-[11px] text-slate-400 mt-2">Current in the coil's two arms experiences opposite forces, so the coil turns. The <b>split ring</b> reverses the current in the coil every half turn, keeping it rotating the same way.</p>
+    </div>
+
+    <!-- EMI -->
+    <div class="card rounded-3xl p-5">
+      <div class="flex items-center justify-between mb-2">
+        <b class="text-white text-sm"><i class="fa-solid fa-magnet accent-text mr-1.5"></i> Electromagnetic induction</b>
+        <button id="btn-emi" onclick="playEMI()" class="px-3 py-1.5 rounded-lg accent-grad text-black text-[11px] font-extrabold"><i class="fa-solid fa-play mr-1"></i> Move magnet</button>
+      </div>
+      <svg viewBox="0 0 460 300" class="w-full h-auto" role="img" aria-label="Electromagnetic induction with coil and galvanometer">
+        <rect x="0" y="0" width="460" height="300" rx="12" fill="#05081a"/>
+        <!-- coil -->
+        <g stroke="#f59e0b" stroke-width="4" fill="none">
+          <ellipse cx="150" cy="140" rx="16" ry="48"/><ellipse cx="176" cy="140" rx="16" ry="48"/>
+          <ellipse cx="202" cy="140" rx="16" ry="48"/><ellipse cx="228" cy="140" rx="16" ry="48"/>
+        </g>
+        <text x="190" y="212" text-anchor="middle" font-size="8.5" fill="#fbbf24">coil</text>
+        <!-- magnet -->
+        <g id="emiMagnet">
+          <rect x="300" y="118" width="60" height="44" rx="5" fill="#dc2626"/><text x="330" y="146" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">N</text>
+          <rect x="360" y="118" width="60" height="44" rx="5" fill="#2563eb"/><text x="390" y="146" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">S</text>
+        </g>
+        <text x="360" y="106" text-anchor="middle" font-size="8.5" fill="#94a3b8">move in / out</text>
+        <!-- wires to galvanometer -->
+        <path d="M150,188 L150,250 L300,250" stroke="#64748b" stroke-width="2.5" fill="none"/>
+        <path d="M228,188 L228,230 L300,230" stroke="#64748b" stroke-width="2.5" fill="none"/>
+        <!-- galvanometer -->
+        <circle cx="340" cy="240" r="34" fill="#0f172a" stroke="#94a3b8" stroke-width="2"/>
+        <g id="galvoNeedle" style="transform-origin:340px 240px;transition:transform .5s">
+          <line x1="340" y1="240" x2="340" y2="214" stroke="#f87171" stroke-width="2.5"/>
+        </g>
+        <text x="340" y="290" text-anchor="middle" font-size="8.5" fill="#94a3b8">galvanometer</text>
+        <text x="230" y="42" text-anchor="middle" font-size="9" fill="#67e8f9">relative motion -> induced current</text>
+      </svg>
+      <p class="text-[11px] text-slate-400 mt-2">Move the magnet towards the coil and the galvanometer deflects; hold it still and the deflection stops; pull it away and the deflection reverses. Only <b>relative motion</b> matters.</p>
+    </div>
+  </div>
+
+  <!-- generator -->
+  <div class="card rounded-3xl p-5 mt-5">
+    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+      <b class="text-white text-sm"><i class="fa-solid fa-wave-square accent-text mr-1.5"></i> Electric generator — AC vs DC</b>
+      <div class="flex gap-2">
+        <button id="btn-gen" onclick="toggleGenerator()" class="px-3 py-1.5 rounded-lg accent-grad text-black text-[11px] font-extrabold"><i class="fa-solid fa-play mr-1"></i> Rotate</button>
+        <button id="btn-acdc" onclick="toggleACDC()" class="px-3 py-1.5 rounded-lg glass text-[11px] font-extrabold text-white">Mode: AC</button>
+      </div>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <svg viewBox="0 0 380 260" class="w-full h-auto" role="img" aria-label="Generator coil rotating in magnetic field">
+        <rect x="0" y="0" width="380" height="260" rx="12" fill="#05081a"/>
+        <rect x="40" y="50" width="34" height="150" rx="5" fill="#dc2626"/><text x="57" y="130" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">N</text>
+        <rect x="306" y="50" width="34" height="150" rx="5" fill="#2563eb"/><text x="323" y="130" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">S</text>
+        <g id="genCoil">
+          <rect x="140" y="98" width="100" height="54" rx="6" fill="none" stroke="#f59e0b" stroke-width="4"/>
+          <text x="190" y="130" text-anchor="middle" font-size="8.5" fill="#fbbf24">coil</text>
+        </g>
+        <circle cx="190" cy="188" r="12" fill="#1e293b" stroke="#a78bfa" stroke-width="2" id="genRing"/>
+        <text x="190" y="228" text-anchor="middle" font-size="8" fill="#c4b5fd" id="genRingLabel">slip rings (AC)</text>
+        <text x="190" y="34" text-anchor="middle" font-size="9" fill="#94a3b8">rotate the coil in the field</text>
+      </svg>
+      <div>
+        <svg viewBox="0 0 380 260" class="w-full h-auto" role="img" aria-label="Output waveform AC or DC">
+          <rect x="0" y="0" width="380" height="260" rx="12" fill="#05081a"/>
+          <line x1="30" y1="130" x2="350" y2="130" stroke="#475569" stroke-width="1.5"/>
+          <line x1="30" y1="30" x2="30" y2="230" stroke="#475569" stroke-width="1.5"/>
+          <text x="360" y="126" font-size="8" fill="#64748b">t</text>
+          <text x="20" y="36" font-size="8" fill="#64748b">I</text>
+          <path id="wavePath" d="M30,130 C60,40 90,40 120,130 C150,220 180,220 210,130 C240,40 270,40 300,130 C330,220 350,220 350,130"
+                fill="none" stroke="#22d3ee" stroke-width="2.5"/>
+          <circle id="waveDot" r="4.5" fill="#22d3ee" class="wave-dot"/>
+          <text x="190" y="246" text-anchor="middle" font-size="8.5" fill="#94a3b8" id="waveLabel">AC — direction reverses every half rotation</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ===== Q&A ===== -->
+<section id="magqa" class="scroll-mt-24 max-w-6xl mx-auto px-4 py-10">
+  <div class="text-center mb-7">
+    <span class="px-3 py-1 rounded-full text-[11px] font-bold glass accent-text">Chapter 12</span>
+    <h2 class="display text-2xl sm:text-3xl font-bold text-white mt-3">NCERT questions &amp; board PYQs</h2>
+    <p class="mt-2 text-slate-400 text-sm">Answer first, then reveal.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-4">
+    <div class="card rounded-3xl p-5">
+      <b class="text-sm text-white"><i class="fa-solid fa-circle-question accent-text mr-1"></i> In-text &amp; exercise questions</b>
+      <div class="mt-3 space-y-2">
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq1')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>1. Which correctly describes the magnetic field near a long straight wire?</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq1" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">(d) The field consists of <b>concentric circles centred on the wire</b>. Their direction is given by the right-hand thumb rule.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq2')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>2. At the time of short circuit, the current in the circuit…</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq2" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">(c) <b>increases heavily</b> — live and neutral touch, so resistance becomes almost zero.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq3')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>3. True or false: (a) field at the centre of a long circular coil is parallel straight lines (b) a green wire is the live wire</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq3" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">(a) <b>True</b> — the arcs appear as parallel straight lines at the centre. (b) <b>False</b> — green insulation is the <b>earth</b> wire; live is red and neutral is black.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq4')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>4. List two methods of producing magnetic fields.</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq4" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">(i) By using a permanent magnet (e.g. a bar magnet). (ii) By passing an electric current through a conductor — a straight wire, a circular coil or a solenoid.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq5')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>5. When is the force on a current-carrying conductor in a magnetic field largest?</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq5" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">When the direction of the current is at <b>right angles</b> to the direction of the magnetic field.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq6')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>6. Electron beam moving from back wall to front wall is deflected to your right. Direction of magnetic field?</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq6" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">Using Fleming's left-hand rule with the current opposite to the electron motion (front → back) and force to the right, the field must point <b>vertically upwards</b>.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq7')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>7. State the rule for (i) field around a straight conductor (ii) force on a conductor (iii) current induced in a rotating coil</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq7" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">(i) <b>Right-hand thumb rule</b>. (ii) <b>Fleming's left-hand rule</b>. (iii) <b>Fleming's right-hand rule</b> (for induced current in a generator).</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq8')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>8. When does an electric short circuit occur?</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq8" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">When the live wire and the neutral wire touch each other directly — usually due to damaged insulation or a fault in the appliance. Resistance falls to nearly zero and the current rises sharply.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mq9')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>9. What is the function of an earth wire? Why earth metallic appliances?</span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mq9" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">The earth wire provides a low-resistance path for current to the ground. If current leaks into the metallic body of an appliance, it flows to earth instead of through the user — so the body stays at earth potential and the user does not get a severe shock. That is why metallic appliances must be earthed.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card rounded-3xl p-5">
+      <b class="text-sm text-white"><i class="fa-solid fa-clock-rotate-left accent-text mr-1"></i> Board-style &amp; numerical</b>
+      <div class="mt-3 space-y-2">
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mp1')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>1. Why does a compass needle deflect when current flows through a nearby wire? <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 ml-1">2</span></span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mp1" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">A current-carrying conductor produces a magnetic field around it. The compass needle, being a small magnet, experiences a force from this field and turns to align with it. Reversing the current reverses the field and the deflection.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mp2')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>2. Why is the magnetic field inside a long solenoid uniform? What does it behave like? <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 ml-1">3</span></span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mp2" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">Inside a solenoid the field lines are parallel straight lines, which shows the field has the same magnitude and direction at all points inside — it is uniform. One end behaves as a north pole and the other as a south pole, so the solenoid behaves like a bar magnet. This strong uniform field can magnetise soft iron placed inside, making an electromagnet.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mp3')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>3. State Fleming's left-hand rule and use it to explain the motor effect. <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 ml-1">3</span></span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mp3" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">Stretch the thumb, forefinger and middle finger of the left hand mutually perpendicular. If the forefinger points along the magnetic field and the middle finger along the current, the thumb gives the direction of the force (motion). In a motor, the two arms of the coil carry current in opposite directions, so the forces on them are opposite — producing rotation.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mp4')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>4. A 2 kW oven on a 220 V circuit rated 5 A — what result do you expect? <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 ml-1">3</span></span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mp4" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">I = P/V = 2000/220 ≈ 9.1 A, which is more than double the 5 A rating. The circuit is overloaded: the fuse melts (or the MCB trips) and the circuit breaks. Without this protection the wiring would overheat and could cause a fire.</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mp5')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>5. Two safety measures commonly used in circuits and appliances. <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 ml-1">2</span></span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mp5" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">(i) <b>Fuse</b> — melts and breaks the circuit on excess current. (ii) <b>Earthing</b> — connects metallic bodies to earth so leakage current does not shock the user. (An MCB is the modern equivalent of a fuse.)</div></div>
+        </div>
+        <div class="rounded-xl border border-white/10 overflow-hidden">
+          <button onclick="toggleAns('mp6')" class="w-full flex justify-between items-center text-left px-3.5 py-2.5 hover:bg-white/5 text-xs font-bold text-slate-200"><span>6. What precautions avoid overloading of domestic circuits? <span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 ml-1">2</span></span><i class="fa-solid fa-chevron-down text-[10px] text-slate-500"></i></button>
+          <div id="mp6" class="ans-body"><div class="px-3.5 py-2.5 text-xs text-slate-400">Do not connect too many high-power appliances to one circuit; keep high-power appliances (geyser, heater, air cooler) on the separate 15 A circuit; use wires and fuses of proper rating; avoid joining many appliances to a single socket.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MCQ ===== -->
+<section id="mcq" class="scroll-mt-24 max-w-3xl mx-auto px-4 py-12">
+  <div class="text-center mb-7">
+    <span class="px-3 py-1 rounded-full text-[11px] font-bold glass accent-text">Self test</span>
+    <h2 class="display text-2xl sm:text-3xl font-bold text-white mt-3">Chapter 12 — 20 MCQ test</h2>
+    <p class="mt-2 text-slate-400 text-sm">1 mark each • explanation after every answer</p>
+  </div>
+  <div class="card rounded-3xl overflow-hidden shadow-2xl" id="mcqCard">
+    <div class="bg-black/40 px-6 py-4 flex items-center justify-between text-white border-b border-white/10">
+      <b class="text-sm">Question <span id="mcqNum">1</span> / <span id="mcqTotal">20</span></b>
+      <div class="flex items-center gap-2 text-xs font-bold">
+        <span class="bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 px-2.5 py-1 rounded-full">Correct: <span id="mcqScore">0</span></span>
+        <span class="bg-rose-400/20 text-rose-300 border border-rose-400/30 px-2.5 py-1 rounded-full">Wrong: <span id="mcqWrong">0</span></span>
+      </div>
+    </div>
+    <div class="h-1.5 bg-white/10"><div id="mcqProgress" class="h-full accent-grad transition-all" style="width:5%"></div></div>
+    <div class="p-6 sm:p-8">
+      <p id="mcqQuestion" class="text-base sm:text-lg font-bold text-white leading-relaxed"></p>
+      <div id="mcqOptions" class="mt-5 space-y-3"></div>
+      <div id="mcqExplain" class="hidden mt-5 bg-white/5 border border-white/10 rounded-2xl p-4 text-sm text-slate-300"></div>
+      <div class="mt-6">
+        <button id="mcqNextBtn" onclick="mcqNext()" class="px-6 py-3 accent-grad text-black rounded-xl text-sm font-extrabold">Next question <i class="fa-solid fa-arrow-right ml-1 text-xs"></i></button>
+      </div>
+    </div>
+  </div>
+  <div id="mcqResult" class="hidden card rounded-3xl p-8 text-center mt-6">
+    <div id="mcqResultEmoji" class="text-5xl"></div>
+    <h3 class="text-2xl font-extrabold text-white mt-3" id="mcqResultTitle"></h3>
+    <p class="text-slate-400 mt-2 text-sm" id="mcqResultMsg"></p>
+    <div class="mt-5 text-4xl font-extrabold text-white"><span id="mcqFinalScore">0</span><span class="text-slate-500 text-2xl">/20</span></div>
+    <button onclick="retryMcq()" class="mt-6 px-8 py-3 accent-grad text-black rounded-xl font-extrabold text-sm"><i class="fa-solid fa-rotate-right mr-1"></i> Take the test again</button>
+  </div>
+</section>
+
+<footer class="text-center py-10 text-xs text-slate-500 border-t border-white/10 mt-6">
+  <p>NCERT Science • Class 10 • Chapter 12 — Magnetic Effects of Electric Current</p>
+  <p class="mt-1">Sections 12.1–12.4 from the NCERT text (Reprint 2026-27); motor, induction and generator are included as bonus topics.</p>
+</footer>
+
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[60] max-w-md w-[92%] glass rounded-2xl p-4 text-sm text-slate-200 shadow-2xl opacity-0 pointer-events-none transition-all duration-300"></div>
+
+<script>
+/* ============ NAV ============ */
+function toggleNav(){
+  const m=document.getElementById('navMenu'),b=document.getElementById('navToggle'),i=document.getElementById('navIcon');
+  const open=!m.classList.toggle('hidden');
+  b.setAttribute('aria-expanded',open?'true':'false');
+  b.setAttribute('aria-label',open?'Close menu':'Open menu');
+  i.className=open?'fa-solid fa-xmark':'fa-solid fa-bars';
+}
+function closeNav(){
+  document.getElementById('navMenu').classList.add('hidden');
+  const b=document.getElementById('navToggle'); if(b) b.setAttribute('aria-expanded','false');
+  const i=document.getElementById('navIcon'); if(i) i.className='fa-solid fa-bars';
+}
+window.addEventListener('resize',()=>{ if(window.innerWidth>=1024) closeNav(); });
+
+let toastTimer;
+function showToast(title,text){
+  const t=document.getElementById('toast');
+  t.innerHTML='<b class="accent-text text-xs uppercase tracking-wide">'+title+'</b><p class="mt-1">'+text+'</p>';
+  t.style.opacity='1'; t.style.transform='translate(-50%,0)';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{t.style.opacity='0';t.style.transform='translate(-50%,12px)';},5200);
+}
+
+/* ============ PART DATA ============ */
+const INFO={
+  field:{
+    north:{t:'NORTH POLE',d:'The end of a magnet that points towards north when suspended freely — the "north-seeking" pole. Field lines emerge from here.'},
+    south:{t:'SOUTH POLE',d:'The end that points towards south. Field lines merge here. Like poles repel, unlike poles attract.'},
+    lines:{t:'FIELD LINES',d:'A field line is the path along which a hypothetical free north pole would tend to move. Lines are closer together where the field is stronger — near the poles. Inside the magnet they run south → north, so every line is a closed curve.'},
+    compass:{t:'COMPASS NEEDLE',d:'A small bar magnet. Its north pole points in the direction of the magnetic field at that point — which is exactly how field lines are traced.'}
+  },
+  dom:{
+    supply:{t:'MAIN SUPPLY',d:'Power reaches the house through a main supply — overhead poles or underground cables — at 220 V with a frequency of 50 Hz.'},
+    live:{t:'LIVE WIRE (red)',d:'The positive wire, with red insulation. The potential difference between live and neutral is 220 V.'},
+    neutral:{t:'NEUTRAL WIRE (black)',d:'The negative wire, with black insulation. Together with the live wire it completes the circuit.'},
+    earth:{t:'EARTH WIRE (green)',d:'Connected to a metal plate deep in the earth near the house. It provides a low-resistance path for leakage current so a metallic body stays at earth potential and the user is protected from severe shock.'},
+    meter:{t:'ELECTRICITY METER',d:'The live and neutral wires pass into the electricity meter through a main fuse — this is what the electricity company reads to bill you.'},
+    fuse:{t:'MAIN FUSE',d:'A safety device that melts and breaks the circuit if the current exceeds its rating — protecting the wiring from short-circuiting and overloading.'},
+    switch:{t:'MAIN SWITCH',d:'Isolates the entire house from the supply. From here the line wires feed the separate circuits in the house.'},
+    circuit15:{t:'15 A CIRCUIT',d:'For appliances with higher power ratings — geysers, air coolers, heaters. Separate from the lighting circuit so starting a heavy appliance does not affect lights.'},
+    circuit5:{t:'5 A CIRCUIT',d:'For low-power appliances — bulbs, fans, TV. Two separate circuits are the standard practice in Indian homes.'},
+    appliance:{t:'EARTHED APPLIANCE',d:'Appliances with metallic bodies — electric press, toaster, table fan, refrigerator — have their body connected to the earth wire, which is why they must be earthed.'}
+  }
+};
+const EL={
+  field:{north:'field-north',south:'field-south',compass:'field-compass',lines:'fieldLines'},
+  dom:{supply:'dom-supply',live:'dom-live',neutral:'dom-neutral',earth:'dom-earth',meter:'dom-meter',fuse:'dom-fuse',switch:'dom-switch',circuit15:'dom-circuit15',circuit5:'dom-circuit5',appliance:'dom-appliance'}
+};
+const PANEL={field:'fieldInfo',dom:'domInfo'};
+function selPart(group,id){
+  const info=(INFO[group]||{})[id]; if(!info) return;
+  document.querySelectorAll('.active-part').forEach(e=>e.classList.remove('active-part'));
+  const elId=(EL[group]||{})[id]; const el=elId?document.getElementById(elId):null;
+  if(el) el.classList.add('active-part');
+  const pid=PANEL[group]; const panel=pid?document.getElementById(pid):null;
+  if(panel) panel.innerHTML='<b class="accent-text text-xs uppercase tracking-wide">'+info.t+'</b><p class="mt-1">'+info.d+'</p>';
+  else showToast(info.t,info.d);
+  const call="selPart('"+group+"','"+id+"')";
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('chip-active',(c.getAttribute('onclick')||'').indexOf(call)!==-1));
+}
+function toggleAns(id){ const e=document.getElementById(id); if(e) e.classList.toggle('open'); }
+
+/* ============ FIELD LINE ANIMATION ============ */
+let fieldPaused=false;
+function toggleFieldFlow(){
+  const g=document.getElementById('fieldLines'), b=document.getElementById('btn-fields');
+  fieldPaused=!fieldPaused;
+  g.style.animationPlayState=fieldPaused?'paused':'running';
+  g.querySelectorAll('path').forEach(p=>{p.style.animationPlayState=fieldPaused?'paused':'running';});
+  g.classList.toggle('flow',!fieldPaused);
+  b.innerHTML=fieldPaused?'<i class="fa-solid fa-play mr-1"></i> Play lines':'<i class="fa-solid fa-pause mr-1"></i> Pause lines';
+}
+
+/* ============ COMPASS / CURRENT ============ */
+let currentOn=false;
+function toggleCurrent(){
+  currentOn=!currentOn;
+  const needle=document.getElementById('needle'), label=document.getElementById('needleLabel');
+  const arrow=document.getElementById('currentArrow'), key=document.getElementById('keySwitch');
+  const btn=document.getElementById('btn-needle');
+  if(currentOn){
+    needle.style.transform='rotate(52deg)';
+    label.textContent='current ON — needle deflects';
+    arrow.setAttribute('opacity','1');
+    key.querySelector('line').setAttribute('x2','182'); key.querySelector('line').setAttribute('y2','120');
+    btn.textContent='Switch OFF';
+  } else {
+    needle.style.transform='rotate(0deg)';
+    label.textContent='no current — needle points N-S';
+    arrow.setAttribute('opacity','0');
+    key.querySelector('line').setAttribute('x2','170'); key.querySelector('line').setAttribute('y2','106');
+    btn.textContent='Switch ON';
+  }
+}
+
+/* ============ WIRE CURRENT REVERSE ============ */
+let wireReversed=false;
+function toggleWireCurrent(){
+  wireReversed=!wireReversed;
+  const circles=document.getElementById('wireCircles');
+  circles.querySelectorAll('ellipse').forEach(el=>{
+    el.style.animationDirection=wireReversed?'reverse':'normal';
+  });
+  document.getElementById('wireDot').setAttribute('fill',wireReversed?'#22d3ee':'#05081a');
+  document.getElementById('wireDir').textContent=wireReversed?'current OUT of page ⊙':'current INTO page ⊗';
+  document.getElementById('btn-wire').textContent=wireReversed?'Current: out':'Current: in';
+}
+
+/* ============ ROD / FORCE ============ */
+let rodReversed=false;
+function toggleRodCurrent(){
+  rodReversed=!rodReversed;
+  const rod=document.getElementById('rod'), arrow=document.getElementById('forceArrow');
+  const cur=document.getElementById('rodCurrent');
+  const lab=document.getElementById('rodCurrentLabel'), flab=document.getElementById('forceLabel');
+  const info=document.getElementById('forceInfo');
+  rod.style.transform=rodReversed?'translateX(26px)':'translateX(0)';
+  arrow.style.transform=rodReversed?'translateY(18px)':'translateY(0)';
+  cur.style.transform=rodReversed?'scaleX(-1)':'scaleX(1)';
+  cur.style.transformOrigin='372px 190px';
+  lab.textContent=rodReversed?'current B → A':'current A → B';
+  flab.textContent=rodReversed?'force (reversed)':'force';
+  info.innerHTML='<b class="accent-text text-xs uppercase tracking-wide">Current '+(rodReversed?'B → A':'A → B')+'</b><p class="mt-1">'+
+    (rodReversed
+      ? 'Reversing the current reverses the displacement — the rod now moves the other way. The force depends on the direction of both the current and the magnetic field.'
+      : 'The rod is displaced. Reverse the current, or interchange the magnet poles, and the displacement reverses.')+'</p>';
+}
+
+/* ============ MOTOR ============ */
+let motorOn=false, motorAngle=0, motorTimer=null;
+function toggleMotor(){
+  const b=document.getElementById('btn-motor'), coil=document.getElementById('coil');
+  motorOn=!motorOn;
+  if(motorOn){
+    b.innerHTML='<i class="fa-solid fa-pause mr-1"></i> Stop';
+    motorTimer=setInterval(()=>{
+      motorAngle=(motorAngle+6)%360;
+      coil.style.transform='rotate('+motorAngle+'deg)';
+    },40);
+  } else {
+    b.innerHTML='<i class="fa-solid fa-play mr-1"></i> Start';
+    clearInterval(motorTimer);
+  }
+}
+
+/* ============ EMI ============ */
+let emiTimer=null;
+function playEMI(){
+  const mag=document.getElementById('emiMagnet'), gal=document.getElementById('galvoNeedle');
+  const b=document.getElementById('btn-emi');
+  b.innerHTML='<i class="fa-solid fa-play mr-1"></i> Moving…';
+  let t=0;
+  clearInterval(emiTimer);
+  emiTimer=setInterval(()=>{
+    t+=1;
+    const phase=t%60;
+    let x=0, defl=0;
+    if(phase<20){ x=-90+(phase/20)*90; defl=28; }       // moving in
+    else if(phase<30){ x=0; defl=0; }                    // still
+    else if(phase<50){ x=((phase-30)/20)*90; defl=-28; } // moving out
+    else { x=0; defl=0; }
+    mag.style.transform='translateX('+x+'px)';
+    gal.style.transform='rotate('+defl+'deg)';
+    if(t>120){ clearInterval(emiTimer); mag.style.transform='translateX(0)'; gal.style.transform='rotate(0deg)'; b.innerHTML='<i class="fa-solid fa-rotate-right mr-1"></i> Again'; }
+  },40);
+}
+
+/* ============ GENERATOR ============ */
+let genOn=false, genAngle=0, genTimer=null, isAC=true, waveTimer=null, waveT=0;
+function toggleGenerator(){
+  const b=document.getElementById('btn-gen'), coil=document.getElementById('genCoil'), dot=document.getElementById('waveDot');
+  genOn=!genOn;
+  if(genOn){
+    b.innerHTML='<i class="fa-solid fa-pause mr-1"></i> Stop';
+    genTimer=setInterval(()=>{ genAngle=(genAngle+7)%360; coil.style.transform='rotate('+genAngle+'deg)'; coil.style.transformOrigin='190px 125px'; },40);
+    const path=document.getElementById('wavePath');
+    waveTimer=setInterval(()=>{
+      waveT=(waveT+0.012)%1;
+      const L=path.getTotalLength();
+      const p=path.getPointAtLength(waveT*L);
+      dot.setAttribute('cx',p.x); dot.setAttribute('cy',p.y);
+      if(!isAC && p.y>130) dot.setAttribute('cy',130);
+    },30);
+  } else {
+    b.innerHTML='<i class="fa-solid fa-play mr-1"></i> Rotate';
+    clearInterval(genTimer); clearInterval(waveTimer);
+  }
+}
+function toggleACDC(){
+  isAC=!isAC;
+  const btn=document.getElementById('btn-acdc'), path=document.getElementById('wavePath');
+  const label=document.getElementById('waveLabel'), ring=document.getElementById('genRingLabel');
+  if(isAC){
+    btn.textContent='Mode: AC';
+    path.setAttribute('d','M30,130 C60,40 90,40 120,130 C150,220 180,220 210,130 C240,40 270,40 300,130 C330,220 350,220 350,130');
+    path.setAttribute('stroke','#22d3ee');
+    label.textContent='AC — direction reverses every half rotation';
+    ring.textContent='slip rings (AC)';
+  } else {
+    btn.textContent='Mode: DC';
+    path.setAttribute('d','M30,130 C60,60 90,60 120,130 C150,200 180,200 210,130 C240,60 270,60 300,130 C330,200 350,200 350,130');
+    path.setAttribute('stroke','#facc15');
+    label.textContent='DC — split ring makes current flow one way (pulsating)';
+    ring.textContent='split ring (DC)';
+  }
+}
+
+/* ============ MCQ ============ */
+const MCQS=[
+  {q:'A compass needle is:',o:['A small bar magnet','A coil of wire','An electromagnet','A non-magnetic needle'],a:0,e:'Its ends point approximately north and south — the north-seeking pole and the south-seeking pole.'},
+  {q:'The direction of a magnetic field at a point is the direction in which:',o:['A south pole moves','A north pole of a compass needle moves','The current flows','Iron filings settle'],a:1,e:'By convention, field direction = direction in which a north pole placed there would move.'},
+  {q:'Magnetic field lines emerge from the:',o:['South pole and merge at north','North pole and merge at south','Centre of the magnet','Both poles equally'],a:1,e:'Outside the magnet they run N → S; inside they run S → N, so field lines are closed curves.'},
+  {q:'Field lines are drawn closer together where:',o:['The field is weaker','The field is stronger','The magnet is longer','There is no field'],a:1,e:'Closeness of lines represents the strength of the field — they crowd near the poles.'},
+  {q:'The magnetic field lines around a long straight current-carrying wire are:',o:['Straight lines parallel to the wire','Straight lines perpendicular to the wire','Concentric circles centred on the wire','Radial lines'],a:2,e:'That is why a compass placed anywhere around the wire points tangentially.'},
+  {q:'According to the right-hand thumb rule, the thumb points along the:',o:['Magnetic field','Direction of current','Force','Direction of motion'],a:1,e:'Hold the wire in your right hand with the thumb along the current; the curled fingers give the field direction.'},
+  {q:'If the direction of current in a wire is reversed, the magnetic field:',o:['Stays the same','Becomes zero','Reverses direction','Becomes stronger'],a:2,e:'The field direction depends on the current direction — reverse one and the other reverses.'},
+  {q:'The strength of the magnetic field due to a straight wire at a point is:',o:['Directly proportional to distance','Inversely proportional to distance','Independent of current','Zero beyond 1 m'],a:1,e:'B is directly proportional to the current and inversely proportional to the distance from the wire.'},
+  {q:'A circular coil of n turns produces a field that is:',o:['Same as one turn','n times that of one turn','1/n of one turn','Zero at the centre'],a:1,e:'The current in every turn flows the same way, so the fields add up.'},
+  {q:'At the centre of a current-carrying circular loop, the field lines appear as:',o:['Circles','Parallel straight lines','Radial lines','No field at all'],a:1,e:'The arcs of the big circles become almost straight lines at the centre.'},
+  {q:'The magnetic field inside a long current-carrying solenoid is:',o:['Zero','Stronger near the ends','The same at all points','Always circular'],a:2,e:'Parallel straight lines inside show a uniform field — same magnitude and direction everywhere inside.'},
+  {q:'A current-carrying solenoid behaves like:',o:['A bar magnet','A capacitor','An insulator','A resistor'],a:0,e:'One end acts as a north pole and the other as a south pole.'},
+  {q:'An electromagnet consists of:',o:['A permanent magnet with a coil','A soft iron core wrapped with insulated copper wire','Only a coil of wire','A steel core with no coil'],a:1,e:'It is magnetic only while current flows, and its strength can be varied.'},
+  {q:'The force on a current-carrying conductor in a magnetic field is largest when:',o:['Current is parallel to the field','Current is at right angles to the field','Current is zero','Field is zero'],a:1,e:'At 90° the displacement is greatest; the force is then perpendicular to both current and field.'},
+  {q:'In Fleming\'s left-hand rule, the forefinger indicates the direction of:',o:['Current','Magnetic field','Force','Motion of the conductor'],a:1,e:'Forefinger = field, middle finger = current, thumb = force/motion.'},
+  {q:'In a domestic supply in India, the live wire has insulation of:',o:['Black','Green','Red','Yellow'],a:2,e:'Live = red, neutral = black, earth = green.'},
+  {q:'The potential difference between live and neutral in Indian homes is:',o:['110 V','220 V','440 V','50 V'],a:1,e:'220 V at a frequency of 50 Hz.'},
+  {q:'The most important safety device that protects a circuit from overloading and short circuiting is the:',o:['Fuse','Switch','Meter','Socket'],a:0,e:'A fuse melts and breaks the circuit when current exceeds its rating.'},
+  {q:'At the time of a short circuit, the current:',o:['Reduces substantially','Does not change','Increases heavily','Becomes zero'],a:2,e:'Live and neutral touch directly, so resistance becomes almost zero and current rises sharply.'},
+  {q:'The earth wire is used to:',o:['Increase current','Provide a low-resistance path for leakage current','Reduce voltage','Store charge'],a:1,e:'It keeps the metallic body at earth potential so the user does not receive a severe shock.'}
+];
+let mi=0,ms=0,mw=0,mlock=false;
+function renderMcq(){
+  const q=MCQS[mi]; mlock=false;
+  document.getElementById('mcqNum').textContent=mi+1;
+  document.getElementById('mcqQuestion').textContent=q.q;
+  document.getElementById('mcqExplain').classList.add('hidden');
+  document.getElementById('mcqProgress').style.width=(mi/MCQS.length*100+5)+'%';
+  const box=document.getElementById('mcqOptions'); box.innerHTML='';
+  q.o.forEach((opt,j)=>{
+    const b=document.createElement('button');
+    b.className='quiz-opt w-full text-left border-2 border-white/15 bg-white/5 rounded-2xl px-4 py-3.5 text-sm font-bold flex items-center gap-3 text-slate-200';
+    b.innerHTML='<span class="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center text-xs flex-shrink-0">'+'ABCD'[j]+'</span> '+opt;
+    b.onclick=()=>pick(j); box.appendChild(b);
+  });
+  document.getElementById('mcqNextBtn').innerHTML= mi===MCQS.length-1?'See result <i class="fa-solid fa-flag-checkered ml-1 text-xs"></i>':'Next question <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>';
+}
+function pick(j){
+  if(mlock) return; mlock=true;
+  const q=MCQS[mi];
+  document.getElementById('mcqOptions').querySelectorAll('.quiz-opt').forEach((b,k)=>{
+    if(k===q.a) b.classList.add('correct'); else if(k===j) b.classList.add('wrong');
+  });
+  if(j===q.a){ms++;document.getElementById('mcqScore').textContent=ms;} else {mw++;document.getElementById('mcqWrong').textContent=mw;}
+  const ex=document.getElementById('mcqExplain');
+  ex.innerHTML=(j===q.a?'<b>✓ Correct!</b> ':'<b>✗ Correct answer: '+q.o[q.a]+'</b> — ')+q.e;
+  ex.classList.remove('hidden');
+}
+function mcqNext(){
+  if(!mlock) return;
+  if(mi===MCQS.length-1){
+    document.getElementById('mcqProgress').style.width='100%';
+    document.getElementById('mcqCard').classList.add('hidden');
+    const r=document.getElementById('mcqResult'); r.classList.remove('hidden');
+    document.getElementById('mcqFinalScore').textContent=ms;
+    let em,ti,msg;
+    if(ms>=16){em='🏆';ti='Excellent — chapter mastered!';msg='You are ready. Revise the three rules once more before the exam.';}
+    else if(ms>=11){em='💪';ti='Good — nearly there';msg='Re-read the sections for the questions you missed, then retake.';}
+    else {em='📚';ti='More revision needed';msg='Go through the diagrams again — especially the rules — then try once more.';}
+    document.getElementById('mcqResultEmoji').textContent=em;
+    document.getElementById('mcqResultTitle').textContent=ti;
+    document.getElementById('mcqResultMsg').textContent=msg;
+    if(typeof r.scrollIntoView==='function') r.scrollIntoView({behavior:'smooth'});
+  } else { mi++; renderMcq(); }
+}
+function retryMcq(){
+  mi=0;ms=0;mw=0;
+  document.getElementById('mcqScore').textContent='0';
+  document.getElementById('mcqWrong').textContent='0';
+  document.getElementById('mcqResult').classList.add('hidden');
+  document.getElementById('mcqCard').classList.remove('hidden');
+  renderMcq();
+  if(typeof document.getElementById('mcq').scrollIntoView==='function') document.getElementById('mcq').scrollIntoView({behavior:'smooth'});
+}
+
+/* ============ BACKGROUND: sparks travelling on field curves ============ */
+(function(){
+  const c=document.getElementById('fx'); if(!c) return;
+  const ctx=c.getContext('2d'); let W,H,sparks=[];
+  function init(){
+    W=c.width=window.innerWidth; H=c.height=window.innerHeight;
+    sparks=[];
+    const n=Math.min(40,Math.floor(W/34));
+    for(let i=0;i<n;i++){
+      sparks.push({x:Math.random()*W,y:Math.random()*H,
+        vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,
+        len:Math.random()*18+8,hue:Math.random()>0.5?200:245,ph:Math.random()*6.28});
+    }
+  }
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    for(const s of sparks){
+      s.x+=s.vx+Math.sin(t/1800+s.ph)*0.3;
+      s.y+=s.vy+Math.cos(t/2200+s.ph)*0.3;
+      if(s.x<-30)s.x=W+30; if(s.x>W+30)s.x=-30;
+      if(s.y<-30)s.y=H+30; if(s.y>H+30)s.y=-30;
+      const grad=ctx.createLinearGradient(s.x,s.y,s.x-s.vx*s.len,s.y-s.vy*s.len);
+      grad.addColorStop(0,'hsla('+s.hue+',90%,70%,.55)');
+      grad.addColorStop(1,'hsla('+s.hue+',90%,70%,0)');
+      ctx.strokeStyle=grad; ctx.lineWidth=1.6;
+      ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(s.x-s.vx*s.len,s.y-s.vy*s.len); ctx.stroke();
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',init);
+  init(); requestAnimationFrame(draw);
+})();
+
+document.addEventListener('DOMContentLoaded',()=>{ renderMcq(); });
+</script>
+</body>
+</html>
