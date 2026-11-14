@@ -378,7 +378,7 @@ html[data-theme="dark"] .glass--strong { background: rgba(24, 28, 44, 0.68); }
 
     @keyframes dock-in-d {
         from { transform: translateY(-50%) translateX(64px); opacity: 0; }
-        to   { transform: translateY(-50%) translateX(0);    opacity: 1; }
+        to   { transform: translateY(-50%) translateX(0);    opacity: 0.5; }
     }
 
     .bottom-nav .nav-btn {
@@ -1030,7 +1030,7 @@ html.lite .quick-card::before, html.lite .footer-content::before { animation: no
 .hx-ring {
     border: 1.5px solid transparent;
     background:
-        radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.05) 44%, rgba(255, 255, 255, 0) 72%) padding-box,
+        radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.05) 44%, rgba(255, 255, 255, 0.025) 72%) padding-box,
         rgba(255, 255, 255, 0.05) padding-box,
         linear-gradient(140deg, rgba(0, 209, 255, 0.95), rgba(106, 92, 255, 0.85) 52%, rgba(255, 92, 160, 0.90)) border-box;
     box-shadow: 0 0 18px rgba(0, 209, 255, 0.30), inset 0 0 14px rgba(255, 255, 255, 0.18);
@@ -1297,7 +1297,7 @@ html.lite .bg-glow { animation: none; }
     .bottom-nav .nav-btn.active:hover,
     .bottom-nav .nav-btn.active:focus-visible {
         background: linear-gradient(135deg, var(--accent), #0066dd);
-        color: #fff;
+        color: #00008B;
     }
 }
 
