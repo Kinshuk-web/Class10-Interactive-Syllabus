@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>404 — Page not found · HYPER·X</title>
+<meta name="description" content="The page you were looking for could not be found.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THEME TOKENS  (same language as index.html)
+   ============================================================ */
+:root{
+  --prism: linear-gradient(135deg,
+      rgba(0,209,255,.85) 0%,
+      rgba(64,140,255,.65) 30%,
+      rgba(255,255,255,.35) 48%,
+      rgba(120,110,255,.65) 70%,
+      rgba(170,120,255,.75) 100%);
+  --font-body:'Space Grotesk','Segoe UI',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Cascadia Code',Consolas,monospace;
+  --font-display:'Instrument Serif','Times New Roman',serif;
+
+  --accent:#0a84ff;
+  --accent-2:#00d1ff;
+  --accent-3:#34e0c0;
+  --ok:#30d158;
+  --warn:#ff9f0a;
+  --radius-lg:26px;
+  --radius-pill:999px;
+  --speed:cubic-bezier(.16,1,.3,1);
+}
+
+html[data-theme="dark"]{
+  --bg:#05060b;
+  --bg-2:#090b13;
+  --surface:rgba(20,23,36,.52);
+  --surface-solid:#0e1119;
+  --border:rgba(255,255,255,.14);
+  --border-strong:rgba(255,255,255,.28);
+  --text:#eef1f8;
+  --muted:#9aa2b5;
+  --grid-line:rgba(255,255,255,.045);
+  --shadow-card:0 18px 50px rgba(0,0,0,.55);
+  --shadow-deep:0 30px 80px rgba(0,0,0,.65);
+  --nav-bg:rgba(10,12,20,.55);
+  --numeral-glow:0 0 34px rgba(0,150,255,.45), 0 0 90px rgba(10,132,255,.35);
+  --ring-glow:drop-shadow(0 0 16px rgba(0,209,255,.45));
+  --sheen:.16;
+  --stage-1:rgba(0,150,255,.42);
+  --stage-2:rgba(96,126,255,.34);
+  --stage-3:rgba(70,100,230,.28);
+  --stage-a:#060c1c; --stage-b:#0a1430; --stage-c:#060b1a;
+}
+
+html[data-theme="light"]{
+  --bg:#e8ecf4;
+  --bg-2:#dde4ef;
+  --surface:rgba(255,255,255,.62);
+  --surface-solid:#ffffff;
+  --border:rgba(12,20,40,.10);
+  --border-strong:rgba(12,20,40,.22);
+  --text:#101524;
+  --muted:#59617a;
+  --grid-line:rgba(20,30,60,.05);
+  --shadow-card:0 18px 44px rgba(30,42,80,.16);
+  --shadow-deep:0 30px 70px rgba(30,42,80,.22);
+  --nav-bg:rgba(255,255,255,.6);
+  --numeral-glow:0 0 30px rgba(10,132,255,.22), 0 0 70px rgba(10,132,255,.14);
+  --ring-glow:drop-shadow(0 0 10px rgba(0,140,200,.35));
+  --sheen:.65;
+  --stage-1:rgba(120,190,255,.55);
+  --stage-2:rgba(150,170,255,.45);
+  --stage-3:rgba(170,200,255,.35);
+  --stage-a:#eef4ff; --stage-b:#e3ecff; --stage-c:#eaf1ff;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  font-family:var(--font-body);
+  background:
+    radial-gradient(1000px 520px at 50% -6%, rgba(10,132,255,.30), transparent 62%),
+    radial-gradient(1100px 600px at 85% -10%, var(--bg-2), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color .45s ease, color .45s ease;
+}
+::selection{ background:rgba(10,132,255,.35); }
+:focus-visible{ outline:2px solid var(--accent-2); outline-offset:3px; border-radius:10px; }
+
+/* ============================================================
+   STAGE — liquid gradient, grid, bloom
+   ============================================================ */
+.liquid-stage{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(1100px 720px at 16% -8%, var(--stage-1), transparent 62%),
+    radial-gradient(980px 640px at 86% 6%, var(--stage-2), transparent 64%),
+    radial-gradient(900px 720px at 50% 112%, var(--stage-3), transparent 66%),
+    linear-gradient(180deg, var(--stage-a) 0%, var(--stage-b) 45%, var(--stage-c) 100%);
+}
+
+.grid-layer{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse 78% 62% at 50% 44%, #000 10%, transparent 78%);
+  mask-image:radial-gradient(ellipse 78% 62% at 50% 44%, #000 10%, transparent 78%);
+}
+
+.bloom{
+  position:fixed; z-index:0; pointer-events:none;
+  left:50%; top:44%;
+  width:min(880px, 120vw); height:min(620px, 80vh);
+  transform:translate(-50%,-50%);
+  background:radial-gradient(closest-side, rgba(0,150,255,.28), rgba(96,126,255,.12) 55%, transparent 78%);
+  filter:blur(14px);
+}
+html[data-theme="light"] .bloom{
+  background:radial-gradient(closest-side, rgba(120,190,255,.40), rgba(160,180,255,.18) 55%, transparent 78%);
+}
+
+/* ============================================================
+   LIQUID GLASS
+   ============================================================ */
+.glass{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  transition:border-color .35s var(--speed), box-shadow .35s var(--speed), transform .35s var(--speed);
+}
+.glass--strong{ background:rgba(24,28,44,.62); }
+html[data-theme="light"] .glass--strong{ background:rgba(255,255,255,.72); }
+
+/* prismatic rim */
+.glass--prism::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:inherit;
+  padding:1px;
+  background:var(--prism);
+  opacity:.72;
+  pointer-events:none;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+}
+
+/* keep content above the sheen layer */
+.topbar > *, .card > *{ position:relative; z-index:1; }
+
+/* travelling sheen */
+.sheen{ overflow:hidden; }
+.sheen::before{
+  content:"";
+  position:absolute;
+  inset:0 -45%;
+  border-radius:inherit;
+  background:linear-gradient(104deg,
+    rgba(255,255,255,0) 33%,
+    rgba(255,255,255,.10) 43%,
+    rgba(255,255,255,.26) 50%,
+    rgba(255,255,255,.10) 57%,
+    rgba(255,255,255,0) 67%);
+  animation:glass-sweep 9s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes glass-sweep{
+  0%,100%{ transform:translateX(-38%); }
+  50%{ transform:translateX(38%); }
+}
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.topbar{
+  position:fixed;
+  top:14px; left:50%;
+  transform:translateX(-50%);
+  width:fit-content;
+  min-width:min(300px, calc(100vw - 28px));
+  max-width:calc(100vw - 28px);
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:22px;
+  padding:10px 12px 10px 16px;
+  border-radius:var(--radius-pill);
+  background:var(--nav-bg);
+}
+.brand{
+  display:flex; align-items:center; gap:10px;
+  text-decoration:none; color:var(--text);
+  font-weight:700; letter-spacing:1.5px; font-size:.95rem;
+  padding-left:4px;
+}
+.brand-dot{
+  width:11px; height:11px; border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, var(--accent-2), var(--accent));
+  box-shadow:0 0 14px rgba(0,209,255,.9), 0 0 34px rgba(10,132,255,.55);
+  flex:none;
+}
+.topbar-tag{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:var(--warn);
+  border:1px solid rgba(255,159,10,.45);
+  background:rgba(255,159,10,.10);
+  padding:6px 13px;
+  border-radius:var(--radius-pill);
+  white-space:nowrap;
+}
+.theme-btn{
+  position:relative; z-index:1;
+  width:34px; height:34px;
+  display:grid; place-items:center;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  cursor:pointer;
+  flex:none;
+  transition:transform .3s var(--speed), background-color .3s ease, border-color .3s ease;
+}
+.theme-btn:hover{ transform:scale(1.07); border-color:var(--border-strong); }
+.theme-btn svg{ width:16px; height:16px; }
+.theme-btn .moon{ display:none; }
+html[data-theme="light"] .theme-btn .moon{ display:block; }
+html[data-theme="light"] .theme-btn .sun{ display:none; }
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.stage{
+  position:relative; z-index:1;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:clamp(6rem, 12vh, 8rem) 1.25rem clamp(2rem, 5vh, 3rem);
+}
+
+.card{
+  width:min(760px, 100%);
+  padding:clamp(2rem, 4.4vw, 3.4rem) clamp(1.4rem, 4vw, 3.4rem) clamp(1.8rem, 3.6vw, 2.6rem);
+  border-radius:var(--radius-lg);
+  text-align:center;
+  box-shadow:var(--shadow-deep), inset 0 1px 0 rgba(255,255,255,.18), inset 0 0 120px rgba(10,132,255,.10);
+}
+html[data-theme="light"] .card{
+  box-shadow:var(--shadow-card), inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 120px rgba(10,132,255,.05);
+}
+
+.badge{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:11px; font-weight:600;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--accent-2);
+  border:1px solid rgba(0,209,255,.45);
+  background:rgba(0,209,255,.08);
+  padding:8px 20px;
+  border-radius:var(--radius-pill);
+  margin-bottom:clamp(1.25rem, 3vw, 1.9rem);
+  box-shadow:0 0 26px rgba(0,209,255,.18), inset 0 0 14px rgba(0,209,255,.06), inset 0 1px 0 rgba(255,255,255,.16);
+}
+html[data-theme="light"] .badge{
+  color:#0077b8;
+  border-color:rgba(0,140,190,.4);
+  background:rgba(0,150,210,.10);
+  box-shadow:0 0 22px rgba(0,140,200,.14), inset 0 1px 0 rgba(255,255,255,.6);
+}
+
+/* ---------- the 404 numeral (unchanged) ---------- */
+.numeral{
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.02em;
+  font-family:var(--font-display);
+  font-weight:400;
+  font-size:clamp(4.5rem, 15vw, 9.5rem);
+  line-height:.86;
+  letter-spacing:-.02em;
+  color:var(--text);
+  text-shadow:var(--numeral-glow);
+}
+.numeral .zero{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:.86em;
+  margin:0 .04em;
+}
+.numeral .zero svg{
+  height:.74em; width:auto; display:block; overflow:visible;
+  filter:var(--ring-glow);
+}
+.ring{ stroke:var(--text); }
+.drift{ stroke:var(--accent-2); }
+
+/* ---------- copy ---------- */
+.card h2{
+  margin:clamp(1.2rem, 3vw, 1.8rem) 0 .7rem;
+  font-size:clamp(1.45rem, 3.4vw, 2.05rem);
+  font-weight:700;
+  letter-spacing:-.8px;
+  line-height:1.15;
+  text-shadow:0 0 26px rgba(0,150,255,.28);
+}
+html[data-theme="light"] .card h2{ text-shadow:0 0 24px rgba(10,132,255,.14); }
+
+.lede{
+  margin:0 auto clamp(1.8rem, 3.6vw, 2.4rem);
+  max-width:34rem;
+  font-size:clamp(.95rem, 1.3vw, 1rem);
+  color:var(--muted);
+  text-wrap:pretty;
+}
+
+/* ---------- CTA (edit the href!) ---------- */
+.home-link{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:.7rem;
+  padding:.95rem 1.6rem .95rem 1.75rem;
+  border-radius:var(--radius-pill);
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:.95rem;
+  letter-spacing:.3px;
+  color:#fff;
+  text-decoration:none;
+  background:linear-gradient(135deg, rgba(10,132,255,1) 0%, rgba(0,209,255,.95) 100%);
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:0 14px 34px rgba(10,132,255,.42), inset 0 1px 0 rgba(255,255,255,.45), 0 0 0 1px rgba(10,132,255,.25);
+  transition:transform .3s var(--speed), box-shadow .3s var(--speed), filter .3s ease;
+  -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+}
+.home-link::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(104deg, transparent 35%, rgba(255,255,255,.45) 50%, transparent 65%);
+  transform:translateX(-120%);
+  transition:transform .7s var(--speed);
+  pointer-events:none;
+}
+.home-link:hover{
+  transform:translateY(-2px);
+  box-shadow:0 20px 46px rgba(10,132,255,.55), inset 0 1px 0 rgba(255,255,255,.5), 0 0 0 1px rgba(0,209,255,.4);
+  filter:brightness(1.05);
+}
+.home-link:hover::after{ transform:translateX(120%); }
+.home-link:active{ transform:translateY(0); }
+.home-link svg{ width:16px; height:16px; transition:transform .3s var(--speed); }
+.home-link:hover svg{ transform:translateX(4px); }
+
+/* ---------- telemetry strip ---------- */
+.telemetry{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:.4rem 1.6rem;
+  margin:clamp(1.9rem, 4vw, 2.6rem) 0 0;
+  padding-top:clamp(1.1rem, 2.4vw, 1.5rem);
+  border-top:1px solid var(--border);
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.telemetry div{ display:flex; align-items:center; gap:.55rem; }
+.telemetry .k{ color:var(--muted); opacity:.75; }
+.telemetry .v{ color:var(--accent-2); }
+html[data-theme="light"] .telemetry .v{ color:#0077b8; }
+.telemetry .pip{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--warn);
+  box-shadow:0 0 10px var(--warn);
+  flex:none;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.foot{
+  position:relative; z-index:1;
+  width:min(760px, calc(100% - 2.5rem));
+  margin:0 auto clamp(1.25rem, 3vh, 2rem);
+  padding:1rem 1.5rem;
+  border-radius:var(--radius-pill);
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:.6rem 1.5rem;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:1.6px;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.foot .status{ display:flex; align-items:center; gap:.6rem; }
+.foot .status-dot{
+  width:9px; height:9px; border-radius:50%;
+  background:var(--warn);
+  box-shadow:0 0 14px var(--warn);
+  flex:none;
+}
+.foot .accent-line{ color:var(--accent-2); font-size:10px; letter-spacing:3px; }
+html[data-theme="light"] .foot .accent-line{ color:#0077b8; }
+
+/* ============================================================
+   CURSOR BEAD
+   ============================================================ */
+.hx-cursor{
+  position:fixed; inset:0; z-index:200;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .3s ease;
+}
+html.hx-cursor-vis .hx-cursor{ opacity:1; }
+
+.hx-dot, .hx-ring{
+  position:absolute; top:0; left:0;
+  display:block;
+  border-radius:50%;
+  will-change:transform;
+}
+.hx-dot{
+  width:6px; height:6px;
+  margin:-3px 0 0 -3px;
+  background:var(--accent-2);
+  box-shadow:0 0 12px rgba(0,209,255,.9);
+}
+.hx-ring{
+  width:34px; height:34px;
+  margin:-17px 0 0 -17px;
+  border:1.5px solid rgba(0,209,255,.42);
+  transition:width .3s var(--speed), height .3s var(--speed),
+             margin .3s var(--speed), border-color .3s ease,
+             background-color .3s ease, box-shadow .3s ease;
+}
+/* hovering something clickable: the ring opens up */
+.hx-ring.hot{
+  width:46px; height:46px;
+  margin:-23px 0 0 -23px;
+  border-color:var(--accent-2);
+  background:rgba(0,209,255,.10);
+  box-shadow:0 0 26px rgba(0,209,255,.45);
+}
+
+/* hide the device pointer while the bead is live */
+html.hx-cursor-on, html.hx-cursor-on *{ cursor:none !important; }
+
+@media (hover:none), (pointer:coarse){ .hx-cursor{ display:none !important; } }
+
+/* ============================================================
+   ENTRANCE
+   ============================================================ */
+@keyframes rise{
+  from{ opacity:0; transform:translateY(18px) scale(.985); }
+  to{ opacity:1; transform:none; }
+}
+@keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+.topbar{ animation:fadeIn .7s var(--speed) both; }
+.card{ animation:rise .85s var(--speed) .08s both; }
+.foot{ animation:rise .85s var(--speed) .18s both; }
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:600px){
+  .topbar{ gap:12px; padding:8px 10px 8px 14px; }
+  .brand{ font-size:.85rem; letter-spacing:1.2px; }
+  .topbar-tag{ font-size:9.5px; letter-spacing:2px; padding:5px 10px; }
+  .stage{ padding-top:6.5rem; }
+  .telemetry{ gap:.5rem .9rem; font-size:10px; letter-spacing:1px; }
+  .foot{ justify-content:center; text-align:center; font-size:10px; border-radius:22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="liquid-stage" aria-hidden="true"></div>
+<div class="grid-layer" aria-hidden="true"></div>
+<div class="bloom" aria-hidden="true"></div>
+
+<div class="hx-cursor" aria-hidden="true"><i class="hx-dot"></i><i class="hx-ring"></i></div>
+
+<header class="topbar glass glass--strong glass--prism sheen">
+  <a class="brand" href="#"><span class="brand-dot"></span>HYPER·X</a>
+  <span class="topbar-tag">HTTP 404</span>
+  <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle theme">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<main class="stage">
+  <section class="card glass glass--strong glass--prism sheen">
+
+    <span class="badge">Error 404 · Route not found</span>
+
+    <h1 class="numeral" aria-label="Error 404">
+      <span aria-hidden="true">4</span>
+      <span class="zero" aria-hidden="true">
+        <svg viewBox="0 0 92 124" role="presentation" focusable="false">
+          <ellipse class="ring" cx="46" cy="62" rx="39" ry="56"
+                   fill="none" stroke-width="7" stroke-linecap="round"
+                   stroke-dasharray="11 13"/>
+          <circle class="drift" cx="83" cy="14" r="6" fill="var(--accent-2)" stroke="none"/>
+          <path class="drift" d="M74 22 L64 32" fill="none" stroke-width="4"
+                stroke-linecap="round" stroke-dasharray="1 9" opacity=".55"/>
+        </svg>
+      </span>
+      <span aria-hidden="true">4</span>
+    </h1>
+
+    <h2>This page took a wrong turn.</h2>
+    <p class="lede">The address you followed doesn’t lead anywhere — the link may be broken, or the page has moved somewhere new.</p>
+
+    <!-- ============================================================
+         ADD YOUR HOME LINK HERE
+         ------------------------------------------------------------
+         1. Replace href="#" with your homepage URL
+            (e.g. href="/"  ·  href="/index.html"  ·  href="https://yoursite.com")
+         2. Change the label "Back to home" to whatever you prefer.
+         Nothing else needs to change.
+         ============================================================ -->
+    <a class="home-link" href="#">
+      <span>Back to home</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <path d="M4 12h15"/><path d="M13 6l6 6-6 6"/>
+      </svg>
+    </a>
+    <!-- ============================================================ -->
+
+    <div class="telemetry">
+      <div><span class="pip"></span><span class="k">request</span><span class="v">GET /unknown</span></div>
+      <div><span class="k">status</span><span class="v">404 Not Found</span></div>
+      <div><span class="k">route</span><span class="v">no match</span></div>
+    </div>
+
+  </section>
+</main>
+
+<footer class="foot glass glass--strong">
+  <span class="status"><span class="status-dot"></span>ROUTE: LOST</span>
+  <span class="accent-line">System Deployment v23</span>
+</footer>
+
+<script>
+(function(){
+  /* theme: stored choice → device preference → dark */
+  var root = document.documentElement;
+  try {
+    var saved = localStorage.getItem('hx-theme');
+    if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+    else if (window.matchMedia('(prefers-color-scheme: light)').matches) root.dataset.theme = 'light';
+  } catch(e){}
+
+  var btn = document.getElementById('themeBtn');
+  if (btn) btn.addEventListener('click', function(){
+    var next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = next;
+    try { localStorage.setItem('hx-theme', next); } catch(e){}
+  });
+
+  /* glassy cursor bead — replaces the device pointer on mouse devices only */
+  var dot  = document.querySelector('.hx-dot'),
+      ring = document.querySelector('.hx-ring'),
+      fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches,
+      tx = 0, ty = 0, rx = 0, ry = 0, raf = null, live = false;
+
+  if (dot && ring && fine){
+    window.addEventListener('mousemove', function(e){
+      tx = e.clientX; ty = e.clientY;
+      if (!live){
+        live = true;
+        rx = tx; ry = ty;
+        root.classList.add('hx-cursor-on', 'hx-cursor-vis');
+      }
+      if (!raf) loop();
+    }, { passive:true });
+
+    /* pointer left the window: give the real cursor back */
+    function release(){
+      live = false;
+      root.classList.remove('hx-cursor-vis');
+      root.classList.remove('hx-cursor-on');
+      if (raf){ cancelAnimationFrame(raf); raf = null; }
+    }
+    document.addEventListener('mouseleave', release);
+    window.addEventListener('blur', release);
+    document.addEventListener('visibilitychange', function(){
+      if (document.hidden) release();
+    });
+
+    /* ring opens up over links and buttons */
+    document.addEventListener('mouseover', function(e){
+      if (e.target.closest && e.target.closest('a, button')) ring.classList.add('hot');
+    });
+    document.addEventListener('mouseout', function(e){
+      if (e.target.closest && e.target.closest('a, button')) ring.classList.remove('hot');
+    });
+
+    function loop(){
+      rx += (tx - rx) * 0.18;
+      ry += (ty - ry) * 0.18;
+      dot.style.transform  = 'translate(' + tx + 'px,' + ty + 'px)';
+      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px)';
+      raf = (Math.abs(tx - rx) > 0.4 || Math.abs(ty - ry) > 0.4) ? requestAnimationFrame(loop) : null;
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
