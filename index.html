@@ -2548,24 +2548,84 @@ renderDistribution();
 })();
 switchView((location.hash || "#home").replace("#", ""), false);
 </script>
-<script src="https://unpkg.com"></script>
+<style>
+  /* Ensure native smooth scroll is disabled so it doesn't fight JS */
+  html {
+    scroll-behavior: auto !important;
+  }
+</style>
+
 <script>
-  // Automatically skips touch devices/smartphones and respects reduced-motion settings
-  const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+  (function () {
+    // 1. Disable completely on smartphones and touchscreens
+    const isMobileOrTouch =
+      window.matchMedia('(pointer: coarse)').matches ||
+      navigator.maxTouchPoints > 0;
 
-  if (!isTouchDevice) {
-    const lenis = new Lenis({
-      lerp: 0.12,        // Responsive inertia without feeling sluggish
-      wheelMultiplier: 1 // Standard scroll distance
-    });
+    if (isMobileOrTouch) return;
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+    let currentY = window.scrollY;
+    let targetY = window.scrollY;
+    let isAnimating = false;
+    let lastTime = performance.now();
+    const ease = 0.15; // Higher = faster response, no 1-second lag
+
+    function getMaxScroll() {
+      return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     }
 
-    requestAnimationFrame(raf);
-  }
+    function animate(now) {
+      const dt = Math.min((now - lastTime) / 16.667, 3);
+      lastTime = now;
+
+      const factor = 1 - Math.pow(1 - ease, dt);
+      const distance = targetY - currentY;
+
+      if (Math.abs(distance) < 0.2) {
+        currentY = targetY;
+        window.scrollTo({ top: currentY, behavior: 'instant' });
+        isAnimating = false;
+        return;
+      }
+
+      currentY += distance * factor;
+      window.scrollTo({ top: currentY, behavior: 'instant' });
+      requestAnimationFrame(animate);
+    }
+
+    function startAnimation() {
+      if (!isAnimating) {
+        isAnimating = true;
+        lastTime = performance.now();
+        requestAnimationFrame(animate);
+      }
+    }
+
+    // Sync if user drags scrollbar or clicks anchor link
+    window.addEventListener('scroll', () => {
+      if (!isAnimating) {
+        currentY = window.scrollY;
+        targetY = window.scrollY;
+      }
+    }, { passive: true });
+
+    window.addEventListener('wheel', (e) => {
+      if (e.ctrlKey) return; // Allow trackpad pinch-zoom
+      e.preventDefault();
+
+      let delta = e.deltaY;
+      if (e.deltaMode === 1) delta *= 32;
+      else if (e.deltaMode === 2) delta *= window.innerHeight;
+
+      targetY = Math.max(0, Math.min(targetY + delta, getMaxScroll()));
+      startAnimation();
+    }, { passive: false });
+
+    window.addEventListener('resize', () => {
+      targetY = Math.max(0, Math.min(targetY, getMaxScroll()));
+      currentY = window.scrollY;
+    }, { passive: true });
+  })();
 </script>
 
 </body>
