@@ -4,9 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Complete study hub for CBSE Class 10 Artificial Intelligence (Subject Code 417), Curriculum 2025-26. Based on the KVS/ZIET Student Support Material, expanded for full syllabus coverage.">
-<link rel="icon" type="image/png" href="logo-small.png">
-<link rel="shortcut icon" href="logo-small.png">
-<link rel="apple-touch-icon" href="logo-small.png">
 <title>Class 10 AI (417) Study Hub — CBSE Curriculum 2025–26</title>
 <style>
 /* ================= DESIGN TOKENS ================= */
@@ -46,7 +43,8 @@ html[data-theme="light"]{
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:clip}
+body{overflow-x:clip;max-width:100%}
 body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.65;font-size:16.5px;transition:background var(--tr),color var(--tr)}
 img,svg{max-width:100%}
 a{color:var(--accent2)}
@@ -65,10 +63,14 @@ button{font-family:inherit}
 .topnav{display:flex;gap:4px;margin-left:6px}
 .topnav a{color:var(--muted);text-decoration:none;font-weight:600;font-size:.92rem;padding:8px 12px;border-radius:999px;cursor:pointer}
 .topnav a:hover{color:var(--text);background:var(--chip)}
-.searchwrap{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-width:170px}
+.searchwrap{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--line);border-radius:999px;padding:6px 14px;min-width:0;width:min(260px,34vw);flex:0 1 auto}
 .searchwrap svg{flex:none;opacity:.6}
-#searchBox{border:0;background:transparent;color:var(--text);outline:none;width:100%;font-size:.92rem}
+#searchBox{border:0;background:transparent;color:var(--text);outline:none;width:100%;min-width:0;font-size:.92rem}
 #searchBox::placeholder{color:var(--muted)}
+.searchwrap.big{width:100%;max-width:620px;margin:16px auto 0;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.55);border-radius:14px;padding:11px 16px;color:#fff}
+.searchwrap.big svg{opacity:.9}
+.searchwrap.big input{border:0;background:transparent;color:#fff;outline:none;width:100%;min-width:0;font-size:1rem}
+.searchwrap.big input::placeholder{color:rgba(255,255,255,.82)}
 .iconbtn{background:var(--input);border:1px solid var(--line);color:var(--text);border-radius:999px;width:40px;height:40px;font-size:1.1rem;cursor:pointer;flex:none}
 .iconbtn:hover{border-color:var(--accent)}
 #menuBtn{display:none}
@@ -76,6 +78,9 @@ button{font-family:inherit}
 
 /* ================= LAYOUT ================= */
 .layout{display:grid;grid-template-columns:272px minmax(0,1fr);gap:28px;max-width:1500px;margin:0 auto;padding:24px 20px 60px}
+.layout>main{min-width:0}
+.view{min-width:0}
+.topic,.pr-item,.view{scroll-margin-top:110px}
 .sidebar{position:sticky;top:82px;align-self:start;max-height:calc(100vh - 100px);overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 12px;box-shadow:var(--sh)}
 .sidebar h2{font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:14px 8px 6px}
 .sidebar .part-title{display:flex;align-items:center;gap:8px;margin:16px 8px 4px;font-size:.78rem;font-weight:800;letter-spacing:1px;text-transform:uppercase}
@@ -143,6 +148,7 @@ button{font-family:inherit}
 .unit-content{margin-top:6px}
 .outcomes{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent2);border-radius:var(--r-s);padding:18px 18px 18px 26px;margin:0;box-shadow:var(--sh)}
 .notes{display:flex;flex-direction:column;gap:22px}
+.notes>.topic{min-width:0}
 .topic{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;box-shadow:var(--sh)}
 .topic>h3{margin:0 0 12px;font-size:1.16rem;display:flex;align-items:flex-start;gap:10px}
 .topic>h3 .tcheck{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);background:transparent;color:transparent;cursor:pointer;font-size:.8rem;line-height:1;display:grid;place-items:center;padding:0;margin-top:2px}
@@ -155,6 +161,13 @@ button{font-family:inherit}
 .topic li{margin:.3rem 0}
 .badge-expanded{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#e879f9;background:rgba(232,121,249,.12);border:1px solid rgba(232,121,249,.4);border-radius:999px;padding:3px 10px;vertical-align:middle;margin-left:8px}
 table.tb{width:100%;border-collapse:collapse;margin:12px 0;font-size:.93rem;border:1px solid var(--line);border-radius:var(--r-s);overflow:hidden}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:12px 0;max-width:100%}
+.tablewrap>table.tb{margin:0}
+.tablewrap::-webkit-scrollbar{height:8px}
+.tablewrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+pre.code::-webkit-scrollbar{height:8px}
+pre.code::-webkit-scrollbar-thumb{background:rgba(148,163,205,.35);border-radius:8px}
+table.tb td,table.tb th{overflow-wrap:break-word}
 table.tb th{background:var(--card2);text-align:left;padding:10px 12px;font-size:.85rem;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
 table.tb td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
 table.tb tr:nth-child(even) td{background:var(--card2);background:color-mix(in srgb,var(--card2) 55%,transparent)}
@@ -246,6 +259,8 @@ pre.code .k{color:#c792ea}pre.code .s{color:#a5e075}pre.code .c{color:#5b678f;fo
 .result-card.a .rk{color:var(--part-a)}.result-card.b .rk{color:var(--part-b)}.result-card.p .rk{color:var(--part-p)}
 .result-card b{display:block;font-size:1.02rem}
 .result-card span{color:var(--muted);font-size:.86rem}
+.result-card .snip{display:block;margin-top:7px;font-style:normal;font-size:.84rem;line-height:1.55;color:var(--muted);border-top:1px dashed var(--line);padding-top:7px}
+mark{background:rgba(34,211,238,.28);color:inherit;border-radius:4px;padding:0 2px}
 .flash{animation:flash 2s ease}
 @keyframes flash{0%,60%{box-shadow:0 0 0 4px rgba(34,211,238,.55)}100%{box-shadow:var(--sh)}}
 
@@ -259,24 +274,94 @@ footer a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--m
 footer a:hover{color:var(--accent)}
 .foot-note{max-width:1200px;margin:26px auto 0;color:var(--muted);font-size:.82rem;border-top:1px solid var(--line);padding-top:18px}
 
+/* ================= DEEP DIVE / PYQ / PROGRAM BLOCKS ================= */
+.deep{background:linear-gradient(135deg,rgba(34,211,238,.07),rgba(168,85,247,.08));border:1px solid rgba(34,211,238,.32);border-radius:var(--r-s);padding:15px 17px;margin:15px 0}
+.deep>span.dh{display:block;color:var(--accent);font-weight:800;font-size:.8rem;letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px}
+.deep p:first-of-type{margin-top:0}
+.deep ul,.deep ol{margin:.4rem 0}
+.pyq-tag{display:inline-flex;align-items:center;gap:5px;font-size:.66rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#fbbf24;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.45);border-radius:999px;padding:3px 9px;margin-left:8px;vertical-align:middle;white-space:nowrap}
+.year-strip{display:flex;align-items:center;gap:10px;margin:30px 0 12px;font-weight:800;font-size:1.05rem}
+.year-strip::after{content:"";flex:1;height:1px;background:var(--line)}
+.pyq-item{background:var(--card);border:1px solid var(--line);border-left:5px solid #fbbf24;border-radius:var(--r-s);padding:16px 18px;margin-bottom:14px;box-shadow:var(--sh)}
+.pyq-item .pq-head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px;font-size:.74rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.pyq-item .pq-marks{color:#fbbf24}
+.pyq-item p{margin:.4rem 0}
+.pyq-item details>summary{cursor:pointer;font-weight:700;color:var(--accent2);margin-top:6px}
+.prog-grid{display:grid;gap:16px}
+.prog{border-left-color:#22d3ee}
+.prog .out{margin-top:10px}
+.prog .out span.ol{display:block;font-size:.72rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#34d399;margin-bottom:5px}
+.chart-out{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px}
+.chart-out svg{display:block;width:100%;height:auto}
+
 /* ================= RESPONSIVE ================= */
-@media (max-width:1100px){
+@media (max-width:1180px){
   .topnav a:not(.keep){display:none}
 }
+@media (max-width:1024px){
+  .topbar{gap:10px;padding:10px 12px}
+}
 @media (max-width:980px){
-  .layout{grid-template-columns:1fr;padding:14px 12px 40px}
+  .layout{grid-template-columns:1fr;padding:14px 12px 40px;gap:18px}
   #menuBtn{display:grid}
-  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:1200;max-height:none;border-radius:0 22px 22px 0;transform:translateX(-105%);transition:transform .3s ease;width:290px}
+  .topnav{display:none}
+  .topbar{gap:10px;padding:10px 12px;flex-wrap:nowrap}
+  .brand{flex:0 1 auto;min-width:0}
+  .brand>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .searchwrap{margin-left:auto;flex:1 1 auto;width:auto;min-width:120px;max-width:420px;padding:9px 14px}
+  #searchBox{font-size:16px}
+  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:1200;max-height:none;border-radius:0 22px 22px 0;transform:translateX(-105%);transition:transform .3s ease;width:min(300px,86vw)}
   .sidebar.open{transform:none}
   .scrim{position:fixed;inset:0;background:rgba(2,6,23,.55);z-index:1100;opacity:0;pointer-events:none;transition:opacity .3s}
   .scrim.show{opacity:1;pointer-events:auto}
+  .topic,.pr-item,.view{scroll-margin-top:132px}
+}
+@media (max-width:600px){
+  .topbar{flex-wrap:wrap;row-gap:10px}
+  .brand{flex:1 1 auto}
+  #themeBtn{order:5}
+  .searchwrap{order:10;flex:1 1 100%;width:auto;max-width:none;margin-left:0}
 }
 @media (max-width:760px){
-  .searchwrap{min-width:0;width:130px}
   .brand small{display:none}
   .unit-content{font-size:1rem}
   table.tb{font-size:.85rem}
-  .unit-actions{flex-direction:column;align-items:flex-start}
+  .unit-actions{flex-direction:column;align-items:flex-start;width:100%}
+  .unit-actions .btn{width:100%;justify-content:center}
+  .hero .cta .btn{width:100%;justify-content:center}
+  .mindmap{padding:10px}
+  .qtext{font-size:1.05rem}
+}
+@media (max-width:520px){
+  body{font-size:16px}
+  .layout{padding:10px 10px 34px}
+  .topbar{padding:8px 10px}
+  .brand{font-size:.98rem}
+  .brand .logo{width:32px;height:32px}
+  .hero{border-radius:20px;padding:24px 18px}
+  .hero h1{letter-spacing:-.2px}
+  .unit-hero{padding:20px 16px;border-radius:18px}
+  .unit-hero .k{font-size:.66rem;letter-spacing:1px;line-height:1.45}
+  .sec-title{font-size:1.12rem;margin:30px 0 12px}
+  .topic{padding:16px 14px;border-radius:14px}
+  .mcq-q{padding:14px}
+  .opt{padding:10px 12px}
+  .glossary{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .stat b{font-size:1.35rem}
+  .unit-pager{flex-direction:column;gap:10px}
+  .unit-pager a{text-align:center}
+  .callout,.revision{padding:12px 14px}
+  .quiz-shell{padding:16px 14px}
+  .quiz-chips{gap:8px}
+  .chip{padding:7px 12px;font-size:.82rem}
+  .qmeta{font-size:.78rem}
+  .pr-item{padding:16px 14px}
+  .pr-steps li{padding-left:40px}
+  .pr-steps li::before{width:26px;height:26px;border-radius:8px}
+  pre.code{padding:14px;font-size:.8rem;border-radius:12px}
+  .result-card{padding:12px 14px}
+  .ar-item,.case-box{padding:14px}
 }
 
 /* ================= PRINT ================= */
@@ -288,6 +373,8 @@ footer a:hover{color:var(--accent)}
   .view:not([hidden]){display:block}
   body{font-size:12px;color:#111}
   .topic,.mcq-q,.ar-item,.case-box,.mindmap,pre.code{page-break-inside:avoid;box-shadow:none;border:1px solid #bbb}
+  .tablewrap{overflow:visible !important}
+  .tablewrap>table.tb{width:100%}
   .sec-title{page-break-after:avoid}
   .unit-hero{color:#111;background:#eee !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .btn-done,.btn-tool{color:#111}
@@ -308,6 +395,7 @@ footer a:hover{color:var(--accent)}
     <a data-nav="home">Home</a>
     <a data-nav="b1" class="keep">Part B</a>
     <a data-nav="practicals" class="keep">Practicals</a>
+    <a data-nav="pyq" class="keep">PYQs</a>
     <a data-nav="quiz" class="keep">Quiz</a>
   </nav>
   <div class="searchwrap">
@@ -336,6 +424,7 @@ footer a:hover{color:var(--accent)}
   <a class="toc-link" data-nav="b5"><span>5. NLP</span><span class="tick">✔</span></a>
   <div class="part-title"><span class="dot p"></span>Practice & Tools</div>
   <a class="toc-link" data-nav="practicals"><span>Practicals & Programs</span><span class="tick">✔</span></a>
+  <a class="toc-link" data-nav="pyq"><span>Board PYQ Bank</span><span class="tick">✔</span></a>
   <a class="toc-link" data-nav="quiz"><span>Quiz Mode</span><span class="tick">✔</span></a>
   <p class="progress-label" style="margin-top:14px">Tip: use the ✓ buttons inside each unit to tick topics off.</p>
 </aside>
@@ -354,7 +443,8 @@ footer a:hover{color:var(--accent)}
     <div class="stats" aria-label="Site statistics">
       <div class="stat"><b>10</b><span>Complete Units</span></div>
       <div class="stat"><b>230+</b><span>Practice MCQs</span></div>
-      <div class="stat"><b>14</b><span>Python Practicals</span></div>
+      <div class="stat"><b>34</b><span>Python Practicals</span></div>
+      <div class="stat"><b>26</b><span>Board PYQs</span></div>
       <div class="stat"><b>50+50</b><span>Theory + Practical Marks</span></div>
     </div>
   </div>
@@ -377,14 +467,15 @@ footer a:hover{color:var(--accent)}
     <a class="ucard b" data-nav="b3"><span class="donetag">✔ DONE</span><span class="k">Part B · Unit 3</span><h3>Evaluation</h3><p>Train–test split and overfitting, the confusion matrix, accuracy, precision, recall and F1-score — with worked numerical examples.</p><span class="go">Open unit →</span></a>
     <a class="ucard b" data-nav="b4"><span class="donetag">✔ DONE</span><span class="k">Part B · Unit 4</span><h3>Computer Vision</h3><p>Pixels, grayscale and RGB images, features, convolution and kernels, CNN architecture, OpenCV and no-code CV tools.</p><span class="go">Open unit →</span></a>
     <a class="ucard b" data-nav="b5"><span class="donetag">✔ DONE</span><span class="k">Part B · Unit 5</span><h3>Natural Language Processing</h3><p>Stages of NLP, text normalization, tokenization, stemming vs lemmatization, Bag of Words, TF-IDF, and chatbots.</p><span class="go">Open unit →</span></a>
-    <a class="ucard p" data-nav="practicals"><span class="donetag">✔ DONE</span><span class="k">Practicals</span><h3>Programs & Activities</h3><p>Orange Data Mining walkthrough, OpenCV programs, NLTK programs, and advanced Python with NumPy, Pandas & Matplotlib — all with complete code.</p><span class="go">Open practicas →</span></a>
+    <a class="ucard p" data-nav="practicals"><span class="donetag">✔ DONE</span><span class="k">Practicals</span><h3>Programs & Activities</h3><p>Orange Data Mining walkthrough, OpenCV, NLTK, advanced Python and 20 core-Python programs — all with complete code and outputs.</p><span class="go">Open practicals →</span></a>
+    <a class="ucard p" data-nav="pyq" style="--uc:#fbbf24"><span class="donetag">✔ DONE</span><span class="k">Exam Prep</span><h3>Board PYQ Bank</h3><p>Real CBSE board questions from the 2024 and 2025 papers and the official sample paper — with answers, marks and the unit each one tests.</p><span class="go">Open PYQ bank →</span></a>
     <a class="ucard q" data-nav="quiz"><span class="k">Interactive</span><h3>Quiz Mode</h3><p>Timed-free, instant-feedback quizzes from the full question bank with score tracking and your best score saved on this device.</p><span class="go">Start quiz →</span></a>
   </div>
 
   <h2 class="sec-title">📋 Exam Pattern at a Glance</h2>
   <div class="topic" style="margin-top:10px">
     <p>The CBSE Class 10 AI (417) board assessment has <strong>two components</strong>: a <strong>50-mark theory paper</strong> and a <strong>50-mark practical/internal assessment</strong>. The theory paper has <strong>Part A — Employability Skills (10 marks)</strong> covering the five soft-skill units, and <strong>Part B — Subject Specific Skills (40 marks)</strong> covering the five AI units. Expect MCQs, assertion–reason, very-short and case-study questions in the pattern practised throughout this site.</p>
-    <div class="callout examtip"><b>🎯 How to use this site</b>Read a unit's notes → trace the mind map → attempt the practice MCQs (click an option to get instant feedback) → open the quick-revision box the night before the exam. Use Quiz Mode for mixed practice once you have finished 3–4 units.</div>
+    <div class="callout examtip"><b>🎯 How to use this site</b>Read a unit's notes → trace the mind map → attempt the practice MCQs (click an option to get instant feedback) → then open the <strong>Board PYQ Bank</strong> and attempt the real 2024/2025 questions for that unit → finish with the quick-revision box. Use Quiz Mode for mixed practice once you have finished 3–4 units.</div>
     <div class="callout remember"><b>ℹ️ About “Added / Expanded” badges</b>Sections marked <span class="badge-expanded" style="margin:0">Added / Expanded</span> contain material that goes <em>beyond</em> the printed KVS/ZIET support material — added or fully written out so that every CBSE 417 syllabus topic is covered in depth. Where the printed material conflicts with the CBSE syllabus/textbook, the CBSE version is followed and the difference is noted.</div>
   </div>
 </section>
@@ -414,7 +505,7 @@ footer a:hover{color:var(--accent)}
     <div class="notes">
 
       <article class="topic" id="a1-methods">
-        <h3><button class="tcheck" data-topic="a1-methods" aria-label="Mark topic done">✔</button>1. Methods of Communication</h3>
+        <h3><button class="tcheck" data-topic="a1-methods" aria-label="Mark topic done">✔</button>1. Methods of Communication <span class="pyq-tag">PYQ 2024</span></h3>
         <p><strong>Communication</strong> is the process of exchanging information, ideas, thoughts and feelings between two or more people. We communicate in many ways, and choosing the right method for the situation is itself a skill.</p>
         <h4>Verbal communication</h4>
         <p>Communication through <strong>spoken and written words</strong>. It implies the use of words that make up a language — speaking, listening, writing and reading. Tone of voice, pitch and speed matter as much as the words.</p>
@@ -493,6 +584,47 @@ footer a:hover{color:var(--accent)}
           <tr><td><strong>General feedback</strong></td><td>Vague praise or criticism with no direction — the weakest kind.</td><td>“Good job” / “Not up to the mark.”</td></tr>
         </table>
         <div class="callout examtip"><b>🎯 Exam tip</b>If a question says the receiver's message was <em>not understood exactly as the sender intended</em>, the answer the examiner is looking for is that the communicator should <strong>seek feedback</strong> to confirm understanding.</div>
+        <div class="deep"><span class="dh">🔎 In depth — what “noise” really means</span>
+          <p>Noise is not only sound. In communication theory, <strong>noise is anything added to the signal between sender and receiver that was not intended</strong>. Four kinds appear in exams and in real life:</p>
+          <ul>
+            <li><strong>Physical noise</strong> — actual interference: traffic, a crackling phone line, a weak Wi-Fi signal, a noisy classroom.</li>
+            <li><strong>Physiological noise</strong> — the body of the sender or receiver: illness, tiredness, poor eyesight, hearing difficulty.</li>
+            <li><strong>Psychological noise</strong> — the mind: prejudice, stress, daydreaming, strong emotion, “I already know what he is going to say”.</li>
+            <li><strong>Semantic noise</strong> — the words themselves: jargon, a word with two meanings, a translation error, an ambiguous instruction.</li>
+          </ul>
+          <p>Notice that three of the four live <em>inside people</em>, not in the wire. That is why the fix is not always “speak louder”: choosing a better channel, simplifying language, asking for feedback and being prepared remove more noise than volume ever will.</p>
+        </div>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 210" role="img" aria-label="A message travelling from sender to receiver is blocked by five kinds of barriers: physical, linguistic, interpersonal, organizational and cultural">
+          <defs><marker id="arrBar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#10b981"/></marker></defs>
+          <g text-anchor="middle" font-size="11.5">
+            <rect x="15" y="80" width="110" height="50" rx="10" fill="rgba(16,185,129,.16)" stroke="#10b981" stroke-width="2"/>
+            <text x="70" y="102" font-weight="800" font-size="12.5" fill="currentColor">SENDER</text>
+            <text x="70" y="119" fill="currentColor" font-size="10.5">message</text>
+            <rect x="775" y="80" width="110" height="50" rx="10" fill="rgba(16,185,129,.16)" stroke="#10b981" stroke-width="2"/>
+            <text x="830" y="102" font-weight="800" font-size="12.5" fill="currentColor">RECEIVER</text>
+            <text x="830" y="119" fill="currentColor" font-size="10.5">meaning</text>
+          </g>
+          <line x1="128" y1="105" x2="770" y2="105" stroke="#10b981" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrBar)"/>
+          <g font-size="10.5" text-anchor="middle">
+            <g><rect x="160" y="30" width="120" height="46" rx="9" fill="rgba(251,113,133,.14)" stroke="#fb7185" stroke-width="1.6"/>
+              <text x="220" y="49" font-weight="700" fill="currentColor" font-size="11">PHYSICAL</text><text x="220" y="65" fill="currentColor" font-size="9.5">noise, distance</text>
+              <line x1="220" y1="78" x2="220" y2="100" stroke="#fb7185" stroke-width="2"/></g>
+            <g><rect x="300" y="134" width="120" height="46" rx="9" fill="rgba(251,113,133,.14)" stroke="#fb7185" stroke-width="1.6"/>
+              <text x="360" y="153" font-weight="700" fill="currentColor" font-size="11">LINGUISTIC</text><text x="360" y="169" fill="currentColor" font-size="9.5">language gap</text>
+              <line x1="360" y1="105" x2="360" y2="132" stroke="#fb7185" stroke-width="2"/></g>
+            <g><rect x="440" y="30" width="120" height="46" rx="9" fill="rgba(251,113,133,.14)" stroke="#fb7185" stroke-width="1.6"/>
+              <text x="500" y="49" font-weight="700" fill="currentColor" font-size="11">INTERPERSONAL</text><text x="500" y="65" fill="currentColor" font-size="9.5">misread intent</text>
+              <line x1="500" y1="78" x2="500" y2="100" stroke="#fb7185" stroke-width="2"/></g>
+            <g><rect x="580" y="134" width="120" height="46" rx="9" fill="rgba(251,113,133,.14)" stroke="#fb7185" stroke-width="1.6"/>
+              <text x="640" y="153" font-weight="700" fill="currentColor" font-size="11">ORGANIZATIONAL</text><text x="640" y="169" fill="currentColor" font-size="9.5">hierarchy, fear</text>
+              <line x1="640" y1="105" x2="640" y2="132" stroke="#fb7185" stroke-width="2"/></g>
+            <g><rect x="712" y="30" width="110" height="46" rx="9" fill="rgba(251,113,133,.14)" stroke="#fb7185" stroke-width="1.6"/>
+              <text x="767" y="49" font-weight="700" fill="currentColor" font-size="11">CULTURAL</text><text x="767" y="65" fill="currentColor" font-size="9.5">customs differ</text>
+              <line x1="767" y1="78" x2="767" y2="100" stroke="#fb7185" stroke-width="2"/></g>
+          </g>
+        </svg>
+        </div>
       </article>
 
       <article class="topic" id="a1-7cs">
@@ -815,6 +947,27 @@ footer a:hover{color:var(--accent)}
         <h4>Benefits of stress management</h4>
         <p>A joyful life · focus and completing tasks on time · a happier, stress-free you · more energy for quality time with friends and family. Chronic <em>emotional</em> stress can come from high expectations from oneself, while benefits of managing it include improved mood, boosted immunity, better efficiency and prevention of psychological disorders.</p>
         <div class="callout examtip"><b>🎯 Exam tip</b>“A series of postures and breathing exercises to control body and mind” = <strong>Yoga</strong>. Benefits-of-stress-management and two-recreational-activities are the most repeated 2-markers from this unit.</div>
+        <div class="deep"><span class="dh">🔎 In depth — what stress does to the body and mind</span>
+          <p>When the brain judges a demand to be bigger than your resources, it releases <strong>adrenaline</strong> (within seconds) and <strong>cortisol</strong> (over minutes). Heart rate, breathing and blood sugar rise, digestion slows and muscles tense — the <strong>fight-or-flight</strong> response. For a short burst this is useful: it sharpens attention before a match or an exam.</p>
+          <p>The problem is <em>duration</em>. If the response never switches off — because you keep rehearsing the exam, the marks, the comparison — cortisol stays high for weeks. Then sleep breaks, immunity drops, memory and concentration suffer, and small problems feel enormous. This is why the techniques in this unit are not “feel-good extras”: sleep, exercise, breathing and planning are what switch the response off.</p>
+          <p>There is also a <strong>healthy amount</strong> of stress. Performance rises with pressure up to a point and then falls sharply — the <strong>Yerkes–Dodson curve</strong>. Too little pressure gives boredom and no preparation; too much gives panic and blank answers; the middle band is where you do your best work.</p>
+        </div>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 280" role="img" aria-label="Yerkes-Dodson curve: performance rises with stress to an optimum point and then falls sharply">
+          <line x1="90" y1="230" x2="820" y2="230" stroke="currentColor" stroke-width="1.6" opacity=".55"/>
+          <line x1="90" y1="230" x2="90" y2="30" stroke="currentColor" stroke-width="1.6" opacity=".55"/>
+          <text x="455" y="262" text-anchor="middle" font-size="12" fill="currentColor">Amount of stress / pressure →</text>
+          <text x="34" y="130" text-anchor="middle" font-size="12" fill="currentColor" transform="rotate(-90 34 130)">Performance →</text>
+          <path d="M100,215 C230,200 290,90 420,80 C520,72 560,120 620,180 C680,225 740,228 810,230" fill="none" stroke="#10b981" stroke-width="3.4"/>
+          <circle cx="420" cy="80" r="7" fill="#34d399"/>
+          <g font-size="11.5" text-anchor="middle">
+            <text x="230" y="150" fill="currentColor">too little →</text><text x="230" y="166" fill="currentColor">bored, unprepared</text>
+            <text x="420" y="55" fill="#34d399" font-weight="800">OPTIMUM — focused, alert</text>
+            <text x="660" y="150" fill="#fb7185" font-weight="700">too much →</text><text x="660" y="166" fill="#fb7185">panic, blank mind</text>
+          </g>
+          <line x1="420" y1="80" x2="420" y2="230" stroke="#34d399" stroke-width="1.2" stroke-dasharray="4 4" opacity=".6"/>
+        </svg>
+        </div>
       </article>
 
       <article class="topic" id="a2-independent">
@@ -863,7 +1016,7 @@ footer a:hover{color:var(--accent)}
       </article>
 
       <article class="topic" id="a2-regulation">
-        <h3><button class="tcheck" data-topic="a2-regulation" aria-label="Mark topic done">✔</button>6. Self-Regulation, SMART Goals and Time Management</h3>
+        <h3><button class="tcheck" data-topic="a2-regulation" aria-label="Mark topic done">✔</button>6. Self-Regulation, SMART Goals and Time Management <span class="pyq-tag">PYQ 2024</span></h3>
         <p><strong>Self-regulation</strong> is the ability to manage your thoughts, emotions and behaviours in ways that help you achieve goals, stay aligned with your values, and adapt to different situations.</p>
         <h4>Goal setting</h4>
         <p>Goal setting is an essential factor in personal life — it helps you decide <em>how</em> to live, <em>where</em> you want to be and <em>how</em> you want to be in the future. <strong>Goals are a set of dreams with a deadline</strong> — e.g., saving pocket money to buy a favourite mobile phone by a particular date.</p>
@@ -1066,7 +1219,7 @@ footer a:hover{color:var(--accent)}
       </article>
 
       <article class="topic" id="a3-desktop">
-        <h3><button class="tcheck" data-topic="a3-desktop" aria-label="Mark topic done">✔</button>3. Windows Desktop, Files and Folders</h3>
+        <h3><button class="tcheck" data-topic="a3-desktop" aria-label="Mark topic done">✔</button>3. Windows Desktop, Files and Folders <span class="pyq-tag">PYQ SQP</span></h3>
         <h4>Desktop elements</h4>
         <ul>
           <li><strong>Taskbar</strong> — at the bottom of the screen; contains the Start button on the left, time/date on the right, plus shortcut icons.</li>
@@ -1092,6 +1245,49 @@ footer a:hover{color:var(--accent)}
           <tr><td><span class="kbd">Ctrl + P</span></td><td>Print</td><td><span class="kbd">Ctrl + S</span></td><td>Save</td></tr>
         </table>
         <div class="callout remember"><b>🧠 Remember</b><strong>Cut</strong> removes content from the original place and moves it to the clipboard; <strong>Copy</strong> duplicates content, leaving the original intact. Both are followed by <strong>Paste</strong>.</div>
+        <h4>Mouse actions you must know <span class="badge-expanded">Added / Expanded</span></h4>
+        <p>The CBSE sample paper asks this directly (“when you bring the mouse over a file in File Explorer, it shows the details of that file — this is known as…”).</p>
+        <table class="tb">
+          <tr><th>Action</th><th>How</th><th>What it does</th></tr>
+          <tr><td><strong>Hover</strong></td><td>Rest the pointer over an item without clicking</td><td>Shows a tooltip or details of the file — no selection is made</td></tr>
+          <tr><td><strong>Single click</strong></td><td>Press the left button once</td><td>Selects an item</td></tr>
+          <tr><td><strong>Double click</strong></td><td>Press the left button twice quickly</td><td>Opens the file, folder or application</td></tr>
+          <tr><td><strong>Right click</strong></td><td>Press the right button once</td><td>Opens the context menu (copy, rename, properties…)</td></tr>
+          <tr><td><strong>Drag and drop</strong></td><td>Hold the left button, move, release</td><td>Moves a file or icon to another place</td></tr>
+          <tr><td><strong>Scroll</strong></td><td>Turn the scroll wheel</td><td>Moves the view up or down</td></tr>
+        </table>
+
+        <div class="deep"><span class="dh">🔎 In depth — how the OS runs many programs at once</span>
+          <p>Every running program becomes a <strong>process</strong>. The OS keeps a table of processes and gives each one a turn on the CPU — a few milliseconds at a time — switching so fast that they appear simultaneous (<strong>multitasking</strong>). It also decides who gets memory, which is why a laptop slows down when twenty browser tabs are open: RAM is full and the OS starts swapping data to the much slower disk.</p>
+          <p>Two more jobs worth naming in an answer: the <strong>file system</strong> (a tree of folders that keeps track of where every byte lives) and <strong>device drivers</strong> (small programs that let the OS talk to a printer, camera or keyboard). When people say “the computer is slow”, the fix is usually an OS-level one — free RAM, clear temporary files, remove startup programs.</p>
+        </div>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 250" role="img" aria-label="A Windows file system tree: This PC contains Local Disk C, which contains Users, which contains a student folder with Documents and Downloads">
+          <g font-size="12.5" fill="currentColor">
+            <rect x="30" y="95" width="150" height="46" rx="9" fill="rgba(16,185,129,.14)" stroke="#10b981" stroke-width="2"/>
+            <text x="105" y="123" text-anchor="middle" font-weight="700">This PC</text>
+            <line x1="180" y1="118" x2="250" y2="118" stroke="currentColor" opacity=".45" stroke-width="1.6"/>
+            <rect x="252" y="95" width="160" height="46" rx="9" fill="rgba(16,185,129,.14)" stroke="#10b981" stroke-width="2"/>
+            <text x="332" y="123" text-anchor="middle" font-weight="700">Local Disk (C:)</text>
+            <line x1="412" y1="118" x2="482" y2="118" stroke="currentColor" opacity=".45" stroke-width="1.6"/>
+            <rect x="484" y="95" width="150" height="46" rx="9" fill="rgba(16,185,129,.14)" stroke="#10b981" stroke-width="2"/>
+            <text x="559" y="123" text-anchor="middle" font-weight="700">Users</text>
+            <line x1="634" y1="118" x2="700" y2="118" stroke="currentColor" opacity=".45" stroke-width="1.6"/>
+            <rect x="702" y="95" width="165" height="46" rx="9" fill="rgba(34,211,238,.14)" stroke="#22d3ee" stroke-width="2"/>
+            <text x="784" y="123" text-anchor="middle" font-weight="700">Aarav (you)</text>
+            <path d="M784,141 L784,175" stroke="currentColor" opacity=".45" stroke-width="1.6"/>
+            <line x1="600" y1="175" x2="840" y2="175" stroke="currentColor" opacity=".45" stroke-width="1.6"/>
+            <path d="M620,175 L620,196" stroke="currentColor" opacity=".45" stroke-width="1.6"/>
+            <path d="M800,175 L800,196" stroke="currentColor" opacity=".45" stroke-width="1.6"/>
+            <rect x="545" y="198" width="150" height="40" rx="8" fill="rgba(168,85,247,.13)" stroke="#a855f7" stroke-width="1.8"/>
+            <text x="620" y="223" text-anchor="middle" font-size="11.5">📁 Documents</text>
+            <rect x="725" y="198" width="150" height="40" rx="8" fill="rgba(168,85,247,.13)" stroke="#a855f7" stroke-width="1.8"/>
+            <text x="800" y="223" text-anchor="middle" font-size="11.5">📁 Downloads</text>
+            <text x="105" y="60" text-anchor="middle" font-size="11.5" opacity=".8">a path looks like:</text>
+            <text x="300" y="60" text-anchor="middle" font-size="11.5" font-family="monospace">C:\Users\Aarav\Documents\project.docx</text>
+          </g>
+        </svg>
+        </div>
       </article>
 
       <article class="topic" id="a3-care">
@@ -1371,6 +1567,21 @@ footer a:hover{color:var(--accent)}
         </ul>
       </article>
 
+      <article class="topic" id="a4-wage">
+        <h3><button class="tcheck" data-topic="a4-wage" aria-label="Mark topic done">✔</button>4b. Wage Employment vs Self-Employment <span class="badge-expanded">Added / Expanded</span> <span class="pyq-tag">PYQ SQP</span></h3>
+        <p>The CBSE sample paper tests this distinction in an assertion–reason question: <em>“A doctor works for a renowned hospital — this is an example of wage employment.”</em> Know the difference clearly.</p>
+        <table class="tb">
+          <tr><th></th><th>Wage employment</th><th>Self-employment (entrepreneurship)</th></tr>
+          <tr><td><strong>Who is the boss?</strong></td><td>An employer; you follow the organisation’s rules</td><td>You are your own boss</td></tr>
+          <tr><td><strong>Income</strong></td><td>Fixed salary/wages at the end of a period</td><td>Profit (or loss) — it varies with the business</td></tr>
+          <tr><td><strong>Risk</strong></td><td>Low — the employer bears business risk</td><td>High — you invest money and time and bear the risk</td></tr>
+          <tr><td><strong>Working hours</strong></td><td>Fixed, decided by the employer</td><td>Flexible, but often longer</td></tr>
+          <tr><td><strong>Skills used</strong></td><td>Job-specific skills</td><td>Job skills + managing money, people, marketing, risk</td></tr>
+          <tr><td><strong>Examples</strong></td><td>A doctor employed by a hospital, a teacher in a school, a bank clerk</td><td>A doctor running her own clinic, a teacher running a coaching centre, a shop owner</td></tr>
+        </table>
+        <div class="callout examtip"><b>🎯 One-line answer</b>In <strong>wage employment</strong> you work <em>for</em> someone else and earn a salary; in <strong>self-employment</strong> you create and run your own enterprise and earn profit while bearing the risk. Both are respectable career paths — entrepreneurship simply adds ownership, risk and the chance of unlimited growth.</div>
+      </article>
+
       <article class="topic" id="a4-extra">
         <h3><button class="tcheck" data-topic="a4-extra" aria-label="Mark topic done">✔</button>5. Ideas, Innovation and Business Basics <span class="badge-expanded">Added / Expanded</span></h3>
         <p>The support material asks these in its question bank but prints no notes — learn them for the 2-markers:</p>
@@ -1574,10 +1785,31 @@ footer a:hover{color:var(--accent)}
           <tr><td>Can be replaced naturally — solar energy, wind power, hydropower</td><td>Limited, take millions of years to form — coal, petrol, natural gas</td></tr>
         </table>
         <div class="callout remember"><b>🧠 Carbon footprint</b><span style="display:inline">The total greenhouse gases released by a person's activities (travel, electricity, consumption). Reducing it — public transport, cycles, LEDs — is an individual's climate action.</span></div>
+        <div class="deep"><span class="dh">🔎 In depth — a carbon footprint you can actually calculate</span>
+          <p>A carbon footprint is measured in <strong>kg of CO₂ equivalent</strong>. Approximate factors used in school projects: electricity ≈ <strong>0.82 kg CO₂ per kWh</strong> (India's grid average), a petrol car ≈ <strong>0.14 kg per km</strong>, and one tree absorbs roughly <strong>20 kg CO₂ a year</strong>.</p>
+          <p><em>Worked example:</em> a family uses 250 kWh a month and drives 600 km. Electricity = 250 × 0.82 = <strong>205 kg</strong>; car = 600 × 0.14 = <strong>84 kg</strong>; total ≈ <strong>289 kg CO₂ a month</strong>. Switching to LED bulbs and public transport for half the driving could cut this by a third — and it would take about <strong>5 trees a year</strong> to absorb what remains. Numbers like these turn “save the planet” into a measurable target, which is exactly what SDG 13 (Climate Action) asks for.</p>
+        </div>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 250" role="img" aria-label="The waste hierarchy as a pyramid: reduce is best, then reuse, then recycle, with disposal at the bottom">
+          <g text-anchor="middle">
+            <polygon points="450,20 545,85 355,85" fill="rgba(16,185,129,.28)" stroke="#10b981" stroke-width="2"/>
+            <text x="450" y="66" font-size="12.5" font-weight="800" fill="currentColor">REDUCE</text>
+            <polygon points="352,92 548,92 610,148 290,148" fill="rgba(34,211,238,.22)" stroke="#22d3ee" stroke-width="2"/>
+            <text x="450" y="126" font-size="12.5" font-weight="800" fill="currentColor">REUSE</text>
+            <polygon points="287,155 613,155 675,210 225,210" fill="rgba(168,85,247,.2)" stroke="#a855f7" stroke-width="2"/>
+            <text x="450" y="189" font-size="12.5" font-weight="800" fill="currentColor">RECYCLE</text>
+            <text x="450" y="238" font-size="11" fill="currentColor">landfill / burn — avoid</text>
+            <text x="760" y="60" font-size="11" fill="currentColor" text-anchor="start">most effective</text>
+            <text x="760" y="200" font-size="11" fill="currentColor" text-anchor="start">least effective</text>
+            <path d="M742,70 L700,70" stroke="currentColor" opacity=".5" stroke-width="1.4"/>
+            <path d="M742,193 L700,193" stroke="currentColor" opacity=".5" stroke-width="1.4"/>
+          </g>
+        </svg>
+        </div>
       </article>
 
       <article class="topic" id="a5-sdg">
-        <h3><button class="tcheck" data-topic="a5-sdg" aria-label="Mark topic done">✔</button>4. The 17 Sustainable Development Goals (SDGs)</h3>
+        <h3><button class="tcheck" data-topic="a5-sdg" aria-label="Mark topic done">✔</button>4. The 17 Sustainable Development Goals (SDGs) <span class="pyq-tag">PYQ SQP</span></h3>
         <p>The United Nations set <strong>17 Global Goals in 2015 to improve the world by 2030</strong>. Know all seventeen:</p>
         <table class="tb">
           <tr><th>#</th><th>Goal</th><th>#</th><th>Goal</th></tr>
@@ -1749,6 +1981,71 @@ footer a:hover{color:var(--accent)}
     <h2 class="sec-title">📚 Study Notes</h2>
     <div class="notes">
 
+      <article class="topic" id="b1-intro-ai">
+        <h3><button class="tcheck" data-topic="b1-intro-ai" aria-label="Mark topic done">✔</button>0. Introduction to AI — Revisited <span class="badge-expanded">Added / Expanded</span> <span class="pyq-tag">PYQ 2025</span></h3>
+        <p>The CBSE sample-paper blueprint opens Part B with <strong>“Introduction to AI”</strong>, and the 2025 board paper tests it directly (the “automatic washing machine” assertion). Here is that ground covered properly.</p>
+        <p><strong>Artificial Intelligence is the capability of a machine to imitate intelligent human behaviour</strong> — to perceive its surroundings, reason about what it perceives, learn from experience, decide, and act to achieve a goal. In one line: <em>when a machine is able to mimic human traits, it is said to be artificially intelligent.</em></p>
+        <h4>What makes something “AI”?</h4>
+        <ul>
+          <li><strong>Perception</strong> — sensing the world (camera, microphone, sensor data).</li>
+          <li><strong>Learning</strong> — improving from data or experience instead of following only fixed instructions.</li>
+          <li><strong>Reasoning and decision-making</strong> — choosing an action from many possibilities.</li>
+          <li><strong>Adaptation</strong> — behaving sensibly in situations it was not explicitly programmed for.</li>
+        </ul>
+        <div class="callout mistake"><b>⚠️ The classic trap — automation is not AI</b>A <strong>fully automatic washing machine</strong>, a calculator, a timer or an automatic door follows a <em>fixed, pre-programmed sequence</em>. It does not perceive, learn or decide, so it is <strong>not</strong> artificially intelligent. A robot vacuum that builds a map of your room, spots obstacles and improves its route <em>is</em> AI, because it senses, decides and adapts. The 2025 board paper asked exactly this as an assertion–reason question.</div>
+        <h4>AI vs human intelligence</h4>
+        <table class="tb">
+          <tr><th>Ability</th><th>Human</th><th>Today’s AI</th></tr>
+          <tr><td>Speed of calculation</td><td>Slow, error-prone</td><td>Extremely fast and tireless</td></tr>
+          <tr><td>Memory</td><td>Limited, forgets</td><td>Can store and search millions of records</td></tr>
+          <tr><td>Learning from examples</td><td>Learns from a handful of examples</td><td>Usually needs thousands of labelled examples</td></tr>
+          <tr><td>Common sense</td><td>Strong</td><td>Weak — can be fooled by simple changes</td></tr>
+          <tr><td>Emotion, empathy, morality</td><td>Natural</td><td>Absent; only simulated in language</td></tr>
+          <tr><td>Creativity and context</td><td>Original, context-aware</td><td>Recombines patterns it has seen</td></tr>
+        </table>
+        <h4>Types of AI</h4>
+        <table class="tb">
+          <tr><th>Type</th><th>Meaning</th><th>Status</th></tr>
+          <tr><td><strong>Narrow AI (ANI)</strong> — weak AI</td><td>Good at <em>one</em> task: face unlock, spam filtering, translation, recommendations.</td><td>Exists today — everything around you is narrow AI.</td></tr>
+          <tr><td><strong>General AI (AGI)</strong> — strong AI</td><td>Human-level ability across any task, able to transfer learning from one field to another.</td><td>Hypothetical — not achieved.</td></tr>
+          <tr><td><strong>Super AI (ASI)</strong></td><td>Beyond human intelligence in every domain.</td><td>Theoretical, discussed in ethics and science fiction.</td></tr>
+        </table>
+        <h4>AI you already use in India</h4>
+        <ul>
+          <li><strong>BHASHINI</strong> — government language-translation platform for Indian languages.</li>
+          <li><strong>DigiYatra</strong> — face recognition at airport entry gates.</li>
+          <li><strong>UPI fraud detection</strong> — banks score each transaction in real time.</li>
+          <li><strong>Maps ETAs</strong> — traffic prediction on Google Maps; <strong>OTT and shopping recommendations</strong>.</li>
+          <li><strong>Kisan e-Mitra / crop advisories</strong> — voice assistants answering farming queries.</li>
+        </ul>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 250" role="img" aria-label="A spectrum from fixed automation through narrow AI to hypothetical general AI, showing what each can do">
+          <defs><marker id="arrIntro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a855f7"/></marker></defs>
+          <g font-size="13" text-anchor="middle">
+            <rect x="20" y="60" width="240" height="120" rx="14" fill="rgba(148,163,205,.12)" stroke="#94a3b8" stroke-width="2"/>
+            <text x="140" y="90" font-weight="800" font-size="14" fill="currentColor">AUTOMATION</text>
+            <text x="140" y="114" fill="currentColor" font-size="11.5">fixed rules · no learning</text>
+            <text x="140" y="132" fill="currentColor" font-size="11.5">washing machine, calculator</text>
+            <text x="140" y="158" fill="#fb7185" font-size="11.5" font-weight="700">NOT AI</text>
+            <rect x="330" y="60" width="240" height="120" rx="14" fill="rgba(168,85,247,.16)" stroke="#a855f7" stroke-width="2"/>
+            <text x="450" y="90" font-weight="800" font-size="14" fill="currentColor">NARROW AI</text>
+            <text x="450" y="114" fill="currentColor" font-size="11.5">perceives · learns · decides</text>
+            <text x="450" y="132" fill="currentColor" font-size="11.5">one task: faces, spam, speech</text>
+            <text x="450" y="158" fill="#34d399" font-size="11.5" font-weight="700">EXISTS TODAY</text>
+            <rect x="640" y="60" width="240" height="120" rx="14" fill="rgba(34,211,238,.10)" stroke="#22d3ee" stroke-width="2" stroke-dasharray="6 5"/>
+            <text x="760" y="90" font-weight="800" font-size="14" fill="currentColor">GENERAL AI</text>
+            <text x="760" y="114" fill="currentColor" font-size="11.5">human-level across any task</text>
+            <text x="760" y="132" fill="currentColor" font-size="11.5">transfers learning between fields</text>
+            <text x="760" y="158" fill="#fbbf24" font-size="11.5" font-weight="700">HYPOTHETICAL</text>
+          </g>
+          <g stroke="#a855f7" stroke-width="2.5" marker-end="url(#arrIntro)">
+            <line x1="262" y1="120" x2="326" y2="120"/><line x1="572" y1="120" x2="636" y2="120"/>
+          </g>
+          <text x="450" y="220" text-anchor="middle" font-size="12" fill="currentColor">More data + more learning + more autonomy →</text>
+        </svg>
+        </div>
+      </article>
+
       <article class="topic" id="b1-cycle">
         <h3><button class="tcheck" data-topic="b1-cycle" aria-label="Mark topic done">✔</button>1. The AI Project Cycle</h3>
         <p>The <strong>AI Project Cycle</strong> is a step-by-step process to solve problems using proven scientific methods and drawing inferences from them. Its components are the steps that contribute to completing the project — it distributes development into stages so the work becomes easier, clearly understandable, and each stage stays specific, giving the best possible output.</p>
@@ -1794,10 +2091,23 @@ footer a:hover{color:var(--accent)}
           <li><strong>Deployment — from development to real-world application.</strong> The solution transitions into the real world, delivering value and impact to users and stakeholders.</li>
         </ol>
         <div class="callout examtip"><b>🎯 Exam tip</b>Order MCQs are guaranteed: <strong>Scoping → Acquisition → Exploration → Modelling → Evaluation → Deployment</strong>. “Data Acquisition” is the <em>second</em> stage; “4Ws canvas” belongs to <em>problem scoping</em>; “web scraping” is a data-acquisition technique.</div>
+
+        <div class="deep"><span class="dh">🔎 In depth — one project followed through all six stages</span>
+          <p>Board answers are stronger when the stages are shown working together. Take a real school problem: <em>the cafeteria throws away a lot of food every day.</em></p>
+          <ol>
+            <li><strong>Problem scoping:</strong> Who — students, canteen staff, the eco-club. What — uneaten food is thrown away. Where — the school cafeteria at lunch. Why — wasted money and landfill; a solution would cut waste and teach portion control. <em>Problem statement:</em> “Our cafeteria (who) wastes a large amount of cooked food (what) every lunch break (where); an ideal solution would predict how much food to cook each day (why).”</li>
+            <li><strong>Data acquisition:</strong> collect last year's daily records — day, menu, number of students present, quantity cooked, quantity left over — from the canteen register, plus attendance data. Check that the source is authentic and the columns are consistent.</li>
+            <li><strong>Data exploration:</strong> plot leftovers against day of week and menu. Discover that Friday and festival days have the highest waste, and that a particular dish is always over-cooked. These patterns decide what the model should use as features.</li>
+            <li><strong>Modelling:</strong> the output is a <em>number</em> (how many plates to cook), so this is <strong>regression</strong>. Compare linear regression with a decision tree; keep the one with the lower error.</li>
+            <li><strong>Evaluation:</strong> test on the last two months of data that the model has never seen. Measure error (and, if you turn it into “will there be waste? yes/no”, a confusion matrix with precision and recall).</li>
+            <li><strong>Deployment:</strong> the canteen manager gets a daily suggested quantity on a simple dashboard; you keep monitoring and retrain as menus and attendance change.</li>
+          </ol>
+          <p>Every later unit — features, regression, metrics, ethics — fits inside this one story. Use it as your scaffold in long answers.</p>
+        </div>
       </article>
 
       <article class="topic" id="b1-4ws">
-        <h3><button class="tcheck" data-topic="b1-4ws" aria-label="Mark topic done">✔</button>2. Problem Scoping in Depth — the 4Ws Canvas <span class="badge-expanded">Added / Expanded</span></h3>
+        <h3><button class="tcheck" data-topic="b1-4ws" aria-label="Mark topic done">✔</button>2. Problem Scoping in Depth — the 4Ws Canvas <span class="badge-expanded">Added / Expanded</span> <span class="pyq-tag">PYQ 2025</span></h3>
         <p>The support material covers the 4Ws only inside a long answer — here are the full notes. The <strong>4Ws Problem Canvas</strong> helps identify the key elements of the problem before any data is collected:</p>
         <table class="tb">
           <tr><th>Block</th><th>What it captures</th><th>Question asked</th></tr>
@@ -1819,14 +2129,53 @@ footer a:hover{color:var(--accent)}
         <p>Also remember: <strong>training data should be relevant, structured and authentic</strong> for better efficiency of an AI project; data on which the machine is trained is called <strong>training data</strong>, and the machine uses it to predict for new data.</p>
       </article>
 
+      <article class="topic" id="b1-features">
+        <h3><button class="tcheck" data-topic="b1-features" aria-label="Mark topic done">✔</button>2b. Data Features and Data Exploration <span class="badge-expanded">Added / Expanded</span> <span class="pyq-tag">PYQ 2025</span></h3>
+        <p>The 2025 board paper asked students to <em>define</em> these two terms — the support material uses them without a formal definition. Learn them exactly.</p>
+        <h4>Data features</h4>
+        <p><strong>Features are the individual measurable properties or characteristics of a dataset</strong> — the columns of a data table that describe each record. They are the inputs from which the model learns; the column you are trying to predict is the <strong>label</strong>.</p>
+        <table class="tb">
+          <tr><th>Engine</th><th>CC</th><th>Seats</th><th>Mileage (kmpl)</th><th>Price (lakh)</th></tr>
+          <tr><td>Petrol</td><td>1200</td><td>5</td><td>19</td><td>9.5</td></tr>
+          <tr><td>Diesel</td><td>1500</td><td>7</td><td>21</td><td>14.2</td></tr>
+        </table>
+        <p>Here Engine, CC, Seats and Mileage are <strong>features</strong>; Price is the <strong>label</strong> if we are predicting price. If we were predicting <em>fuel type</em>, then Engine would become the label and the rest the features — <strong>which column is the label depends on the question you are asking.</strong></p>
+        <ul>
+          <li><strong>Feature selection</strong> — keeping only the columns that actually help (drop “roll number” when predicting marks).</li>
+          <li><strong>Feature engineering</strong> — creating a useful new column, e.g., “age of car = current year − year of manufacture”.</li>
+          <li>Good features are <strong>relevant, structured and authentic</strong> — the 2024 board paper's answer for “what makes an AI project efficient”.</li>
+        </ul>
+        <h4>Data exploration</h4>
+        <p><strong>Data exploration is the stage in which the acquired data is arranged uniformly and given a visual form — graphs, databases, flow charts, maps — so that the patterns it follows can be interpreted.</strong> Its purpose is to <em>simplify complex data and discover patterns, trends, outliers and relationships</em> before any model is built.</p>
+        <table class="tb">
+          <tr><th>What you do</th><th>Question it answers</th><th>Typical tool/chart</th></tr>
+          <tr><td>Check size, columns, types</td><td>What data do I actually have?</td><td>Data table, <code class="inline">df.info()</code></td></tr>
+          <tr><td>Look at distributions</td><td>Is the data balanced? Any skew?</td><td>Histogram, box plot</td></tr>
+          <tr><td>Compare two features</td><td>Do they move together?</td><td>Scatter plot, correlation</td></tr>
+          <tr><td>Find gaps and outliers</td><td>Is anything missing or impossible?</td><td>Missing-value count, box plot</td></tr>
+          <tr><td>Group and compare</td><td>How do categories differ?</td><td>Bar chart, pivot table</td></tr>
+        </table>
+        <div class="callout examtip"><b>🎯 Two-mark answer to memorise</b>“Data exploration is arranging the acquired data uniformly and visualising it through graphs, databases, flow charts and maps to discover patterns and insights. Data features are the measurable properties or columns of a dataset that are used as inputs to predict the label.”</div>
+      </article>
+
       <article class="topic" id="b1-domains">
-        <h3><button class="tcheck" data-topic="b1-domains" aria-label="Mark topic done">✔</button>3. The Three AI Domains</h3>
+        <h3><button class="tcheck" data-topic="b1-domains" aria-label="Mark topic done">✔</button>3. The Three AI Domains <span class="pyq-tag">PYQ 2025</span></h3>
         <p>Depending on the type of data fed into the AI model, AI is categorised into three domains:</p>
         <table class="tb">
           <tr><th>Domain</th><th>What it does</th><th>Applications</th></tr>
           <tr><td><strong>Statistical Data</strong></td><td>Domain related to data systems and processes in which the system collects numerous data, maintains datasets, and derives meaning/sense out of them.</td><td>Price comparison websites</td></tr>
           <tr><td><strong>Computer Vision (CV)</strong></td><td>Gives machines the capability to acquire and analyse visual information and then predict decisions; the entire process involves image acquiring, screening, analysing, identifying and extracting information.</td><td>Agricultural monitoring (drones check crop health, pests, yield), surveillance systems</td></tr>
           <tr><td><strong>Natural Language Processing (NLP)</strong></td><td>Branch of AI dealing with the interaction between computers and humans using natural language.</td><td>E-mail filters, machine translation</td></tr>
+        </table>
+        <h4>Statistical Data = “Data Science” <span class="badge-expanded">Added / Expanded</span></h4>
+        <p>The CBSE sample-paper blueprint calls this domain <strong>Data Sciences</strong>, and the 2025 board paper asked for its applications: <em>“One of the applications of Data Science is Airline Route Planning. List any two tasks that airline companies can do using Data Science.”</em> Data science is the same idea as the statistical-data domain — collecting large datasets, cleaning them, finding patterns and predicting.</p>
+        <table class="tb">
+          <tr><th>Industry</th><th>What data science does there</th></tr>
+          <tr><td>Airlines</td><td>Demand forecasting, dynamic ticket pricing, route and network planning, crew and aircraft scheduling, fuel efficiency, predictive maintenance.</td></tr>
+          <tr><td>Retail &amp; e-commerce</td><td>Price comparison, demand and stock prediction, customer segmentation, recommendation.</td></tr>
+          <tr><td>Banking &amp; payments</td><td>Credit scoring, fraud-risk scoring, churn prediction.</td></tr>
+          <tr><td>Health</td><td>Patient-risk scoring, hospital bed and medicine demand forecasting.</td></tr>
+          <tr><td>Sport</td><td>Player selection and performance analytics (e.g., cricket analytics).</td></tr>
         </table>
       </article>
 
@@ -1863,6 +2212,65 @@ footer a:hover{color:var(--accent)}
           <li><strong>Human-centredness</strong> — keeping human welfare and autonomy at the core.</li>
           <li><strong>Safety and security</strong> — preventing unintended harm.</li>
         </ul>
+      </article>
+
+      <article class="topic" id="b1-bias">
+        <h3><button class="tcheck" data-topic="b1-bias" aria-label="Mark topic done">✔</button>5. AI Bias and AI Access <span class="badge-expanded">Added / Expanded</span> <span class="pyq-tag">PYQ 2025</span></h3>
+        <p>These two terms appear as a full 4-mark question in the <strong>2025 board paper</strong> and were not covered by the support material. Learn both with examples.</p>
+        <h4>AI bias</h4>
+        <p><strong>AI bias is the presence of discrimination in an AI system that makes it favour some groups over others, because of the data used to train the model.</strong> It occurs when a system shows prejudiced behaviour or produces inaccurate predictions due to <em>flawed training data, biased algorithms or incomplete representation of reality</em>. A machine has no biases of its own — bias passes from the developer and the data into the model.</p>
+        <table class="tb">
+          <tr><th>Source of bias</th><th>What happens</th><th>Example</th></tr>
+          <tr><td><strong>Historical / data bias</strong></td><td>The training data records past human prejudice, so the model repeats it.</td><td>A hiring model trained on 10 years of mostly male hires ranks men higher.</td></tr>
+          <tr><td><strong>Sampling bias</strong></td><td>The data covers only some groups, so accuracy collapses for the rest.</td><td>Face unlock trained mostly on light-skinned faces fails on darker skin.</td></tr>
+          <tr><td><strong>Measurement / labelling bias</strong></td><td>Labels themselves are subjective or wrong.</td><td>“Good employee” labels given by one biased manager.</td></tr>
+          <tr><td><strong>Algorithmic bias</strong></td><td>The objective the model optimises favours one outcome.</td><td>Optimising “approval rate” pushes loans to already-wealthy areas.</td></tr>
+          <tr><td><strong>Deployment bias</strong></td><td>A model built for one setting is used in another.</td><td>A voice assistant tuned for US accents failing on Indian English.</td></tr>
+        </table>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 200" role="img" aria-label="How bias enters an AI system: biased data, biased design and biased use all lead to biased decisions and harm">
+          <defs><marker id="arrBias" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fb7185"/></marker></defs>
+          <g font-size="12" text-anchor="middle">
+            <rect x="15" y="30" width="150" height="60" rx="10" fill="rgba(251,113,133,.12)" stroke="#fb7185" stroke-width="2"/>
+            <text x="90" y="55" font-weight="700" fill="currentColor" font-size="12.5">Biased data</text>
+            <text x="90" y="73" fill="currentColor" font-size="10.5">history · sampling</text>
+            <rect x="15" y="110" width="150" height="60" rx="10" fill="rgba(251,113,133,.12)" stroke="#fb7185" stroke-width="2"/>
+            <text x="90" y="135" font-weight="700" fill="currentColor" font-size="12.5">Biased design</text>
+            <text x="90" y="153" fill="currentColor" font-size="10.5">labels · objective</text>
+            <rect x="230" y="70" width="150" height="60" rx="10" fill="rgba(168,85,247,.16)" stroke="#a855f7" stroke-width="2"/>
+            <text x="305" y="95" font-weight="700" fill="currentColor" font-size="12.5">Model learns</text>
+            <text x="305" y="113" fill="currentColor" font-size="10.5">the pattern</text>
+            <rect x="445" y="70" width="160" height="60" rx="10" fill="rgba(251,191,36,.14)" stroke="#fbbf24" stroke-width="2"/>
+            <text x="525" y="95" font-weight="700" fill="currentColor" font-size="12.5">Biased decisions</text>
+            <text x="525" y="113" fill="currentColor" font-size="10.5">at scale, every day</text>
+            <rect x="670" y="70" width="200" height="60" rx="10" fill="rgba(34,211,238,.14)" stroke="#22d3ee" stroke-width="2"/>
+            <text x="770" y="95" font-weight="700" fill="currentColor" font-size="12.5">Audit → fix → monitor</text>
+            <text x="770" y="113" fill="currentColor" font-size="10.5">diverse data · fairness metrics</text>
+          </g>
+          <g stroke="#fb7185" stroke-width="2.2" marker-end="url(#arrBias)">
+            <line x1="167" y1="60" x2="226" y2="88"/><line x1="167" y1="140" x2="226" y2="112"/>
+            <line x1="382" y1="100" x2="441" y2="100"/>
+          </g>
+          <path d="M607,100 L664,100" stroke="#22d3ee" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#arrBias)"/>
+        </svg>
+        </div>
+        <p><strong>How to reduce bias:</strong> use diverse and representative training data; audit the model with fairness metrics across groups; keep a human in the loop for high-stakes decisions; document how the model works (transparency); test with real users from every group it will serve; and monitor after deployment, because bias can creep back.</p>
+        <h4>AI access</h4>
+        <p><strong>AI access is the availability of AI technologies, tools and resources to people and organisations.</strong> It ensures AI systems are reachable by different communities — especially marginalised or underserved groups — so that the digital divide does not widen. Access has two faces:</p>
+        <ul>
+          <li><strong>Technical access</strong> — devices, internet, computing power, data, software and platforms, and the skills to use them.</li>
+          <li><strong>Social access</strong> — equitable use and benefit: does the AI work in your language, for your crop, your handwriting, your accent, your price range?</li>
+        </ul>
+        <table class="tb">
+          <tr><th>Barrier to access</th><th>Who is left out</th><th>What helps</th></tr>
+          <tr><td>Language</td><td>Speakers of Indian languages not in the model</td><td>BHASHINI-style multilingual models, local datasets</td></tr>
+          <tr><td>Cost and devices</td><td>Low-income households with basic phones</td><td>Lightweight models, shared Common Service Centres</td></tr>
+          <tr><td>Connectivity and power</td><td>Rural and remote areas</td><td>Offline models, edge devices</td></tr>
+          <tr><td>Digital skills</td><td>Elderly, first-generation users</td><td>Training, voice interfaces, vernacular UI</td></tr>
+          <tr><td>Data representation</td><td>Groups absent from training data</td><td>Inclusive datasets, community data collection</td></tr>
+        </table>
+        <div class="callout remember"><b>🧠 Bias vs access in one line</b><strong>Bias</strong> is about <em>unfair treatment by</em> an AI system; <strong>access</strong> is about <em>unequal reach to</em> AI systems. Both decide whether AI reduces or widens inequality.</div>
+        <p><strong>India's access efforts:</strong> the IndiaAI Mission, BHASHINI translation models, Digital India and Common Service Centres, AI-skilling programmes in schools, and open datasets such as data.gov.in.</p>
       </article>
     </div>
 
@@ -2032,6 +2440,46 @@ footer a:hover{color:var(--accent)}
         </ul>
         <h4>Deep Learning</h4>
         <p>A special kind of ML that uses <strong>neural networks</strong> to understand complex things and learns from huge datasets (thousands of images). You show a bird photo — the DL model sees it pixel by pixel and says “That's a bird!”. Used in face recognition, voice assistants and language translation.</p>
+
+        <div class="deep"><span class="dh">🔎 In depth — how a model actually “learns”</span>
+          <p>“Learning” has a precise meaning in machine learning: <strong>adjusting the model's parameters until its predictions stop being wrong</strong>. The loop looks like this:</p>
+          <ol>
+            <li><strong>Forward pass</strong> — feed a batch of training examples through the model and get predictions.</li>
+            <li><strong>Compare</strong> — measure the difference between prediction and the true label with a <strong>loss function</strong> (for regression, mean squared error; for classification, cross-entropy).</li>
+            <li><strong>Backward pass</strong> — calculate how much each weight contributed to that error (gradient).</li>
+            <li><strong>Update</strong> — nudge every weight a little in the direction that reduces the loss. The size of the nudge is set by the <strong>learning rate</strong>.</li>
+            <li><strong>Repeat</strong> for many <strong>epochs</strong> (full passes over the data) until the loss stops falling on validation data.</li>
+          </ol>
+          <p>Two failure modes follow directly from this loop. If you loop too long on too little data, the model memorises the training set — <strong>overfitting</strong> — and the validation loss starts rising even as training loss falls. If the model is too simple or trains too briefly, it never learns the pattern — <strong>underfitting</strong>. That is why the train–test split in Unit 3 exists: it is the only honest check on this loop.</p>
+        </div>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 250" role="img" aria-label="The machine learning training loop: data, model, prediction, compare with label, loss, update weights, and repeat">
+          <defs><marker id="arrLoop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a855f7"/></marker></defs>
+          <g font-size="11.5" text-anchor="middle">
+            <rect x="25" y="95" width="130" height="55" rx="10" fill="rgba(34,211,238,.14)" stroke="#22d3ee" stroke-width="2"/>
+            <text x="90" y="118" font-weight="800" font-size="12.5" fill="currentColor">Training data</text>
+            <text x="90" y="135" fill="currentColor" font-size="10.5">features + labels</text>
+            <rect x="205" y="95" width="130" height="55" rx="10" fill="rgba(168,85,247,.15)" stroke="#a855f7" stroke-width="2"/>
+            <text x="270" y="118" font-weight="800" font-size="12.5" fill="currentColor">Model</text>
+            <text x="270" y="135" fill="currentColor" font-size="10.5">weights + bias</text>
+            <rect x="385" y="95" width="130" height="55" rx="10" fill="rgba(168,85,247,.15)" stroke="#a855f7" stroke-width="2"/>
+            <text x="450" y="118" font-weight="800" font-size="12.5" fill="currentColor">Prediction</text>
+            <text x="450" y="135" fill="currentColor" font-size="10.5">ŷ for each input</text>
+            <rect x="565" y="95" width="130" height="55" rx="10" fill="rgba(251,191,36,.14)" stroke="#fbbf24" stroke-width="2"/>
+            <text x="630" y="118" font-weight="800" font-size="12.5" fill="currentColor">Loss</text>
+            <text x="630" y="135" fill="currentColor" font-size="10.5">how wrong?</text>
+            <rect x="745" y="95" width="130" height="55" rx="10" fill="rgba(52,211,153,.15)" stroke="#34d399" stroke-width="2"/>
+            <text x="810" y="118" font-weight="800" font-size="12.5" fill="currentColor">Update</text>
+            <text x="810" y="135" fill="currentColor" font-size="10.5">nudge weights</text>
+          </g>
+          <g stroke="#a855f7" stroke-width="2.2" marker-end="url(#arrLoop)">
+            <line x1="157" y1="122" x2="201" y2="122"/><line x1="337" y1="122" x2="381" y2="122"/>
+            <line x1="517" y1="122" x2="561" y2="122"/><line x1="697" y1="122" x2="741" y2="122"/>
+          </g>
+          <path d="M810,152 C810,205 270,205 270,154" fill="none" stroke="#34d399" stroke-width="2.2" stroke-dasharray="6 5" marker-end="url(#arrLoop)"/>
+          <text x="540" y="228" text-anchor="middle" font-size="11" fill="currentColor">repeat for many epochs until the validation loss stops improving</text>
+        </svg>
+        </div>
       </article>
 
       <article class="topic" id="b2-terms">
@@ -2103,8 +2551,48 @@ footer a:hover{color:var(--accent)}
           <tr><td>“Is this house luxury, mid-range or affordable?”</td><td>“What is the price of this house?”</td></tr>
           <tr><td>“Will it be sunny, cloudy or rainy?”</td><td>“What will the temperature be in °C?”</td></tr>
         </table>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 250" role="img" aria-label="Left: classification draws a boundary between two labelled classes. Right: regression fits a line through points to predict a number">
+          <g>
+            <rect x="20" y="20" width="400" height="205" rx="12" fill="rgba(148,163,205,.06)" stroke="var(--line)"/>
+            <text x="220" y="44" text-anchor="middle" font-size="12.5" font-weight="800" fill="currentColor">CLASSIFICATION — “which class?”</text>
+            <line x1="60" y1="190" x2="380" y2="190" stroke="currentColor" opacity=".35"/>
+            <line x1="60" y1="190" x2="60" y2="65" stroke="currentColor" opacity=".35"/>
+            <g fill="#22d3ee"><circle cx="110" cy="90" r="5.5"/><circle cx="140" cy="120" r="5.5"/><circle cx="95" cy="140" r="5.5"/><circle cx="160" cy="85" r="5.5"/></g>
+            <g fill="#fb7185"><circle cx="250" cy="100" r="5.5"/><circle cx="300" cy="80" r="5.5"/><circle cx="280" cy="140" r="5.5"/><circle cx="330" cy="120" r="5.5"/></g>
+            <line x1="200" y1="60" x2="215" y2="190" stroke="#34d399" stroke-width="2.5" stroke-dasharray="7 5"/>
+            <text x="120" y="215" font-size="11" fill="#22d3ee" text-anchor="middle">class A</text>
+            <text x="300" y="215" font-size="11" fill="#fb7185" text-anchor="middle">class B</text>
+          </g>
+          <g>
+            <rect x="470" y="20" width="410" height="205" rx="12" fill="rgba(148,163,205,.06)" stroke="var(--line)"/>
+            <text x="675" y="44" text-anchor="middle" font-size="12.5" font-weight="800" fill="currentColor">REGRESSION — “how much?”</text>
+            <line x1="510" y1="190" x2="850" y2="190" stroke="currentColor" opacity=".35"/>
+            <line x1="510" y1="190" x2="510" y2="65" stroke="currentColor" opacity=".35"/>
+            <g fill="#fbbf24"><circle cx="540" cy="165" r="5.5"/><circle cx="590" cy="150" r="5.5"/><circle cx="640" cy="140" r="5.5"/><circle cx="690" cy="120" r="5.5"/><circle cx="740" cy="105" r="5.5"/><circle cx="800" cy="88" r="5.5"/></g>
+            <line x1="520" y1="178" x2="830" y2="80" stroke="#34d399" stroke-width="2.5"/>
+            <text x="675" y="215" font-size="11" fill="currentColor" text-anchor="middle">a line predicts a continuous value (price, marks, temperature)</text>
+          </g>
+        </svg>
+        </div>
+        <div class="callout remember"><b>🧠 Read the output, choose the model</b>If the answer is a <em>label</em> (“spam / not spam”, “pass / fail”), it is classification. If the answer is a <em>quantity</em> (“₹, °C, marks, kg”), it is regression. If there is no answer column at all, it is unsupervised — clustering if you want groups, association if you want “bought together”.</div>
         <h4>Clustering (unsupervised)</h4>
         <p><strong>Groups similar things together, without labels.</strong> A music app groups songs you like based on rhythm, tone and tempo. Other examples: grouping customers by buying habits, grouping users by interests for recommendations.</p>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 220" role="img" aria-label="Clustering places unlabelled points into groups by similarity, shown as three dashed circles around separate clusters">
+          <rect x="20" y="15" width="860" height="190" rx="12" fill="rgba(148,163,205,.06)" stroke="var(--line)"/>
+          <text x="450" y="40" text-anchor="middle" font-size="12.5" font-weight="800" fill="currentColor">CLUSTERING — no labels, the algorithm finds the groups</text>
+          <ellipse cx="190" cy="125" rx="105" ry="62" fill="rgba(34,211,238,.10)" stroke="#22d3ee" stroke-width="2" stroke-dasharray="6 5"/>
+          <ellipse cx="470" cy="110" rx="95" ry="58" fill="rgba(168,85,247,.10)" stroke="#a855f7" stroke-width="2" stroke-dasharray="6 5"/>
+          <ellipse cx="740" cy="130" rx="100" ry="60" fill="rgba(251,191,36,.10)" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6 5"/>
+          <g fill="#22d3ee"><circle cx="150" cy="105" r="6"/><circle cx="200" cy="140" r="6"/><circle cx="240" cy="110" r="6"/><circle cx="180" cy="155" r="6"/></g>
+          <g fill="#a855f7"><circle cx="430" cy="95" r="6"/><circle cx="490" cy="125" r="6"/><circle cx="520" cy="90" r="6"/><circle cx="455" cy="140" r="6"/></g>
+          <g fill="#fbbf24"><circle cx="700" cy="115" r="6"/><circle cx="760" cy="145" r="6"/><circle cx="800" cy="110" r="6"/><circle cx="730" cy="160" r="6"/></g>
+          <text x="190" y="203" text-anchor="middle" font-size="11" fill="currentColor">customers who buy weekly</text>
+          <text x="470" y="200" text-anchor="middle" font-size="11" fill="currentColor">festival-only buyers</text>
+          <text x="740" y="203" text-anchor="middle" font-size="11" fill="currentColor">bulk / wholesale</text>
+        </svg>
+        </div>
         <h4>Association (unsupervised)</h4>
         <p><strong>Finds links/relations between items.</strong> “If you buy bread, you might also buy butter.” Useful in shopping apps for product suggestions and market-basket analysis (which products are bought together).</p>
         <table class="tb">
@@ -2117,7 +2605,7 @@ footer a:hover{color:var(--accent)}
       </article>
 
       <article class="topic" id="b2-nn">
-        <h3><button class="tcheck" data-topic="b2-nn" aria-label="Mark topic done">✔</button>6. Deep Learning — Neural Networks (ANN) and CNN</h3>
+        <h3><button class="tcheck" data-topic="b2-nn" aria-label="Mark topic done">✔</button>6. Deep Learning — Neural Networks (ANN) and CNN <span class="pyq-tag">PYQ 2025</span></h3>
         <p>A <strong>Neural Network</strong> mimics how our brain works, using “neurons”. An <strong>Artificial Neural Network (ANN)</strong> is a computing system inspired by the human brain, made of layers of interconnected nodes that process data and learn patterns. It is a fast, efficient way to solve problems for which the dataset is very large. Every node in the hidden layers is essentially a machine learning algorithm.</p>
         <div class="mindmap" style="padding:12px">
         <svg viewBox="0 0 900 340" role="img" aria-label="Neural network diagram with an input layer of three nodes, two hidden layers of four nodes each, and an output layer of two nodes, all connected by lines">
@@ -2375,7 +2863,7 @@ footer a:hover{color:var(--accent)}
       </article>
 
       <article class="topic" id="b3-confusion">
-        <h3><button class="tcheck" data-topic="b3-confusion" aria-label="Mark topic done">✔</button>2. The Confusion Matrix</h3>
+        <h3><button class="tcheck" data-topic="b3-confusion" aria-label="Mark topic done">✔</button>2. The Confusion Matrix <span class="pyq-tag">PYQ 2025</span></h3>
         <p>The <strong>confusion matrix</strong> is a tabular presentation of the accuracy of a model with two or more classes — the <em>actual (reality)</em> values on one axis and the <em>predicted</em> values on the other. Each cell counts the predictions falling into that combination. From it we can calculate accuracy, precision, recall and F1-score.</p>
         <table class="tb">
           <tr><th></th><th>Reality: YES</th><th>Reality: NO</th></tr>
@@ -2389,6 +2877,29 @@ footer a:hover{color:var(--accent)}
           <li><strong>False Negative (FN)</strong> — the model wrongly predicts the positive class as negative (predicted NO, reality YES).</li>
         </ul>
         <p><strong>TP and TN are the correct decisions</strong> of an AI model; FP and FN are the wrong ones. Total wrong predictions = <strong>FP + FN</strong>.</p>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 250" role="img" aria-label="Coloured confusion matrix grid: true positive and true negative are green, false positive and false negative are red">
+          <g font-size="12" text-anchor="middle">
+            <text x="450" y="22" font-size="12.5" font-weight="800" fill="currentColor">REALITY →</text>
+            <text x="60" y="130" font-size="12.5" font-weight="800" fill="currentColor" transform="rotate(-90 60 130)">PREDICTION →</text>
+            <text x="300" y="52" font-weight="700" fill="currentColor">YES</text>
+            <text x="500" y="52" font-weight="700" fill="currentColor">NO</text>
+            <text x="190" y="105" font-weight="700" fill="currentColor">YES</text>
+            <text x="190" y="185" font-weight="700" fill="currentColor">NO</text>
+            <rect x="230" y="65" width="170" height="60" rx="8" fill="rgba(16,185,129,.24)" stroke="#10b981" stroke-width="2"/>
+            <text x="315" y="90" font-weight="800" fill="currentColor">TP</text><text x="315" y="110" font-size="10.5" fill="currentColor">said yes · was yes ✓</text>
+            <rect x="430" y="65" width="170" height="60" rx="8" fill="rgba(251,113,133,.2)" stroke="#fb7185" stroke-width="2"/>
+            <text x="515" y="90" font-weight="800" fill="currentColor">FP</text><text x="515" y="110" font-size="10.5" fill="currentColor">said yes · was no ✗</text>
+            <rect x="230" y="145" width="170" height="60" rx="8" fill="rgba(251,113,133,.2)" stroke="#fb7185" stroke-width="2"/>
+            <text x="315" y="170" font-weight="800" fill="currentColor">FN</text><text x="315" y="190" font-size="10.5" fill="currentColor">said no · was yes ✗</text>
+            <rect x="430" y="145" width="170" height="60" rx="8" fill="rgba(16,185,129,.24)" stroke="#10b981" stroke-width="2"/>
+            <text x="515" y="170" font-weight="800" fill="currentColor">TN</text><text x="515" y="190" font-size="10.5" fill="currentColor">said no · was no ✓</text>
+            <text x="760" y="95" font-size="11" fill="currentColor" text-anchor="start">← green = correct</text>
+            <text x="760" y="120" font-size="11" fill="currentColor" text-anchor="start">red = wrong</text>
+            <text x="760" y="175" font-size="11" fill="currentColor" text-anchor="start">wrong total = FP + FN</text>
+          </g>
+        </svg>
+        </div>
         <h4>The paddy-plant example (from the support material)</h4>
         <p>A model tests paddy plant specimens for fungal infection, over 43 observations: 12 correctly identified infection (TP), 4 wrongly flagged infection (FP), 21 correctly identified absence of infection (TN), 6 missed infections (FN).</p>
         <table class="tb">
@@ -2417,12 +2928,49 @@ footer a:hover{color:var(--accent)}
         <p>F1 combines precision and recall into a <strong>single measure (harmonic mean)</strong> — used when the dataset is unbalanced and we cannot decide whether FP or FN matters more.</p>
         <div class="formula">F1 = 2 × Precision × Recall / (Precision + Recall)</div>
         <p>A <strong>high F1-score indicates a good balance</strong> between precision and recall; a large imbalance between them drags F1 down.</p>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 250" role="img" aria-label="Precision and recall shown as overlapping sets: actual positives, predicted positives and the true positives where they overlap">
+          <g text-anchor="middle" font-size="11.5">
+            <ellipse cx="330" cy="125" rx="190" ry="95" fill="rgba(34,211,238,.14)" stroke="#22d3ee" stroke-width="2"/>
+            <ellipse cx="500" cy="125" rx="190" ry="95" fill="rgba(168,85,247,.14)" stroke="#a855f7" stroke-width="2"/>
+            <text x="215" y="60" fill="currentColor" font-weight="700">ALL ACTUAL POSITIVES</text>
+            <text x="215" y="76" fill="currentColor" font-size="10.5">TP + FN</text>
+            <text x="615" y="60" fill="currentColor" font-weight="700">ALL PREDICTED POSITIVES</text>
+            <text x="615" y="76" fill="currentColor" font-size="10.5">TP + FP</text>
+            <text x="415" y="118" fill="currentColor" font-weight="800" font-size="13">TP</text>
+            <text x="415" y="136" fill="currentColor" font-size="10.5">both agree</text>
+            <text x="245" y="200" fill="#fb7185" font-weight="700">FN — missed</text>
+            <text x="600" y="200" fill="#fb7185" font-weight="700">FP — false alarm</text>
+            <text x="450" y="240" fill="currentColor">Precision = TP ÷ (TP+FP) → how clean is the “yes” pile?</text>
+            <text x="450" y="20" fill="currentColor">Recall = TP ÷ (TP+FN) → how much of the truth did we catch?</text>
+          </g>
+        </svg>
+        </div>
+        <div class="deep"><span class="dh">🔎 In depth — precision and recall are in tension</span>
+          <p>Imagine a smoke detector you can tune. Turn the sensitivity <em>up</em> and it catches every fire (high recall) but also screams at toast (low precision). Turn it <em>down</em> and it never cries wolf (high precision) but may sleep through a real fire (low recall). You cannot maximise both at once — that is the <strong>precision–recall trade-off</strong>, and the F1-score is the single number that balances them.</p>
+          <p>So the exam question “which metric would you use?” is really asking <em>which mistake is more expensive here?</em> Expensive false alarms → precision. Expensive misses → recall. Both expensive and you cannot choose → F1. Accuracy is only fair when the classes are balanced and every mistake costs the same.</p>
+          <p><em>Worked mini-example:</em> TP = 40, FP = 10, FN = 20. Precision = 40/50 = 0.80, Recall = 40/60 ≈ 0.67, F1 = 2(0.8)(0.67)/(1.47) ≈ 0.73. Notice that F1 sits <em>below</em> precision and above nothing in particular — it always leans toward the weaker of the two, which is exactly what you want.</p>
+        </div>
         <div class="callout examtip"><b>🎯 Which metric when? (classic 4-marker)</b><ul style="margin:4px 0 0;padding-left:18px">
           <li><strong>Spam e-mail blocking → Precision</strong> — a false positive (real mail marked spam) must be minimised.</li>
           <li><strong>Gold mining → Precision</strong> — wrongly labelling a non-gold area as gold wastes everything; FP must fall.</li>
           <li><strong>Viral outbreak detection → Recall</strong> — a false negative (infected person missed) is life-threatening; FN must fall.</li>
           <li><strong>Can't decide which error hurts more → F1-score.</strong></li>
         </ul></div>
+      </article>
+
+      <article class="topic" id="b3-context">
+        <h3><button class="tcheck" data-topic="b3-context" aria-label="Mark topic done">✔</button>3b. Reading FP and FN in Real Contexts <span class="badge-expanded">Added / Expanded</span> <span class="pyq-tag">PYQ 2025</span></h3>
+        <p>The 2025 board paper asked students to describe false positives and false negatives for a <strong>fraudulent-transaction detector</strong>. The same error means different things in different systems — this table is worth memorising.</p>
+        <table class="tb">
+          <tr><th>System</th><th>False Positive means…</th><th>False Negative means…</th><th>Which error hurts more?</th></tr>
+          <tr><td><strong>Fraud detection</strong></td><td>A genuine payment is blocked</td><td>A fraudulent payment goes through</td><td>Usually FN (money lost) — so recall is watched closely, balanced against customer annoyance from FPs</td></tr>
+          <tr><td><strong>Spam filter</strong></td><td>A real e-mail lands in spam</td><td>A spam mail reaches the inbox</td><td>FP — you may miss an important mail → precision</td></tr>
+          <tr><td><strong>Disease screening</strong></td><td>A healthy person is flagged</td><td>A sick person is cleared</td><td>FN — the patient is not treated → recall</td></tr>
+          <tr><td><strong>Fire alarm</strong></td><td>Alarm rings with no fire</td><td>Fire burns with no alarm</td><td>FN — catastrophic; FPs only cause nuisance</td></tr>
+          <tr><td><strong>Gold mining</strong></td><td>Digging where there is no gold</td><td>Missing a gold-bearing site</td><td>FP — wasted cost → precision</td></tr>
+        </table>
+        <div class="callout remember"><b>🧠 The sentence to write in the exam</b>“A false positive is a <em>false alarm</em> — the model says yes when the truth is no. A false negative is a <em>missed case</em> — the model says no when the truth is yes.”</div>
       </article>
 
       <article class="topic" id="b3-worked">
@@ -2582,7 +3130,7 @@ footer a:hover{color:var(--accent)}
     <div class="notes">
 
       <article class="topic" id="b4-intro">
-        <h3><button class="tcheck" data-topic="b4-intro" aria-label="Mark topic done">✔</button>1. What is Computer Vision?</h3>
+        <h3><button class="tcheck" data-topic="b4-intro" aria-label="Mark topic done">✔</button>1. What is Computer Vision? <span class="pyq-tag">PYQ 2025</span></h3>
         <p><strong>Computer Vision (CV) is a field of Artificial Intelligence that helps machines “see” and understand images or videos just like humans do</strong> — it teaches computers to analyse, recognise and make decisions based on visuals. CV uses Machine Learning and Deep Learning to understand visual data. Computer Vision is a part of AI: <em>AI makes machines think, while Computer Vision helps them see and interpret visuals.</em></p>
         <p><strong>Why it matters:</strong> it automates tasks that need human eyes (identifying faces or objects) and powers self-driving cars, facial recognition, healthcare and security systems.</p>
         <h4>Computer Vision vs Image Processing</h4>
@@ -2596,7 +3144,15 @@ footer a:hover{color:var(--accent)}
         <ul>
           <li><strong>Facial recognition</strong> — phones and security systems; e.g., Face ID on iPhones.</li>
           <li><strong>Self-driving cars</strong> — detect roads, people and signs to drive safely; e.g., Tesla's Autopilot.</li>
-          <li><strong>Medical imaging</strong> — analyse X-rays and MRIs to detect diseases; AI finds tumours faster than doctors.</li>
+          <li><strong>Medical imaging</strong> — analyse X-rays, CT scans and MRIs to detect diseases; AI finds tumours faster than doctors. <span class="badge-expanded">Added / Expanded</span>
+            <ul>
+              <li><strong>Earlier detection</strong> — flags small lesions and nodules that are easy to miss in a busy radiology list.</li>
+              <li><strong>Triage</strong> — sorts urgent scans to the top so critical patients are seen first.</li>
+              <li><strong>Measurement and 3-D reconstruction</strong> — measures tumour size or vessel width consistently, and builds 3-D models for surgical planning.</li>
+              <li><strong>Remote diagnosis</strong> — a scan taken in a small town can be screened where no radiologist is available.</li>
+              <li><strong>Limits</strong> — rare conditions may be missed if they were absent from training data, so AI must support, never replace, the doctor (recall the bioethics principles in Unit B1).</li>
+            </ul>
+          </li>
           <li><strong>Retail industry</strong> — track customers and stock with cameras; e.g., Amazon Go cashierless stores.</li>
           <li><strong>Google Translate camera</strong> — translates text in photos using OCR (Optical Character Recognition), e.g., a Chinese menu into English.</li>
         </ul>
@@ -2629,6 +3185,26 @@ footer a:hover{color:var(--accent)}
           <tr><td>Red</td><td>(255, 0, 0)</td></tr>
         </table>
         <p>A pixel with all values 0 in RGB represents <strong>complete darkness</strong>; all 255 is white.</p>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 200" role="img" aria-label="An RGB colour image is three stacked layers — red, green and blue intensity — which combine into one colour pixel">
+          <g text-anchor="middle" font-size="11.5">
+            <rect x="70" y="30" width="120" height="120" rx="8" fill="#ef4444" opacity=".85"/>
+            <text x="130" y="172" fill="currentColor" font-weight="700">RED channel</text>
+            <text x="130" y="188" fill="currentColor" font-size="10.5">0–255</text>
+            <rect x="200" y="45" width="120" height="120" rx="8" fill="#22c55e" opacity=".8"/>
+            <text x="260" y="185" fill="currentColor" font-weight="700">GREEN</text>
+            <rect x="330" y="60" width="120" height="120" rx="8" fill="#3b82f6" opacity=".8"/>
+            <text x="390" y="198" fill="currentColor" font-weight="700">BLUE</text>
+            <text x="520" y="110" font-size="18" fill="currentColor">→</text>
+            <rect x="570" y="55" width="130" height="130" rx="12" fill="#a855f7" stroke="currentColor" stroke-width="1.5"/>
+            <text x="635" y="128" fill="#fff" font-weight="800" font-size="13">(148, 85, 247)</text>
+            <text x="635" y="205" fill="currentColor" font-weight="700">one pixel</text>
+            <text x="800" y="95" fill="currentColor" font-size="10.5">3 channels ×</text>
+            <text x="800" y="112" fill="currentColor" font-size="10.5">8 bits each</text>
+            <text x="800" y="129" fill="currentColor" font-size="10.5">= 24-bit colour</text>
+          </g>
+        </svg>
+        </div>
         <div class="mindmap" style="padding:12px">
         <svg viewBox="0 0 900 230" role="img" aria-label="A zoomed three by three pixel grid showing brightness numbers 0 to 255 next to a colour ramp from black to white">
           <rect x="60" y="35" width="240" height="60" fill="rgba(148,163,205,.15)" stroke="var(--line)"/>
@@ -2671,6 +3247,39 @@ footer a:hover{color:var(--accent)}
           <li><strong>Remove noise</strong></li>
         </ul>
         <p>Example: in CCTV footage, convolution helps sharpen blurry images. Common kernels include edge-detection kernels (like Sobel), blur (box/mean) kernels and sharpen kernels.</p>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 250" role="img" aria-label="A 3 by 3 kernel slides across a 5 by 5 pixel grid; each position produces one number in the output feature map">
+          <g font-size="11" text-anchor="middle">
+            <text x="170" y="28" font-size="12" font-weight="800" fill="currentColor">INPUT IMAGE (pixels)</text>
+            <g>
+              <rect x="60" y="45" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="96" y="45" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="132" y="45" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="168" y="45" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="204" y="45" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/>
+              <rect x="60" y="81" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="96" y="81" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="132" y="81" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="168" y="81" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="204" y="81" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/>
+              <rect x="60" y="117" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="96" y="117" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="132" y="117" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="168" y="117" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="204" y="117" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/>
+              <rect x="60" y="153" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="96" y="153" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="132" y="153" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="168" y="153" width="36" height="36" fill="rgba(251,191,36,.35)" stroke="#fbbf24"/><rect x="204" y="153" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/>
+              <rect x="60" y="189" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="96" y="189" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="132" y="189" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="168" y="189" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/><rect x="204" y="189" width="36" height="36" fill="rgba(148,163,205,.18)" stroke="var(--line)"/>
+            </g>
+            <text x="150" y="243" font-size="10.5" fill="currentColor">the 3×3 window slides one pixel at a time</text>
+            <text x="380" y="120" font-size="18" fill="currentColor">→</text>
+            <text x="380" y="140" font-size="10" fill="currentColor">kernel</text>
+            <rect x="430" y="45" width="90" height="90" rx="8" fill="rgba(168,85,247,.15)" stroke="#a855f7" stroke-width="2"/>
+            <g font-size="12" font-weight="700" fill="currentColor">
+              <text x="460" y="70">1</text><text x="490" y="70">0</text><text x="520" y="70">-1</text>
+              <text x="460" y="95">2</text><text x="490" y="95">0</text><text x="520" y="95">-2</text>
+              <text x="460" y="120">1</text><text x="490" y="120">0</text><text x="520" y="120">-1</text>
+            </g>
+            <text x="475" y="155" font-size="10.5" fill="currentColor">edge-detection kernel</text>
+            <text x="590" y="120" font-size="18" fill="currentColor">→</text>
+            <text x="720" y="28" font-size="12" font-weight="800" fill="currentColor">FEATURE MAP</text>
+            <g>
+              <rect x="660" y="45" width="36" height="36" fill="rgba(52,211,153,.3)" stroke="#34d399"/><rect x="696" y="45" width="36" height="36" fill="rgba(52,211,153,.18)" stroke="#34d399"/><rect x="732" y="45" width="36" height="36" fill="rgba(52,211,153,.18)" stroke="#34d399"/>
+              <rect x="660" y="81" width="36" height="36" fill="rgba(52,211,153,.18)" stroke="#34d399"/><rect x="696" y="81" width="36" height="36" fill="rgba(52,211,153,.18)" stroke="#34d399"/><rect x="732" y="81" width="36" height="36" fill="rgba(52,211,153,.18)" stroke="#34d399"/>
+              <rect x="660" y="117" width="36" height="36" fill="rgba(52,211,153,.18)" stroke="#34d399"/><rect x="696" y="117" width="36" height="36" fill="rgba(52,211,153,.18)" stroke="#34d399"/><rect x="732" y="117" width="36" height="36" fill="rgba(52,211,153,.18)" stroke="#34d399"/>
+            </g>
+            <text x="714" y="180" font-size="10.5" fill="currentColor">one number per window position</text>
+            <text x="714" y="198" font-size="10.5" fill="currentColor">(sum of pixel × kernel)</text>
+          </g>
+        </svg>
+        </div>
         <div class="callout remember"><b>🧠 Kernel = the small matrix · Convolution = the sliding-and-combining operation</b>The kernel's numbers decide the effect: an edge kernel makes boundaries pop; a blur kernel averages neighbours, softening the image.</div>
       </article>
 
@@ -2884,6 +3493,45 @@ footer a:hover{color:var(--accent)}
         <div class="callout remember"><b>🧠 Syntax vs Semantics</b><strong>Syntax</strong> = the grammatical structure of a sentence. <strong>Semantics</strong> = the meaning of the sentence.</div>
       </article>
 
+      <article class="topic" id="b5-langdiff">
+        <h3><button class="tcheck" data-topic="b5-langdiff" aria-label="Mark topic done">✔</button>1b. Human Language vs Computer Language <span class="badge-expanded">Added / Expanded</span> <span class="pyq-tag">PYQ 2025</span></h3>
+        <p>The 2025 board paper asked: <em>“What is the primary difference between Human Language and Computer Language?”</em> This comparison is the foundation of the whole unit.</p>
+        <table class="tb">
+          <tr><th></th><th>Human language (natural)</th><th>Computer language (formal)</th></tr>
+          <tr><td><strong>Origin</strong></td><td>Evolved naturally over centuries</td><td>Designed by people (Python, C++, Java)</td></tr>
+          <tr><td><strong>Grammar</strong></td><td>Flexible; rules bend with usage and slang</td><td>Fixed and strict — one missing colon is an error</td></tr>
+          <tr><td><strong>Meaning</strong></td><td>Ambiguous, depends on context and tone (“bank”, “cool”, sarcasm)</td><td>Unambiguous — every statement has exactly one meaning</td></tr>
+          <tr><td><strong>Learning</strong></td><td>Absorbed informally from family and surroundings</td><td>Learned formally, with a compiler checking you</td></tr>
+          <tr><td><strong>Change</strong></td><td>New words every year</td><td>Changes only through new versions of the language</td></tr>
+          <tr><td><strong>Errors</strong></td><td>A listener can still understand a broken sentence</td><td>A machine stops at the first syntax error</td></tr>
+          <tr><td><strong>Why it matters</strong></td><td colspan="2">Because human language is ambiguous, a computer cannot simply “read” it — it needs <strong>NLP</strong> to normalise, parse and interpret it.</td></tr>
+        </table>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 210" role="img" aria-label="Human language is ambiguous and context dependent, computer language is exact and literal, and NLP bridges the two">
+          <defs><marker id="arrLang" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#22d3ee"/></marker></defs>
+          <g text-anchor="middle" font-size="12">
+            <rect x="20" y="45" width="270" height="120" rx="16" fill="rgba(168,85,247,.15)" stroke="#a855f7" stroke-width="2"/>
+            <text x="155" y="72" font-weight="800" font-size="13.5" fill="currentColor">HUMAN LANGUAGE</text>
+            <text x="155" y="96" fill="currentColor">“It’s cool.” → temperature? style?</text>
+            <text x="155" y="116" fill="currentColor">slang · tone · context · emotion</text>
+            <text x="155" y="140" fill="currentColor" font-size="11" font-style="italic">flexible but ambiguous</text>
+            <rect x="610" y="45" width="270" height="120" rx="16" fill="rgba(34,211,238,.13)" stroke="#22d3ee" stroke-width="2"/>
+            <text x="745" y="72" font-weight="800" font-size="13.5" fill="currentColor">COMPUTER LANGUAGE</text>
+            <text x="745" y="96" fill="currentColor">print(“It’s cool”)</text>
+            <text x="745" y="116" fill="currentColor">fixed syntax · one meaning</text>
+            <text x="745" y="140" fill="currentColor" font-size="11" font-style="italic">exact but literal</text>
+            <rect x="345" y="70" width="210" height="70" rx="35" fill="rgba(52,211,153,.16)" stroke="#34d399" stroke-width="2"/>
+            <text x="450" y="100" font-weight="800" font-size="13.5" fill="currentColor">NLP</text>
+            <text x="450" y="120" fill="currentColor" font-size="11">normalise · parse · interpret</text>
+          </g>
+          <g stroke="#22d3ee" stroke-width="2.2" marker-end="url(#arrLang)">
+            <line x1="292" y1="105" x2="341" y2="105"/><line x1="559" y1="105" x2="606" y2="105"/>
+          </g>
+          <text x="450" y="195" text-anchor="middle" font-size="11.5" fill="currentColor">NLP turns messy human text into structured data a model can use</text>
+        </svg>
+        </div>
+      </article>
+
       <article class="topic" id="b5-what">
         <h3><button class="tcheck" data-topic="b5-what" aria-label="Mark topic done">✔</button>2. What is NLP? Applications</h3>
         <p><strong>Natural Language Processing (NLP) is a field that combines computer science, artificial intelligence and language studies.</strong> It helps computers understand, process and create human language in a way that makes sense and is useful.</p>
@@ -2960,7 +3608,7 @@ footer a:hover{color:var(--accent)}
       </article>
 
       <article class="topic" id="b5-bow">
-        <h3><button class="tcheck" data-topic="b5-bow" aria-label="Mark topic done">✔</button>5. Bag of Words (BoW)</h3>
+        <h3><button class="tcheck" data-topic="b5-bow" aria-label="Mark topic done">✔</button>5. Bag of Words (BoW) <span class="pyq-tag">PYQ 2025</span></h3>
         <p><strong>Bag of Words is an NLP model which helps extract features from text so machine learning algorithms can use them.</strong> It treats a document as a collection (“bag”) of words, <strong>ignoring word order and grammar</strong> and focusing on the frequency of each word. Bag of Words gives us two things: <strong>a vocabulary of words for the corpus</strong>, and <strong>the frequency of these words</strong> (how many times each occurred).</p>
         <h4>How it works — a tiny example</h4>
         <p>Corpus: <em>Doc 1: “I love AI” · Doc 2: “AI is fun. I love fun.”</em></p>
@@ -2974,6 +3622,31 @@ footer a:hover{color:var(--accent)}
           <tr><th>Doc 1</th><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
           <tr><th>Doc 2</th><td>1</td><td>2</td><td>1</td><td>1</td><td>1</td></tr>
         </table>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 220" role="img" aria-label="Bag of Words turns documents into a vocabulary and a frequency matrix">
+          <g font-size="11" text-anchor="middle">
+            <text x="130" y="28" font-size="12" font-weight="800" fill="currentColor">DOCUMENTS</text>
+            <rect x="30" y="45" width="200" height="34" rx="7" fill="rgba(34,211,238,.13)" stroke="#22d3ee"/>
+            <text x="130" y="67" fill="currentColor">“I love AI”</text>
+            <rect x="30" y="88" width="200" height="34" rx="7" fill="rgba(34,211,238,.13)" stroke="#22d3ee"/>
+            <text x="130" y="110" fill="currentColor">“AI is fun. I love fun.”</text>
+            <text x="355" y="28" font-size="12" font-weight="800" fill="currentColor">VOCABULARY</text>
+            <text x="355" y="60" fill="currentColor" font-size="12" font-family="monospace">[ai, fun, i, is, love]</text>
+            <text x="355" y="84" fill="currentColor" font-size="10.5">(unique words, lower-cased)</text>
+            <text x="355" y="108" fill="currentColor" font-size="10.5">order is lost — hence “bag”</text>
+            <text x="700" y="28" font-size="12" font-weight="800" fill="currentColor">DOCUMENT VECTORS</text>
+            <g font-size="11" font-family="monospace">
+              <text x="620" y="62" fill="currentColor">ai  fun  i  is  love</text>
+              <text x="620" y="86" fill="currentColor">1   0   1   0   1</text>
+              <text x="620" y="110" fill="currentColor">1   2   1   1   1</text>
+            </g>
+            <text x="700" y="140" fill="currentColor" font-size="10.5">one row per document</text>
+            <text x="700" y="156" fill="currentColor" font-size="10.5">= numbers a model can use</text>
+          </g>
+          <path d="M235,90 L300,90" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrLang)"/>
+          <path d="M470,90 L560,90" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrLang)"/>
+        </svg>
+        </div>
         <p>A corpus with 12 documents produces <strong>12 document vectors</strong> — one per document. (A 0/1 version of the table — 1 if the word occurs, 0 if absent — is also a valid document vector table.)</p>
       </article>
 
@@ -3011,6 +3684,36 @@ footer a:hover{color:var(--accent)}
           <tr><td>Work on small, closed knowledge bases.</td><td>Work on bigger databases and other resources directly.</td></tr>
           <tr><td>Example: an FAQ bot that replies “Office hours are 9–5” whenever it sees “hours”.</td><td>Example: a customer-support bot that understands free-form questions and learns from feedback.</td></tr>
         </table>
+        <div class="mindmap" style="padding:12px">
+        <svg viewBox="0 0 900 200" role="img" aria-label="Chatbot pipeline: user message, language understanding, intent and database lookup, response generation, reply to user">
+          <defs><marker id="arrBot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a855f7"/></marker></defs>
+          <g font-size="10.8" text-anchor="middle">
+            <rect x="15" y="70" width="130" height="62" rx="10" fill="rgba(34,211,238,.14)" stroke="#22d3ee" stroke-width="2"/>
+            <text x="80" y="95" font-weight="800" font-size="12" fill="currentColor">USER</text>
+            <text x="80" y="113" fill="currentColor">“Where is my order?”</text>
+            <rect x="180" y="70" width="150" height="62" rx="10" fill="rgba(168,85,247,.15)" stroke="#a855f7" stroke-width="2"/>
+            <text x="255" y="92" font-weight="800" font-size="12" fill="currentColor">NLU</text>
+            <text x="255" y="108" fill="currentColor">tokenise · normalise</text>
+            <text x="255" y="122" fill="currentColor">intent = track_order</text>
+            <rect x="365" y="70" width="160" height="62" rx="10" fill="rgba(168,85,247,.15)" stroke="#a855f7" stroke-width="2"/>
+            <text x="445" y="92" font-weight="800" font-size="12" fill="currentColor">DIALOGUE + DATA</text>
+            <text x="445" y="108" fill="currentColor">slots, order DB,</text>
+            <text x="445" y="122" fill="currentColor">context of earlier turns</text>
+            <rect x="560" y="70" width="150" height="62" rx="10" fill="rgba(168,85,247,.15)" stroke="#a855f7" stroke-width="2"/>
+            <text x="635" y="92" font-weight="800" font-size="12" fill="currentColor">NLG</text>
+            <text x="635" y="108" fill="currentColor">build a reply</text>
+            <text x="635" y="122" fill="currentColor">in natural language</text>
+            <rect x="745" y="70" width="140" height="62" rx="10" fill="rgba(52,211,153,.15)" stroke="#34d399" stroke-width="2"/>
+            <text x="815" y="95" font-weight="800" font-size="12" fill="currentColor">REPLY</text>
+            <text x="815" y="113" fill="currentColor">“Out for delivery”</text>
+          </g>
+          <g stroke="#a855f7" stroke-width="2" marker-end="url(#arrBot)">
+            <line x1="147" y1="101" x2="176" y2="101"/><line x1="332" y1="101" x2="361" y2="101"/>
+            <line x1="527" y1="101" x2="556" y2="101"/><line x1="712" y1="101" x2="741" y2="101"/>
+          </g>
+          <text x="450" y="170" text-anchor="middle" font-size="10.8" fill="currentColor">A script bot skips NLU and jumps straight from keyword → fixed reply; a smart bot runs the whole pipeline.</text>
+        </svg>
+        </div>
         <div class="callout examtip"><b>🎯 Exam tip</b>Correct features of a <strong>smart bot</strong>: flexible and powerful · coding is required to build them · they work on bigger databases and other resources directly — <em>all of the above</em>.</div>
       </article>
     </div>
@@ -3135,7 +3838,7 @@ footer a:hover{color:var(--accent)}
   <header class="unit-hero p">
     <p class="k">Practical File · CBSE AI 417</p>
     <h1>Practicals — Programs & Activities</h1>
-    <p>The no-code Orange Data Mining walkthrough plus all 14 Python programs (Computer Vision, NLP and Advanced Python) with complete, runnable code. In the printed support material most programs appear as screenshots — here every program is written out in full.</p>
+    <p>The no-code Orange Data Mining walkthrough plus all 34 Python programs (Computer Vision, NLP, Advanced Python and 20 core-Python programs) with complete, runnable code and their outputs. In the printed support material most programs appear as screenshots — here every program is written out in full.</p>
     <div class="unit-actions">
       <button class="btn btn-done" data-unit="practicals">✔ Mark section as done</button>
       <button class="btn btn-tool" onclick="window.print()">🖨 Print as notes</button>
@@ -3475,7 +4178,452 @@ plt.show()</code></pre>
       <p class="concept"><strong>Concept covered:</strong> <code class="inline">plt.bar()</code> takes category labels and heights — a bar graph compares quantities across categories.</p>
     </div>
 
-    <h2 class="sec-title">⚡ Quick Revision — Practical Viva Notes</h2>
+<h2 class="sec-title">🐍 Practical 5 — 20 Core Python Programs (Set 2)</h2>
+    <div class="pr-item" style="border-top-color:#22d3ee">
+    <h3>About this set</h3>
+    <p>These twenty programs come from the class program sheet. They revise the Python you need for the AI practical: input/output, conditions, loops, strings, lists, tuples, plotting and NumPy. Every program is written out in full, with the exact console output of a sample run (and a sketch of the chart where the program draws one).</p>
+    <p class="concept"><strong>Marks tip:</strong> in the practical exam you are marked for the objective, correct syntax, the output and your explanation. Type each program yourself once — reading code is not the same as writing it.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 1 — Add, subtract, multiply and divide two numbers</h3>
+    <p>Read two integers and print their sum, difference, product and quotient — with a guard against division by zero.</p>
+    <pre class="code"><code>num1 = int(input("Enter first number: "))
+num2 = int(input("Enter second number: "))
+
+print("Sum:", num1 + num2)
+print("Difference:", num1 - num2)
+print("Product:", num1 * num2)
+
+if num2 != 0:
+    print("Quotient:", num1 / num2)
+else:
+    print("Quotient: Cannot divide by zero.")</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Enter first number: 10
+Enter second number: 4
+Sum: 14
+Difference: 6
+Product: 40
+Quotient: 2.5</div></div>
+    <p class="concept"><strong>Why it matters:</strong> The <code class="inline">if</code> guard is what examiners look for: dividing by zero raises a <code class="inline">ZeroDivisionError</code> and crashes the program.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 2 — Check whether a number is even or odd</h3>
+    <p>Use the modulus operator to test divisibility by 2.</p>
+    <pre class="code"><code>num = int(input("Enter a number: "))
+
+if num % 2 == 0:
+    print(f"{num} is an Even number.")
+else:
+    print(f"{num} is an Odd number.")</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Enter a number: 17
+17 is an Odd number.</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">num % 2</code> gives the remainder. Remainder 0 → even, 1 → odd. Works for negative numbers too in Python.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 3 — Check whether a year is a leap year</h3>
+    <p>A year is a leap year if it is divisible by 4 but not by 100 — unless it is also divisible by 400.</p>
+    <pre class="code"><code>year = int(input("Enter a year: "))
+
+if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+    print(f"{year} is a Leap Year.")
+else:
+    print(f"{year} is not a Leap Year.")</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Enter a year: 2024
+2024 is a Leap Year.
+
+Enter a year: 1900
+1900 is not a Leap Year.</div></div>
+    <p class="concept"><strong>Why it matters:</strong> 1900 is divisible by 4 <em>and</em> by 100 but not by 400 — so it is <strong>not</strong> a leap year. 2000 is. This is the trap in the question.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 4 — Display the multiplication table of a number</h3>
+    <p>Use a <code class="inline">for</code> loop with <code class="inline">range(1, 11)</code>.</p>
+    <pre class="code"><code>num = int(input("Enter a number to display its multiplication table: "))
+
+for i in range(1, 11):
+    result = num * i
+    print(f"{num} x {i} = {result}")</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Enter a number: 7
+7 x 1 = 7
+7 x 2 = 14
+7 x 3 = 21
+7 x 4 = 28
+7 x 5 = 35
+7 x 6 = 42
+7 x 7 = 49
+7 x 8 = 56
+7 x 9 = 63
+7 x 10 = 70</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">range(1, 11)</code> stops at 10 — the upper limit is excluded.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 5 — Find the factorial of a number using a loop</h3>
+    <p>Multiply 1 × 2 × 3 … × n, handling negatives and zero.</p>
+    <pre class="code"><code>num = int(input("Enter a number: "))
+
+if num &lt; 0:
+    print("Factorial does not exist for negative numbers.")
+elif num == 0:
+    print("The factorial of 0 is 1.")
+else:
+    factorial = 1
+    i = 1
+    while i &lt;= num:
+        factorial = factorial * i
+        i = i + 1
+    print(f"The factorial of {num} is {factorial}")</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Enter a number: 5
+The factorial of 5 is 120</div></div>
+    <p class="concept"><strong>Why it matters:</strong> By definition 0! = 1, and factorial is undefined for negative integers — both cases must be handled explicitly.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 6 — Count vowels and consonants in a string</h3>
+    <p>Check every character; count only alphabets.</p>
+    <pre class="code"><code>text = input("Enter a string: ")
+vowels = "aeiouAEIOU"
+vowel_count = 0
+consonant_count = 0
+
+for char in text:
+    if char.isalpha():          # ignore spaces, digits, punctuation
+        if char in vowels:
+            vowel_count += 1
+        else:
+            consonant_count += 1
+
+print(f"Number of Vowels: {vowel_count}")
+print(f"Number of Consonants: {consonant_count}")</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Enter a string: Hello World
+Number of Vowels: 3
+Number of Consonants: 7</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">isalpha()</code> is essential — without it the space would be counted as a consonant.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 7 — Check whether a string is a palindrome</h3>
+    <p>A palindrome reads the same forwards and backwards.</p>
+    <pre class="code"><code>text = input("Enter a string: ")
+
+cleaned_text = text.lower()
+reversed_text = cleaned_text[::-1]
+
+if cleaned_text == reversed_text:
+    print(f"'{text}' is a Palindrome.")
+else:
+    print(f"'{text}' is not a Palindrome.")</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Enter a string: Madam
+'Madam' is a Palindrome.</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">[::-1]</code> is the Python slice that reverses a string. Converting to lower case first makes the check case-insensitive.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 8 — Find the sum of all elements in a list</h3>
+    <p>Accumulate a running total in a loop.</p>
+    <pre class="code"><code>numbers = [10, 20, 30, 40, 50]
+
+total_sum = 0
+for num in numbers:
+    total_sum += num
+
+print(f"The list is: {numbers}")
+print(f"The sum of all elements in the list is: {total_sum}")</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">The list is: [10, 20, 30, 40, 50]
+The sum of all elements in the list is: 150</div></div>
+    <p class="concept"><strong>Why it matters:</strong> You may also use the built-in <code class="inline">sum(numbers)</code> — but write the loop in the exam to show the logic.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 9 — Calculate simple and compound interest</h3>
+    <p>SI = P×R×T/100; CI = P(1+R/100)^T − P.</p>
+    <pre class="code"><code>p = float(input("Enter principal: "))
+r = float(input("Enter rate of interest: "))
+t = float(input("Enter time in years: "))
+
+si = (p * r * t) / 100
+ci = p * ((1 + r / 100) ** t) - p
+
+print("Simple Interest:", si)
+print("Compound Interest:", ci)</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Enter principal: 10000
+Enter rate of interest: 5
+Enter time in years: 2
+Simple Interest: 1000.0
+Compound Interest: 1025.0</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">**</code> is the power operator. CI is always ≥ SI for the same rate and time, because interest earns interest.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 10 — Separate even and odd numbers into two lists</h3>
+    <p>Append to two lists while looping.</p>
+    <pre class="code"><code>numbers = [12, 7, 22, 15, 3, 18, 40, 9]
+
+even_numbers = []
+odd_numbers = []
+
+for num in numbers:
+    if num % 2 == 0:
+        even_numbers.append(num)
+    else:
+        odd_numbers.append(num)
+
+print("Original List:", numbers)
+print("Even Numbers:", even_numbers)
+print("Odd Numbers:", odd_numbers)</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Original List: [12, 7, 22, 15, 3, 18, 40, 9]
+Even Numbers: [12, 22, 18, 40]
+Odd Numbers: [7, 15, 3, 9]</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">append()</code> adds to the end of a list. The original order is preserved inside each new list.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 11 — Draw a simple line plot</h3>
+    <p>Plot five points with Matplotlib.</p>
+    <pre class="code"><code>import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+plt.plot(x, y)
+plt.title("Simple Line Plot")
+plt.xlabel("X Axis")
+plt.ylabel("Y Axis")
+plt.show()</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="chart-out"><svg viewBox="0 0 320 190" role="img" aria-label="Line plot of x from 1 to 5 against y from 2 to 10"><rect x="38" y="20" width="262" height="140" fill="none" stroke="#94a3b8" stroke-width="1" opacity=".5"/><polyline points="50,130 102,110 154,90 206,70 258,50" fill="none" stroke="#22d3ee" stroke-width="2.4"/><circle cx="50" cy="130" r="3.5" fill="#22d3ee"/><circle cx="102" cy="110" r="3.5" fill="#22d3ee"/><circle cx="154" cy="90" r="3.5" fill="#22d3ee"/><circle cx="206" cy="70" r="3.5" fill="#22d3ee"/><circle cx="258" cy="50" r="3.5" fill="#22d3ee"/><text x="170" y="182" text-anchor="middle" font-size="10" fill="currentColor">X Axis</text><text x="16" y="90" font-size="10" fill="currentColor" transform="rotate(-90 16 90)">Y Axis</text></svg></div>
+    <div class="output-box">A window opens showing a straight line rising from (1, 2) to (5, 10).</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">plt.plot()</code> joins the points with a line. <code class="inline">title</code>, <code class="inline">xlabel</code> and <code class="inline">ylabel</code> are what earn the presentation marks.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 12 — Plot marks across ten unit tests</h3>
+    <p>A line graph with markers for a student's ten test scores.</p>
+    <pre class="code"><code>import matplotlib.pyplot as plt
+
+Marks = [75, 82, 78, 85, 88, 84, 91, 89, 95, 93]
+tests = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+plt.plot(tests, Marks, marker="o")
+plt.title("Student Performance Across Unit Tests")
+plt.xlabel("Unit Test Number")
+plt.ylabel("Marks Scored")
+plt.show()</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="chart-out"><svg viewBox="0 0 340 190" role="img" aria-label="Line graph of marks across ten unit tests, rising from 75 to 95"><rect x="40" y="20" width="282" height="130" fill="none" stroke="#94a3b8" opacity=".5"/><polyline points="44,130 71,102 98,118 125,90 152,78 179,94 206,66 233,74 260,50 287,58" fill="none" stroke="#34d399" stroke-width="2.4"/><circle cx="44" cy="130" r="3" fill="#34d399"/><circle cx="71" cy="102" r="3" fill="#34d399"/><circle cx="98" cy="118" r="3" fill="#34d399"/><circle cx="125" cy="90" r="3" fill="#34d399"/><circle cx="152" cy="78" r="3" fill="#34d399"/><circle cx="179" cy="94" r="3" fill="#34d399"/><circle cx="206" cy="66" r="3" fill="#34d399"/><circle cx="233" cy="74" r="3" fill="#34d399"/><circle cx="260" cy="50" r="3" fill="#34d399"/><circle cx="287" cy="58" r="3" fill="#34d399"/><text x="180" y="182" text-anchor="middle" font-size="10" fill="currentColor">Unit Test Number (1–10)</text><text x="16" y="90" font-size="10" fill="currentColor" transform="rotate(-90 16 90)">Marks</text></svg></div>
+    <div class="output-box">A line graph rising overall from 75 in test 1 to 95 in test 9, with a small dip at test 3.</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">marker="o"</code> draws a dot at every test so individual scores are readable.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 13 — Plot a vertical bar chart</h3>
+    <p>Compare marks across four subjects.</p>
+    <pre class="code"><code>import matplotlib.pyplot as plt
+
+Sub = ["SST", "PHYSICS", "CHEMISTRY", "MATHS"]
+Marks = [60, 45, 50, 49]
+
+plt.bar(Sub, Marks, color="skyblue", edgecolor="black")
+plt.title("Student Marks by Subject")
+plt.xlabel("Subjects")
+plt.ylabel("Marks Scored")
+plt.show()</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="chart-out"><svg viewBox="0 0 340 195" role="img" aria-label="Vertical bar chart of marks: SST 60, Physics 45, Chemistry 50, Maths 49"><rect x="45" y="20" width="270" height="140" fill="none" stroke="#94a3b8" opacity=".5"/><rect x="62" y="46.0" width="42" height="114.0" fill="rgba(34,211,238,.55)" stroke="#22d3ee"/><text x="83" y="41.0" text-anchor="middle" font-size="9.5" fill="currentColor">60</text><text x="83" y="176" text-anchor="middle" font-size="9.5" fill="currentColor">SST</text><rect x="124" y="74.5" width="42" height="85.5" fill="rgba(34,211,238,.55)" stroke="#22d3ee"/><text x="145" y="69.5" text-anchor="middle" font-size="9.5" fill="currentColor">45</text><text x="145" y="176" text-anchor="middle" font-size="9.5" fill="currentColor">PHY</text><rect x="186" y="65.0" width="42" height="95.0" fill="rgba(34,211,238,.55)" stroke="#22d3ee"/><text x="207" y="60.0" text-anchor="middle" font-size="9.5" fill="currentColor">50</text><text x="207" y="176" text-anchor="middle" font-size="9.5" fill="currentColor">CHEM</text><rect x="248" y="66.9" width="42" height="93.1" fill="rgba(34,211,238,.55)" stroke="#22d3ee"/><text x="269" y="61.900000000000006" text-anchor="middle" font-size="9.5" fill="currentColor">49</text><text x="269" y="176" text-anchor="middle" font-size="9.5" fill="currentColor">MATH</text><text x="180" y="190" text-anchor="middle" font-size="10" fill="currentColor">Subjects</text></svg></div>
+    <div class="output-box">Four bars of height 60, 45, 50 and 49 labelled SST, PHYSICS, CHEMISTRY, MATHS.</div></div>
+    <p class="concept"><strong>Why it matters:</strong> Use a <strong>bar chart</strong> for comparing categories, and a <strong>line chart</strong> only when the x-axis is a sequence (time, tests).</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 14 — Plot a scatter chart of hours studied vs marks</h3>
+    <p>Show the relationship between two numeric variables.</p>
+    <pre class="code"><code>import matplotlib.pyplot as plt
+
+Hours = [2, 3, 4, 5, 6, 7]
+Marks = [50, 55, 60, 65, 70, 75]
+
+plt.scatter(Hours, Marks, color="red", marker="o")
+plt.title("Relationship Between Hours Studied and Marks Obtained")
+plt.xlabel("Hours Studied")
+plt.ylabel("Marks Obtained")
+plt.show()</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="chart-out"><svg viewBox="0 0 340 190" role="img" aria-label="Scatter plot showing hours studied against marks, a rising trend"><rect x="45" y="20" width="270" height="140" fill="none" stroke="#94a3b8" opacity=".5"/><circle cx="55" cy="80.0" r="4.5" fill="#fb7185"/><circle cx="97" cy="72.0" r="4.5" fill="#fb7185"/><circle cx="139" cy="64.0" r="4.5" fill="#fb7185"/><circle cx="181" cy="56.0" r="4.5" fill="#fb7185"/><circle cx="223" cy="48.0" r="4.5" fill="#fb7185"/><circle cx="265" cy="40.0" r="4.5" fill="#fb7185"/><text x="180" y="182" text-anchor="middle" font-size="10" fill="currentColor">Hours Studied</text><text x="16" y="90" font-size="10" fill="currentColor" transform="rotate(-90 16 90)">Marks</text></svg></div>
+    <div class="output-box">Six points lying on a rising straight trend: 2h→50, 3h→55, 4h→60, 5h→65, 6h→70, 7h→75.</div></div>
+    <p class="concept"><strong>Why it matters:</strong> A scatter plot is the right chart for correlation — here the points rise together, showing positive correlation between study hours and marks.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 15 — List indexing and slicing</h3>
+    <p>Access an element, use negative indexing, and slice a range.</p>
+    <pre class="code"><code>Mylist = [34, 53, 14, 64, 37, 25, 18]
+
+print("Element at index 4:", Mylist[4])
+print("Second last element:", Mylist[-2])
+print("Sliced list (index 2 to 5):", Mylist[2:5])</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Element at index 4: 37
+Second last element: 25
+Sliced list (index 2 to 5): [14, 64, 37]</div></div>
+    <p class="concept"><strong>Why it matters:</strong> Indexing starts at 0, so index 4 is the fifth item. <code class="inline">-1</code> is the last item, <code class="inline">-2</code> the second last. A slice <code class="inline">[2:5]</code> includes 2 but <strong>excludes</strong> 5.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 16 — List operations: max, min, sort, insert</h3>
+    <p>Run four operations on one list.</p>
+    <pre class="code"><code>List1 = [122, 33, 144, 55, 66, 77]
+
+print("1. Original list:", List1)
+
+max_val = max(List1)
+min_val = min(List1)
+print("2. Maximum value:", max_val)
+print("   Minimum value:", min_val)
+
+List1.sort(reverse=True)
+print("3. Sorted list (descending):", List1)
+
+List1.insert(2, 500)
+print("4. List after inserting 500 at index 2:", List1)</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">1. Original list: [122, 33, 144, 55, 66, 77]
+2. Maximum value: 144
+   Minimum value: 33
+3. Sorted list (descending): [144, 122, 77, 66, 55, 33]
+4. List after inserting 500 at index 2: [144, 122, 500, 77, 66, 55, 33]</div></div>
+    <p class="concept"><strong>Why it matters:</strong> <code class="inline">sort()</code> changes the list itself and returns <code class="inline">None</code>; <code class="inline">sorted()</code> returns a new list. <code class="inline">insert(2, 500)</code> places 500 <em>before</em> the item currently at index 2.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 17 — Convert an image to grayscale with OpenCV</h3>
+    <p>Read an image, convert it, show both windows and save the result.</p>
+    <pre class="code"><code>import cv2
+
+image_path = "f1.jpg"
+img = cv2.imread(image_path)
+
+# Always check that the image actually loaded
+if img is None:
+    print(f"Error: Could not open or find '{image_path}'. Check the file path.")
+else:
+    # Convert BGR (colour) to grayscale
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    cv2.imshow("Original Image", img)
+    cv2.imshow("Grayscale Image", gray_img)
+
+    # Optional: save the grayscale image
+    cv2.imwrite("grayscale_output.jpg", gray_img)
+    print("Grayscale image saved as grayscale_output.jpg")
+
+    print("Press any key while the image window is focused to close.")
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Grayscale image saved as grayscale_output.jpg
+Press any key while the image window is focused to close.
+
+(Two windows open: the colour image and its grayscale version.)</div></div>
+    <p class="concept"><strong>Why it matters:</strong> Two marks are usually lost here: not checking <code class="inline">img is None</code> (a wrong path crashes later), and showing the <em>original</em> array after converting it. Keep the original and the converted image in separate variables.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 18 — Tuple access and slicing</h3>
+    <p>Access one value and a range from a tuple.</p>
+    <pre class="code"><code>Tup = (525, 240, 350, 485, 210, 120, 640)
+
+# 1. Access the value 350 (it is at index 2)
+val = Tup[2]
+print("1. Accessed value:", val)
+
+# 2. Access values from index 1 to index 4
+sliced_values = Tup[1:5]
+print("2. Values from index 1 to index 4:", sliced_values)</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">1. Accessed value: 350
+2. Values from index 1 to index 4: (240, 350, 485, 210)</div></div>
+    <p class="concept"><strong>Why it matters:</strong> A slice returns a <strong>tuple</strong>, not a list — note the round brackets in the output.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 19 — Tuple length, largest, smallest, count</h3>
+    <p>Basic tuple statistics.</p>
+    <pre class="code"><code>Tuple1 = (34, 45, 26, 41, 78, 67)
+
+tuple_length = len(Tuple1)
+print("1. Length of the tuple:", tuple_length)
+
+largest_val = max(Tuple1)
+print("2. Largest value:", largest_val)
+
+smallest_val = min(Tuple1)
+print("3. Smallest value:", smallest_val)
+
+item_count = len(Tuple1)
+print("4. Number of items in the tuple:", item_count)</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">1. Length of the tuple: 6
+2. Largest value: 78
+3. Smallest value: 26
+4. Number of items in the tuple: 6</div></div>
+    <p class="concept"><strong>Why it matters:</strong> Tuples are <strong>immutable</strong> — you can read and count items but cannot add, remove or change them.</p>
+    </div>
+    <div class="pr-item prog">
+    <h3>Program 20 — NumPy operations on a 3×3 matrix</h3>
+    <p>Add, multiply, divide and square every element — vectorised, without loops.</p>
+    <pre class="code"><code>import numpy as np
+
+# Create the original 3x3 matrix
+matrix = np.array([[10, 20, 30],
+                   [40, 50, 60],
+                   [70, 80, 90]])
+
+print("Original Array:")
+print(matrix)
+print("-" * 30)
+
+add_result = matrix + 8
+print("1. After adding 8 to each element:")
+print(add_result)
+print("-" * 30)
+
+multiply_result = matrix * 2
+print("2. After multiplying each element by 2:")
+print(multiply_result)
+print("-" * 30)
+
+divide_result = matrix / 5
+print("3. After dividing each element by 5:")
+print(divide_result)
+print("-" * 30)
+
+square_result = matrix ** 2
+print("4. After squaring each element:")
+print(square_result)</code></pre>
+    <div class="out"><span class="ol">Output</span>
+    <div class="output-box">Original Array:
+[[10 20 30]
+ [40 50 60]
+ [70 80 90]]
+------------------------------
+1. After adding 8 to each element:
+[[18 28 38]
+ [48 58 68]
+ [78 88 98]]
+------------------------------
+2. After multiplying each element by 2:
+[[ 20  40  60]
+ [ 80 100 120]
+ [140 160 180]]
+------------------------------
+3. After dividing each element by 5:
+[[ 2.  4.  6.]
+ [ 8. 10. 12.]
+ [14. 16. 18.]]
+------------------------------
+4. After squaring each element:
+[[ 100  400  900]
+ [1600 2500 3600]
+ [4900 6400 8100]]</div></div>
+    <p class="concept"><strong>Why it matters:</strong> The operation applies to <strong>every element at once</strong> — this is called vectorisation, and it is why NumPy is faster than a Python loop. Division produces floats, so the decimals appear.</p>
+    </div>
+
+        <h2 class="sec-title">⚡ Quick Revision — Practical Viva Notes</h2>
     <aside class="revision">
       <ul>
         <li>Orange workflow: <strong>File → Data Table → Linear Regression → Test & Score → Predictions</strong>.</li>
@@ -3485,12 +4633,256 @@ plt.show()</code></pre>
         <li>CountVectorizer = <strong>Bag of Words</strong>: vocabulary list + frequency matrix.</li>
         <li>Statistics: <code class="inline">np.mean / np.median</code>, <code class="inline">stats.mode</code>.</li>
         <li>Pandas: <code class="inline">read_csv → head(10) · info() · describe()</code>.</li>
-        <li>Matplotlib: <code class="inline">plot</code> (line), <code class="inline">scatter</code> (points), <code class="inline">pie</code> (with autopct %), <code class="inline">bar</code> (categories).</li>
+        <li>Matplotlib: <code class="inline">plot</code> (line), <code class="inline">scatter</code> (points), <code class="inline">pie</code> (with autopct %), <code class="inline">bar</code> (categories).</li><li>Set 2 essentials: <code class="inline">%</code> for even/odd, <code class="inline">range(1,11)</code> for tables, <code class="inline">[::-1]</code> to reverse, <code class="inline">[2:5]</code> slices exclude the end index, tuples are immutable, and NumPy applies arithmetic to every element at once.</li>
       </ul>
     </aside>
   </div>
   <nav class="unit-pager" aria-label="Section navigation"><a data-nav="b5">← Unit 5: NLP</a><a data-nav="quiz">Quiz Mode →</a></nav>
 </section>
+<!-- ==================== BOARD PYQ BANK ==================== -->
+<section class="view" id="view-pyq" hidden>
+  <nav class="crumbs" aria-label="Breadcrumb"><a data-nav="home">Home</a> / Board PYQ Bank</nav>
+  <header class="unit-hero p" style="background:linear-gradient(135deg,#b45309,#f59e0b)">
+    <p class="k">Exam Prep · Verified Sources</p>
+    <h1>Board PYQ Bank — CBSE Class 10 AI (417)</h1>
+    <p>Real questions from the <strong>CBSE Board Examination 2025</strong> (Q.P. Code 104, Set 4), the <strong>CBSE Board Examination 2024</strong> and the <strong>official CBSE Sample Question Paper</strong> — each with its marks, a model answer and the unit it tests.</p>
+    <div class="unit-actions">
+      <button class="btn btn-done" data-unit="pyq">✔ Mark section as done</button>
+      <button class="btn btn-tool" onclick="window.print()">🖨 Print as notes</button>
+    </div>
+  </header>
+  <div class="unit-content">
+    <div class="callout remember" style="margin-top:20px"><b>📌 How to use this bank</b>Questions are quoted as printed in the papers (typos corrected). Answers follow the CBSE marking scheme where one is published; otherwise they are model answers written to the same value points. Read the question, write your answer, <em>then</em> open the answer. Every card links to the notes that cover it.</div>
+
+    <div class="year-strip">📄 CBSE Board Examination 2025 · Q.P. Code 104, Set 4</div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">2 marks</span><span>Unit B1</span></div>
+      <p><strong>Q11.</strong> Differentiate between Computer Vision (CV) and Natural Language Processing (NLP).</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <table class="tb">
+          <tr><th>Computer Vision</th><th>Natural Language Processing</th></tr>
+          <tr><td>Branch of AI that lets a machine <em>acquire and analyse visual information</em> and predict decisions about it.</td><td>Branch of AI that deals with the <em>spoken and written interaction</em> between computers and humans using natural language.</td></tr>
+          <tr><td>Input: photographs, videos, thermal/infrared images.</td><td>Input: text and speech — chat messages, microphones, social media.</td></tr>
+          <tr><td>Process: image acquiring, screening, analysing, identifying, extracting information.</td><td>Process: reading, deciphering, understanding and making sense of human language.</td></tr>
+          <tr><td>Example: face recognition, self-driving cars.</td><td>Example: chatbots, machine translation, sentiment analysis.</td></tr>
+        </table>
+        <p><a data-nav="b1" style="cursor:pointer">→ Study: AI domains (Unit B1)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">2 marks</span><span>Unit B1</span></div>
+      <p><strong>Q12.</strong> Define the following with respect to the AI project cycle: (i) Data Exploration (ii) Data Features.</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p><strong>(i) Data Exploration:</strong> the stage in which the acquired data is arranged uniformly and given a visual form — graphs, databases, flow charts and maps — so that the patterns the data follows can be interpreted. It simplifies complex data and reveals trends, outliers and relationships before modelling.</p>
+        <p><strong>(ii) Data Features:</strong> the individual measurable properties or characteristics of a dataset — the <em>columns</em> of a data table (e.g., engine, CC, cost of a car) that are used as inputs to predict the label. Good features are relevant, structured and authentic.</p>
+        <p><a data-nav="b1" style="cursor:pointer">→ Study: Data exploration & features (Unit B1)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">2 marks</span><span>Unit B1</span></div>
+      <p><strong>Q13.</strong> One of the applications of Data Science is Airline Route Planning. List any two tasks that airline companies can do using Data Science.</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p>Any two of: <strong>demand forecasting</strong> (predict how many seats will sell on a route and when); <strong>dynamic ticket pricing</strong>; <strong>route and network optimisation</strong> (which city pairs to fly and when); <strong>crew and aircraft scheduling</strong>; <strong>fuel-efficiency analysis</strong>; <strong>predictive maintenance</strong> of aircraft; analysing customer feedback to improve service.</p>
+        <p><a data-nav="b1" style="cursor:pointer">→ Study: Statistical Data / Data Science domain (Unit B1)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">2 marks</span><span>Unit B4</span></div>
+      <p><strong>Q14.</strong> Give any two key impacts of Computer Vision on medical imaging.</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p>Any two: <strong>earlier and faster detection</strong> — AI scans X-rays, CTs and MRIs and flags tumours or lesions that the eye may miss; <strong>triage and workload reduction</strong> — routine scans are sorted so radiologists focus on urgent cases; <strong>precise measurement and 3-D reconstruction</strong> for surgical planning; <strong>remote diagnosis</strong> — specialists can review images from another city; <strong>consistency</strong> — the same standard applied to every scan.</p>
+        <p><a data-nav="b4" style="cursor:pointer">→ Study: CV applications (Unit B4)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">2 marks</span><span>Unit B5</span></div>
+      <p><strong>Q15.</strong> What is the primary difference between Human Language and Computer Language?</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p><strong>Human language is natural</strong> — it evolved on its own, is flexible and ambiguous (one word can carry many meanings, meaning depends on context), and is learnt informally. <strong>Computer language is artificial/formal</strong> — it is designed by people, has a fixed, unambiguous grammar and vocabulary, and must be written exactly or the machine rejects it. That ambiguity of human language is exactly why machines need NLP.</p>
+        <p><a data-nav="b5" style="cursor:pointer">→ Study: Human vs computer language (Unit B5)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">2 marks</span><span>Unit B3</span></div>
+      <p><strong>Q16.</strong> Suppose you are developing an AI model to detect fraudulent financial transaction risk. Describe False Positives and False Negatives in this context.</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p><strong>False Positive:</strong> the model flags a <em>genuine</em> transaction as fraud. The customer's payment is blocked — embarrassment, failed purchase and a support call. Here precision matters, because too many false alarms destroy trust.</p>
+        <p><strong>False Negative:</strong> the model lets a <em>fraudulent</em> transaction through as genuine. Money is lost and may never be recovered. Here recall matters, because a missed fraud is far more costly than a blocked card.</p>
+        <p><a data-nav="b3" style="cursor:pointer">→ Study: FP/FN in context (Unit B3)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">4 marks</span><span>Unit B1</span></div>
+      <p><strong>Q17.</strong> What do you understand by AI Bias and AI Access? Give one example of each to support your answer.</p>
+      <details><summary>Show model answer (CBSE marking scheme)</summary><div class="ar-ans">
+        <p><strong>AI Bias</strong> refers to discrimination in AI systems that leads them to favour certain groups over others, because of the data used to train the model. It occurs when a system shows prejudiced behaviour or produces inaccurate predictions due to flawed training data, biased algorithms or incomplete representation of reality. A machine has no biases of its own — bias transfers from the developer or the data to the model. <em>Example:</em> a recruitment AI trained on past hiring data that ranked male candidates above equally qualified female candidates.</p>
+        <p><strong>AI Access</strong> refers to the availability of AI technologies, tools and resources to people and organisations. It ensures AI systems reach different communities — particularly marginalised or underserved groups — so the digital divide does not widen. Access can be <em>technical</em> (tools, platforms, infrastructure, computing power) or <em>social</em> (fair use and benefit across sectors). <em>Example:</em> a voice assistant that understands only English and a few global accents excludes users who speak other languages; an AI crop-advisory app that needs a fast smartphone and data pack excludes small farmers with basic phones.</p>
+        <p><a data-nav="b1" style="cursor:pointer">→ Study: AI Bias & AI Access (Unit B1)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">4 marks</span><span>Unit B1</span></div>
+      <p><strong>Q18.</strong> What is the use of the problem statement template with respect to the 4Ws of problem scoping? Draw a problem statement template depicting all key elements.</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p>The 4Ws canvas collects the raw details of a problem (Who is affected, What the problem is, Where it occurs, Why a solution is needed). The <strong>problem statement template summarises all these important points in one place</strong>, converting the four blocks into a single, clear, formal sentence that the whole project can be measured against.</p>
+        <table class="tb">
+          <tr><th colspan="2">Problem Statement Template</th></tr>
+          <tr><td>Our <em>[stakeholders]</em></td><td><strong>Who</strong></td></tr>
+          <tr><td>have a problem that <em>[need]</em></td><td><strong>What</strong></td></tr>
+          <tr><td>when/while <em>[context / location / situation]</em></td><td><strong>Where</strong></td></tr>
+          <tr><td>an ideal solution would be <em>[solution]</em></td><td><strong>Why</strong></td></tr>
+        </table>
+        <p><a data-nav="b1" style="cursor:pointer">→ Study: 4Ws canvas & template (Unit B1)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">4 marks</span><span>Unit B2</span></div>
+      <p><strong>Q19.</strong> Consider the following diagram. It explains how a system of organized machine learning algorithms performs certain tasks. Identify the concept and explain its working. <em>(The diagram shows an input layer, hidden layers and an output layer of connected nodes.)</em></p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p><strong>Concept: Artificial Neural Network (ANN)</strong> — a computing system inspired by the human brain, made of layers of interconnected nodes (“neurons”) that process data and learn patterns.</p>
+        <p><strong>Working:</strong> the <strong>input layer</strong> acquires the data and feeds it forward (no processing). Each node of the <strong>hidden layer(s)</strong> runs its own machine-learning algorithm on the received values, multiplies each input by a <strong>weight</strong>, adds a <strong>bias</strong>, applies an activation function and passes the result to the next layer; these layers perform most of the computation and learn patterns and relationships. The <strong>output layer</strong> receives the final processed values and gives the prediction (for example “cat”), again without processing. During training the network compares its output with the correct answer and adjusts the weights and biases, so accuracy improves over time. It is used where datasets are very large, such as images.</p>
+        <p><a data-nav="b2" style="cursor:pointer">→ Study: Neural networks (Unit B2)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">4 marks</span><span>Unit B5</span></div>
+      <p><strong>Q20.</strong> Consider the following documents: <em>Document 1: “NLP is a domain of AI.” Document 2: “NLP stands for Natural Language Processing.”</em> Implement all four steps of the Bag of Words (BoW) model to create a document vector table.</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p><strong>Step 1 — Tokenise</strong> (and lower-case): D1 → [nlp, is, a, domain, of, ai]; D2 → [nlp, stands, for, natural, language, processing].</p>
+        <p><strong>Step 2 — Build the vocabulary</strong> (all unique words): nlp, is, a, domain, of, ai, stands, for, natural, language, processing.</p>
+        <p><strong>Step 3 — Count frequencies</strong> in each document.</p>
+        <p><strong>Step 4 — Write the document vector table:</strong></p>
+        <table class="tb">
+          <tr><th></th><th>nlp</th><th>is</th><th>a</th><th>domain</th><th>of</th><th>ai</th><th>stands</th><th>for</th><th>natural</th><th>language</th><th>processing</th></tr>
+          <tr><th>D1</th><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><th>D2</th><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+        <p><a data-nav="b5" style="cursor:pointer">→ Study: Bag of Words (Unit B5)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">4 marks</span><span>Unit B3</span></div>
+      <p><strong>Q21.</strong> An AI model was developed to test specimens (blood/urine/cough) to diagnose ailments. It was tested on about 630 tests and the resulting confusion matrix is: Prediction Yes/Reality Yes = 110, Prediction Yes/Reality No = 60, Prediction No/Reality Yes = 50, Prediction No/Reality No = 410. (A) How many total cases are True Negative? (B) Calculate Precision, Recall and F1 Score.</p>
+      <details><summary>Show model answer</summary><div class="ar-ans">
+        <p><strong>(A)</strong> True Negative = <strong>410</strong> (predicted No, reality No).</p>
+        <p><strong>(B)</strong> TP = 110, FP = 60, FN = 50, TN = 410.</p>
+        <p class="formula">Precision = TP/(TP+FP) = 110/170 ≈ <strong>0.647</strong></p>
+        <p class="formula">Recall = TP/(TP+FN) = 110/160 ≈ <strong>0.688</strong></p>
+        <p class="formula">F1 = 2PR/(P+R) = (2 × 0.647 × 0.688)/(0.647 + 0.688) ≈ <strong>0.667</strong></p>
+        <p><a data-nav="b3" style="cursor:pointer">→ Study: Evaluation metrics (Unit B3)</a></p>
+      </div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">1 mark</span><span>Unit A2</span></div>
+      <p><strong>Section A.</strong> Which of the following does not help in stress management? (A) Healthy food (B) Sound sleep (C) Yoga asanas (D) Negative thoughts</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(D) Negative thoughts.</strong> Healthy food, sound sleep and yoga all reduce stress; negative thinking adds to it. <a data-nav="a2" style="cursor:pointer">→ Unit A2</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">1 mark</span><span>Unit A3</span></div>
+      <p><strong>Section A.</strong> Spam refers to (A) Unnecessary images (B) Temporary files (C) Junk mails (D) Music files</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(C) Junk mails</strong> — unsolicited bulk e-mail, filtered out by spam filters. <a data-nav="a3" style="cursor:pointer">→ Unit A3</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">1 mark</span><span>Unit A2</span></div>
+      <p><strong>Section A (translated from the bilingual paper).</strong> Which of the following does <em>not</em> cause self-motivation? (A) Focusing on your goal (B) Planning to achieve your goal (C) Not staying disciplined (D) Recognising your own strength</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(C) Not staying disciplined.</strong> Goal focus, planning and self-knowledge all build self-motivation; lack of discipline erodes it. <a data-nav="a2" style="cursor:pointer">→ Unit A2</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2025 Board</span><span class="pq-marks">1 mark</span><span>Unit B1</span></div>
+      <p><strong>Section A.</strong> Assertion (A): When a machine is able to mimic human traits, it is said to be artificially intelligent. Reason (R): A fully automatic washing machine is artificially intelligent. (A) Both correct, R explains A (B) Both correct, R does not explain A (C) A correct, R not correct (D) A not correct, R correct</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(C) A is correct but R is not correct.</strong> A washing machine follows fixed, pre-programmed cycles — it does not perceive, learn or decide, so it is automation, not AI. <a data-nav="b1" style="cursor:pointer">→ Unit B1 (Introduction to AI)</a></div></details>
+    </div>
+
+    <div class="year-strip">📄 CBSE Board Examination 2024</div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2024 Board</span><span class="pq-marks">1 mark</span><span>Unit A2</span></div>
+      <p><strong>Q1(i).</strong> The SMART method can be used to set goals to make you successful in your career and personal life. What does ‘A’ in SMART stand for? (a) Abrupt (b) Accountable (c) Achievable (d) Admirable</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(c) Achievable.</strong> Breaking a big goal into smaller parts makes it achievable. (S = Specific, M = Measurable, R = Realistic, T = Time-bound.) <a data-nav="a2" style="cursor:pointer">→ Unit A2</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2024 Board</span><span class="pq-marks">1 mark</span><span>Unit A3</span></div>
+      <p><strong>Q1(iv).</strong> The most important software in any computer is the ______. This is the software that starts working as soon as we switch on a computer. (a) Web browsers (b) Operating System (c) Office software (d) Designing software</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(b) Operating System</strong> — it loads first and manages all hardware and software resources. <a data-nav="a3" style="cursor:pointer">→ Unit A3</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2024 Board</span><span class="pq-marks">1 mark</span><span>Unit A1</span></div>
+      <p><strong>Q1(v).</strong> Which of the following types of communication takes place when one individual addresses a large gathering? (a) Written communication (b) Public communication (c) Small group communication (d) Interpersonal communication</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(b) Public communication</strong> — one speaker to a large audience, e.g., the Principal at assembly. <a data-nav="a1" style="cursor:pointer">→ Unit A1</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2024 Board</span><span class="pq-marks">1 mark</span><span>Unit A4</span></div>
+      <p><strong>Q1(iii).</strong> Which of the following is a quality of successful entrepreneurs? (a) Hard working (b) Resistance to change (c) Lazy (d) Less-confident</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(a) Hard working.</strong> Entrepreneurs put in great effort, especially at the start; resistance to change, laziness and low confidence are the opposite of entrepreneurial qualities. <a data-nav="a4" style="cursor:pointer">→ Unit A4</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2024 Board</span><span class="pq-marks">1 mark</span><span>Unit A2</span></div>
+      <p><strong>Q1(ii).</strong> Which of the following is <em>not</em> a key element of self-management skills? (a) Prioritising your work (b) [as printed] (c) Goal setting (d) Staying updated about new practices</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(d) Staying updated about new practices.</strong> Prioritising, goal setting and time management are core self-management elements; keeping up with new practices belongs to continuous learning/adaptability. <a data-nav="a2" style="cursor:pointer">→ Unit A2</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">2024 Board</span><span class="pq-marks">1 mark</span><span>Unit B1</span></div>
+      <p><strong>Q2(i).</strong> Which of the following contributes to the efficiency of an AI project? (a) High model complexity (b) Relevant and authentic training data (c) Minimal preprocessing (d) Limited hardware resources</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(b) Relevant and authentic training data.</strong> Training data must be relevant, structured and authentic; complexity without good data does not help. <a data-nav="b1" style="cursor:pointer">→ Unit B1</a></div></details>
+    </div>
+
+    <div class="year-strip">📄 Official CBSE Sample Question Paper (Class X, 417)</div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">CBSE SQP</span><span class="pq-marks">1 mark</span><span>Unit A3</span></div>
+      <p><strong>Q1(ii).</strong> When you bring the mouse over a file in File Explorer, it shows the details of that file. This is known as: (a) Drag and drop (b) Double click (c) Hover (d) Single click</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(c) Hover</strong> — resting the pointer over an item without clicking, which shows a tooltip or details. <a data-nav="a3" style="cursor:pointer">→ Unit A3</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">CBSE SQP</span><span class="pq-marks">1 mark</span><span>Unit A4</span></div>
+      <p><strong>Q1(iii).</strong> Assertion (A): A doctor works for a renowned hospital. Reason (R): The statement above is an example of wage employment. (a) Both correct, R explains A (b) Both correct, R does not explain A (c) A correct, R not correct (d) A not correct, R correct</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(a) Both A and R are correct and R is the correct explanation of A.</strong> A doctor who works for a salary in someone else’s hospital is in <em>wage employment</em>; a doctor who runs her own clinic is <em>self-employed</em>. <a data-nav="a4" style="cursor:pointer">→ Unit A4</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">CBSE SQP</span><span class="pq-marks">1 mark</span><span>Unit A2</span></div>
+      <p><strong>Q1(iv).</strong> ______ is all about identifying and noting how we spent our time, and analysing how to spend our time effectively. (a) Organising (b) Prioritising (c) Controlling (d) Tracking</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(d) Tracking</strong> — the fourth step of time management. <a data-nav="a2" style="cursor:pointer">→ Unit A2</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">CBSE SQP</span><span class="pq-marks">1 mark</span><span>Unit A1</span></div>
+      <p><strong>Q1(v).</strong> Remya travelled to Sweden from India to pursue her higher education but does not know Swedish, so she could not find a part-time job. This is an example of: (a) Interpersonal barrier (b) Physical barrier (c) Organisational barrier (d) Linguistic barrier</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(d) Linguistic barrier</strong> — the inability to communicate in a common language. <a data-nav="a1" style="cursor:pointer">→ Unit A1</a></div></details>
+    </div>
+
+    <div class="pyq-item">
+      <div class="pq-head"><span class="pyq-tag">CBSE SQP</span><span class="pq-marks">1 mark</span><span>Unit A5</span></div>
+      <p><strong>Q1(vi).</strong> “Efforts are made to increase solar power generation so that our electricity needs are met and at the same time we do not pollute the environment or use up natural resources.” Which SDG can you relate this statement to? (a) Life on land (b) Clean water and sanitation (c) Affordable and clean energy (d) Reduced inequalities</p>
+      <details><summary>Show answer</summary><div class="ar-ans"><strong>(c) Affordable and clean energy</strong> — SDG 7. <a data-nav="a5" style="cursor:pointer">→ Unit A5</a></div></details>
+    </div>
+
+    <div class="callout examtip" style="margin-top:24px"><b>🎯 What the papers repeat</b>Across 2024, 2025 and the sample paper, the highest-frequency topics are: <strong>confusion matrix + precision/recall/F1</strong>, <strong>AI project cycle vocabulary (data exploration, features, problem statement template)</strong>, <strong>CV vs NLP</strong>, <strong>Bag of Words</strong>, <strong>neural networks</strong>, <strong>AI bias/ethics</strong>, and the employability one-markers on <strong>SMART, tracking, barriers, SDGs and stress</strong>. All of these are now covered in the units above.</div>
+  </div>
+  <nav class="unit-pager" aria-label="Section navigation"><a data-nav="practicals">← Practicals</a><a data-nav="quiz">Quiz Mode →</a></nav>
+</section>
+
 <!-- ==================== QUIZ VIEW ==================== -->
 <section class="view" id="view-quiz" hidden>
   <nav class="crumbs" aria-label="Breadcrumb"><a data-nav="home">Home</a> / Quiz Mode</nav>
@@ -3551,6 +4943,10 @@ plt.show()</code></pre>
     <p class="k">Live Search</p>
     <h1>🔍 Search Results</h1>
     <p id="searchSummary">Type in the search box above to filter topics live across all units, practicals and tools.</p>
+    <div class="searchwrap big">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="searchBox2" type="search" placeholder="Search topics, definitions, formulas…" aria-label="Search topics" autocomplete="off">
+    </div>
   </header>
   <div id="searchResults" style="margin-top:20px"></div>
 </section>
@@ -3583,7 +4979,7 @@ plt.show()</code></pre>
       <ul>
         <li>Study notes, MCQ answer keys and practical activities are based on the <strong>KVS/ZIET Student Support Material — Class 10 AI (417), 2025–26</strong>.</li>
         <li>Topics the support material covers only briefly (or not at all) have been fully written out and marked with an “Added / Expanded” badge, cross-checked against the CBSE 417 curriculum.</li>
-        <li>Single self-contained file — works offline. Progress, theme and best scores are stored only in your browser's localStorage.</li>
+        <li>Board questions are quoted from the <strong>CBSE Class X 2025 question paper (Q.P. 104, Set 4)</strong>, the <strong>CBSE Class X 2024 paper</strong> and the <strong>official CBSE sample question paper</strong>; answers follow the CBSE marking scheme where published.</li><li>Single self-contained file — works offline. Progress, theme and best scores are stored only in your browser's localStorage.</li>
       </ul>
     </div>
   </div>
@@ -3853,9 +5249,9 @@ plt.show()</code></pre>
     a4:"Entrepreneurial Skills – II", a5:"Green Skills – II",
     b1:"AI Project Cycle & Ethical Frameworks", b2:"Advanced Concepts of Modeling in AI",
     b3:"Evaluation", b4:"Computer Vision", b5:"Natural Language Processing",
-    practicals:"Practicals", quiz:"Quiz Mode", home:"Home"
+    practicals:"Practicals", pyq:"Board PYQ Bank", quiz:"Quiz Mode", home:"Home"
   };
-  var SECTIONS = ["a1","a2","a3","a4","a5","b1","b2","b3","b4","b5","practicals","quiz"];
+  var SECTIONS = ["a1","a2","a3","a4","a5","b1","b2","b3","b4","b5","practicals","pyq","quiz"];
 
   /* ---------------- helpers ---------------- */
   function $(id){ return document.getElementById(id); }
@@ -4126,6 +5522,25 @@ plt.show()</code></pre>
 
   /* ---------------- live search ---------------- */
   var searchIndex = [];
+  function textOf(el, skip){
+    var out = "";
+    var BLOCK = {P:1,LI:1,H1:1,H2:1,H3:1,H4:1,TR:1,TD:1,TH:1,DIV:1,ARTICLE:1,UL:1,OL:1,TABLE:1,CAPTION:1,PRE:1,DT:1,DD:1,BR:1,SPAN:0};
+    (function walk(node){
+      for(var n = node.firstChild; n; n = n.nextSibling){
+        if(n === skip) continue;
+        if(n.nodeType === 3){ out += n.nodeValue; }
+        else if(n.nodeType === 1){
+          var tag = (n.tagName || "").toUpperCase();
+          if(tag === "SCRIPT" || tag === "STYLE" || tag === "BUTTON" || tag === "SVG") continue;
+          var isBlock = !!BLOCK[tag];
+          if(isBlock) out += " ";
+          walk(n);
+          if(isBlock) out += " ";
+        }
+      }
+    })(el);
+    return out.replace(/\s+/g, " ").trim();
+  }
   function buildIndex(){
     searchIndex = [];
     var views = document.querySelectorAll(".view");
@@ -4134,51 +5549,87 @@ plt.show()</code></pre>
       if(vid === "home" || vid === "quiz" || vid === "search") return;
       var h1 = v.querySelector("h1");
       var unitName = h1 ? h1.textContent.trim() : UNIT_LABEL[vid] || vid;
-      searchIndex.push({ view: vid, el: v, title: unitName, unit: unitName, text: (unitName + " " + v.textContent).toLowerCase() });
       var topics = v.querySelectorAll("article.topic, .pr-item");
       Array.prototype.forEach.call(topics, function(t){
         var h = t.querySelector("h3");
         var title = h ? h.textContent.replace("✔", "").trim() : "Topic";
-        searchIndex.push({ view: vid, el: t, title: title, unit: unitName, text: (title + " " + t.textContent).toLowerCase() });
+        var body = textOf(t, h).replace(/\s+/g, " ");
+        var searchable = (unitName + " " + title + " " + body).toLowerCase();
+        searchIndex.push({
+          view: vid, el: t, title: title, unit: unitName,
+          raw: body.slice(0, 7000), text: searchable
+        });
       });
     });
   }
+  function snippetFor(item, terms){
+    var raw = item.raw || "", low = raw.toLowerCase();
+    var at = -1, hit = "";
+    for(var i = 0; i < terms.length; i++){
+      var idx = low.indexOf(terms[i]);
+      if(idx !== -1 && (at === -1 || terms[i].length > hit.length)){ at = idx; hit = terms[i]; }
+    }
+    if(at === -1) return "";
+    var from = Math.max(0, at - 55), to = Math.min(raw.length, at + hit.length + 95);
+    var snip = (from > 0 ? "… " : "") + raw.slice(from, to) + (to < raw.length ? " …" : "");
+    var out = esc(snip);
+    try{
+      var safe = hit.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      out = out.replace(new RegExp("(" + safe + ")", "ig"), "<mark>$1</mark>");
+    }catch(e){}
+    return out;
+  }
   function runSearch(q){
-    q = q.trim().toLowerCase();
     var box = $("searchResults"), sum = $("searchSummary");
-    if(q.length < 2){
+    var query = q.trim().toLowerCase();
+    if(query.length < 2){
       if(currentView === "search"){
         sum.textContent = "Type at least 2 characters to search.";
         box.innerHTML = "";
       }
       return;
     }
-    show("search");
+    if(currentView !== "search") show("search");
+    var terms = query.split(/\s+/).filter(Boolean);
     var hits = [];
-    for(var i = 0; i < searchIndex.length && hits.length < 40; i++){
-      if(searchIndex[i].text.indexOf(q) !== -1) hits.push(searchIndex[i]);
+    for(var i = 0; i < searchIndex.length; i++){
+      var t = searchIndex[i].text, all = true;
+      for(var k = 0; k < terms.length; k++){
+        if(t.indexOf(terms[k]) === -1){ all = false; break; }
+      }
+      if(all) hits.push(searchIndex[i]);
+      if(hits.length >= 40) break;
     }
-    sum.textContent = hits.length + " result" + (hits.length === 1 ? "" : "s") + ' for “' + q + '” — click a card to open that topic.';
-    var html = "";
-    var seen = {};
+    sum.textContent = hits.length + " result" + (hits.length === 1 ? "" : "s") + ' for “' + q.trim() + '” — tap a card to open that topic.';
+    var html = "", seen = {};
     for(var j = 0; j < hits.length; j++){
       var h = hits[j];
       var key = h.view + "|" + h.title;
       if(seen[key]) continue;
       seen[key] = 1;
       var cls = h.view.charAt(0) === "a" ? "a" : (h.view.charAt(0) === "b" ? "b" : "p");
-      html += '<a class="result-card ' + cls + '" data-view="' + h.view + '"><span class="rk">' + esc(UNIT_LABEL[h.view] || h.view) + '</span><b>' + esc(h.title) + '</b><span>' + esc(h.unit) + '</span></a>';
+      var snip = snippetFor(h, terms);
+      html += '<a class="result-card ' + cls + '" data-view="' + h.view + '">' +
+              '<span class="rk">' + esc(UNIT_LABEL[h.view] || h.view) + '</span>' +
+              '<b>' + esc(h.title) + '</b>' +
+              '<span>' + esc(h.unit) + '</span>' +
+              (snip ? '<em class="snip">' + snip + '</em>' : '') +
+              '</a>';
     }
-    box.innerHTML = html || '<div class="topic" style="margin-top:10px"><p>No topics matched. Try words like <em>confusion matrix</em>, <em>stemming</em>, <em>SMART</em>, <em>kernel</em> or <em>SDG</em>.</p></div>';
+    box.innerHTML = html || '<div class="topic" style="margin-top:10px"><p>No topics matched. Try shorter or different words — for example <em>confusion</em>, <em>stemming</em>, <em>SMART</em>, <em>kernel</em> or <em>SDG</em>.</p></div>';
   }
-  var sbox = $("searchBox"), sTimer = null;
-  if(sbox){
-    sbox.addEventListener("input", function(){
+  var sbox = $("searchBox"), sbox2 = $("searchBox2"), sTimer = null;
+  function bindSearch(el, other){
+    if(!el) return;
+    el.addEventListener("input", function(){
       clearTimeout(sTimer);
-      var val = sbox.value;
-      sTimer = setTimeout(function(){ runSearch(val); }, 180);
+      if(other && other.value !== el.value) other.value = el.value;
+      var val = el.value;
+      sTimer = setTimeout(function(){ runSearch(val); }, 160);
     });
   }
+  bindSearch(sbox, sbox2);
+  bindSearch(sbox2, sbox);
   $("searchResults").addEventListener("click", function(e){
     var card = e.target.closest ? e.target.closest(".result-card") : null;
     if(!card) return;
@@ -4227,7 +5678,20 @@ plt.show()</code></pre>
     show(nav.dataset.nav);
   });
 
+  /* ---------------- mobile-safe tables ---------------- */
+  function wrapTables(){
+    var tables = document.querySelectorAll("table.tb");
+    Array.prototype.forEach.call(tables, function(t){
+      if(t.parentElement && t.parentElement.classList.contains("tablewrap")) return;
+      var w = document.createElement("div");
+      w.className = "tablewrap";
+      t.parentNode.insertBefore(w, t);
+      w.appendChild(t);
+    });
+  }
+
   /* ---------------- init ---------------- */
+  wrapTables();
   renderMCQs();
   highlightCode();
   buildIndex();
